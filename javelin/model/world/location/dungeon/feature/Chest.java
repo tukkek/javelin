@@ -1,14 +1,21 @@
 package javelin.model.world.location.dungeon.feature;
 
+import java.util.Collection;
+
 import javelin.Javelin;
+import javelin.controller.Point;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.old.RPG;
 
 /**
  * Loot! A chest should normally contain only items or gold, not both.
+ *
+ * TODO would be pretty cool to have rarer but specialized types of chests such
+ * as alchemy tables (potions), weapon racks (weapons), bookshelves (scrolls)...
  *
  * @author alex
  */
@@ -18,10 +25,8 @@ public class Chest extends Feature{
 	/** Gold inside the chest. */
 	public int gold=0;
 
-	/** Constructor. */
-	Chest(){
-		super("dungeonchest");
-	}
+	/** Amount of items to generate. Random if <code>null</code>. */
+	public Integer nitems=null;
 
 	/**
 	 * @param pool Value to be added in gold or {@link Item}s, preferrring
@@ -30,17 +35,41 @@ public class Chest extends Feature{
 	 *          generate items.
 	 * @see RewardCalculator#generateloot(int)
 	 */
-	public Chest(int pool,boolean generateitems){
-		this();
-		if(generateitems&&pool>0) items.addAll(RewardCalculator.generateloot(pool));
-		if(items.isEmpty()) gold=Javelin.round(pool);
+	public Chest(int pool){
+		super("dungeonchest");
+		gold=pool;
+		if(nitems==null){
+			nitems=1;
+			while(RPG.chancein(2))
+				nitems+=1;
+		}
 	}
 
 	/** @param special If true, will show a distinguished chest image. */
 	public Chest(Item i,boolean special){
-		this();
+		this(0);
 		items.add(i);
 		if(special) avatarfile="dungeonchestspecial";
+	}
+
+	/**
+	 * @return A list of all items that can be found. Will eventually be passed to
+	 *         {@link Item#randomize()}.
+	 */
+	protected Collection<Item> getitems(){
+		return Item.ITEMS;
+	}
+
+	@Override
+	public void place(Dungeon d,Point p){
+		if(x>=0){
+			super.place(d,p);
+			return;
+		}
+		if(nitems>0&&items.isEmpty()&&gold>0)
+			items.addAll(RewardCalculator.generateloot(gold,nitems,getitems()));
+		if(items.isEmpty()) gold=Javelin.round(gold);
+		if(!items.isEmpty()||gold>0) super.place(d,p);
 	}
 
 	@Override
@@ -58,7 +87,7 @@ public class Chest extends Feature{
 
 	@Override
 	public String toString(){
-		return "Floor "+Dungeon.active.getfloor()+" chest: "
+		return getClass().getSimpleName()+": "
 				+(items.isEmpty()?"$"+Javelin.format(gold):items);
 	}
 }

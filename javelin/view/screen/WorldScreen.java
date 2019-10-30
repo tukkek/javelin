@@ -339,7 +339,7 @@ public class WorldScreen extends BattleScreen{
 	}
 
 	private void saywelcome(){
-		Squad.updatevision();
+		if(Dungeon.active==null) Squad.updatevision();
 		Javelin.redraw();
 		Javelin.message(Javelin.welcome(),Javelin.Delay.NONE);
 		WorldScreen.current.center();

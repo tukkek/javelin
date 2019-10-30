@@ -3,6 +3,7 @@ package javelin.controller.challenge;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -184,19 +185,19 @@ public class RewardCalculator{
 	/**
 	 * @param pool Given an amount of gold, will try return a list of items equal
 	 *          of similar value.
+	 * @param selection All items that can be generated. Will be passed to
+	 *          {@link Item#randomize(Collection)}.
 	 * @param forbidden Instances of these exact classes are not generated (only
 	 *          checks exact matches, not hierarchies). Will update this list live
 	 *          with generated items! If <code>null</code>, will only be used
 	 *          interanlly.
 	 * @return Empty list if could not generate any items.
 	 */
-	static public ArrayList<Item> generateloot(int pool){
-		var items=new ArrayList<Item>(1);
-		var maxitems=2;
-		while(RPG.chancein(2))
-			maxitems+=1;
-		var floor=pool/maxitems;
-		for(Item i:Item.randomize(Item.ITEMS)){
+	static public ArrayList<Item> generateloot(int pool,int nitems,
+			Collection<Item> selection){
+		var items=new ArrayList<Item>(nitems);
+		var floor=nitems==1?pool*.8:pool/nitems;
+		for(Item i:Item.randomize(selection)){
 			if(!(floor<=i.price&&i.price<pool)) continue;
 			pool-=i.price;
 			items.add(i.clone());

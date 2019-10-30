@@ -43,6 +43,7 @@ import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.feature.Chest;
+import javelin.model.world.location.dungeon.feature.Crate;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Passage;
 import javelin.model.world.location.dungeon.feature.StairsDown;
@@ -146,7 +147,7 @@ public class Dungeon extends Location{
 	Dungeon parent;
 
 	/** All floors that make part of this dungeon. */
-	protected List<Dungeon> floors;
+	public List<Dungeon> floors;
 
 	transient int nrooms;
 
@@ -494,12 +495,18 @@ public class Dungeon extends Location{
 		for(;chests>0;chests--){
 			int gold=chests==1?pool:pool/RPG.r(2,chests);
 			pool-=gold;
-			createchest(gold,zoner,false);
+			createchest(Chest.class,gold,zoner,false);
 		}
 		for(;hiddenchests>0;hiddenchests--){
 			int gold=hiddenchests==1?hiddenpool:hiddenpool/RPG.r(2,chests);
 			hiddenpool-=gold;
-			createchest(gold,zoner,true);
+			createchest(Chest.class,gold,zoner,true);
+		}
+		var freebie=RewardCalculator.getgold(level);
+		int ncrates=RPG.r(1,4)-1;
+		for(var crates=ncrates;crates>0;crates--){
+			var gold=(freebie+RPG.randomize(freebie))/10;
+			createchest(Crate.class,gold,zoner,doorbackground);
 		}
 	}
 
@@ -507,13 +514,20 @@ public class Dungeon extends Location{
 	 * TODO hidden chests would probably require copious amounts of decoration to
 	 * hide the actual chests as.
 	 */
-	void createchest(int gold,DungeonZoner zoner,boolean hidden){
+	void createchest(Class<? extends Chest> type,int gold,DungeonZoner zoner,
+			boolean hidden){
 		var percentmodifier=gettable(FeatureModifierTable.class).rollmodifier()*2;
-		gold=gold*(100+percentmodifier)/100;
-		var toplevel=this;
-		while(toplevel.parent!=null)
-			toplevel=toplevel.parent;
-		new Chest(gold,true).place(this,zoner.getpoint());
+		gold=Math.round(gold*(100+percentmodifier)/100f);
+		Chest c;
+		if(type==Chest.class)
+			c=new Chest(gold);
+		else if(type==Crate.class)
+			c=new Crate(gold);
+		else if(Javelin.DEBUG)
+			throw new RuntimeException("Unknown chest type: "+type);
+		else
+			return;
+		c.place(this,zoner.getpoint());
 	}
 
 	/** @return Most special chest here. */

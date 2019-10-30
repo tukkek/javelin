@@ -20,6 +20,7 @@ import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.feature.Brazier;
 import javelin.model.world.location.dungeon.feature.Chest;
+import javelin.model.world.location.dungeon.feature.Crate;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Fountain;
 import javelin.model.world.location.dungeon.feature.LearningStone;
@@ -62,7 +63,7 @@ public class Wilderness extends Dungeon{
 	/** Placeholder to prevent an uneeded call {@link #baptize(String)}.p */
 	static final String DESCRIPTION="Wilderness";
 	static final Set<Class<? extends Feature>> FORBIDDEN=Set.of(Brazier.class,
-			Mirror.class,Throne.class,Fountain.class,Prisoner.class);
+			Mirror.class,Throne.class,Fountain.class,Prisoner.class,Crate.class);
 
 	class Entrance extends StairsUp{
 		Entrance(Point p){
@@ -171,7 +172,9 @@ public class Wilderness extends Dungeon{
 
 	void makechest(){
 		var gold=RewardCalculator.getgold(level+makeeasy());
-		new Chest(gold,RPG.chancein(2)).place(this,getunnocupied());
+		var c=new Chest(gold);
+		if(RPG.chancein(2)) c.nitems=0;
+		c.place(this,getunnocupied());
 	}
 
 	@Override

@@ -13,6 +13,10 @@ import javelin.model.unit.Monster;
  *
  * Rings were added here as {@link Slot#FINGER}.
  *
+ * TODO pathfinder has a very useful table of body types to determine which
+ * slots each creature has: "Magic Item Slots for Animals"
+ * https://www.d20pfsrd.com/magic-items#Table-Random-Magic-Item-Generation
+ *
  * @see Monster#humanoid
  *
  * @author alex

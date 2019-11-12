@@ -132,6 +132,8 @@ public class Colosseum extends UniqueLocation{
 			squad.remove(fighter);
 			fighter=choosefighter(squad,chosen);
 		}
+		//TODO there needs to be a check of whether can generate opponents first, probably be instantiating the Fight first and valitaing
+		//TODO use the confirm prompt to pay an entry fee
 		if(!chosen.isEmpty()
 				&&Javelin.prompt(CONFIRM+Javelin.group(chosen)+".")=='\n')
 			throw new StartBattle(new ColosseumFight(chosen));

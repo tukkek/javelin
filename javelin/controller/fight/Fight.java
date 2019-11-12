@@ -163,6 +163,12 @@ public abstract class Fight{
 			throw new RuntimeException("Cannot bribe this fight! "+getClass());
 	}
 
+	/** @return Amount of gold to reward party. */
+	protected int getgoldreward(List<Combatant> defeated){
+		var gold=RewardCalculator.receivegold(defeated);
+		return Javelin.round(Math.max(gold,Squad.active.eat()/2));
+	}
+
 	/**
 	 * Only called on victory.
 	 *
@@ -172,16 +178,14 @@ public abstract class Fight{
 		List<Combatant> defeated=new ArrayList<>(Fight.originalredteam);
 		defeated.removeAll(Fight.state.fleeing);
 		if(defeated.isEmpty()) return "All enemies have fled...";
-		final int gold=RewardCalculator.receivegold(defeated);
-		final float food=Squad.active.eat()/2;
 		/* should at least serve as food for 1 day */
-		final int bonus=Javelin.round(Math.round(Math.max(food,gold)));
 		String rewards="Congratulations! ";
 		if(rewardxp)
 			rewards+=RewardCalculator.rewardxp(Fight.originalblueteam,defeated,1);
 		if(rewardgold){
-			Squad.active.gold+=bonus;
-			rewards+=" Party receives $"+Javelin.format(bonus)+"!";
+			var gold=getgoldreward(defeated);
+			Squad.active.gold+=gold;
+			rewards+=" Party receives $"+Javelin.format(gold)+"!";
 		}
 		var d=javelin.model.diplomacy.Diplomacy.instance;
 		if(rewardreputation&&d!=null){

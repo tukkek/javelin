@@ -125,6 +125,7 @@ public class Javelin{
 		app=new JavelinApp();
 		LauncherDialog.choose(args);
 		final JFrame f=new JFrame(TITLE);
+		f.setExtendedState(f.getExtendedState()|Frame.MAXIMIZED_BOTH);
 		f.setBackground(java.awt.Color.black);
 		f.addWindowListener(StateManager.SAVEONCLOSE);
 		f.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -402,12 +403,12 @@ public class Javelin{
 	 *
 	 * @return The input value, but rounded off as to be more legible.
 	 */
-	static public int round(int gold){
-		if(gold<=100) return gold;
+	static public int round(double gold){
+		if(gold<=100) return (int)Math.round(gold);
 		int roundto=1;
 		while(roundto*100<gold)
 			roundto=roundto*10;
-		return roundto*Math.round((float)gold/roundto);
+		return roundto*(int)Math.round(gold/roundto);
 	}
 
 	/** Updates the {@link MapPanel} and {@link MessagePanel}. */

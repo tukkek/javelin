@@ -61,19 +61,23 @@ public class Colosseum extends UniqueLocation{
 		}
 	}
 
+	//TODO change map name
+	//TODO need to reward gold only after discounting ally's share
 	class ColosseumFight extends WavesFight{
 		ArrayList<Combatant> fighters;
-		int minionsel;
+		int allyel=0;
+		int teamel;
+		int waveel;
 
 		public ColosseumFight(ArrayList<Combatant> fighters){
 			super(Colosseum.this,new ColosseumMap(),
-					ChallengeCalculator.calculateel(fighters)); //TODO change map name
+					ChallengeCalculator.calculateel(fighters));
 			friendly=true;
 			friendlylevel=Combatant.STATUSINJURED;
 			message="New gladiators enter the arena!";
 			this.fighters=fighters;
-			minionsel=ChallengeCalculator.calculateel(fighters)
-					+RPG.r(Difficulty.EASY,0);
+			period=Javelin.PERIODNOON;
+			teamel=ChallengeCalculator.calculateel(fighters);
 		}
 
 		@Override
@@ -81,19 +85,36 @@ public class Colosseum extends UniqueLocation{
 			return fighters;
 		}
 
+		public void generateallies(){
+			if(!RPG.chancein(4)) try{
+				//TODO perhaps only intelligent or NPC
+				allyel=ChallengeCalculator.calculateel(fighters)
+						+RPG.r(Difficulty.EASY,0);
+				var allies=EncounterGenerator.generate(allyel,
+						Arrays.asList(Terrain.ALL));
+				for(var a:allies){
+					a.automatic=true;
+					a.mercenary=true;
+				}
+				add(allies,Fight.state.blueTeam,((ColosseumMap)map).minionspawn);
+			}catch(GaveUp e){
+				allyel=0;
+			}
+			waveel=ChallengeCalculator.calculateel(Fight.state.blueTeam)
+					+getelmodifier();
+		}
+
 		@Override
 		protected Combatants generatewave(int el) throws GaveUp{
+			if(wave==1) generateallies();
 			//TODO would be cool to have some NPC waves, even if EncounterGenerator should really handle that instead
-			var terrains=Arrays.asList(Terrain.ALL);
-			var allies=EncounterGenerator.generate(minionsel,terrains);
-			for(var a:allies){
-				a.automatic=true;
-				a.mercenary=true;
-			}
-			add(allies,Fight.state.blueTeam,((ColosseumMap)map).minionspawn);
-			var red=new Combatants(EncounterGenerator.generate(el,terrains));
-			red.addAll(EncounterGenerator.generate(minionsel,terrains));
-			return red;
+			return EncounterGenerator.generate(waveel,Arrays.asList(Terrain.ALL));
+		}
+
+		@Override
+		protected int getgoldreward(List<Combatant> defeated){
+			var gold=super.getgoldreward(defeated);
+			return gold*teamel/(allyel+teamel);
 		}
 	}
 
@@ -121,25 +142,24 @@ public class Colosseum extends UniqueLocation{
 	@Override
 	public boolean interact(){
 		if(!super.interact()) return false;
-		var squad=Squad.active.members.stream()
-				.filter(c->c.getnumericstatus()==Combatant.STATUSUNHARMED)
-				.collect(Collectors.toList());
-		if(squad.isEmpty()){
+		var hurt=Squad.active.members.stream()
+				.filter(c->c.getnumericstatus()<Combatant.STATUSSCRATCHED).limit(1);
+		if(hurt.count()>0){
 			Javelin.message(NONEELIGIBLE,false);
 			return false;
 		}
-		var chosen=new ArrayList<Combatant>(Squad.active.members.size());
-		Combatant fighter=choosefighter(squad,chosen);
-		while(fighter!=null){
-			chosen.add(fighter);
-			squad.remove(fighter);
-			fighter=choosefighter(squad,chosen);
-		}
+		//		var chosen=new ArrayList<Combatant>(Squad.active.members.size());
+		//		Combatant fighter=choosefighter(squad,chosen);
+		//		while(fighter!=null){
+		//			chosen.add(fighter);
+		//			squad.remove(fighter);
+		//			fighter=choosefighter(squad,chosen);
+		//		}
 		//TODO there needs to be a check of whether can generate opponents first, probably be instantiating the Fight first and valitaing
 		//TODO use the confirm prompt to pay an entry fee
-		if(!chosen.isEmpty()
-				&&Javelin.prompt(CONFIRM+Javelin.group(chosen)+".")=='\n')
-			throw new StartBattle(new ColosseumFight(chosen));
+		var team=new Combatants(Squad.active.members);
+		if(Javelin.prompt(CONFIRM+Javelin.group(team)+".")=='\n')
+			throw new StartBattle(new ColosseumFight(team));
 		return false;
 	}
 

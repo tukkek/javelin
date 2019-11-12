@@ -30,19 +30,27 @@ public abstract class WavesFight extends LocationFight{
 	protected String message="A new wave of enemies appears!";
 
 	static{
-		WavesFight.ELMODIFIER.put(1,0);
-		WavesFight.ELMODIFIER.put(2,-2);
-		WavesFight.ELMODIFIER.put(3,-3);
-		WavesFight.ELMODIFIER.put(4,-4);
+		ELMODIFIER.put(1,0);
+		ELMODIFIER.put(2,-2);
+		ELMODIFIER.put(3,-3);
+		ELMODIFIER.put(4,-4);
 	}
 
+	/** Total waves. */
 	protected int waves=RPG.r(1,4);
+	/** Current wave. 0 before any wave, 1 at first #generatewave(). */
+	protected int wave=0;
 	int el;
 
 	/** Constructor. */
 	public WavesFight(Location l,LocationMap map,int el){
 		super(l,map);
-		this.el=el+WavesFight.ELMODIFIER.get(waves);
+		this.el=el+getelmodifier();
+	}
+
+	/** @return Proper {@link #ELMODIFIER} given {@link #waves}. */
+	protected Integer getelmodifier(){
+		return WavesFight.ELMODIFIER.get(waves);
 	}
 
 	/**
@@ -56,10 +64,10 @@ public abstract class WavesFight extends LocationFight{
 	@Override
 	public void checkend(){
 		try{
-			if(waves<=0) return;
+			wave+=1;
+			if(wave>waves) return;
 			if(!Fight.state.redTeam.isEmpty()) return;
 			var wave=generatewave(el);
-			waves-=1;
 			if(wave==null) return;
 			add(wave,Fight.state.redTeam,((LocationMap)map).spawnred);
 			Javelin.redraw();

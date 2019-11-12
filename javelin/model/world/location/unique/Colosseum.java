@@ -34,6 +34,9 @@ import javelin.view.Images;
  * TODO would probably want to up the ante by adding a number of allied buddies
  * up to a given EL
  *
+ * TODO apparently it's failing to generate fights for very low level parties,
+ * like going in with a single unit
+ *
  * @author alex
  */
 public class Colosseum extends UniqueLocation{

@@ -30,6 +30,7 @@ public abstract class PreciousObject extends Item{
 		this.sides=sides;
 		this.multiplier=multiplier;
 		sellvalue=1;
+		consumable=false;
 	}
 
 	@Override

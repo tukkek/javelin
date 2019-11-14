@@ -2,6 +2,7 @@ package javelin.model.item.artifact;
 
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.Slot;
 
 /**
  * Adds {@link Monster#intelligence}.

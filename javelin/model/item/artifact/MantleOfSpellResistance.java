@@ -2,6 +2,7 @@ package javelin.model.item.artifact;
 
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.Slot;
 
 /**
  * Adds to {@link Monster#energyresistance}.
@@ -13,7 +14,7 @@ public class MantleOfSpellResistance extends Artifact{
 
 	/** Constructor */
 	public MantleOfSpellResistance(int price){
-		super("Mantle of spell resistance",price,Slot.BACK);
+		super("Mantle of spell resistance",price,Slot.SHOULDERS);
 	}
 
 	@Override

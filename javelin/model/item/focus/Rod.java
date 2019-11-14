@@ -7,8 +7,8 @@ import javelin.Javelin;
 import javelin.controller.action.CastSpell;
 import javelin.controller.exception.RepeatTurn;
 import javelin.model.item.artifact.Artifact;
-import javelin.model.item.artifact.Slot;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Slot;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.Touch;
 
@@ -33,7 +33,7 @@ public class Rod extends Artifact{
 	 * @param register
 	 */
 	protected Rod(String name,int price,Spell s,boolean register){
-		super(Wand.name(name,s),price,Slot.HAND,register);
+		super(Wand.name(name,s),price,Slot.HANDS,register);
 		if(Javelin.DEBUG&&!s.iswand) throw new InvalidParameterException();
 		spell=s.clone();
 		spell.provokeaoo=false;

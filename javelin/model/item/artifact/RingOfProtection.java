@@ -1,6 +1,7 @@
 package javelin.model.item.artifact;
 
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Slot;
 
 /**
  * Adds AC bonus.
@@ -12,7 +13,7 @@ public class RingOfProtection extends Artifact{
 
 	/** Constructor. */
 	public RingOfProtection(int bonus,int price){
-		super("Ring of protection +"+bonus,price,Slot.FINGER);
+		super("Ring of protection +"+bonus,price,Slot.RING);
 		this.bonus=bonus;
 	}
 

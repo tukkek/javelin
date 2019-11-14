@@ -9,6 +9,7 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.CombatantByCr;
 import javelin.controller.generator.NpcGenerator;
+import javelin.model.unit.Body;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -71,7 +72,7 @@ public class MercenariesGuild extends Fortification{
 		List<Monster> candidates=new ArrayList<>();
 		for(Float tier:Monster.BYCR.keySet())
 			if(cr/2<=tier&&tier<cr) for(Monster m:Monster.BYCR.get(tier))
-				if(m.think(-1)&&m.humanoid) candidates.add(m);
+				if(m.think(-1)&&m.body.equals(Body.HUMANOID)) candidates.add(m);
 		Monster m=RPG.pick(candidates);
 		Combatant c=NpcGenerator.generatenpc(m,cr);
 		c.setmercenary(true);

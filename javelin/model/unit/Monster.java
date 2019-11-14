@@ -29,8 +29,6 @@ import javelin.controller.quality.subtype.Undead;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.Cloneable;
-import javelin.model.item.artifact.Artifact;
-import javelin.model.item.artifact.Slot;
 import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.unit.abilities.Constrict;
 import javelin.model.unit.abilities.TouchAttack;
@@ -259,21 +257,8 @@ public class Monster implements Cloneable,Serializable{
 	 */
 	public int sr=0;
 
-	/**
-	 * A monster is humanoid if it can use most of it's {@link Slot}s to wear
-	 * {@link Artifact}s. Humanoid and monstrous humanoid monster types are
-	 * humanoid by default, other types have to manually marked as Humanoid="yes"
-	 * in monster.xml to be marked as such.
-	 *
-	 * Ideally this would be defined in a slot-by-slot and monster-by-monster
-	 * basis but for now a creature tagged as humanoid is eligible to use any and
-	 * all {@link Slot}s.
-	 *
-	 * What is or not a humanoid can be hard to determine in a fantasy game.
-	 * Currently, if anything is any less than 90% human in form (and thus able to
-	 * wear all {@link Slot}s comfortably) then it isn't a proper humanoid.
-	 */
-	public Boolean humanoid=null;
+	/** Available {@link Slot}s. Will not be cloned! */
+	public Body body=null;
 	/** Creatures that should only be spawned at night or underground. */
 	public boolean nightonly=false;
 	/** Immunity to critical hits. */

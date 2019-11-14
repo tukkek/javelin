@@ -2,6 +2,7 @@ package javelin.model.item.artifact;
 
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.Slot;
 
 /**
  * Adds to {@link Monster#energyresistance}.
@@ -14,7 +15,7 @@ public class RingOfEnergyResistance extends Artifact{
 
 	/** Constructor */
 	public RingOfEnergyResistance(int bonus,int price){
-		super(getprefix(bonus)+" ring of energy resistance",price,Slot.FINGER);
+		super(getprefix(bonus)+" ring of energy resistance",price,Slot.RING);
 		this.bonus=bonus;
 	}
 

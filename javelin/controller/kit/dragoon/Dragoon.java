@@ -14,6 +14,7 @@ import javelin.controller.upgrade.damage.effect.DamageEffect;
 import javelin.controller.upgrade.damage.effect.EffectUpgrade;
 import javelin.controller.upgrade.movement.Flying;
 import javelin.controller.upgrade.movement.WalkingSpeed;
+import javelin.model.unit.Body;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Monster.MonsterType;
 import javelin.model.unit.abilities.BreathWeapon;
@@ -75,6 +76,6 @@ public abstract class Dragoon extends Kit{
 
 	@Override
 	public boolean allow(int bestability,int secondbest,Monster m){
-		return super.allow(bestability,secondbest,m)&&m.humanoid;
+		return super.allow(bestability,secondbest,m)&&m.body.equals(Body.HUMANOID);
 	}
 }

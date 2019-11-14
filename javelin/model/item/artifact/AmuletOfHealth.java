@@ -2,6 +2,7 @@ package javelin.model.item.artifact;
 
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.Slot;
 
 /**
  * Raises {@link Monster#constitution}
@@ -13,7 +14,7 @@ public class AmuletOfHealth extends Artifact{
 
 	/** Constructor. */
 	public AmuletOfHealth(int bonus,int price){
-		super("Amulet of health +"+bonus,price,Slot.COLLAR);
+		super("Amulet of health +"+bonus,price,Slot.NECK);
 		this.bonus=bonus;
 	}
 

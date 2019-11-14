@@ -4,6 +4,7 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.Slot;
 import javelin.model.world.Caravan;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.town.Town;
@@ -149,7 +150,7 @@ public abstract class Artifact extends Item{
 
 	@Override
 	public String canuse(Combatant c){
-		return c.source.humanoid?null:"Not humanoid";
+		return c.source.body.slots.contains(slot)?null:"Doesn't have "+slot;
 	}
 
 	@Override

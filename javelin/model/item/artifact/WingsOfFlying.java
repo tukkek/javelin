@@ -2,6 +2,7 @@ package javelin.model.item.artifact;
 
 import javelin.controller.db.reader.fields.Speed;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Slot;
 
 /**
  * Turn a unit into a flying unit.
@@ -16,7 +17,7 @@ public class WingsOfFlying extends Artifact{
 
 	/** Constructor. */
 	public WingsOfFlying(int price){
-		super("Wings of flying",price,Slot.BACK);
+		super("Wings of flying",price,Slot.SHOULDERS);
 	}
 
 	@Override

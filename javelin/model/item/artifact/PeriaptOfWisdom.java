@@ -2,6 +2,7 @@ package javelin.model.item.artifact;
 
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.Slot;
 
 /**
  * Raises {@link Monster#wisdom}.
@@ -13,7 +14,7 @@ public class PeriaptOfWisdom extends Artifact{
 
 	/** Constructor. */
 	public PeriaptOfWisdom(int bonus,int price){
-		super("Periapt of wisdom +"+bonus,price,Slot.COLLAR);
+		super("Periapt of wisdom +"+bonus,price,Slot.NECK);
 		this.bonus=bonus;
 	}
 

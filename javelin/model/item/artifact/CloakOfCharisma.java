@@ -2,6 +2,7 @@ package javelin.model.item.artifact;
 
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.Slot;
 
 /**
  * Raises {@link Monster#charisma}.
@@ -14,7 +15,7 @@ public class CloakOfCharisma extends Artifact{
 
 	/** Constructor. */
 	public CloakOfCharisma(int bonus,int price){
-		super("Cloak of charisma +"+bonus,price,Slot.BACK);
+		super("Cloak of charisma +"+bonus,price,Slot.SHOULDERS);
 		this.bonus=bonus;
 	}
 

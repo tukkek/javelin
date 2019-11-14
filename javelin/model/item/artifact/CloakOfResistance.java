@@ -1,6 +1,7 @@
 package javelin.model.item.artifact;
 
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Slot;
 
 /**
  * Adds bonus to saving throws.
@@ -15,7 +16,7 @@ public class CloakOfResistance extends Artifact{
 	 * Constructor.
 	 */
 	public CloakOfResistance(int bonus,int price){
-		super("Cloak of resistance +"+bonus,price,Slot.BACK);
+		super("Cloak of resistance +"+bonus,price,Slot.SHOULDERS);
 		this.bonus=bonus;
 	}
 

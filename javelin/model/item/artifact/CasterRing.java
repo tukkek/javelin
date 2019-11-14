@@ -5,6 +5,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Slot;
 import javelin.model.unit.abilities.spell.Spell;
 
 /**
@@ -40,7 +41,7 @@ public class CasterRing extends Artifact{
 
 	/** Constructor. */
 	public CasterRing(Spell s,int uses){
-		super(name(s,uses),s.casterlevel*s.level*400*uses,Slot.FINGER);
+		super(name(s,uses),s.casterlevel*s.level*400*uses,Slot.RING);
 		if(Javelin.DEBUG&&!s.isring) throw new InvalidParameterException();
 		spell=s;
 		this.uses=uses;

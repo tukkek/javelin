@@ -32,6 +32,7 @@ import javelin.controller.db.reader.fields.Skills;
 import javelin.controller.db.reader.fields.SpecialAttacks;
 import javelin.controller.db.reader.fields.SpecialQualities;
 import javelin.controller.db.reader.fields.Speed;
+import javelin.model.unit.Body;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Monster.MonsterType;
 import javelin.model.unit.abilities.BreathWeapon;
@@ -148,27 +149,9 @@ public class MonsterReader extends DefaultHandler{
 			var subtypes=attributes.getValue("Subtypes");
 			if(subtypes!=null) for(var subtype:subtypes.split(","))
 				monster.subtypes.add(subtype.trim().toLowerCase());
-			var humanoid=attributes.getValue("Humanoid");
-			if(humanoid==null)
-				switch(monster.type){
-					case HUMANOID:
-					case MONSTROUSHUMANOID:
-						monster.humanoid=true;
-						break;
-					case ANIMAL:
-					case VERMIN:
-					case CONSTRUCT:
-					case ELEMENTAL:
-					case OOZE:
-					case DRAGON:
-						monster.humanoid=false;
-						break;
-					default:
-						break;
-				}
-			else if("true".equalsIgnoreCase(humanoid))
-				monster.humanoid=true;
-			else if("false".equalsIgnoreCase(humanoid)) monster.humanoid=false;
+			//TODO ideally slots could be overriden in XML for each entry
+			var body=attributes.getValue("Body");
+			if(body!=null) monster.body=Body.TYPES.get(body.toLowerCase());
 		}else if(name.equalsIgnoreCase("avatar"))
 			monster.avatarfile=attributes.getValue("Image");
 		else if(name.equalsIgnoreCase("Climateandterrain")){
@@ -480,14 +463,8 @@ public class MonsterReader extends DefaultHandler{
 	}
 
 	void registermonster(){
-		if(monster.humanoid==null)
-			/* TODO ideally this would be integrated with the #invalid error
-			 * system here but this would just give positive to most monsters
-			 * since this is a custom field for Javelin. It'd be better to take
-			 * the time and fill all remaining entries first with the correct
-			 * values. */
-			throw new RuntimeException(
-					monster+" humanoid tag missing #monsterreader");
+		if(monster.body==null)
+			throw new RuntimeException("Unrecognized body: "+monster.name);
 		try{
 			ChallengeCalculator.calculatecr(monster);
 		}catch(final Exception e){

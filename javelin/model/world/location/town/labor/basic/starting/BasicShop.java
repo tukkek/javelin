@@ -1,6 +1,7 @@
 package javelin.model.world.location.town.labor.basic.starting;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.model.item.Item;
@@ -33,11 +34,11 @@ public class BasicShop extends Shop{
 			super.stock();
 			return;
 		}
-		var cheap=RPG.shuffle(new ArrayList<>(Item.ITEMS.stream()
+		List<Item> cheap=RPG.shuffle(new ArrayList<>(Item.ITEMS.stream()
 				.filter(i->i.price<100&&!(i instanceof PreciousObject))
 				.collect(Collectors.toList())));
-		for(var i=0;i<5&&i<cheap.size();i++)
-			selection.add(cheap.get(i));
+		if(cheap.size()>5) cheap=cheap.subList(0,5);
+		selection.addAll(cheap);
 	}
 
 	@Override

@@ -14,6 +14,10 @@ import javelin.model.world.location.town.labor.cultural.MagesGuild;
 /**
  * Ideally, a kit that represents one of the eight schools of magic.
  *
+ * TODO add intelligent requirement, maybe even a Spellcaster abstract kit
+ * (actually this might break the assumption that there are enough non-prestige
+ * kits for each primary attribute)
+ *
  * @author alex
  */
 public abstract class Wizard extends Kit{

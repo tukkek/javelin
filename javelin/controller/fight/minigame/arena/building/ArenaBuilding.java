@@ -1,7 +1,7 @@
 package javelin.controller.fight.minigame.arena.building;
 
 import javelin.Javelin;
-import javelin.controller.fight.minigame.arena.Arena;
+import javelin.controller.fight.minigame.arena.ArenaMinigame;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Building;
 import javelin.model.unit.Combatant;
@@ -60,7 +60,7 @@ public abstract class ArenaBuilding extends Building{
 	}
 
 	/**
-	 * Called not from the {@link Arena} main logic but from the
+	 * Called not from the {@link ArenaMinigame} main logic but from the
 	 * {@link BattleScreen#perform(Runnable)} callback (boils down to be being the
 	 * same pretty much though).
 	 *

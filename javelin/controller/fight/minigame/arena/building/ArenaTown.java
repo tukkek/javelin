@@ -7,7 +7,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.fight.Fight;
-import javelin.controller.fight.minigame.arena.Arena;
+import javelin.controller.fight.minigame.arena.ArenaMinigame;
 import javelin.controller.fight.minigame.arena.ArenaSetup;
 import javelin.model.unit.Building;
 import javelin.model.unit.Combatant;
@@ -89,12 +89,12 @@ public class ArenaTown extends ArenaBuilding{
 
 		@Override
 		protected int getgold(){
-			return Arena.get().gold;
+			return ArenaMinigame.get().gold;
 		}
 
 		@Override
 		protected void spend(Option o){
-			Arena.get().gold-=o.price;
+			ArenaMinigame.get().gold-=o.price;
 			((TownOption)o).buy();
 			kingdomlevel+=1;
 		}
@@ -125,7 +125,7 @@ public class ArenaTown extends ArenaBuilding{
 	}
 
 	/**
-	 * @return A town instance for the current {@link Arena} or <code>null</code>
+	 * @return A town instance for the current {@link ArenaMinigame} or <code>null</code>
 	 *         if it's destroyed.
 	 */
 	public static ArenaTown get(){
@@ -136,7 +136,7 @@ public class ArenaTown extends ArenaBuilding{
 	@Override
 	public String getactiondescription(Combatant current){
 		int price=getprojectprice();
-		String gold=Javelin.format(Arena.get().gold);
+		String gold=Javelin.format(ArenaMinigame.get().gold);
 		return super.getactiondescription(current)+"\n\n"+"Next project: $"+price
 				+". You have $"+gold+".";
 	}

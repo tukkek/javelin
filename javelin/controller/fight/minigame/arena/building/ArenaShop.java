@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.controller.fight.minigame.arena.Arena;
+import javelin.controller.fight.minigame.arena.ArenaMinigame;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.Tier;
@@ -30,22 +30,22 @@ public class ArenaShop extends ArenaBuilding{
 
 		@Override
 		protected int getgold(){
-			return Arena.get().gold;
+			return ArenaMinigame.get().gold;
 		}
 
 		@Override
 		protected void spend(Option o){
-			Arena.get().gold-=((PurchaseOption)o).i.price;
+			ArenaMinigame.get().gold-=((PurchaseOption)o).i.price;
 		}
 
 		@Override
 		protected List<Combatant> getbuyers(){
-			return Arena.get().getgladiators();
+			return ArenaMinigame.get().getgladiators();
 		}
 
 		@Override
 		protected void afterpurchase(PurchaseOption o){
-			HashMap<Integer,ArrayList<Item>> items=Arena.get().items;
+			HashMap<Integer,ArrayList<Item>> items=ArenaMinigame.get().items;
 			ArrayList<Item> bag=items.get(buyer.id);
 			if(bag==null){
 				bag=new ArrayList<>();
@@ -93,7 +93,7 @@ public class ArenaShop extends ArenaBuilding{
 
 	public static String getgoldinfo(){
 		return "\n\nYour gladiators currently have $"
-				+Javelin.format(Arena.get().gold)+".";
+				+Javelin.format(ArenaMinigame.get().gold)+".";
 	}
 
 	@Override

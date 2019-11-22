@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import javelin.Javelin;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
-import javelin.controller.fight.minigame.arena.Arena;
+import javelin.controller.fight.minigame.arena.ArenaMinigame;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
@@ -39,12 +39,12 @@ public class ArenaLair extends ArenaBuilding{
 
 		@Override
 		protected int getgold(){
-			return Arena.get().gold;
+			return ArenaMinigame.get().gold;
 		}
 
 		@Override
 		protected void spend(Option o){
-			Arena.get().gold-=o.price;
+			ArenaMinigame.get().gold-=o.price;
 			hired=((HireOption)o).group;
 			for(Combatant c:hired)
 				c.setmercenary(true);
@@ -56,7 +56,7 @@ public class ArenaLair extends ArenaBuilding{
 			super.onexit();
 			if(hired!=null){
 				Javelin.app.switchScreen(BattleScreen.active);
-				Arena.get().enter(hired,Fight.state.blueTeam,getlocation());
+				ArenaMinigame.get().enter(hired,Fight.state.blueTeam,getlocation());
 			}
 		}
 
@@ -118,7 +118,7 @@ public class ArenaLair extends ArenaBuilding{
 
 	public static String getgoldinfo(){
 		return "\n\nYour gladiators currently have $"
-				+Javelin.format(Arena.get().gold)+".";
+				+Javelin.format(ArenaMinigame.get().gold)+".";
 	}
 
 	@Override

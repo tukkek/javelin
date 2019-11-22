@@ -21,9 +21,9 @@ import javelin.old.RPG;
 public class ArenaSetup extends BattleSetup{
 	static final int MAPSIZE=28;
 
-	final Arena fight;
+	final ArenaMinigame fight;
 
-	ArenaSetup(Arena f){
+	ArenaSetup(ArenaMinigame f){
 		fight=f;
 	}
 
@@ -47,7 +47,7 @@ public class ArenaSetup extends BattleSetup{
 	@Override
 	protected void place(boolean strict){
 		ArenaTown home=placebuildings();
-		var blue=Arena.get().getallies();
+		var blue=ArenaMinigame.get().getallies();
 		fight.enter(blue,Fight.state.blueTeam,home.getlocation());
 	}
 

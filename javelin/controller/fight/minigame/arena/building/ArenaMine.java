@@ -4,12 +4,12 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
-import javelin.controller.fight.minigame.arena.Arena;
+import javelin.controller.fight.minigame.arena.ArenaMinigame;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 
 /**
- * Provides {@link Arena#gold}.
+ * Provides {@link ArenaMinigame#gold}.
  *
  * @author alex
  */
@@ -21,7 +21,7 @@ public class ArenaMine extends ArenaFountain{
 
 	@Override
 	protected String activate(Combatant current,List<Combatant> nearby){
-		Arena f=Arena.get();
+		ArenaMinigame f=ArenaMinigame.get();
 		float cr=1;
 		Combatants crs=new Combatants(f.getallies());
 		crs.addAll(f.getopponents());

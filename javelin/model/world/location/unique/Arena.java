@@ -14,7 +14,7 @@ import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.WavesFight;
-import javelin.controller.fight.minigame.arena.Arena;
+import javelin.controller.fight.minigame.arena.ArenaMinigame;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.map.location.LocationMap;
 import javelin.controller.terrain.Terrain;
@@ -26,8 +26,9 @@ import javelin.old.RPG;
 import javelin.view.Images;
 
 /**
- * TODO a replacement for the {@link Arena} minigame and the TrainingHall
- * location. Should probably be named Arena but for now let's not clash names.
+ * TODO a replacement for the {@link ArenaMinigame} minigame and the
+ * TrainingHall location. Should probably be named Arena but for now let's not
+ * clash names.
  *
  * TODO should be considered a winnable game objective
  *
@@ -39,7 +40,7 @@ import javelin.view.Images;
  *
  * @author alex
  */
-public class Colosseum extends UniqueLocation{
+public class Arena extends UniqueLocation{
 	static final String NONEELIGIBLE="Only gladiators in full health are allowed to fight in the arena!";
 	static final String CONFIRM="Begin an Arena match with these fighters?\n"
 			+"Press ENTER to confirm or any other key to cancel...\n\n";
@@ -70,7 +71,7 @@ public class Colosseum extends UniqueLocation{
 		int waveel;
 
 		public ColosseumFight(ArrayList<Combatant> fighters){
-			super(Colosseum.this,new ColosseumMap(),
+			super(Arena.this,new ColosseumMap(),
 					ChallengeCalculator.calculateel(fighters));
 			friendly=true;
 			friendlylevel=Combatant.STATUSINJURED;
@@ -119,7 +120,7 @@ public class Colosseum extends UniqueLocation{
 	}
 
 	/** Constructor. */
-	public Colosseum(){
+	public Arena(){
 		super(DESCRIPTION,DESCRIPTION,15,20);
 		generategarrison=false;
 	}
@@ -161,10 +162,5 @@ public class Colosseum extends UniqueLocation{
 		if(Javelin.prompt(CONFIRM+Javelin.group(team)+".")=='\n')
 			throw new StartBattle(new ColosseumFight(team));
 		return false;
-	}
-
-	@Override
-	public String getimagename(){
-		return "locationtraininghall"; //TODO
 	}
 }

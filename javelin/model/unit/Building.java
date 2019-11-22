@@ -1,6 +1,6 @@
 package javelin.model.unit;
 
-import javelin.controller.fight.minigame.arena.Arena;
+import javelin.controller.fight.minigame.arena.ArenaMinigame;
 import javelin.controller.quality.resistance.CriticalImmunity;
 import javelin.controller.quality.resistance.MindImmunity;
 import javelin.controller.quality.resistance.ParalysisImmunity;
@@ -34,9 +34,9 @@ public class Building extends Combatant{
 
 	public static BuildingLevel[] LEVELS=new BuildingLevel[]{
 			new BuildingLevel(0,5,70,60,5,0),
-			new BuildingLevel(1,10,110,90,7,7500*Arena.BOOST),
-			new BuildingLevel(2,15,240,180,8,25000*Arena.BOOST),
-			new BuildingLevel(3,20,600,540,8,60000*Arena.BOOST),};
+			new BuildingLevel(1,10,110,90,7,7500*ArenaMinigame.BOOST),
+			new BuildingLevel(2,15,240,180,8,25000*ArenaMinigame.BOOST),
+			new BuildingLevel(3,20,600,540,8,60000*ArenaMinigame.BOOST),};
 
 	static final Monster MONSTER=Monster.get("building");
 

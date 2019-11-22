@@ -77,7 +77,7 @@ import javelin.view.screen.SquadScreen;
  *
  * @author alex
  */
-public class Arena extends Minigame{
+public class ArenaMinigame extends Minigame{
 	static final double GLADIATORMAXCR=SquadScreen.SELECTABLE[SquadScreen.SELECTABLE.length
 			-1];
 	static final float SQUADEL=Campaign.INITIALEL;
@@ -101,7 +101,7 @@ public class Arena extends Minigame{
 	Combatants gladiators;
 
 	/** Constructor. */
-	public Arena(){
+	public ArenaMinigame(){
 		weather=Weather.CLEAR;
 		period=Javelin.PERIODNOON;
 		setup=new ArenaSetup(this);
@@ -319,8 +319,8 @@ public class Arena extends Minigame{
 		}
 	}
 
-	public static Arena get(){
-		return (Arena)Javelin.app.fight;
+	public static ArenaMinigame get(){
+		return (ArenaMinigame)Javelin.app.fight;
 	}
 
 	public List<Combatant> getallies(){

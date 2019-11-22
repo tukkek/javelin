@@ -8,7 +8,7 @@ import java.util.LinkedList;
 
 import javelin.Javelin;
 import javelin.controller.fight.Fight;
-import javelin.controller.fight.minigame.arena.Arena;
+import javelin.controller.fight.minigame.arena.ArenaMinigame;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.Combatant;
@@ -54,12 +54,12 @@ public class ArenaAcademy extends ArenaBuilding{
 
 		@Override
 		public int getgold(){
-			return Arena.get().gold;
+			return ArenaMinigame.get().gold;
 		}
 
 		@Override
 		public void pay(int cost){
-			Arena.get().gold-=cost;
+			ArenaMinigame.get().gold-=cost;
 		}
 
 		@Override
@@ -71,7 +71,7 @@ public class ArenaAcademy extends ArenaBuilding{
 		public String printinfo(){
 			int xp=Math.round(trainee.xp.floatValue()*100);
 			return trainee+" has "+xp+"XP.\n"+"You have $"
-					+Javelin.format(Arena.get().gold)+".";
+					+Javelin.format(ArenaMinigame.get().gold)+".";
 		}
 	}
 
@@ -110,6 +110,6 @@ public class ArenaAcademy extends ArenaBuilding{
 	public String getactiondescription(Combatant current){
 		return super.getactiondescription(current)+"\n\n"+current+" currently has "
 				+current.gethumanxp()+". Your team has $"
-				+Javelin.format(Arena.get().gold)+".";
+				+Javelin.format(ArenaMinigame.get().gold)+".";
 	}
 }

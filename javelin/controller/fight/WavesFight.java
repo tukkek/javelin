@@ -64,9 +64,9 @@ public abstract class WavesFight extends LocationFight{
 	@Override
 	public void checkend(){
 		try{
+			if(!Fight.state.redTeam.isEmpty()) return;
 			wave+=1;
 			if(wave>waves) return;
-			if(!Fight.state.redTeam.isEmpty()) return;
 			var wave=generatewave(el);
 			if(wave==null) return;
 			add(wave,Fight.state.redTeam,((LocationMap)map).spawnred);

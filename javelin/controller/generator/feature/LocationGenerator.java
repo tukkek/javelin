@@ -49,7 +49,7 @@ import javelin.model.world.location.town.labor.basic.MiniatureParlor;
 import javelin.model.world.location.town.labor.basic.starting.BasicAcademy;
 import javelin.model.world.location.town.labor.basic.starting.BasicShop;
 import javelin.model.world.location.unique.AdventurersGuild;
-import javelin.model.world.location.unique.Colosseum;
+import javelin.model.world.location.unique.Arena;
 import javelin.model.world.location.unique.DeepDungeon;
 import javelin.model.world.location.unique.PillarOfSkulls;
 import javelin.old.RPG;
@@ -193,8 +193,9 @@ public class LocationGenerator implements Serializable{
 			return difference>0?1:-1;
 		});
 		spawnnear(t,new AdventurersGuild(),w,2,3,true);
-		spawnnear(t,new Colosseum(),w,2,3,false);
+		spawnnear(t,new Arena(),w,2,3,false);
 		placedeepdungeon(w,t);
+		w.discovered.addAll(t.getdistrict().getarea());
 	}
 
 	/**

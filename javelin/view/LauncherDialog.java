@@ -26,7 +26,7 @@ import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.TextReader;
 import javelin.controller.fight.minigame.Minigame;
-import javelin.controller.fight.minigame.arena.Arena;
+import javelin.controller.fight.minigame.arena.ArenaMinigame;
 import javelin.controller.scenario.Campaign;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.scenario.artofwar.ArtOfWar;
@@ -48,7 +48,7 @@ public class LauncherDialog extends JFrame{
 		SCENARIOS.put("Dungeon delve",DungeonDelve.class);
 		//		SCENARIOS.put("Dungeon world",DungeonWorld.class); //TODO
 		SCENARIOS.put("Art of war",ArtOfWar.class);
-		MINIGAMES.put("Arena",Arena.class);
+		MINIGAMES.put("Arena",ArenaMinigame.class);
 		//		MINIGAMES.put("Battlefield",Battlefield.class); //TODO
 		//		MINIGAMES.put("Crimson war",CrimsonWar.class); //TODO
 		//		MINIGAMES.put("Monster madness",MonsterMadness.class); //TODO

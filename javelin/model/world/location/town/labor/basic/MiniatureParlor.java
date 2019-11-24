@@ -9,7 +9,9 @@ import java.util.stream.Collectors;
 import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.MonstersByCr;
+import javelin.controller.exception.battle.StartBattle;
 import javelin.model.Miniatures;
+import javelin.model.Miniatures.MiniatureFight;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.world.location.Location;
@@ -24,6 +26,8 @@ import javelin.view.screen.town.PurchaseScreen;
 
 public class MiniatureParlor extends Location{
 	static final Option PLAY=new Option("Play a match",0);
+	static final Option EXHIBITION=new Option("Play an exhibition match",0);
+	static final Option CHALLENGE=new Option("Play an exhibition challenge",0);
 	static final int MINIMUMSTOCK=5;
 
 	/** {@link Labor} with cost 1 so as not to penalize actual game content. */
@@ -54,6 +58,36 @@ public class MiniatureParlor extends Location{
 		}
 	}
 
+	class Exhibition extends MiniatureFight{
+		Exhibition(List<Monster> bluearmy,List<Monster> redarmy){
+			super(bluearmy,redarmy,Miniatures.miniatures,redarmy);
+		}
+
+		@Override
+		public boolean onend(){
+			Javelin.message("The exhibition match is now over.",true);
+			return false;
+		}
+	}
+
+	class Challenge extends Exhibition{
+		Challenge(List<Monster> bluearmy,List<Monster> redarmy){
+			super(bluearmy,redarmy);
+			difficulty=RPG.r(1,4);
+		}
+
+		@Override
+		public boolean onend(){
+			if(victory){
+				List<Monster> spoils=RPG.shuffle(new ArrayList<>(redarmy));
+				spoils=spoils.subList(0,Math.min(difficulty,spoils.size()));
+				bluecollection.addAll(spoils);
+				Javelin.message("You've won: "+Javelin.group(spoils)+".",true);
+			}
+			return super.onend();
+		}
+	}
+
 	class MiniatureScreen extends PurchaseScreen{
 		public MiniatureScreen(){
 			super("Welcome to the miniature shop!",null);
@@ -65,12 +99,14 @@ public class MiniatureParlor extends Location{
 			for(var m:miniatures)
 				options.add(new MiniaturePurchase(m));
 			options.add(PLAY);
+			options.add(EXHIBITION);
+			options.add(CHALLENGE);
 			return options;
 		}
 
 		@Override
 		public String printpriceinfo(Option o){
-			return o==PLAY?"":super.printpriceinfo(o);
+			return o==PLAY||o==EXHIBITION||o==CHALLENGE?"":super.printpriceinfo(o);
 		}
 
 		@Override
@@ -79,22 +115,30 @@ public class MiniatureParlor extends Location{
 			Miniatures.miniatures.add(((MiniaturePurchase)o).mini);
 		}
 
+		List<Monster> generatearmy(){
+			var target=RPG.rolldice(miniatures.size(),4);
+			var opponent=new ArrayList<Monster>(target);
+			var external=Math.round(target*(4-RPG.r(1,4))/4f);
+			while(opponent.size()<target-external)
+				Miniatures.add(RPG.pick(miniatures),opponent);
+			if(external>0){
+				var d=getdistrict();
+				var cr=d==null||d.town==null?RPG.r(1,20):d.town.population;
+				opponent.addAll(Miniatures.buildcollection(external,cr));
+			}
+			return opponent;
+		}
+
 		@Override
 		public boolean select(Option o){
 			if(o==PLAY){
-				var target=RPG.rolldice(miniatures.size(),4);
-				var opponent=new ArrayList<Monster>(target);
-				var external=Math.round(target*(4-RPG.r(1,4))/4f);
-				while(opponent.size()<target-external)
-					Miniatures.add(RPG.pick(miniatures),opponent);
-				if(external>0){
-					var d=getdistrict();
-					var cr=d==null||d.town==null?RPG.r(1,20):d.town.population;
-					opponent.addAll(Miniatures.buildcollection(external,cr));
-				}
-				Miniatures.play(opponent);
+				Miniatures.play(generatearmy());
 				return true;
 			}
+			if(o==EXHIBITION)
+				throw new StartBattle(new Exhibition(generatearmy(),generatearmy()));
+			if(o==CHALLENGE)
+				throw new StartBattle(new Challenge(generatearmy(),generatearmy()));
 			return super.select(o);
 		}
 
@@ -102,7 +146,8 @@ public class MiniatureParlor extends Location{
 		public String printinfo(){
 			var collection=Miniatures.miniatures.isEmpty()?"empty..."
 					:Javelin.group(Miniatures.miniatures)+".";
-			return super.printinfo()+"\n\nYour collection: "+collection;
+			return super.printinfo()+"\n\nYour collection: "+collection
+					+"\n\n(Hint: you can click on the parlour from anywhere in the world map to start a miniature match!)";
 		}
 	}
 
@@ -128,7 +173,7 @@ public class MiniatureParlor extends Location{
 			maxlevel=d.town.population;
 			stock=Math.max(maxlevel,MINIMUMSTOCK);
 		}
-		var valid=Monster.MONSTERS.stream().filter(m->m.cr<=maxlevel)
+		var valid=Monster.MONSTERS.stream().filter(m->m.cr<=maxlevel&&!m.passive)
 				.collect(Collectors.toList());
 		while(miniatures.size()<stock)
 			miniatures.add(RPG.pick(valid));
@@ -153,5 +198,10 @@ public class MiniatureParlor extends Location{
 		if(!super.interact()) return false;
 		new MiniatureScreen().show();
 		return true;
+	}
+
+	@Override
+	public void accessremotely(){
+		interact();
 	}
 }

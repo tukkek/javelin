@@ -25,19 +25,22 @@ import javelin.view.screen.BattleScreen;
 public class Miniatures{
 	public static ArrayList<Monster> miniatures=new ArrayList<>(0);
 
-	static class MiniatureFight extends Fight{
-		List<Monster> bluearmy;
-		List<Monster> redarmy;
-		List<Monster> bluecollection;
-		List<Monster> redcollection;
+	public static class MiniatureFight extends Fight{
+		protected List<Monster> bluearmy;
+		protected List<Monster> redarmy;
+		protected List<Monster> bluecollection;
+		protected List<Monster> redcollection;
+		/** Extra EL difficulty for {@link #balance()}. */
+		protected int difficulty=0;
 
-		MiniatureFight(List<Monster> bluearmy,List<Monster> redarmy,
+		public MiniatureFight(List<Monster> bluearmy,List<Monster> redarmy,
 				List<Monster> bluecollection,List<Monster> redcollection){
 			this.bluearmy=bluearmy;
 			this.redarmy=redarmy;
 			this.bluecollection=bluecollection;
 			this.redcollection=redcollection;
-			map=RPG.pick(Map.getall());
+			map=RPG.pick(Map.getall().stream().filter(m->m.standard)
+					.collect(Collectors.toList()));
 			map.floor=Images.get("terrainboardfloor");
 			map.wall=Images.get("terrainboardwall");
 			bribe=false;
@@ -61,7 +64,7 @@ public class Miniatures{
 		boolean balance(){
 			var blue=ChallengeCalculator.calculateel(state.blueTeam);
 			var red=ChallengeCalculator.calculateel(state.redTeam);
-			if(blue==red) return false;
+			if(blue+difficulty==red) return false;
 			var weak=blue<red?state.blueTeam:state.redTeam;
 			var weakest=new Combatants(weak).getweakest();
 			if(!Commoner.SINGLETON.upgrade(weakest)) return false;
@@ -169,7 +172,7 @@ public class Miniatures{
 		var collection=new ArrayList<Monster>(size);
 		while(collection.size()<size){
 			var cr=averagecr+RPG.randomize(4);
-			var tier=Monster.MONSTERS.stream().filter(m->m.cr==cr)
+			var tier=Monster.MONSTERS.stream().filter(m->m.cr==cr&&!m.passive)
 					.collect(Collectors.toList());
 			if(!tier.isEmpty()) add(RPG.pick(tier),collection);
 		}

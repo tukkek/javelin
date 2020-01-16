@@ -61,7 +61,11 @@ public class BasicAcademy extends Academy{
 	public BasicAcademy(){
 		super(DESCRIPTION,DESCRIPTION,Tier.LOW.minlevel,Tier.LOW.maxlevel,Set.of(),
 				null,null);
-		/*TODO raise damage isn't "proper" for low-level characters but there's
+		/* TODO not ideal but the starting academy keeps being snatched by enemy incursions,
+		 *  making further progress impossible. The ideal solution would be to make it a
+		 *  higher CR or allow other forms of advacenemnt. */
+		impermeable=true;
+		/* TODO raise damage isn't "proper" for low-level characters but there's
 		 * not any other good "generic" alternatives for now. It's not intended
 		 * that players should return to the basic academy during mid- and late-
 		 * game to raise damage.*/

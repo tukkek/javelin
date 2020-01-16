@@ -45,6 +45,8 @@ public abstract class Actor implements Serializable{
 	public Realm realm=null;
 	/**
 	 * If <code>true</code> this actor will be ignored by {@link Incursion}s.
+	 *
+	 * TODO probably better to have #CR==Integer.MAX as impermeable?
 	 */
 	public boolean impermeable=false;
 	/**

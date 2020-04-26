@@ -38,6 +38,9 @@ import javelin.view.Images;
  * TODO apparently it's failing to generate fights for very low level parties,
  * like going in with a single unit
  *
+ * TODO allow escape at any point (even if engaged) - just moving all units to
+ * BattleState#fleeing should suffice?
+ *
  * @author alex
  */
 public class Arena extends UniqueLocation{

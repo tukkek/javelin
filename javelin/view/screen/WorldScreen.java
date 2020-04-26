@@ -502,6 +502,6 @@ public class WorldScreen extends BattleScreen{
 	public void center(){
 		Javelin.app.switchScreen(this);
 		Point here=getsquadlocation();
-		center(here.x,here.y);
+		if(here!=null) center(here.x,here.y);
 	}
 }

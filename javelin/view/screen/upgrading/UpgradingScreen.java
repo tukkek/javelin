@@ -213,7 +213,7 @@ public abstract class UpgradingScreen extends SelectScreen{
 			int goldpieces=price(cost.floatValue());
 			if(goldpieces>getgold()){
 				text+="\n\nNot enough gold! Press any key to continue...";
-				Javelin.app.switchScreen(this);
+				print(text);
 				InfoScreen.feedback();
 				return null;
 			}

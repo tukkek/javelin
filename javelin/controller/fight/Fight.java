@@ -217,8 +217,14 @@ public abstract class Fight{
 	 *         for {@link Minigame}s.
 	 */
 	public boolean onend(){
-		for(Combatant c:state.getfleeing(Fight.originalblueteam))
-			state.blueTeam.add(c);
+		state.blueTeam.addAll(state.getfleeing(Fight.originalblueteam));
+		//TODO clear fleeing as well, like the dead, below?
+		if(Javelin.app.fight.friendly){
+			var survivors=state.dead.stream().filter(d->d.hp>Combatant.DEADATHP)
+					.collect(Collectors.toList());
+			state.dead.removeAll(survivors);
+			state.blueTeam.addAll(survivors);
+		}
 		EndBattle.showcombatresult();
 		return true;
 	}

@@ -159,8 +159,9 @@ public class Arena extends UniqueLocation{
 		//TODO there needs to be a check of whether can generate opponents first, probably be instantiating the Fight first and valitaing
 		//TODO use the confirm prompt to pay an entry fee
 		var team=new Combatants(Squad.active.members);
-		if(Javelin.prompt(CONFIRM+Javelin.group(team)+".")=='\n')
-			throw new StartBattle(new ColosseumFight(team));
-		return false;
+		if(Javelin.prompt(CONFIRM+Javelin.group(team)+".")!='\n') return false;
+		var f=new ColosseumFight(team);
+		/*TODO would be cool to be able to generate fights in advance so here we could check if EmcounterGenerator was able to come up with something or not*/
+		throw new StartBattle(f);
 	}
 }

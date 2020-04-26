@@ -33,9 +33,10 @@ public class EndBattle extends BattleEvent{
 
 	/** Start after-{@link Fight} cleanup. */
 	public static void end(){
-		Fight.victory=Javelin.app.fight.win();
+		var f=Javelin.app.fight;
+		Fight.victory=f.win();
 		terminateconditions(Fight.state,BattleScreen.active);
-		if(Javelin.app.fight.onend()){
+		if(f.onend()){
 			var s=Squad.active;
 			if(s!=null){
 				while(World.get(s.x,s.y,Incursion.class)!=null){
@@ -47,8 +48,7 @@ public class EndBattle extends BattleEvent{
 			}
 		}
 		AiCache.reset();
-		if(World.scenario!=null)
-			World.scenario.end(Javelin.app.fight,Fight.victory);
+		if(World.scenario!=null) World.scenario.end(f,Fight.victory);
 		Javelin.app.fight=null;
 		Fight.state=null;
 	}
@@ -67,19 +67,20 @@ public class EndBattle extends BattleEvent{
 	public static void showcombatresult(){
 		MessagePanel.active.clear();
 		String combatresult;
+		var s=Fight.state;
+		var f=Javelin.app.fight;
 		if(Fight.victory)
-			combatresult=Javelin.app.fight.reward();
-		else if(Fight.state.getfleeing(Fight.originalblueteam).isEmpty()){
+			combatresult=f.reward();
+		else if(f.friendly&&!s.blueTeam.isEmpty())
+			combatresult="You lost!";
+		else if(s.getfleeing(Fight.originalblueteam).isEmpty()){
 			Squad.active.disband();
 			combatresult="You lost!";
-		}else if(Javelin.app.fight.friendly)
-			combatresult="You lost!";
-		else{
+		}else{
 			combatresult="Fled from combat. No awards received.";
-			if(!Fight.victory
-					&&Fight.state.fleeing.size()!=Fight.originalblueteam.size()){
+			if(!Fight.victory&&s.fleeing.size()!=Fight.originalblueteam.size()){
 				combatresult+="\nFallen allies left behind are lost!";
-				for(Combatant abandoned:Fight.state.dead)
+				for(Combatant abandoned:s.dead)
 					abandoned.hp=Combatant.DEADATHP;
 			}
 			if(Squad.active.transport!=null&&Dungeon.active==null
@@ -97,8 +98,6 @@ public class EndBattle extends BattleEvent{
 
 	static void updateoriginal(List<Combatant> originalteam){
 		var update=new ArrayList<>(Fight.state.blueTeam);
-		for(var d:Fight.state.dead)
-			if(d.hp>Combatant.DEADATHP) update.add(d);
 		for(var inbattle:update){
 			int originali=originalteam.indexOf(inbattle);
 			if(originali>=0){

@@ -394,7 +394,7 @@ public abstract class Fight{
 	public ArrayList<Combatant> setup(){
 		if(Debug.period!=null) period=Debug.period;
 		Fight.state=new BattleState(this);
-		Fight.state.blueTeam=getblueteam();
+		Fight.state.blueTeam=new ArrayList<>(getblueteam());
 		return generate();
 	}
 

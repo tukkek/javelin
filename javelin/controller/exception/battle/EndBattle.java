@@ -125,9 +125,10 @@ public class EndBattle extends BattleEvent{
 	static void bury(List<Combatant> originalteam){
 		for(Combatant c:Fight.state.dead){
 			if(!originalteam.contains(c)) continue;
-			if(c.hp>Combatant.DEADATHP&&c.source.constitution>0)
+			if(c.hp>Combatant.DEADATHP&&c.source.constitution>0){
 				c.hp=1;
-			else if(!Fight.victory||!revive(c,originalteam)){
+				Fight.state.blueTeam.add(c);
+			}else if(!Fight.victory||!revive(c,originalteam)){
 				originalteam.remove(c);
 				c.bury();
 			}
@@ -184,8 +185,8 @@ public class EndBattle extends BattleEvent{
 		//				Fight.state.blueTeam.remove(c);
 		//				Fight.state.redTeam.remove(c);
 		//			}
-		updateoriginal(originalteam);
 		bury(originalteam);
+		updateoriginal(originalteam);
 		Squad.active.members=originalteam;
 		ThreadManager.printbattlerecord();
 	}

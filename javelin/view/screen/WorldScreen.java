@@ -126,7 +126,7 @@ public class WorldScreen extends BattleScreen{
 		return mappanel.tiles;
 	}
 
-	void move(){
+	void act(){
 		try{
 			if(callback!=null){
 				callback.run();
@@ -135,6 +135,8 @@ public class WorldScreen extends BattleScreen{
 				return;
 			}
 			redraw();
+			var d=Squad.active.getdistrict();
+			if(d!=null) d.town.report();
 			Interface.userinterface.waiting=true;
 			final KeyEvent updatableUserAction=getUserInput();
 			if(MapPanel.overlay!=null) MapPanel.overlay.clear();
@@ -142,7 +144,7 @@ public class WorldScreen extends BattleScreen{
 		}catch(RepeatTurn e){
 			MessagePanel.active.clear();
 			updateplayerinformation();
-			move();
+			act();
 		}
 	}
 
@@ -178,7 +180,7 @@ public class WorldScreen extends BattleScreen{
 		endturn();
 		if(World.getall(Squad.class).isEmpty()) return;
 		updateplayerinformation();
-		if(Squad.active!=null) move();
+		if(Squad.active!=null) act();
 		messagepanel.clear();
 	}
 

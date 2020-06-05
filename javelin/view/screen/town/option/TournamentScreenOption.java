@@ -42,7 +42,7 @@ public class TournamentScreenOption extends ScreenOption{
 			public boolean select(Option o){
 				if(!super.select(o)) return false;
 				Exhibition e=((EventOption)o).event;
-				town.events.remove(e);
+				town.exhibitions.remove(e);
 				e.start();
 				return true;
 			}
@@ -55,7 +55,7 @@ public class TournamentScreenOption extends ScreenOption{
 			@Override
 			public List<Option> getoptions(){
 				ArrayList<Option> options=new ArrayList<>();
-				for(Exhibition e:town.events)
+				for(Exhibition e:town.exhibitions)
 					options.add(new EventOption(e.name,price,e));
 				return options;
 			}

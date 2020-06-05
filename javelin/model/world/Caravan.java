@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javelin.Javelin;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
@@ -156,8 +155,7 @@ public class Caravan extends Actor{
 	void announce(Town town){
 		MessagePanel.active.clear();
 		var notification="A caravan arrives at "+town+", city grows!";
-		Javelin.message(notification,true);
-		MessagePanel.active.clear();
+		town.events.add(notification);
 	}
 
 	int calculatedelta(int from,int to){

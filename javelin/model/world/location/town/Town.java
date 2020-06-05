@@ -96,7 +96,7 @@ public class Town extends Location{
 	public static final float DAILYLABOR=.11f;
 
 	/** @see HostTournament */
-	public ArrayList<Exhibition> events=new ArrayList<>();
+	public ArrayList<Exhibition> exhibitions=new ArrayList<>();
 	/**
 	 * Represents the size of a town. In {@link Campaign} games this is expected
 	 * to go from roughly 1 to 20 in the span of a year. Default is 1
@@ -146,6 +146,12 @@ public class Town extends Location{
 	public int strike=0;
 	/** See {@link Governor}. */
 	Governor governor=null;
+	/**
+	 * Records messages that should be shown to the player once he's in town.
+	 *
+	 * TODO add a message log in 2.0
+	 */
+	public List<String> events=new ArrayList<>();
 
 	/** @param p Spot to place town in the {@link World}. */
 	public Town(Point p,Realm r){
@@ -216,15 +222,15 @@ public class Town extends Location{
 	}
 
 	/**
-	 * @return <code>true</code> if the town is hosting {@link #events}.
+	 * @return <code>true</code> if the town is hosting {@link #exhibitions}.
 	 */
 	public boolean ishosting(){
-		return !events.isEmpty();
+		return !exhibitions.isEmpty();
 	}
 
 	@Override
 	public void turn(long time,WorldScreen screen){
-		if(ishosting()) events.remove(0);
+		if(ishosting()) exhibitions.remove(0);
 		work();
 		if(happiness!=0) happiness+=happiness>0?-HAPPINESSDECAY:+HAPPINESSDECAY;
 		updatequests();
@@ -426,7 +432,10 @@ public class Town extends Location{
 		var rank=getrank().rank;
 		if(quests.size()<rank){
 			var q=Quest.generate(this);
-			if(q!=null) quests.add(q);
+			if(q!=null){
+				quests.add(q);
+				events.add("New quest available: "+q+"!");
+			}
 		}
 	}
 
@@ -518,5 +527,12 @@ public class Town extends Location{
 	@Override
 	public Integer getel(Integer attackerel){
 		return population;
+	}
+
+	/** Displays relevant town news. */
+	public void report(){
+		if(!ishostile()) for(var e:events)
+			Javelin.message("News from "+this+"!\n"+e+'.',true);
+		events.clear();
 	}
 }

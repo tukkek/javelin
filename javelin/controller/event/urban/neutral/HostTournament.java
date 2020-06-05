@@ -29,7 +29,7 @@ public class HostTournament extends UrbanEvent{
 	public void happen(Squad s){
 		for(int events=RPG.r(1,4)+town.getrank().rank;events>0;events--){
 			var e=RPG.r(1,2)==1?RPG.pick(Exhibition.SPECIALEVENTS):new Match();
-			town.events.add(e);
+			town.exhibitions.add(e);
 		}
 		Javelin.message(town+" is now hosting a tournament!",true);
 	}

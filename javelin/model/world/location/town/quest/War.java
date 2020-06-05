@@ -32,11 +32,11 @@ public class War extends Quest{
 
 	@Override
 	protected String getname(){
-		return "Liberate: "+target;
+		return "Liberate "+target;
 	}
 
 	@Override
-	public boolean complete(){
+	protected boolean checkcomplete(){
 		return !target.ishostile();
 	}
 }

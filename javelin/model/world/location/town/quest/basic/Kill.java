@@ -60,11 +60,11 @@ public class Kill extends Quest{
 
 	@Override
 	protected String getname(){
-		return "Capture: "+target;
+		return "Capture "+target;
 	}
 
 	@Override
-	public boolean complete(){
+	protected boolean checkcomplete(){
 		return !target.ishostile()||!World.getactors().contains(target);
 	}
 }

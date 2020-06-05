@@ -35,11 +35,11 @@ public class Fetch extends Quest{
 
 	@Override
 	protected String getname(){
-		return "Connect resource: "+target.name.toLowerCase();
+		return "Connect "+target.name.toLowerCase();
 	}
 
 	@Override
-	public boolean complete(){
+	protected boolean checkcomplete(){
 		return town.resources.contains(target);
 	}
 }

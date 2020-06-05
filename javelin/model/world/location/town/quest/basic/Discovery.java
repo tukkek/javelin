@@ -33,11 +33,11 @@ public class Discovery extends Quest{
 
 	@Override
 	protected String getname(){
-		return "Find: "+target.toString();
+		return "Find "+target.toString();
 	}
 
 	@Override
-	public boolean complete(){
+	protected boolean checkcomplete(){
 		return WorldScreen.see(target.getlocation());
 	}
 }

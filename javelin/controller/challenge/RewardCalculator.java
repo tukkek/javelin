@@ -123,25 +123,33 @@ public class RewardCalculator{
 	 * which is what the d20 system is designed to do.
 	 *
 	 * @param winners {@link Combatant}s to award XP to.
-	 * @param originalblue Allied team that started the battle.
-	 * @param originalred Battle opponent.
+	 * @param team Allied team that started the battle.
+	 * @param el Encounter Level overcome.
 	 * @param bonus Multiplier bonus.
 	 * @return A string representing how much XP was gained by the party.
 	 * @see Combatant#xp
 	 */
-	public static String rewardxp(List<Combatant> originalblue,
-			List<Combatant> originalred,float bonus){
-		int elred=ChallengeCalculator.calculateel(originalred);
-		List<Float> crs=originalblue.stream()
-				.map((c)->c.source.cr+Math.max(0,c.xp.floatValue()))
-				.collect(Collectors.toList());
-		int elblue=ChallengeCalculator.calculateelfromcrs(crs);
-		int eldifference=Math.round(elred-elblue);
+	public static String rewardxp(List<Combatant> team,int el,float bonus){
+		int elblue=ChallengeCalculator.calculateelfromcrs(
+				team.stream().map((c)->c.source.cr+Math.max(0,c.xp.floatValue()))
+						.collect(Collectors.toList()));
+		int eldifference=Math.round(el-elblue);
 		if(World.scenario!=null) bonus*=World.scenario.boost;
-		double partycr=getpartyxp(eldifference,originalblue.size(),bonus);
-		distributexp(originalblue,partycr);
+		double partycr=getpartyxp(eldifference,team.size(),bonus);
+		distributexp(team,partycr);
 		BigDecimal xp=new BigDecimal(100*partycr).setScale(0,RoundingMode.UP);
-		return "Party wins "+xp+"XP!";
+		return "Party earns "+xp+"XP!";
+	}
+
+	/**
+	 * @param enemies Converts to EL and passes to
+	 *          {@link #rewardxp(List, int, float)}.
+	 * @see ChallengeCalculator#calculateel(List)
+	 */
+	public static String rewardxp(List<Combatant> team,List<Combatant> enemies,
+			float bonus){
+		var crs=enemies.stream().map(c->c.source.cr).collect(Collectors.toList());
+		return rewardxp(team,ChallengeCalculator.calculateelfromcrs(crs),bonus);
 	}
 
 	/**
@@ -187,10 +195,7 @@ public class RewardCalculator{
 	 *          of similar value.
 	 * @param selection All items that can be generated. Will be passed to
 	 *          {@link Item#randomize(Collection)}.
-	 * @param forbidden Instances of these exact classes are not generated (only
-	 *          checks exact matches, not hierarchies). Will update this list live
-	 *          with generated items! If <code>null</code>, will only be used
-	 *          interanlly.
+	 * @param nitems Target number of items. Not guaranteed to be an exact match.
 	 * @return Empty list if could not generate any items.
 	 */
 	static public ArrayList<Item> generateloot(int pool,int nitems,

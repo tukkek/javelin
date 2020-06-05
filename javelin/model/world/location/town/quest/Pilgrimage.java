@@ -141,7 +141,7 @@ public class Pilgrimage extends Quest{
 	}
 
 	@Override
-	public boolean complete(){
+	protected boolean checkcomplete(){
 		if(next!=null) return false;
 		for(var c:followers)
 			if(!Squad.active.members.contains(c)) return false;
@@ -150,7 +150,7 @@ public class Pilgrimage extends Quest{
 	}
 
 	@Override
-	public boolean cancel(){
+	protected boolean cancel(){
 		var cancelled=super.cancel()||next==null&&followers.isEmpty();
 		if(cancelled){
 			if(next!=null) next.remove();

@@ -15,6 +15,7 @@ import javelin.controller.ContentSummary;
 import javelin.controller.Point;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.terrain.Terrain;
+import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
@@ -137,7 +138,13 @@ public abstract class Quest implements Serializable{
 	 *
 	 * @see #reward()
 	 */
-	public int reward;
+	public int gold;
+	/**
+	 * Item reward.
+	 *
+	 * @see #reward()
+	 */
+	public Item item;
 	/**
 	 * Utility value for maximum distance quests should be from their Town.
 	 */
@@ -161,7 +168,15 @@ public abstract class Quest implements Serializable{
 
 	/** A chance to further define details after validation. */
 	protected void define(){
-
+		int target=Math.min(town.population,el);
+		var min=RewardCalculator.getgold(target-1);
+		var max=RewardCalculator.getgold(target+1);
+		gold=Math.max(1,Javelin.round(RPG.r(min,max)));
+		var items=RewardCalculator.generateloot(gold,1,Item.ITEMS);
+		if(items.size()>0){
+			gold=0;
+			item=items.get(0);
+		}
 	}
 
 	/**
@@ -173,17 +188,6 @@ public abstract class Quest implements Serializable{
 	}
 
 	/**
-	 * @return By default returns a proper amount of gold for the quest's
-	 *         {@link #el} (capped by city size).
-	 */
-	protected int reward(){
-		int target=Math.min(town.population,el);
-		var min=RewardCalculator.getgold(target-1);
-		var max=RewardCalculator.getgold(target+1);
-		return Math.max(1,Javelin.round(RPG.r(min,max)));
-	}
-
-	/**
 	 * Note that a quest can be fulfilled but if {@link #daysleft} has expired,
 	 * players won't be able to complete it as it will have been removed from
 	 * {@link #town}.
@@ -191,14 +195,14 @@ public abstract class Quest implements Serializable{
 	 * @return If <code>true</code>, the quest is considered completed and a
 	 *         {@link Squad} may claim the reward.
 	 */
-	abstract public boolean complete();
+	protected abstract boolean checkcomplete();
 
 	/**
 	 * @return <code>true</code> if a quest is to be cancelled permanently. For
 	 *         example: a location needs to be captured but the location itself is
 	 *         removed by some external force.
 	 */
-	public boolean cancel(){
+	protected boolean cancel(){
 		return daysleft<=0;
 	}
 
@@ -223,7 +227,7 @@ public abstract class Quest implements Serializable{
 
 	@Override
 	public String toString(){
-		return name.toLowerCase();
+		return name;
 	}
 
 	/**
@@ -246,7 +250,6 @@ public abstract class Quest implements Serializable{
 				q.name=q.getname();
 				if(t.quests.contains(q)) continue;
 				q.define();
-				q.reward=q.reward();
 				return q;
 			}
 		}catch(ReflectiveOperationException e){
@@ -284,5 +287,34 @@ public abstract class Quest implements Serializable{
 		var detailed=traits.stream().map(t->QUESTS.get(t).size()+" "+t)
 				.collect(Collectors.joining(", "));
 		return total+" town quests ("+detailed+")";
+	}
+
+	/** @return Description of {@link #item} or {@link #gold}. */
+	public String describereward(){
+		return item==null?"$"+Javelin.format(gold):item.toString();
+	}
+
+	/**
+	 * Checks if the quest is expired or invalid, whether the objective is
+	 * completed and then rewards the player. Removes itself from
+	 * {@link Town#quests} as necessary.
+	 */
+	public void complete(){
+		if(cancel()){
+			town.quests.remove(this);
+			town.happiness-=Town.HAPPINESSSTEP;
+			town.events.add("Quest expired: "+name);
+			return;
+		}
+		if(!checkcomplete()) return;
+		town.happiness+=Town.HAPPINESSSTEP;
+		var m="You have completed a quest ("+name+")!\n";
+		m+=RewardCalculator.rewardxp(Squad.active.members,el,1)+"\n";
+		m+="You are rewarded for your efforts with: "+describereward()+"!\n";
+		m+="Mood in "+town+" is now: "+town.describehappiness().toLowerCase()+".";
+		Javelin.message(m,true);
+		Squad.active.gold+=gold;
+		if(item!=null) item.grab();
+		town.quests.remove(this);
 	}
 }

@@ -107,12 +107,12 @@ public class Pursue extends Quest{
 	}
 
 	@Override
-	public boolean cancel(){
+	protected boolean cancel(){
 		return super.cancel()||escaped;
 	}
 
 	@Override
-	public boolean complete(){
+	protected boolean checkcomplete(){
 		return !escaped&&!fugitives.exists();
 	}
 }

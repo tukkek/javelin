@@ -154,7 +154,7 @@ public class Caravan extends Actor{
 
 	void announce(Town town){
 		MessagePanel.active.clear();
-		var notification="A caravan arrives at "+town+", city grows!";
+		var notification="A caravan arrives at "+town+", city grows";
 		town.events.add(notification);
 	}
 

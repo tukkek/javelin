@@ -34,7 +34,7 @@ public class DiscoverTown extends Quest{
 	}
 
 	@Override
-	public boolean complete(){
+	protected boolean checkcomplete(){
 		for(var t:undiscovered)
 			if(WorldScreen.see(t.getlocation())&&t.exists()) return true;
 		return false;

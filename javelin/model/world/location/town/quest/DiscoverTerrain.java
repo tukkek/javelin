@@ -38,11 +38,11 @@ public class DiscoverTerrain extends Quest{
 
 	@Override
 	protected String getname(){
-		return "Discover terrain: "+terrain.toString().toLowerCase();
+		return "Discover "+terrain.toString().toLowerCase();
 	}
 
 	@Override
-	public boolean complete(){
+	protected boolean checkcomplete(){
 		for(var x=0;x<World.scenario.size;x++)
 			for(var y=0;y<World.scenario.size;y++)
 				if(WorldScreen.see(new Point(x,y))&&Terrain.get(x,y).equals(terrain))

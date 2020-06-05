@@ -80,7 +80,7 @@ public class Town extends Location{
 			.round(Math.round(District.RADIUSMAX*1.5));
 	static final float HAPPINESSMAX=.1f;
 	static final float HAPPINESSMIN=-HAPPINESSMAX;
-	static final float HAPPINESSSTEP=.05f;
+	public static final float HAPPINESSSTEP=.05f;
 	static final float HAPPINESSDECAY=.001f;
 
 	/**
@@ -127,9 +127,11 @@ public class Town extends Location{
 	/**
 	 * Percent value to apply to work done.
 	 *
+	 * TODO see https://github.com/tukkek/javelin/issues/247
+	 *
 	 * @see Governor#work(float, District)
 	 */
-	float happiness=0;
+	public float happiness=0;
 
 	/**
 	 * Each Town has an initial random alignment.
@@ -273,8 +275,6 @@ public class Town extends Location{
 		int damage=RPG.randomize(4)+attacker.getel()/2;
 		if(damage>0) population=Math.max(1,population-damage);
 		setgovernor(new MonsterGovernor(this));
-		for(var q:quests)
-			q.cancel();
 		quests.clear();
 	}
 
@@ -288,7 +288,6 @@ public class Town extends Location{
 	@Override
 	public boolean interact(){
 		if(!super.interact()) return false;
-		if(completequests()) return true;
 		Squad.active.lasttown=this;
 		if(strike>0){
 			String riots=this+" is rioting!";
@@ -303,33 +302,6 @@ public class Town extends Location{
 			new TownScreen(this).show();
 		for(final Combatant c:Squad.active.members)
 			if(c.source.fasthealing>0) c.heal(c.maxhp,false);
-		return true;
-	}
-
-	boolean completequests(){
-		var s=Squad.active;
-		var completed=false;
-		for(var q:new ArrayList<>(quests)){
-			if(cancel(q)) continue;
-			if(!q.complete()) continue;
-			happiness+=HAPPINESSSTEP;
-			completed=true;
-			s.gold+=q.reward;
-			String notification="You have completed a quest ("+q+")!\n";
-			notification+="You are rewarded for your efforts with $"
-					+Javelin.format(q.reward)+"!\n";
-			notification+="Mood in "+this+" is now: "
-					+describehappiness().toLowerCase()+".";
-			Javelin.message(notification,true);
-			quests.remove(q);
-		}
-		return completed;
-	}
-
-	boolean cancel(Quest q){
-		if(!q.cancel()) return false;
-		quests.remove(q);
-		happiness-=HAPPINESSSTEP;
 		return true;
 	}
 
@@ -425,16 +397,14 @@ public class Town extends Location{
 	/** Ticks a day off active quests and generates new ones. */
 	public void updatequests(){
 		if(!World.scenario.quests||ishostile()) return;
-		for(var q:new ArrayList<>(quests)){
+		for(var q:new ArrayList<>(quests))
 			q.daysleft-=1;
-			cancel(q);
-		}
 		var rank=getrank().rank;
 		if(quests.size()<rank){
 			var q=Quest.generate(this);
 			if(q!=null){
 				quests.add(q);
-				events.add("New quest available: "+q+"!");
+				events.add("New quest available:\n  "+q);
 			}
 		}
 	}
@@ -534,5 +504,12 @@ public class Town extends Location{
 		if(!ishostile()) for(var e:events)
 			Javelin.message("News from "+this+"!\n"+e+'.',true);
 		events.clear();
+	}
+
+	/** Called when a {@link Squad} is present in Town. */
+	public void enter(){
+		for(var q:new ArrayList<>(quests))
+			q.complete();
+		report();
 	}
 }

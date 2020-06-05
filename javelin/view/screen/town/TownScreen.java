@@ -106,8 +106,8 @@ public class TownScreen extends PurchaseScreen{
 		if(!town.quests.isEmpty()){
 			info+="\n\nActive quests:\n";
 			var quests=town.quests.stream().sorted((a,b)->a.daysleft-b.daysleft)
-					.map(q->" - "+q+" ("+q.getdeadline()+", $"+Javelin.format(q.reward)
-							+" bounty)");
+					.map(q->"- "+q+", "+q.getdeadline()+", reward: "
+							+q.describereward().toLowerCase());
 			info+=String.join("\n",quests.collect(Collectors.toList()));
 		}
 		return info;

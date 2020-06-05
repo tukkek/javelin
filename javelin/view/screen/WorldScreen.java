@@ -134,9 +134,9 @@ public class WorldScreen extends BattleScreen{
 				Javelin.redraw();
 				return;
 			}
-			redraw();
 			var d=Squad.active.getdistrict();
-			if(d!=null) d.town.report();
+			if(d!=null) d.town.enter();
+			redraw();
 			Interface.userinterface.waiting=true;
 			final KeyEvent updatableUserAction=getUserInput();
 			if(MapPanel.overlay!=null) MapPanel.overlay.clear();
@@ -179,7 +179,6 @@ public class WorldScreen extends BattleScreen{
 		StateManager.save(false,StateManager.SAVEFILE);
 		endturn();
 		if(World.getall(Squad.class).isEmpty()) return;
-		updateplayerinformation();
 		if(Squad.active!=null) act();
 		messagepanel.clear();
 	}
@@ -190,12 +189,12 @@ public class WorldScreen extends BattleScreen{
 	}
 
 	void redraw(){
-		//		Javelin.app.switchScreen(this);
 		var h=JavelinApp.context.getsquadlocation();
 		if(h!=null){
 			center(h.x,h.y);
 			view(h.x,h.y);
 		}
+		updateplayerinformation();
 		Javelin.redraw();
 	}
 
@@ -204,9 +203,7 @@ public class WorldScreen extends BattleScreen{
 		Squad.active.seesurroudings();
 	}
 
-	/**
-	 * Marks coordinate as permanently visible.
-	 */
+	/** Marks coordinate as permanently visible. */
 	static public void discover(int x,int y){
 		if(!World.validatecoordinate(x,y)) return;
 		WorldScreen s=getcurrentscreen();

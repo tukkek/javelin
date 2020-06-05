@@ -53,6 +53,9 @@ public class Diplomacy implements Serializable{
 	/** Maximum amount of cards for {@link #hand}. */
 	public static final int HANDMAX=7;
 
+	/** TODO see https://github.com/tukkek/javelin/issues/247 */
+	static final boolean ENABLED=false;
+
 	/** Generated at campaign start of set by {@link StateManager#load()}. */
 	public static Diplomacy instance=null;
 
@@ -98,6 +101,7 @@ public class Diplomacy implements Serializable{
 	 * @see Town#generatereputation()
 	 */
 	static public int getdailyprogress(boolean randomize){
+		if(!ENABLED) return 0;
 		var total=0;
 		for(Town t:Town.gettowns())
 			if(!t.ishostile()){

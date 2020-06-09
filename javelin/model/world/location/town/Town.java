@@ -399,8 +399,7 @@ public class Town extends Location{
 		if(!World.scenario.quests||ishostile()) return;
 		for(var q:new ArrayList<>(quests))
 			q.daysleft-=1;
-		var rank=getrank().rank;
-		if(quests.size()<rank){
+		if(quests.size()<getrank().rank&&RPG.chancein(7)){
 			var q=Quest.generate(this);
 			if(q!=null){
 				quests.add(q);

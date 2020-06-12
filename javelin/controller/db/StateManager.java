@@ -23,7 +23,6 @@ import javelin.controller.event.urban.UrbanEvents;
 import javelin.controller.event.wild.WildEvents;
 import javelin.controller.wish.Ressurect;
 import javelin.model.Miniatures;
-import javelin.model.diplomacy.Diplomacy;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -113,7 +112,6 @@ public class StateManager{
 			writer.writeObject(OpenJournal.content);
 			writer.writeObject(WildEvents.instance);
 			writer.writeObject(UrbanEvents.instance);
-			writer.writeObject(Diplomacy.instance);
 			writer.writeObject(Miniatures.miniatures);
 			writer.flush();
 			writer.close();
@@ -155,7 +153,6 @@ public class StateManager{
 			OpenJournal.content=(String)stream.readObject();
 			WildEvents.instance=(EventDealer)stream.readObject();
 			UrbanEvents.instance=(UrbanEvents)stream.readObject();
-			Diplomacy.instance=(Diplomacy)stream.readObject();
 			Miniatures.miniatures=(ArrayList<Monster>)stream.readObject();
 			stream.close();
 			filestream.close();

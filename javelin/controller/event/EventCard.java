@@ -31,7 +31,6 @@ public abstract class EventCard{
 			terrain=Terrain.get(l.x,l.y);
 			hide=false;
 			bribe=false;
-			rewardreputation=true;
 		}
 
 		/** Constructor. */

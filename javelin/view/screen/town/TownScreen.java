@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
+import javelin.model.diplomacy.mandate.Mandate;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
@@ -25,6 +26,7 @@ public class TownScreen extends PurchaseScreen{
 	static final Option SETTLE=new Option("Settle worker",0,'s');
 	static final boolean DEBUGMANAGEMENT=false;
 	static final Option RENAME=new Option("Rename town",0,'r');
+	static final Option TREATISE=new Option("Claim treaty",0,'t');
 
 	class Manage extends ScreenOption{
 		public Manage(Town town){
@@ -46,6 +48,55 @@ public class TownScreen extends PurchaseScreen{
 		return "Welcome to "+t+"!";
 	}
 
+	class TreatyOption extends Option{
+		Mandate m;
+
+		public TreatyOption(Mandate m,char key){
+			super(m.name,0,key);
+			this.m=m;
+		}
+	}
+
+	class SelectTreaty extends SelectScreen{
+		List<Option> options;
+
+		public SelectTreaty(){
+			super("Select a treaty to implement:",TownScreen.this.town);
+			stayopen=false;
+			var treaties=town.diplomacy.treaties;
+			options=new ArrayList<>(treaties.size());
+			var i=0;
+			for(var t:treaties)
+				options.add(new TreatyOption(t,KEYS[i++]));
+		}
+
+		@Override
+		public String getCurrency(){
+			return "";
+		}
+
+		@Override
+		public String printinfo(){
+			return "";
+		}
+
+		@Override
+		public String printpriceinfo(Option o){
+			return "";
+		}
+
+		@Override
+		public List<Option> getoptions(){
+			return options;
+		}
+
+		@Override
+		public boolean select(Option o){
+			town.diplomacy.enact(((TreatyOption)o).m);
+			return true;
+		}
+	}
+
 	@Override
 	public boolean select(final Option o){
 		if(o instanceof ScreenOption){
@@ -61,6 +112,7 @@ public class TownScreen extends PurchaseScreen{
 			return true;
 		}
 		if(o==SETTLE) return retire(town);
+		if(o==TREATISE) new SelectTreaty().show();
 		stayopen=false;
 		return true;
 	}
@@ -85,6 +137,7 @@ public class TownScreen extends PurchaseScreen{
 		if(World.scenario.labormodifier>0) list.add(new Manage(town));
 		list.add(RENAME);
 		list.add(SETTLE);
+		if(town.diplomacy.claim()) list.add(TREATISE);
 		if(town.ishosting())
 			list.add(new TournamentScreenOption("Enter tournament",town,'t'));
 		return list;
@@ -102,24 +155,28 @@ public class TownScreen extends PurchaseScreen{
 
 	@Override
 	public String printinfo(){
-		var info="Your squad has $"+Javelin.format(Squad.active.gold)+".";
+		var info=new ArrayList<String>(0);
 		if(!town.quests.isEmpty()){
-			info+="\n\nActive quests:\n";
-			var quests=town.quests.stream().sorted((a,b)->a.daysleft-b.daysleft)
+			var quests="Active quests:\n";
+			quests+=town.quests.stream().sorted((a,b)->a.daysleft-b.daysleft)
 					.map(q->"- "+q+", "+q.getdeadline()+", reward: "
-							+q.describereward().toLowerCase());
-			info+=String.join("\n",quests.collect(Collectors.toList()));
+							+q.describereward().toLowerCase())
+					.collect(Collectors.joining("\n"));
+			info.add(quests);
 		}
-		return info;
+		var r=town.diplomacy;
+		if(!r.treaties.isEmpty()){
+			var treaties="Available treaties:\n";
+			treaties+=r.treaties.parallelStream().map(m->"- "+m)
+					.collect(Collectors.joining("\n"));
+			treaties+="\n\nReputation: "+r.describestatus().toLowerCase()+".";
+			info.add(treaties);
+		}
+		return String.join("\n\n",info);
 	}
 
 	@Override
 	protected Comparator<Option> sort(){
 		return (o1,o2)->o1.key.compareTo(o2.key);
-	}
-
-	@Override
-	protected boolean select(char feedback,List<Option> options){
-		return super.select(feedback,options);
 	}
 }

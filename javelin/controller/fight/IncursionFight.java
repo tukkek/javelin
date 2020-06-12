@@ -24,7 +24,6 @@ public class IncursionFight extends Fight{
 		meld=true;
 		hide=false;
 		canflee=true;
-		rewardreputation=true;
 		var d=i.getdistrict();
 		map=d==null?RPG.pick(Terrain.get(i.x,i.y).getmaps()):new TownMap(d.town);
 	}

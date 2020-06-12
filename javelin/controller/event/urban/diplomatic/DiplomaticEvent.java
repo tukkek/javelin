@@ -4,7 +4,7 @@ import java.util.List;
 
 import javelin.controller.event.urban.UrbanEvent;
 import javelin.controller.scenario.Scenario;
-import javelin.model.diplomacy.Diplomacy;
+import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
@@ -19,10 +19,5 @@ public abstract class DiplomaticEvent extends UrbanEvent{
 	/** Full constructor. */
 	public DiplomaticEvent(Town t,List<String> traits,Rank minimum){
 		super(t,traits,minimum);
-	}
-
-	@Override
-	public boolean validate(Squad s,int squadel){
-		return Diplomacy.instance!=null&&super.validate(s,squadel);
 	}
 }

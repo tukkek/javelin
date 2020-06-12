@@ -4,10 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javelin.controller.Point;
-import javelin.model.diplomacy.Diplomacy;
-import javelin.model.diplomacy.Relationship;
+import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.world.World;
 import javelin.model.world.location.town.District;
+import javelin.model.world.location.town.Town;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -19,10 +19,9 @@ public class RequestMap extends Mandate{
 	Set<Point> area=new HashSet<>();
 
 	/** Reflection constructor. */
-	public RequestMap(Relationship r){
-		super(r);
-		var t=r.town;
-		var radius=t.getdistrict().getradius()+target.getabsolutestatus()-1;
+	public RequestMap(Town t){
+		super(t);
+		var radius=t.getdistrict().getradius()*2;
 		for(var x=t.x-radius;x<=t.x+radius;x++)
 			for(var y=t.y-radius;y<=t.y+radius;y++){
 				var p=new Point(x,y);
@@ -36,7 +35,7 @@ public class RequestMap extends Mandate{
 
 	@Override
 	public boolean validate(Diplomacy d){
-		return target.getstatus()>=Relationship.FRIENDLY&&countundiscovered()>0;
+		return countundiscovered()>0;
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package javelin.model.diplomacy.mandate.influence;
 
-import javelin.model.diplomacy.Diplomacy;
-import javelin.model.diplomacy.Relationship;
+import javelin.model.town.diplomacy.Diplomacy;
+import javelin.model.world.location.town.Town;
 
 /**
  * Degrades a {@link Relationship} with a faction, with the possiblity of
@@ -11,8 +11,8 @@ import javelin.model.diplomacy.Relationship;
  */
 public class Insult extends ImproveRelationship{
 	/** Reflection constructor. */
-	public Insult(Relationship r){
-		super(r);
+	public Insult(Town t){
+		super(t);
 		targetbonus=-1;
 		compatiblebonus=-1;
 		incompatiblebonus=+1;
@@ -20,7 +20,7 @@ public class Insult extends ImproveRelationship{
 
 	@Override
 	public boolean validate(Diplomacy d){
-		return target.getstatus()>Relationship.HOSTILE;
+		return d.town!=target&&target.diplomacy.getstatus()>-1;
 	}
 
 	@Override

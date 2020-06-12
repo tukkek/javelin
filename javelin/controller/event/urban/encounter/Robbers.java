@@ -77,7 +77,6 @@ public class Robbers extends UrbanEncounter{
 	protected EventFight fight(Squad s,Combatants foes){
 		var f=super.fight(s,foes);
 		if(town.traits.contains(Trait.MILITARY)&&RPG.r(1,20)<=town.population){
-			f.rewardreputation=false;
 			var rank=town.getrank().toString().toLowerCase();
 			notify("A group of "+rank+" guards comes to your aid!");
 			var guards=new Guards(town).generatefoes();

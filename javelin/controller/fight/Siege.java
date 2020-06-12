@@ -35,7 +35,6 @@ public class Siege extends Fight{
 		hide=false;
 		meld=true;
 		terrain=Terrain.get(l.x,l.y);
-		rewardreputation=true;
 		var d=l.getdistrict();
 		if(d!=null) map=new TownMap(d.town);
 	}

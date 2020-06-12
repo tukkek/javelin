@@ -7,6 +7,7 @@ import javelin.controller.event.urban.UrbanEvent;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;
+import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
@@ -18,7 +19,7 @@ import javelin.old.RPG;
  * A {@link Town#population} is so livid that they retake their home!
  *
  * @author alex
- * @see Town#REVOLTING
+ * @see Diplomacy#REVOLTING
  */
 public class Revolt extends UrbanEvent{
 	List<Location> targets=town.getdistrict().getlocations().stream()
@@ -38,8 +39,8 @@ public class Revolt extends UrbanEvent{
 
 	@Override
 	public boolean validate(Squad s,int squadel){
-		return town.describehappiness()==Town.REVOLTING&&!targets.isEmpty()
-				&&mob!=null&&super.validate(s,squadel);
+		return town.diplomacy.reputation<0&&!targets.isEmpty()&&mob!=null
+				&&super.validate(s,squadel);
 	}
 
 	@Override

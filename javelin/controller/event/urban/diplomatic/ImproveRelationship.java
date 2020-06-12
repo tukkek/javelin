@@ -1,7 +1,5 @@
 package javelin.controller.event.urban.diplomatic;
 
-import javelin.model.diplomacy.Diplomacy;
-import javelin.model.diplomacy.Relationship;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
@@ -13,10 +11,6 @@ import javelin.model.world.location.town.Town;
  */
 public class ImproveRelationship extends DiplomaticEvent{
 	/**
-	 * Will invalidate if current {@link Relationship} status sits at this level.
-	 */
-	protected int forbid=Relationship.ALLY;
-	/**
 	 * How much to change the relationship for.
 	 *
 	 * @see Relationship#changestatus(int)
@@ -25,7 +19,7 @@ public class ImproveRelationship extends DiplomaticEvent{
 	/** Representation of what is happening to the relationship status. */
 	protected String description="improves";
 
-	Relationship relationship;
+	Town relationship;
 
 	/** Reflection constructor. */
 	public ImproveRelationship(Town t){
@@ -34,17 +28,15 @@ public class ImproveRelationship extends DiplomaticEvent{
 
 	@Override
 	public boolean validate(Squad s,int squadel){
-		var d=Diplomacy.instance;
-		if(d==null) return false;
-		relationship=d.getdiscovered().get(town);
-		if(relationship==null||relationship.getstatus()==forbid) return false;
+		relationship=town;
+		if(relationship==null) return false;
 		return super.validate(s,squadel);
 	}
 
 	@Override
 	public void happen(Squad s){
-		relationship.changestatus(change);
-		var status=relationship.describestatus().toLowerCase();
+		relationship.diplomacy.reputation+=town.population*change;
+		var status=relationship.diplomacy.describestatus().toLowerCase();
 		notify("Relationship with "+town+" spontaneously "+description+" to: "
 				+status+"!");
 	}

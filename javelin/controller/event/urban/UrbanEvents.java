@@ -72,20 +72,14 @@ public class UrbanEvents extends EventDealer{
 
 	@Override
 	protected EventDeck choosedeck(){
-		var happiness=generating.describehappiness();
 		List<EventDeck> choices;
-		if(happiness==Town.HAPPY)
-			choices=List.of(positive,positive,positive,neutral,negative);
-		else if(happiness==Town.CONTENT)
+		var happiness=generating.diplomacy.getstatus();
+		if(happiness>+1)
 			choices=List.of(positive,positive,neutral,negative);
-		else if(happiness==Town.NEUTRAL)
-			choices=List.of(positive,neutral,negative);
-		else if(happiness==Town.UNHAPPY)
+		else if(happiness<-1)
 			choices=List.of(positive,neutral,negative,negative);
-		else if(happiness==Town.REVOLTING)
-			choices=List.of(positive,neutral,negative,negative,negative);
 		else
-			throw new RuntimeException("Unknown happines: "+happiness);
+			choices=List.of(positive,neutral,negative);
 		return RPG.pick(choices);
 	}
 

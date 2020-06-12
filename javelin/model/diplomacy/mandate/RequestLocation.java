@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.model.diplomacy.Diplomacy;
-import javelin.model.diplomacy.Relationship;
+import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
+import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
 
 /**
@@ -18,15 +18,14 @@ import javelin.old.RPG;
  */
 public class RequestLocation extends Mandate{
 	/** Reflection constructor. */
-	public RequestLocation(Relationship r){
-		super(r);
+	public RequestLocation(Town t){
+		super(t);
 	}
 
 	boolean validate(Actor a){
-		var t=target.town;
-		var realm=t.realm;
+		var realm=target.realm;
 		if(realm==null||!realm.equals(a.realm)) return false;
-		var population=target.town.population;
+		var population=target.population;
 		var el=a.getel(population);
 		if(el==null||el>population) return false;
 		return !a.see();
@@ -38,10 +37,7 @@ public class RequestLocation extends Mandate{
 	}
 
 	int getamount(){
-		int amount=target.getabsolutestatus()-1;
-		if(amount<=0) return amount;
-		amount+=RPG.randomize(amount);
-		return Math.min(gettargets().size(),amount);
+		return Math.min(gettargets().size(),target.getrank().rank);
 	}
 
 	@Override
@@ -51,7 +47,7 @@ public class RequestLocation extends Mandate{
 
 	@Override
 	public String getname(){
-		return "Reveal location(s) aligned with "+target.town;
+		return "Reveal location(s) aligned with "+target;
 	}
 
 	@Override

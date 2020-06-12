@@ -16,6 +16,7 @@ import javelin.controller.Point;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
+import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
@@ -37,6 +38,7 @@ import javelin.view.screen.WorldScreen;
  * most of them require you to come back in that time frame to collect your
  * reward.
  *
+ * @see Diplomacy
  * @author alex
  */
 public abstract class Quest implements Serializable{
@@ -294,24 +296,32 @@ public abstract class Quest implements Serializable{
 		return item==null?"$"+Javelin.format(gold):item.toString();
 	}
 
+	int modifyreputation(){
+		var gain=town.population/town.getrank().rank;
+		return gain+RPG.randomize(gain);
+	}
+
 	/**
 	 * Checks if the quest is expired or invalid, whether the objective is
 	 * completed and then rewards the player. Removes itself from
 	 * {@link Town#quests} as necessary.
 	 */
-	public void complete(){
+	public void update(){
 		if(cancel()){
 			town.quests.remove(this);
-			town.happiness-=Town.HAPPINESSSTEP;
-			town.events.add("Quest expired: "+name);
-			return;
-		}
-		if(!checkcomplete()) return;
-		town.happiness+=Town.HAPPINESSSTEP;
+			town.diplomacy.reputation-=modifyreputation();
+			town.events.add("Quest expired: "+name+".");
+		}else if(checkcomplete()) complete();
+	}
+
+	/** Completes the quest succesfully. */
+	public void complete(){
+		town.diplomacy.reputation+=modifyreputation();
 		var m="You have completed a quest ("+name+")!\n";
 		m+=RewardCalculator.rewardxp(Squad.active.members,el,1)+"\n";
 		m+="You are rewarded for your efforts with: "+describereward()+"!\n";
-		m+="Mood in "+town+" is now: "+town.describehappiness().toLowerCase()+".";
+		var s=town.diplomacy.describestatus().toLowerCase();
+		m+="Mood in "+town+" is now: "+s+".";
 		Javelin.message(m,true);
 		Squad.active.gold+=gold;
 		if(item!=null) item.grab();

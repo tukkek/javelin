@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.Point;
@@ -25,8 +26,8 @@ import javelin.controller.scenario.Campaign;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
-import javelin.model.diplomacy.Diplomacy;
-import javelin.model.diplomacy.Relationship;
+import javelin.model.diplomacy.mandate.Mandate;
+import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.unit.Alignment;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -66,22 +67,8 @@ import javelin.view.screen.town.TownScreen;
  * @author alex
  */
 public class Town extends Location{
-	/** @see #describehappiness() */
-	public static final String NEUTRAL="Neutral";
-	/** @see #describehappiness() */
-	public static final String UNHAPPY="Unhappy";
-	/** @see #describehappiness() */
-	public static final String REVOLTING="Revolting";
-	/** @see #describehappiness() */
-	public static final String CONTENT="Content";
-	/** @see #describehappiness() */
-	public static final String HAPPY="Happy";
 	static final int MINIMUMTOWNDISTANCE=Math
 			.round(Math.round(District.RADIUSMAX*1.5));
-	static final float HAPPINESSMAX=.1f;
-	static final float HAPPINESSMIN=-HAPPINESSMAX;
-	public static final float HAPPINESSSTEP=.05f;
-	static final float HAPPINESSDECAY=.001f;
 
 	/**
 	 * How much {@link Labor} a single work produces in one day (
@@ -123,16 +110,6 @@ public class Town extends Location{
 	 * TODO is not actually affecting economy right now
 	 */
 	public Set<Resource> resources=new HashSet<>(0);
-
-	/**
-	 * Percent value to apply to work done.
-	 *
-	 * TODO see https://github.com/tukkek/javelin/issues/247
-	 *
-	 * @see Governor#work(float, District)
-	 */
-	public float happiness=0;
-
 	/**
 	 * Each Town has an initial random alignment.
 	 *
@@ -154,6 +131,8 @@ public class Town extends Location{
 	 * TODO add a message log in 2.0
 	 */
 	public List<String> events=new ArrayList<>();
+	/** {@link Mandate} options and diplomatic states. */
+	public Diplomacy diplomacy=new Diplomacy(this);
 
 	/** @param p Spot to place town in the {@link World}. */
 	public Town(Point p,Realm r){
@@ -234,22 +213,41 @@ public class Town extends Location{
 	public void turn(long time,WorldScreen screen){
 		if(ishosting()) exhibitions.remove(0);
 		work();
-		if(happiness!=0) happiness+=happiness>0?-HAPPINESSDECAY:+HAPPINESSDECAY;
 		updatequests();
+		diplomacy.turn();
 	}
 
 	void work(){
 		if(strike>0){
 			strike-=1;
 			if(strike==0&&notifyplayer())
-				Javelin.message(this+" resumes its normal labors.",true);
-			return;
+				events.add(this+" resumes its normal labors.");
+		}else{
+			var labor=getdailylabor(true);
+			if(labor>0) getgovernor().work(labor,getdistrict());
 		}
-		float labor=population+RPG.randomize(population)/10f;
-		labor*=World.scenario.boost*World.scenario.labormodifier;
-		if(labor<=0) return;
-		labor*=DAILYLABOR*(1+gethappiness());
-		getgovernor().work(labor,getdistrict());
+	}
+
+	/**
+	 * @param randomize If <code>true</code>, result is modified by
+	 *          {@link RPG#randomize(int)}.
+	 * @return Daily amount of work done.
+	 * @see Labor#work(float)
+	 */
+	public float getdailylabor(boolean randomize){
+		var resources=1+this.resources.size()*0.1f;
+		var labor=population*DAILYLABOR*resources*World.scenario.boost
+				*World.scenario.labormodifier;
+		if(randomize) labor+=RPG.randomize(Math.round(labor))/10f;
+		return labor;
+	}
+
+	/**
+	 * @return Similar to {@link #getdailylabor(boolean)} but an integer for
+	 *         easier representation on UI.
+	 */
+	public int getweeklylabor(boolean randomize){
+		return Math.round(getdailylabor(randomize)*7);
 	}
 
 	/**
@@ -403,53 +401,9 @@ public class Town extends Location{
 			var q=Quest.generate(this);
 			if(q!=null){
 				quests.add(q);
-				events.add("New quest available:\n  "+q);
+				events.add("New quest available: "+q+".");
 			}
 		}
-	}
-
-	/** @return Human representation of {@link #happiness}. */
-	public String describehappiness(){
-		if(happiness>=HAPPINESSMAX) return HAPPY;
-		if(happiness>=HAPPINESSSTEP) return CONTENT;
-		if(happiness<=-HAPPINESSMAX) return REVOLTING;
-		if(happiness<=-HAPPINESSSTEP) return UNHAPPY;
-		return NEUTRAL;
-	}
-
-	/**
-	 * @return {@link #happiness} but bound to {@link #HAPPINESSMAX} either way.
-	 */
-	float gethappiness(){
-		if(happiness>HAPPINESSMAX) return HAPPINESSMAX;
-		if(happiness<-HAPPINESSMAX) return -HAPPINESSMAX;
-		return happiness;
-	}
-
-	/** Should only be used for debug purposes. */
-	@Deprecated
-	public void sethappiness(float happiness){
-		this.happiness=happiness;
-	}
-
-	/**
-	 * Each town generates {@link Diplomacy#reputation} according to three
-	 * factors: number of {@link #resources} and {@link #happiness} (both of which
-	 * only count if the town is not hostile) and its {@link Relationship#status}.
-	 *
-	 * @return 0 or more reputation points based on {@link #happiness} and
-	 *         {@link #resources}. Reputation never goes down so negative values
-	 *         are returned as zero.
-	 * @see #ishostile()
-	 * @see Diplomacy#getdiscovered()
-	 */
-	public int generatereputation(){
-		var r=Diplomacy.instance.getdiscovered().get(this);
-		if(r==null) return 0;
-		var reputation=r.getstatus();
-		if(!ishostile())
-			reputation+=resources.size()+Math.round(gethappiness()/HAPPINESSSTEP);
-		return Math.max(0,reputation);
 	}
 
 	/**
@@ -501,14 +455,22 @@ public class Town extends Location{
 	/** Displays relevant town news. */
 	public void report(){
 		if(!ishostile()) for(var e:events)
-			Javelin.message("News from "+this+"!\n"+e+'.',true);
+			Javelin.message("News from "+this+"!\n"+e,true);
 		events.clear();
 	}
 
 	/** Called when a {@link Squad} is present in Town. */
 	public void enter(){
 		for(var q:new ArrayList<>(quests))
-			q.complete();
+			q.update();
+		diplomacy.validate();
 		report();
+	}
+
+	/** @return All discovered towns. */
+	static public List<Town> getdiscovered(){
+		var d=World.seed.discovered;
+		return gettowns().stream().filter(t->d.contains(t.getlocation()))
+				.collect(Collectors.toList());
 	}
 }

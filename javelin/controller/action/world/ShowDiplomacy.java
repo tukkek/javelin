@@ -1,8 +1,6 @@
 package javelin.controller.action.world;
 
-import javelin.Javelin;
-import javelin.model.diplomacy.Diplomacy;
-import javelin.model.world.World;
+import javelin.model.town.diplomacy.Diplomacy;
 import javelin.view.frame.DiplomacyScreen;
 import javelin.view.screen.WorldScreen;
 
@@ -19,12 +17,6 @@ public class ShowDiplomacy extends WorldAction{
 
 	@Override
 	public void perform(WorldScreen screen){
-		var d=Diplomacy.instance;
-		if(d==null){
-			var mode=World.scenario.toString().toLowerCase();
-			Javelin.message("Diplomacy not enabled on "+mode+" mode...",false);
-			return;
-		}
 		DiplomacyScreen.open();
 	}
 }

@@ -15,7 +15,6 @@ import javelin.controller.action.Action;
 import javelin.controller.action.world.WorldMove;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.RepeatTurn;
@@ -38,7 +37,6 @@ import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.enchantment.compulsion.DominateMonster.Dominated;
 import javelin.model.unit.skill.Diplomacy;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.old.RPG;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.BattleScreen;
 
@@ -72,11 +70,6 @@ public abstract class Fight{
 	 * If <code>false</code> will not reward gold after victory.
 	 */
 	public boolean rewardgold=true;
-	/**
-	 * If <code>true</code> will reward reputation according to
-	 * {@link Difficulty}.
-	 */
-	public boolean rewardreputation=false;
 	/**
 	 * <code>true</code> if there is a chance for the {@link Squad} to hide and
 	 * avoid this combat. This doesn't make sense for {@link Siege}s for example
@@ -186,18 +179,6 @@ public abstract class Fight{
 			var gold=getgoldreward(defeated);
 			Squad.active.gold+=gold;
 			rewards+=" Party receives $"+Javelin.format(gold)+"!";
-		}
-		var d=javelin.model.diplomacy.Diplomacy.instance;
-		if(rewardreputation&&d!=null){
-			var blueel=ChallengeCalculator.calculateel(Fight.originalblueteam);
-			var redel=ChallengeCalculator.calculateel(Fight.originalredteam);
-			var fightel=getel(blueel);
-			if(fightel!=null&&fightel>redel) redel=fightel;
-			var reputation=redel-blueel-Difficulty.MODERATE;
-			if(reputation>0){
-				d.reputation+=reputation+RPG.randomize(reputation);
-				rewards+=" You gain "+reputation+" reputation!";
-			}
 		}
 		return rewards+"\n";
 	}

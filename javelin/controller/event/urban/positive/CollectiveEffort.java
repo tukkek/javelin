@@ -29,7 +29,7 @@ public class CollectiveEffort extends UrbanEvent{
 	@Override
 	public boolean validate(Squad s,int squadel){
 		return s!=null&&!projects.isEmpty()&&town.strike==0
-				&&town.describehappiness()!=Town.REVOLTING&&super.validate(s,squadel);
+				&&town.diplomacy.getstatus()>0&&super.validate(s,squadel);
 	}
 
 	@Override

@@ -49,7 +49,6 @@ public class Miniatures{
 			period=Javelin.PERIODNOON;
 			rewardgold=false;
 			rewardgold=false;
-			rewardreputation=false;
 			rewardxp=false;
 			weather=Weather.CLEAR;
 			onready.add(()->{

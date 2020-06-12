@@ -23,8 +23,7 @@ public class Migration extends UrbanEvent{
 	}
 
 	static boolean isunhappy(Town t){
-		var h=t.describehappiness();
-		return h==Town.REVOLTING||h==Town.UNHAPPY;
+		return t.diplomacy.reputation<0;
 	}
 
 	@Override

@@ -2,10 +2,10 @@ package javelin.model.diplomacy.mandate;
 
 import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
-import javelin.model.diplomacy.Diplomacy;
-import javelin.model.diplomacy.Relationship;
+import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.District;
+import javelin.model.world.location.town.Town;
 
 /**
  * Adds gold to a {@link Squad} standing in the respective {@link District}.
@@ -14,21 +14,18 @@ import javelin.model.world.location.town.District;
  */
 public class RequestGold extends Mandate{
 	/** Reflection constructor. */
-	public RequestGold(Relationship r){
-		super(r);
+	public RequestGold(Town t){
+		super(t);
 	}
 
 	int getgold(){
-		var population=target.town.population;
-		int gold=RewardCalculator.getgold(population-1,population+1);
-		if(target.getstatus()==Relationship.INDIFFERENT) gold=Javelin.round(gold/2);
-		return gold;
+		var p=target.population;
+		return Javelin.round(RewardCalculator.getgold(p-1,p+1));
 	}
 
 	@Override
 	public boolean validate(Diplomacy d){
-		return target.getstatus()>=Relationship.INDIFFERENT&&getgold()!=0
-				&&getsquad()!=null;
+		return getgold()>0&&getsquad()!=null;
 	}
 
 	@Override

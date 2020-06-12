@@ -4,8 +4,7 @@ import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.terrain.Terrain;
-import javelin.model.diplomacy.Diplomacy;
-import javelin.model.diplomacy.Relationship;
+import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -22,15 +21,14 @@ import javelin.old.RPG;
  */
 public class RequestAlly extends Mandate{
 	/** Reflection constructor. */
-	public RequestAlly(Relationship r){
-		super(r);
+	public RequestAlly(Town t){
+		super(t);
 	}
 
 	Monster getally(){
-		var l=target.town.getlocation();
+		var l=target.getlocation();
 		var all=Terrain.get(l.x,l.y).getmonsters();
-		var el=target.town.population+target.getstatus()-Relationship.ALLY;
-		for(;el>0;el--){
+		for(var el=target.population;el>0;el--){
 			final var cr=el;
 			var candidates=all.stream().filter(m->m.cr==cr)
 					.collect(Collectors.toList());

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.model.diplomacy.Diplomacy;
-import javelin.model.diplomacy.Relationship;
 import javelin.model.diplomacy.mandate.Mandate;
+import javelin.model.town.diplomacy.Diplomacy;
+import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
 
 /**
@@ -24,21 +24,21 @@ public class ImproveRelationship extends Mandate{
 	 * Possible relationship bonus/penalty to apply to factions compatible with
 	 * the target.
 	 */
-	protected int compatiblebonus=+1;
+	protected float compatiblebonus=1.5f;
 	/**
 	 * Possible relationship bonus/penalty to apply to factions incompatible with
 	 * the target.
 	 */
-	protected int incompatiblebonus=-1;
+	protected float incompatiblebonus=.5f;
 
 	/** Reflection constructor. */
-	public ImproveRelationship(Relationship r){
-		super(r);
+	public ImproveRelationship(Town t){
+		super(t);
 	}
 
 	@Override
 	public boolean validate(Diplomacy d){
-		return target.getstatus()<Relationship.ALLY;
+		return d.town!=target&&target.diplomacy.getstatus()<1;
 	}
 
 	@Override
@@ -48,31 +48,31 @@ public class ImproveRelationship extends Mandate{
 
 	@Override
 	public void act(Diplomacy d){
-		target.changestatus(targetbonus);
-		var a=target.town.alignment;
-		var relationships=d.getdiscovered();
+		target.diplomacy.reputation+=d.town.population*targetbonus;
+		var a=target.alignment;
+		var relationships=Town.getdiscovered();
 		var compatible=new ArrayList<String>(0);
 		var incompatible=new ArrayList<String>(0);
-		for(var t:relationships.keySet()){
-			if(t==target.town) continue;
+		for(var t:relationships){
+			if(t==target) continue;
 			if(t.alignment.iscompatible(a)){
 				if(RPG.chancein(INDIRECTCHANCEIN)){
-					relationships.get(t).changestatus(compatiblebonus);
+					t.diplomacy.reputation+=d.town.population*compatiblebonus;
 					compatible.add(t.toString());
 				}
 			}else if(t.alignment.isincompatible(a)&&RPG.chancein(INDIRECTCHANCEIN)){
-				relationships.get(t).changestatus(incompatiblebonus);
+				t.diplomacy.reputation+=d.town.population*incompatiblebonus;
 				incompatible.add(t.toString());
 			}
 		}
 		var result="New relationship status with "+target+": "
-				+target.describestatus().toLowerCase()+"!";
+				+target.diplomacy.describestatus().toLowerCase()+"!";
 		result+=react(compatible,compatiblebonus);
 		result+=react(incompatible,incompatiblebonus);
 		Javelin.message(result,true);
 	}
 
-	static String react(List<String> factions,int bonus){
+	static String react(List<String> factions,float bonus){
 		if(factions.isEmpty()) return "";
 		var reaction=bonus>0?"positively":"negatively";
 		return "\nThe following factions reacted "+reaction+" to this action: "

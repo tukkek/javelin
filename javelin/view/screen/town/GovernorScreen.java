@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import javelin.Debug;
 import javelin.controller.action.world.meta.help.Guide;
-import javelin.model.diplomacy.Diplomacy;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.view.screen.Option;
@@ -97,23 +96,16 @@ public class GovernorScreen extends SelectScreen{
 				traits+=trait+", ";
 			info+=traits.substring(0,traits.length()-2)+".";
 		}
-		float production=t.population*Town.DAILYLABOR;
-		info+="\n  Production: "
-				+String.format(production>=1?"%1.0f":"%.1f",production)
-				+" labor per day (on average).";
+		var production=t.getweeklylabor(false);
+		info+="\n  Production: "+production+" labor/week (on average).";
 		info+="\n  Resources: ";
 		if(town.resources.isEmpty())
 			info+="none.";
 		else
 			info+=town.resources.stream().map(r->r.name.toLowerCase()).sorted()
 					.collect(Collectors.joining(", "))+".";
-		info+="\n  Mood: "+t.describehappiness().toLowerCase()+".";
-		if(Diplomacy.instance!=null){
-			var status=Diplomacy.instance.getdiscovered().get(town).describestatus()
-					.toLowerCase();
-			info+="\n  Diplomatic status: "+status+".";
-			info+="\n  Reputation: "+t.generatereputation()+" per day (on average).";
-		}
+		info+="\n  Alignment: "+t.diplomacy.describealignment().toLowerCase()+".";
+		info+="\n  Reputation: "+t.diplomacy.describestatus().toLowerCase()+".";
 		return info;
 	}
 

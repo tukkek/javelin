@@ -1,6 +1,6 @@
 package javelin.controller.event.urban.diplomatic;
 
-import javelin.model.diplomacy.Diplomacy;
+import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
@@ -20,18 +20,13 @@ public class Badmouth extends DiplomaticEvent{
 
 	@Override
 	public boolean validate(Squad s,int squadel){
-		if(!super.validate(s,squadel)||Diplomacy.instance.reputation==0)
-			return false;
-		var h=town.describehappiness();
-		return h==Town.UNHAPPY||h==Town.REVOLTING;
+		return super.validate(s,squadel)&&town.diplomacy.getstatus()>-1;
 	}
 
 	@Override
 	public void happen(Squad s){
 		var reputation=town.population+RPG.randomize(town.population);
-		reputation=Math.min(reputation,Diplomacy.instance.reputation);
-		Diplomacy.instance.reputation-=reputation;
-		notify("Someone in "+town+" is badmouthing you!\n"+"You lose "+reputation
-				+" reputation.");
+		town.diplomacy.reputation-=reputation;
+		notify("Someone in "+town+" is badmouthing you!\nYou lose reputation!");
 	}
 }

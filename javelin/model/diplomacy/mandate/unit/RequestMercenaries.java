@@ -3,10 +3,10 @@ package javelin.model.diplomacy.mandate.unit;
 import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.terrain.Terrain;
-import javelin.model.diplomacy.Diplomacy;
-import javelin.model.diplomacy.Relationship;
 import javelin.model.diplomacy.mandate.Mandate;
+import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.world.location.town.District;
+import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
 
 /**
@@ -17,21 +17,20 @@ import javelin.old.RPG;
  */
 public class RequestMercenaries extends Mandate{
 	/** Reflection constructor. */
-	public RequestMercenaries(Relationship r){
-		super(r);
+	public RequestMercenaries(Town t){
+		super(t);
 	}
 
 	@Override
 	public boolean validate(Diplomacy d){
-		return target.getstatus()>=Relationship.INDIFFERENT&&getsquad()!=null
-				&&getmercenaries()!=null;
+		return getsquad()!=null&&getmercenaries()!=null;
 	}
 
 	Encounter getmercenaries(){
-		var l=target.town.getlocation();
+		var l=target.getlocation();
 		var t=Terrain.get(l.x,l.y).name;
 		var mercenaries=Organization.ENCOUNTERSBYTERRAIN.get(t)
-				.get(target.town.population);
+				.get(target.population);
 		return mercenaries==null||mercenaries.isEmpty()?null:RPG.pick(mercenaries);
 	}
 

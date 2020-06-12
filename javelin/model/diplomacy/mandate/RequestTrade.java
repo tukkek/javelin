@@ -3,8 +3,7 @@ package javelin.model.diplomacy.mandate;
 import java.util.ArrayList;
 
 import javelin.Javelin;
-import javelin.model.diplomacy.Diplomacy;
-import javelin.model.diplomacy.Relationship;
+import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.world.location.ResourceSite.Resource;
 import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
@@ -19,13 +18,12 @@ public class RequestTrade extends Mandate{
 	Resource type;
 
 	/** Reflection constructor. */
-	public RequestTrade(Relationship r){
-		super(r);
-		var candidates=RPG
-				.shuffle(new ArrayList<>(Diplomacy.instance.getdiscovered().keySet()));
-		candidates.remove(r.town);
+	public RequestTrade(Town t){
+		super(t);
+		var candidates=RPG.shuffle(new ArrayList<>(Town.getdiscovered()));
+		candidates.remove(t);
 		for(var c:candidates)
-			if(!c.ishostile()) for(var type:r.town.resources)
+			if(!c.ishostile()) for(var type:t.resources)
 				if(!c.resources.contains(type)){
 					destination=c;
 					this.type=type;
@@ -35,8 +33,8 @@ public class RequestTrade extends Mandate{
 
 	@Override
 	public boolean validate(Diplomacy d){
-		return target.getstatus()==Relationship.ALLY&&destination!=null&&type!=null
-				&&target.town.resources.contains(type)
+		return target.diplomacy.getstatus()>=0&&destination!=null&&type!=null
+				&&target.resources.contains(type)
 				&&!destination.resources.contains(type);
 	}
 
@@ -49,13 +47,11 @@ public class RequestTrade extends Mandate{
 	@Override
 	public void act(Diplomacy d){
 		destination.resources.add(type);
-		var relationship=Diplomacy.instance.getdiscovered().get(destination);
 		String message="Trade route established, "+target+" gets "
 				+type.toString().toLowerCase()+"!";
-		if(relationship!=null&&relationship.changestatus(+1)){
-			var status=relationship.describestatus().toLowerCase();
-			message+="\nNew relationship status with "+target+": "+status+".";
-		}
+		destination.diplomacy.reputation+=d.town.population;
+		var status=destination.diplomacy.describestatus().toLowerCase();
+		message+="\nNew relationship status with "+target+": "+status+".";
 		Javelin.message(message,true);
 	}
 }

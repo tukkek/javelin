@@ -1,8 +1,7 @@
 package javelin.model.diplomacy.mandate;
 
 import javelin.Javelin;
-import javelin.model.diplomacy.Diplomacy;
-import javelin.model.diplomacy.Relationship;
+import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.unit.Alignment;
 import javelin.model.world.location.town.Town;
 
@@ -13,13 +12,13 @@ import javelin.model.world.location.town.Town;
  */
 public class RevealAlignment extends Mandate{
 	/** Reflection constructor. */
-	public RevealAlignment(Relationship r){
-		super(r);
+	public RevealAlignment(Town t){
+		super(t);
 	}
 
 	@Override
 	public boolean validate(Diplomacy d){
-		return !target.showalignment;
+		return !target.diplomacy.showalignment;
 	}
 
 	@Override
@@ -31,7 +30,7 @@ public class RevealAlignment extends Mandate{
 	public void act(Diplomacy d){
 		changealignment();
 		String result="Alignment for "+target+" is: "
-				+target.describealignment().toLowerCase()+".";
+				+target.diplomacy.describealignment().toLowerCase()+".";
 		Javelin.message(result,true);
 	}
 
@@ -39,6 +38,6 @@ public class RevealAlignment extends Mandate{
 	 * Sets {@link Relationship#showalignment} or {@link Relationship#showmorals}.
 	 */
 	protected void changealignment(){
-		target.showalignment=true;
+		target.diplomacy.showalignment=true;
 	}
 }

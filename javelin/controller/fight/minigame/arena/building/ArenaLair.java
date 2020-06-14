@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.arena.ArenaMinigame;
 import javelin.controller.generator.encounter.EncounterGenerator;
@@ -81,12 +80,8 @@ public class ArenaLair extends ArenaBuilding{
 		int levelmin=level*5+1;
 		int levelmax=levelmin+4;
 		while(hires.size()<OPTIONS)
-			try{
-				hires.add(EncounterGenerator.generate(RPG.r(levelmin,levelmax),
-						Arrays.asList(Terrain.ALL)));
-			}catch(GaveUp e){
-				continue;
-			}
+			hires.add(EncounterGenerator.generate(RPG.r(levelmin,levelmax),
+					Arrays.asList(Terrain.ALL)));
 	}
 
 	@Override

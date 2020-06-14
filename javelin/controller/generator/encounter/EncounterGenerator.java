@@ -6,7 +6,6 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.db.EncounterIndex;
 import javelin.controller.db.reader.fields.Organization;
-import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
@@ -27,8 +26,37 @@ import javelin.old.RPG;
  * @author alex
  */
 public class EncounterGenerator{
-	private static final int MAXSIZEDIFFERENCE=5;
+	static final int MAXSIZEDIFFERENCE=5;
 	static final int MAXTRIES=1000;
+	static final boolean PRINTINFO=false;
+
+	static int minel=Integer.MIN_VALUE;
+	static int maxel=Integer.MAX_VALUE;
+
+	/**
+	 * TODO ideally at some point here would use {@link Terrain#ALL} but currently
+	 * {@link Terrain#WATER} can't even reliably generate encounters with EL less
+	 * than 2, so clearly some work has got to go into adding low-level aquatic
+	 * enemies first.
+	 */
+	static int checklimit(int baseline,int step){
+		String failure=null;
+		for(var el=baseline;;el+=step)
+			for(var t:Terrain.NONWATER){
+				if(Javelin.DEBUG&&PRINTINFO)
+					failure=String.format("Failure: %s el%s",t,el);
+				if(EncounterGenerator.generate(el,t)==null){
+					if(failure!=null) System.out.println(failure);
+					return el-step;
+				}
+			}
+	}
+
+	static{
+		minel=checklimit(0,-1);
+		maxel=checklimit(0,+1);
+		System.out.println(List.of("minel",minel,"maxel",maxel));
+	}
 
 	/**
 	 * @param el Target encounter level - will work around this is cannot generate
@@ -37,27 +65,27 @@ public class EncounterGenerator{
 	 *          example not when generation a
 	 *          {@link javelin.model.world.location.Location#garrison}, which uses
 	 *          the local terrain instead.
-	 * @return Enemy units for an encounter.
-	 * @throws GaveUp After too many tries without result, even relaxing the given
-	 *           EL parameter.
+	 * @return Enemy units for an encounter. <code>null</code> should not be
+	 *         thrown to external calls of this class, as Encounter Levels should
+	 *         be padded to safety.
 	 */
-	public static Combatants generate(int el,List<Terrain> terrains)
-			throws GaveUp{
+	public static Combatants generate(int el,List<Terrain> terrains){
+		if(el<minel) el=minel;
+		if(el>maxel) el=maxel;
 		Combatants encounter=null;
 		for(int i=0;i<MAXTRIES;i++){
 			encounter=select(el,terrains);
 			if(encounter==null) continue;
-			if(Javelin.app.fight!=null&&!Javelin.app.fight.validate(encounter))
-				continue;
-			return encounter;
+			var f=Javelin.app.fight;
+			if(f==null||f.validate(encounter)) return encounter;
 		}
-		throw new GaveUp();
+		return null;
 	}
 
 	static Combatants select(int elp,List<Terrain> terrains){
 		ArrayList<Integer> popper=new ArrayList<>();
 		popper.add(elp);
-		while(RPG.r(0,1)==1){
+		while(RPG.chancein(2)){
 			Integer pop=popper.get(RPG.r(0,popper.size()-1));
 			popper.remove(popper.indexOf(pop));
 			pop-=2;
@@ -105,20 +133,17 @@ public class EncounterGenerator{
 
 	static List<Combatant> makeencounter(final int el,List<Terrain> terrains){
 		List<Encounter> possibilities=new ArrayList<>();
-		int maxel=Integer.MIN_VALUE;
 		for(Terrain t:terrains){
 			EncounterIndex index=Organization.ENCOUNTERSBYTERRAIN.get(t.toString());
 			if(index!=null){
-				maxel=Math.max(maxel,index.lastKey());
 				List<Encounter> tier=index.get(el);
 				if(tier!=null) possibilities.addAll(tier);
 			}
 		}
-		if(el>maxel) return makeencounter(maxel,terrains);
 		return possibilities.isEmpty()?null:RPG.pick(possibilities).generate();
 	}
 
-	public static Combatants generate(int el,Terrain t) throws GaveUp{
+	public static Combatants generate(int el,Terrain t){
 		return generate(el,List.of(t));
 	}
 }

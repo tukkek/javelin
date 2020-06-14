@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.controller.event.urban.UrbanEvent;
-import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.town.diplomacy.Diplomacy;
@@ -30,11 +29,7 @@ public class Revolt extends UrbanEvent{
 	/** Reflection constructor. */
 	public Revolt(Town t){
 		super(t,null,Rank.HAMLET);
-		try{
-			mob=EncounterGenerator.generate(el,Terrain.get(town.x,town.y));
-		}catch(GaveUp e){
-			mob=null;
-		}
+		mob=EncounterGenerator.generate(el,Terrain.get(town.x,town.y));
 	}
 
 	@Override

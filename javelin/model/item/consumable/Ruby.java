@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import javelin.Javelin;
 import javelin.controller.action.world.UseItems;
-import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;
@@ -55,18 +54,14 @@ public class Ruby extends Item{
 
 	@Override
 	public boolean use(Combatant user){
-		try{
-			int el=Math.max(1,Math.round(user.source.cr));
-			Combatants summoned=EncounterGenerator.generate(el,Terrain.NONWATER);
-			for(Combatant c:summoned)
-				Summon.place(user,c,Fight.state.blueTeam,Fight.state);
-			Javelin.redraw();
-			BattleScreen.active.center(user.location[0],user.location[1]);
-			String feedback="Summoned: "+Javelin.group(summoned).toLowerCase()+"!";
-			Javelin.message(feedback,false);
-			return true;
-		}catch(GaveUp e){
-			throw new RuntimeException(e);
-		}
+		int el=Math.max(1,Math.round(user.source.cr));
+		Combatants summoned=EncounterGenerator.generate(el,Terrain.NONWATER);
+		for(Combatant c:summoned)
+			Summon.place(user,c,Fight.state.blueTeam,Fight.state);
+		Javelin.redraw();
+		BattleScreen.active.center(user.location[0],user.location[1]);
+		String feedback="Summoned: "+Javelin.group(summoned).toLowerCase()+"!";
+		Javelin.message(feedback,false);
+		return true;
 	}
 }

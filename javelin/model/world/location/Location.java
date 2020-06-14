@@ -9,7 +9,6 @@ import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
-import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
@@ -391,12 +390,8 @@ public abstract class Location extends Actor{
 	}
 
 	public void spawn(){
-		try{
-			Incursion.spawn(new Incursion(x,y,garrison,realm));
-			garrison=EncounterGenerator.generate(getel(null),Terrain.get(x,y));
-		}catch(GaveUp e){
-			return;
-		}
+		Incursion.spawn(new Incursion(x,y,garrison,realm));
+		garrison=EncounterGenerator.generate(getel(null),Terrain.get(x,y));
 	}
 
 	@Override

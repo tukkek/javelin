@@ -6,7 +6,6 @@ import java.util.Set;
 import javelin.controller.Point;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
-import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomDungeonEncounter;
 import javelin.controller.generator.dungeon.template.Template;
@@ -142,14 +141,10 @@ public class Wilderness extends Dungeon{
 	protected void generateencounters(){
 		var target=RPG.rolldice(2,10);
 		var failures=100;
-		while(encounters.size()<target)
-			try{
-				var el=level+Difficulty.get()+makeeasy();
-				encounters.add(EncounterGenerator.generate(el,type));
-			}catch(GaveUp e){
-				failures-=1;
-				if(failures<=0&&!encounters.isEmpty()) return;
-			}
+		while(encounters.size()<target){
+			var el=level+Difficulty.get()+makeeasy();
+			encounters.add(EncounterGenerator.generate(el,type));
+		}
 	}
 
 	int makeeasy(){

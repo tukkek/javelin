@@ -15,7 +15,6 @@ import javelin.controller.event.urban.UrbanEvent;
 import javelin.controller.event.urban.UrbanEvents;
 import javelin.controller.event.urban.negative.Riot;
 import javelin.controller.event.urban.neutral.HostTournament;
-import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Siege;
@@ -438,13 +437,8 @@ public class Town extends Location{
 	 */
 	public void populate(int el){
 		el+=4;
-		var terrain=Terrain.get(x,y);
-		while(garrison.isEmpty())
-			try{
-				garrison.addAll(EncounterGenerator.generate(el,terrain));
-			}catch(GaveUp e){
-				el+=1;
-			}
+		var t=Terrain.get(x,y);
+		garrison.addAll(EncounterGenerator.generate(el,t));
 	}
 
 	@Override

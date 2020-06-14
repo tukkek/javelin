@@ -47,10 +47,10 @@ public class StartBattle extends BattleEvent{
 		final int elblue=ChallengeCalculator.calculateel(Fight.state.blueTeam);
 		int diffifculty=elred-elblue;
 		if(fight instanceof Minigame||!Squad.active.skipcombat(diffifculty)){
-			if(Javelin.DEBUG) Debug.onbattlestart();
 			BattlePanel.current=Fight.state.next;
 			BattleScreen screen=new BattleScreen(true,true);
 			fight.draw();
+			if(Javelin.DEBUG) Debug.onbattlestart();
 			screen.mainloop();
 		}else
 			quickbattle(diffifculty);

@@ -16,7 +16,6 @@ import javelin.controller.action.world.WorldMove;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
-import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.minigame.Minigame;
@@ -285,11 +284,7 @@ public abstract class Fight{
 
 	static ArrayList<Combatant> chooseopponents(final int el,
 			ArrayList<Terrain> terrains){
-		try{
-			return EncounterGenerator.generate(el,terrains);
-		}catch(final GaveUp e){
-			return null;
-		}
+		return EncounterGenerator.generate(el,terrains);
 	}
 
 	/**

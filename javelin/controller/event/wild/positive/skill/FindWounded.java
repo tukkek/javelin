@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.challenge.Difficulty;
-import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;
@@ -120,16 +119,13 @@ public class FindWounded extends SkillEvent{
 
 	@Override
 	protected boolean fumble(Combatant active,PointOfInterest location){
-		try{
-			var foes=EncounterGenerator.generate(
-					Math.round(wounded.cr)+Difficulty.get(),
-					Terrain.get(location.x,location.y));
-			Javelin.message("It seems that whoever attacked the "+name
-					+" hasn't strayed too far!\n"+"The "+name
-					+" feebly rises up in a last attempt to defend itself!",true);
-			throw new StartBattle(new WoundedFight(foes,location));
-		}catch(GaveUp e){
-			return false;
-		}
+		var foes=EncounterGenerator.generate(
+				Math.round(wounded.cr)+Difficulty.get(),
+				Terrain.get(location.x,location.y));
+		var m="It seems that whoever attacked the "+name
+				+" hasn't strayed too far!\n"+"The "+name
+				+" feebly rises up in a last attempt to defend itself!";
+		Javelin.message(m,true);
+		throw new StartBattle(new WoundedFight(foes,location));
 	}
 }

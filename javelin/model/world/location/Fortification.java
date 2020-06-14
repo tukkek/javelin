@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
-import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.RandomEncounter;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.scenario.Scenario;
@@ -109,16 +108,11 @@ public abstract class Fortification extends Location{
 			capture();
 			return;
 		}
-		while(garrison.isEmpty())
-			try{
-				int el=RPG.r(minlevel,maxlevel);
-				ArrayList<Terrain> terrains=new ArrayList<>(1);
-				terrains.add(terrain==null?Terrain.get(x,y):terrain);
-				garrison.addAll(EncounterGenerator.generate(el,terrains));
-				targetel=el;
-			}catch(GaveUp e){
-				continue;
-			}
+		int el=RPG.r(minlevel,maxlevel);
+		ArrayList<Terrain> terrains=new ArrayList<>(1);
+		terrains.add(terrain==null?Terrain.get(x,y):terrain);
+		garrison.addAll(EncounterGenerator.generate(el,terrains));
+		targetel=el;
 	}
 
 	public void raiselevel(int bonus){

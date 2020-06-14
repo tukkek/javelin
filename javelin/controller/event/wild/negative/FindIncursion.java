@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import javelin.Javelin;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.event.wild.WildEvent;
-import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
@@ -40,17 +39,12 @@ public class FindIncursion extends WildEvent{
 			nincursions+=1;
 		var realm=Realm.random();
 		var tries=ATTEMPTS;
-		while(incursions.size()<nincursions)
-			try{
-				var el=squadel+Difficulty.get();
-				var terrain=Terrain.get(location.x,location.y);
-				var group=EncounterGenerator.generate(el,terrain);
-				incursions.add(new Incursion(location.x,location.y,group,realm));
-			}catch(GaveUp e){
-				tries-=1;
-				if(tries==0) return false;
-				continue;
-			}
+		while(incursions.size()<nincursions){
+			var el=squadel+Difficulty.get();
+			var terrain=Terrain.get(location.x,location.y);
+			var group=EncounterGenerator.generate(el,terrain);
+			incursions.add(new Incursion(location.x,location.y,group,realm));
+		}
 		return true;
 	}
 }

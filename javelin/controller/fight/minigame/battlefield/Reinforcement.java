@@ -2,9 +2,7 @@ package javelin.controller.fight.minigame.battlefield;
 
 import java.util.List;
 
-import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
@@ -38,13 +36,10 @@ public class Reinforcement{
 	}
 
 	void generateelites(int el){
-		for(int target=el;elites==null;)
-			try{
-				elites=EncounterGenerator.generate(target,terrains);
-				if(elites.size()==1) elites=null;
-			}catch(GaveUp e){
-				continue;
-			}
+		for(int target=el;elites==null;){
+			elites=EncounterGenerator.generate(target,terrains);
+			if(elites.size()==1) elites=null;
+		}
 	}
 
 	void generatefootsoldiers(int elp){
@@ -52,11 +47,7 @@ public class Reinforcement{
 		if(el<-1) el=RPG.chancein(2)?-1:0;
 		Combatants footsoldiers=null;
 		while(footsoldiers==null||footsoldiers.size()>9)
-			try{
-				footsoldiers=EncounterGenerator.generate(el,terrains);
-			}catch(GaveUp e){
-				el+=RPG.chancein(2)?+1:-1;
-			}
+			footsoldiers=EncounterGenerator.generate(el,terrains);
 		this.footsoldiers.addAll(footsoldiers);
 		while(ChallengeCalculator.calculateel(this.footsoldiers)<elp){
 			Combatant c=RPG.pick(footsoldiers);

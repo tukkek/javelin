@@ -6,7 +6,6 @@ import java.util.TreeMap;
 
 import javelin.Javelin;
 import javelin.controller.Point;
-import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.setup.LocationFightSetup;
 import javelin.controller.map.location.LocationMap;
 import javelin.model.unit.Combatant;
@@ -56,10 +55,8 @@ public abstract class WavesFight extends LocationFight{
 	/**
 	 * @param el Target Encounter Level.
 	 * @return New enemies to enter the fight.
-	 * @throws GaveUp If cannot generate. Will probably end the fight immediately
-	 *           in this case.
 	 */
-	abstract protected Combatants generatewave(int el) throws GaveUp;
+	abstract protected Combatants generatewave(int el);
 
 	@Override
 	public void checkend(){
@@ -72,8 +69,6 @@ public abstract class WavesFight extends LocationFight{
 			add(wave,Fight.state.redTeam,((LocationMap)map).spawnred);
 			Javelin.redraw();
 			Javelin.message(message,true);
-		}catch(GaveUp e){
-			if(Javelin.DEBUG) throw new RuntimeException(e);
 		}finally{
 			super.checkend();
 		}

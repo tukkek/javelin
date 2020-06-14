@@ -130,8 +130,13 @@ public abstract class Haunt extends Fortification{
 		}
 
 		@Override
-		protected Combatants generatewave(int el) throws GaveUp{
-			return Haunt.this.generatewave();
+		protected Combatants generatewave(int el){
+			try{
+				return Haunt.this.generatewave();
+			}catch(GaveUp e){
+				if(Javelin.DEBUG) throw new RuntimeException(e);
+				return new Combatants();
+			}
 		}
 
 		@Override

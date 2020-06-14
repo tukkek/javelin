@@ -10,6 +10,7 @@ import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
+import javelin.model.world.location.haunt.Haunt;
 import javelin.old.RPG;
 
 /**
@@ -137,7 +138,6 @@ public class TensionDirector{
 	/**
 	 * @return Given an Encounter Level, an appropriate gruop of
 	 *         {@link #monsters}.
-	 * @throws GaveUp If cannot fulfill this condition.
 	 */
 	protected List<Combatant> generate(int el) throws GaveUp{
 		return EncounterGenerator.generate(el,Terrain.NONWATER);

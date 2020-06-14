@@ -5,7 +5,6 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
-import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
 import javelin.controller.table.dungeon.feature.CommonFeatureTable;
 import javelin.controller.terrain.Terrain;
@@ -97,8 +96,7 @@ public class TempleDungeon extends Dungeon{
 	}
 
 	@Override
-	protected Combatants generateencounter(int level,List<Terrain> terrains)
-			throws GaveUp{
+	protected Combatants generateencounter(int level,List<Terrain> terrains){
 		terrains=temple.getterrains();
 		Combatants encounter=super.generateencounter(level-RPG.r(1,4),terrains);
 		if(!temple.validate(encounter.getmonsters())) return null;

@@ -17,7 +17,6 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.EncountersByEl;
-import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomDungeonEncounter;
@@ -321,19 +320,15 @@ public class Dungeon extends Location{
 				encounters.remove(0);
 		}
 		var terrains=Arrays.asList(new Terrain[]{Terrain.UNDERGROUND});
-		while(encounters.size()<target)
-			try{
-				var el=level+Difficulty.get();
-				var encounter=generateencounter(el,terrains);
-				if(encounter!=null&&!encounters.contains(encounter))
-					encounters.add(encounter);
-			}catch(GaveUp e){
-				continue;
-			}
+		while(encounters.size()<target){
+			var el=level+Difficulty.get();
+			var encounter=generateencounter(el,terrains);
+			if(encounter!=null&&!encounters.contains(encounter))
+				encounters.add(encounter);
+		}
 	}
 
-	protected Combatants generateencounter(int level,List<Terrain> terrains)
-			throws GaveUp{
+	protected Combatants generateencounter(int level,List<Terrain> terrains){
 		return EncounterGenerator.generate(level,terrains);
 	}
 

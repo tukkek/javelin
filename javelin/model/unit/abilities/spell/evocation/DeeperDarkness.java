@@ -2,11 +2,11 @@ package javelin.model.unit.abilities.spell.evocation;
 
 import java.util.List;
 
-import javelin.Javelin;
 import javelin.controller.ai.ChanceNode;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.world.Period;
 
 /**
  * See the d20 SRD for more info.
@@ -21,7 +21,7 @@ public class DeeperDarkness extends Spell{
 	@Override
 	public String cast(Combatant caster,Combatant target,boolean saved,
 			BattleState s,ChanceNode cn){
-		s.period=Javelin.PERIODNIGHT;
+		s.period=Period.NIGHT;
 		return "Light dims!";
 	}
 

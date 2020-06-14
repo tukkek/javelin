@@ -14,6 +14,7 @@ import javelin.model.item.ItemSelection;
 import javelin.model.item.Tier;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.world.Period;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.order.CraftingOrder;
@@ -243,7 +244,7 @@ public class Shop extends Location{
 	@Override
 	public boolean interact(){
 		if(!super.interact()) return false;
-		for(Order o:crafting.reclaim(Javelin.gettime())){
+		for(Order o:crafting.reclaim(Period.gettime())){
 			CraftingOrder done=(CraftingOrder)o;
 			done.item.grab();
 		}

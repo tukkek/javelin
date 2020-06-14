@@ -31,6 +31,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
+import javelin.model.world.Period;
 import javelin.model.world.World;
 import javelin.old.Interface;
 import javelin.old.messagepanel.MessagePanel;
@@ -61,17 +62,6 @@ public class Javelin{
 	 * logging.
 	 */
 	public static final boolean DEBUG=System.getProperty("debug")!=null;
-
-	/** TODO turn into {@link Enum} */
-	public static final String PERIODMORNING="Morning";
-	/** TODO turn into {@link Enum} */
-	public static final String PERIODNOON="Noon";
-	/** TODO turn into {@link Enum} */
-	public static final String PERIODEVENING="Evening";
-	/** TODO turn into {@link Enum} */
-	public static final String PERIODNIGHT="Night";
-	public static final String[] PERIODS=new String[]{PERIODMORNING,PERIODNOON,
-			PERIODEVENING,PERIODNIGHT};
 
 	public static final Image[] ICONS=new Image[]{Images.get("javelin")};
 
@@ -149,31 +139,6 @@ public class Javelin{
 	}
 
 	/**
-	 * TODO move to a new class with proper enum?
-	 *
-	 * @return {@link #PERIODEVENING}, {@link #PERIODMORNING},
-	 *         {@link #PERIODNIGHT} or {@value #PERIODNOON}.
-	 */
-	public static String getperiod(){
-		if(Javelin.app.fight!=null) return Javelin.app.fight.period;
-		final long hourofday=getHour();
-		if(hourofday<6) return PERIODNIGHT;
-		if(hourofday<12) return PERIODMORNING;
-		if(hourofday<18) return PERIODNOON;
-		return PERIODEVENING;
-	}
-
-	/**
-	 * If {@link Squad#active} is <code>null</code> for any reason, will return
-	 * zero.
-	 *
-	 * @return Hour of the day, from 0 to 23.
-	 */
-	public static long getHour(){
-		return Squad.active==null?0:Javelin.gettime()%24;
-	}
-
-	/**
 	 * This is also the only function that should write to {@link Squad#active} so
 	 * it should be called with extreme caution to avoid changing it in the middle
 	 * of an action.
@@ -184,7 +149,7 @@ public class Javelin{
 		Squad next=nexttoact();
 		Squad.active=next;
 		if(WorldScreen.lastday==-1)
-			WorldScreen.lastday=Math.ceil(Javelin.gettime()/24.0);
+			WorldScreen.lastday=Math.ceil(Period.gettime()/24.0);
 		return next;
 	}
 
@@ -208,15 +173,15 @@ public class Javelin{
 	 *         day.
 	 */
 	public static String welcome(){
-		final String period=getperiod();
+		var period=Period.now();
 		String flavor;
-		if(period==PERIODMORNING)
+		if(Period.MORNING.is())
 			flavor="What dangers lie ahead..?";
-		else if(period==PERIODNOON)
+		else if(Period.AFTERNOON.is())
 			flavor="Onwards to victory!";
-		else if(period==PERIODEVENING)
+		else if(Period.EVENING.is())
 			flavor="Cheers!";
-		else if(period==PERIODNIGHT)
+		else if(Period.NIGHT.is())
 			flavor="What a horrible night to suffer an invasion...";
 		else
 			throw new RuntimeException("No welcome message");
@@ -476,10 +441,5 @@ public class Javelin{
 	/** @return A "Capitalized" version of the input. */
 	public static String capitalize(String s){
 		return Character.toUpperCase(s.charAt(0))+s.substring(1).toLowerCase();
-	}
-
-	public static long gettime(){
-		return Squad.active==null?Math.round(WorldScreen.lastday*24)
-				:Squad.active.gettime();
 	}
 }

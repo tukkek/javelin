@@ -42,6 +42,7 @@ import javelin.model.unit.feat.Feat;
 import javelin.model.unit.feat.attack.focus.WeaponFocus;
 import javelin.model.unit.feat.internal.WeaponFinesse;
 import javelin.model.unit.skill.Skill;
+import javelin.model.world.Period;
 import javelin.model.world.location.Academy;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.old.RPG;
@@ -695,14 +696,11 @@ public class Monster implements Cloneable,Serializable{
 	 */
 	public int see(){
 		if(vision==VISION_DARK) return 0;
-		String period=Javelin.getperiod();
-		boolean verydark=period==Javelin.PERIODNIGHT
-				||Weather.current==Weather.STORM;
+		boolean verydark=Period.NIGHT.is()||Weather.current==Weather.STORM;
 		if(vision==VISION_LOWLIGHT){
 			if(verydark) return -2;
 		}else{ // normal vision
-			if(period==Javelin.PERIODEVENING||Weather.current==Weather.RAIN)
-				return -2;
+			if(Period.EVENING.is()||Weather.current==Weather.RAIN) return -2;
 			if(verydark) return -4;
 		}
 		return 0;

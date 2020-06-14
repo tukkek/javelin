@@ -14,6 +14,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
+import javelin.model.world.Period;
 import javelin.model.world.World;
 import javelin.model.world.location.Fortification;
 import javelin.model.world.location.Location;
@@ -108,7 +109,7 @@ public class MercenariesGuild extends Fortification{
 	 * @return <code>false</code> if doesn't have enough money to pay in advance.
 	 */
 	static public boolean recruit(Combatant c,boolean message){
-		long advance=Math.max(1,Javelin.getHour()*c.pay()/24);
+		long advance=Math.max(1,Period.gethour()*c.pay()/24);
 		if(Squad.active.gold<advance){
 			if(message){
 				var output="You don't have the money to pay today's advancement ($"

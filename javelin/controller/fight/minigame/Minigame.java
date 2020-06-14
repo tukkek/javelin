@@ -11,6 +11,7 @@ import javelin.controller.map.Map;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.world.Period;
 import javelin.old.RPG;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.BattleScreen;
@@ -27,7 +28,7 @@ public abstract class Minigame extends Fight{
 		bribe=false;
 		hide=false;
 		map=Map.random();
-		period=Javelin.PERIODS[RPG.r(Javelin.PERIODS.length)];
+		period=RPG.pick(Period.ALL);
 		weather=Weather.DISTRIBUTION[RPG.r(Weather.DISTRIBUTION.length)];
 	}
 

@@ -8,6 +8,7 @@ import javelin.model.item.ItemSelection;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.world.Period;
 import javelin.model.world.location.Fortification;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.order.CraftingOrder;
@@ -79,13 +80,13 @@ public class Artificer extends Fortification{
 			new ArtificerScreen(this).show();
 			return true;
 		}
-		if(crafting.completed(Javelin.gettime())){
+		if(crafting.completed(Period.gettime())){
 			crafting.item.grab();
 			crafting=null;
 			return true;
 		}
 		MessagePanel.active.clear();
-		Javelin.message("\"I still need "+crafting.geteta(Javelin.gettime())
+		Javelin.message("\"I still need "+crafting.geteta(Period.gettime())
 				+" before your "+crafting.item.toString().toLowerCase()
 				+" is completed.\"",false);
 		Javelin.input();
@@ -102,7 +103,7 @@ public class Artificer extends Fortification{
 
 	@Override
 	public boolean hascrafted(){
-		return crafting!=null&&crafting.completed(Javelin.gettime());
+		return crafting!=null&&crafting.completed(Period.gettime());
 	}
 
 	/**
@@ -121,6 +122,6 @@ public class Artificer extends Fortification{
 
 	@Override
 	public boolean isworking(){
-		return crafting!=null&&!crafting.completed(Javelin.gettime());
+		return crafting!=null&&!crafting.completed(Period.gettime());
 	}
 }

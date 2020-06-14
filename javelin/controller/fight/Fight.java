@@ -36,6 +36,7 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.enchantment.compulsion.DominateMonster.Dominated;
 import javelin.model.unit.skill.Diplomacy;
+import javelin.model.world.Period;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.BattleScreen;
@@ -100,7 +101,7 @@ public abstract class Fight{
 	 *
 	 * @see Javelin#getperiod()
 	 */
-	public String period=Javelin.getperiod();
+	public Period period=Period.now();
 	/** Status to remove {@link Combatant} from a {@link #friendly} battle. */
 	public int friendlylevel=Combatant.STATUSWOUNDED;
 	/** Delegates some setup details.TODO */
@@ -373,7 +374,9 @@ public abstract class Fight{
 	 * @return Opponent units.
 	 */
 	public ArrayList<Combatant> setup(){
-		if(Debug.period!=null) period=Debug.period;
+		if(Debug.period!=null) period=Period.ALL.stream()
+				.filter(p->p.toString().equalsIgnoreCase(Debug.period)).findFirst()
+				.orElseThrow();
 		Fight.state=new BattleState(this);
 		Fight.state.blueTeam=new ArrayList<>(getblueteam());
 		return generate();

@@ -28,6 +28,7 @@ import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
+import javelin.model.world.Period;
 import javelin.model.world.Season;
 import javelin.model.world.World;
 import javelin.model.world.location.Fortification;
@@ -266,7 +267,7 @@ public class WorldScreen extends BattleScreen{
 		final ArrayList<String> infos=new ArrayList<>();
 		String date="Day "+currentday();
 		if(Dungeon.active==null){
-			infos.add(date+", "+Javelin.getperiod().toLowerCase());
+			infos.add(date+", "+Period.now().toString().toLowerCase());
 			String season=Season.current.toString();
 			String weather=Terrain.current().getweather();
 			if(!weather.isEmpty()) season+=", "+weather+"";

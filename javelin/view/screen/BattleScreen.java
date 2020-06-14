@@ -26,6 +26,7 @@ import javelin.controller.map.Map;
 import javelin.model.state.BattleState;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
+import javelin.model.world.Period;
 import javelin.old.Interface;
 import javelin.old.QuestApp;
 import javelin.old.Screen;
@@ -308,8 +309,8 @@ public class BattleScreen extends Screen{
 
 	/** TODO */
 	public void view(int x,int y){
-		if(Fight.state.period==Javelin.PERIODEVENING
-				||Fight.state.period==Javelin.PERIODNIGHT)
+		var p=Fight.state.period;
+		if(p.equals(Period.EVENING)||p.equals(Period.NIGHT))
 			Fight.state.next.detect();
 		else if(!maprevealed){
 			for(javelin.view.mappanel.Tile[] ts:mappanel.tiles)

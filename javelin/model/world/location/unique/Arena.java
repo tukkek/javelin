@@ -22,6 +22,7 @@ import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
+import javelin.model.world.Period;
 import javelin.old.RPG;
 import javelin.view.Images;
 
@@ -80,7 +81,7 @@ public class Arena extends UniqueLocation{
 			friendlylevel=Combatant.STATUSINJURED;
 			message="New gladiators enter the arena!";
 			this.fighters=fighters;
-			period=Javelin.PERIODNOON;
+			period=Period.AFTERNOON;
 			teamel=ChallengeCalculator.calculateel(fighters);
 		}
 

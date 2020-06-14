@@ -4,6 +4,7 @@ import javelin.Javelin;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.world.Period;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 
@@ -48,12 +49,12 @@ public abstract class Relic extends Item{
 			return true;
 		}
 		if(!activate(user)) return false;
-		lastused=Javelin.gettime();
+		lastused=Period.gettime();
 		return true;
 	}
 
 	boolean charge(){
-		return Javelin.gettime()-lastused<RECHARGEPERIOD;
+		return Period.gettime()-lastused<RECHARGEPERIOD;
 	}
 
 	/**

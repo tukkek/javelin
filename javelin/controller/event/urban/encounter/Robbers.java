@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javelin.Javelin;
 import javelin.controller.fight.Fight;
 import javelin.controller.kit.Barbarian;
 import javelin.controller.kit.Rogue;
@@ -15,6 +14,7 @@ import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
+import javelin.model.world.Period;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Trait;
@@ -44,8 +44,7 @@ public class Robbers extends UrbanEncounter{
 
 	@Override
 	protected boolean validate(Monster foe){
-		var p=Javelin.getperiod();
-		if(p==Javelin.PERIODMORNING||p==Javelin.PERIODNOON) return false;
+		if(Period.MORNING.is()||Period.AFTERNOON.is()) return false;
 		var a=foe.alignment;
 		return a.ethics!=Ethics.LAWFUL&&a.morals!=Morals.GOOD&&foe.cr<=5
 				&&super.validate(foe);

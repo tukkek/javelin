@@ -55,6 +55,7 @@ import javelin.model.unit.feat.attack.GreatCleave;
 import javelin.model.unit.skill.Perception;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
+import javelin.model.world.Period;
 import javelin.model.world.World;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.old.RPG;
@@ -396,34 +397,31 @@ public class Combatant implements Serializable,Cloneable{
 	 * @param period objective period of the day
 	 * @return subjective period of the day
 	 */
-	public String perceive(String period){
+	public Period perceive(Period p){
 		switch(source.vision){
 			case 0:
-				return period;
+				return p;
 			case 2:
-				return Javelin.app.fight.denydarkvision?Javelin.PERIODEVENING
-						:Javelin.PERIODNOON;
+				return Javelin.app.fight.denydarkvision?Period.EVENING:Period.AFTERNOON;
 			case 1:
-				if(period==Javelin.PERIODNIGHT) return Javelin.PERIODEVENING;
-				if(period==Javelin.PERIODEVENING)
-					return Javelin.app.fight.denydarkvision?Javelin.PERIODEVENING
-							:Javelin.PERIODNOON;
+				if(p.equals(Period.NIGHT)) return Period.EVENING;
+				if(p.equals(Period.EVENING))
+					return Javelin.app.fight.denydarkvision?Period.EVENING:Period.AFTERNOON;
 		}
-		return period;
+		return p;
 	}
 
 	/**
 	 * Not to be confused with {@link Skills#perceive(Monster, boolean)}.
 	 *
-	 * @param period Objective period.
+	 * @param p Objective period.
 	 * @return monster's vision in squares (5 feet)
 	 * @see #perceive(String)
 	 */
-	public int view(String period){
-		if(source.vision==2||source.vision==1&&period==Javelin.PERIODEVENING)
-			return 12;
-		if(period==Javelin.PERIODEVENING||source.vision==1) return 8;
-		if(period==Javelin.PERIODNIGHT) return 4;
+	public int view(Period p){
+		if(source.vision==2||source.vision==1&&p.equals(Period.EVENING)) return 12;
+		if(p.equals(Period.EVENING)||source.vision==1) return 8;
+		if(p.equals(Period.NIGHT)) return 4;
 		return Integer.MAX_VALUE;
 	}
 

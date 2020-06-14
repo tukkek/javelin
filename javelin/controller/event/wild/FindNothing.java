@@ -8,6 +8,7 @@ import javelin.controller.Weather;
 import javelin.controller.event.EventDealer.EventDeck;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;
+import javelin.model.world.Period;
 import javelin.model.world.location.PointOfInterest;
 import javelin.old.RPG;
 
@@ -44,10 +45,9 @@ public class FindNothing extends WildEvent{
 	@Override
 	public void happen(Squad s){
 		ArrayList<String> messages=new ArrayList<>(MESSAGES);
-		String period=Javelin.getperiod();
-		if(period==Javelin.PERIODNOON) period="afternoon";
+		var period=Period.now();
 		messages.add("You suddenly notice how this is such a beatiful "
-				+period.toLowerCase()+".");
+				+period.toString().toLowerCase()+".");
 		if(Weather.current!=Weather.CLEAR)
 			messages.add("It sure is raining a lot, isn't it..?");
 		if(s.members.size()>=3) messages.add(RPG.pick(s.members)

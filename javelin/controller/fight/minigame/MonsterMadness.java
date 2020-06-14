@@ -16,6 +16,7 @@ import javelin.controller.generator.encounter.Encounter;
 import javelin.model.unit.Building;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.world.Period;
 import javelin.old.RPG;
 import javelin.view.screen.BattleScreen;
 
@@ -59,7 +60,7 @@ public class MonsterMadness extends Minigame{
 		meld=false;
 		canflee=false;
 		setup=new Setup();
-		period=Javelin.PERIODNOON;
+		period=Period.AFTERNOON;
 	}
 
 	@Override

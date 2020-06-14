@@ -30,6 +30,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
+import javelin.model.world.Period;
 import javelin.old.RPG;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.BattleScreen;
@@ -103,7 +104,7 @@ public class ArenaMinigame extends Minigame{
 	/** Constructor. */
 	public ArenaMinigame(){
 		weather=Weather.CLEAR;
-		period=Javelin.PERIODNOON;
+		period=Period.AFTERNOON;
 		setup=new ArenaSetup(this);
 		meld=false;
 		canflee=false;

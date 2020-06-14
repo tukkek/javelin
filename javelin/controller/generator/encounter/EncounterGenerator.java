@@ -12,6 +12,7 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
+import javelin.model.world.Period;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.old.RPG;
 
@@ -79,12 +80,9 @@ public class EncounterGenerator{
 	private static boolean validatecreature(Combatant invitee,
 			ArrayList<Combatant> foes){
 		if(foes.indexOf(invitee)>=0) return false;
-		final String period=Javelin.getperiod();
 		final boolean underground=Dungeon.active!=null;
-		if(invitee.source.nightonly&&!underground
-				&&(period==Javelin.PERIODMORNING||period==Javelin.PERIODNOON))
-			return false;
-		return true;
+		return !invitee.source.nightonly||underground
+				||Period.NIGHT.is()&&Period.EVENING.is();
 	}
 
 	/**

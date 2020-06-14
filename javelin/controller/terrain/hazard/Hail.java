@@ -6,6 +6,7 @@ import javelin.model.transport.Transport;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
+import javelin.model.world.Period;
 import javelin.model.world.Season;
 import javelin.old.RPG;
 
@@ -24,8 +25,7 @@ public class Hail extends Hazard{
 				||Transport.SHIP.equals(s.transport)
 				||Transport.AIRSHIP.equals(s.transport))
 			return false;
-		String period=Javelin.getperiod();
-		return period==Javelin.PERIODEVENING||period==Javelin.PERIODNIGHT;
+		return Period.EVENING.is()||Period.NIGHT.is();
 	}
 
 	@Override

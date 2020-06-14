@@ -1,8 +1,8 @@
 package javelin.controller.event.wild;
 
-import javelin.Javelin;
 import javelin.controller.Weather;
 import javelin.model.unit.Squad;
+import javelin.model.world.Period;
 import javelin.model.world.location.PointOfInterest;
 
 public abstract class Wanderer extends WildEvent{
@@ -13,8 +13,7 @@ public abstract class Wanderer extends WildEvent{
 
 	@Override
 	public boolean validate(Squad s,int squadel){
-		return Weather.current!=Weather.STORM
-				&&Javelin.getperiod()!=Javelin.PERIODNIGHT;
+		return Weather.current!=Weather.STORM&&!Period.NIGHT.is();
 	}
 
 }

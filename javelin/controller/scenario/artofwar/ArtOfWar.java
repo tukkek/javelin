@@ -19,6 +19,7 @@ import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
+import javelin.model.world.Period;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.feature.Fountain;
 import javelin.old.RPG;
@@ -202,7 +203,7 @@ public class ArtOfWar extends Scenario{
 				||World.get(from.x,from.y,actors)!=null
 				||Terrain.get(from.x,from.y).equals(Terrain.WATER))
 			from.displace();
-		var s=new Squad(from.x,from.y,Javelin.gettime(),null);
+		var s=new Squad(from.x,from.y,Period.gettime(),null);
 		s.place();
 		for(var c:captured){
 			var hires=new ArrayList<>(c.hires);

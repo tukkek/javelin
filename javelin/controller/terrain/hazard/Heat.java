@@ -3,6 +3,7 @@ package javelin.controller.terrain.hazard;
 import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.condition.Fatigued;
+import javelin.model.world.Period;
 import javelin.model.world.Season;
 import javelin.old.RPG;
 
@@ -19,9 +20,9 @@ public class Heat extends PartyHazard{
 		if(Season.current==Season.SUMMER)
 			level+=2;
 		else if(Season.current==Season.WINTER) level-=2;
-		if(Javelin.getperiod()==Javelin.PERIODNOON)
+		if(Period.AFTERNOON.is())
 			level+=1;
-		else if(Javelin.getperiod()!=Javelin.PERIODMORNING) level-=1;
+		else if(Period.NIGHT.is()) level-=1;
 		/* doesn't rain on the desert so don't consider weather */
 		return level>=2;
 	}

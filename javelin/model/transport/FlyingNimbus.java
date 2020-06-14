@@ -1,10 +1,10 @@
 package javelin.model.transport;
 
-import javelin.Javelin;
 import javelin.controller.map.terrain.water.DeepWaters;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.relic.Flute;
 import javelin.model.unit.Squad;
+import javelin.model.world.Period;
 
 /**
  * Vehicle like the {@link Airship} but 10x faster, lasts for a day but will not
@@ -31,7 +31,7 @@ public class FlyingNimbus extends Airship{
 		maintenance=0;
 		parkeable=false;
 		oldtransport=oldtransportp;
-		expireat=Javelin.gettime()+24;
+		expireat=Period.gettime()+24;
 	}
 
 	@Override

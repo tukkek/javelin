@@ -18,6 +18,7 @@ import javelin.model.item.Tier;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
+import javelin.model.world.Period;
 import javelin.old.RPG;
 import javelin.view.Images;
 import javelin.view.screen.BattleScreen;
@@ -46,7 +47,7 @@ public class Miniatures{
 			bribe=false;
 			hide=false;
 			meld=true;
-			period=Javelin.PERIODNOON;
+			period=Period.AFTERNOON;
 			rewardgold=false;
 			rewardgold=false;
 			rewardxp=false;

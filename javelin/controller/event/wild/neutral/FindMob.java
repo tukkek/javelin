@@ -15,12 +15,13 @@ import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
+import javelin.model.world.Period;
 import javelin.model.world.Season;
 import javelin.model.world.location.PointOfInterest;
 
 /**
- * The {@link Squad} has to convince a mob to let go of a guy - getting a reward
- * if succesful. However, in case of a
+ * The {@link Squad} has to convince a mob to let go of a victim - getting a
+ * reward if succesful. However, in case of a
  * {@link #fumble(Combatant, PointOfInterest)}, they'll have a very tough
  * {@link Fight} ahead of them.
  *
@@ -71,8 +72,7 @@ public class FindMob extends SkillEvent{
 	@Override
 	public boolean validate(Squad s,int squadel){
 		if(Season.current==Season.WINTER) return false;
-		var period=Javelin.getperiod();
-		if(period!=Javelin.PERIODNOON&&period!=Javelin.PERIODEVENING) return false;
+		if(!Period.AFTERNOON.is()&&!Period.EVENING.is()) return false;
 		terrain=Terrain.get(location.x,location.y);
 		return terrain.equals(Terrain.HILL)||terrain.equals(Terrain.PLAIN);
 	}

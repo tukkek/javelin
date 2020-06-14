@@ -17,6 +17,7 @@ import javelin.model.transport.Transport;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Incursion;
+import javelin.model.world.Period;
 import javelin.model.world.World;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.OrderQueue;
@@ -155,7 +156,7 @@ public abstract class Academy extends Fortification{
 	}
 
 	void completetraining(boolean force){
-		var complete=force?training.queue:training.reclaim(Javelin.gettime());
+		var complete=force?training.queue:training.reclaim(Period.gettime());
 		for(Order o:complete)
 			completetraining((TrainingOrder)o);
 	}
@@ -273,7 +274,7 @@ public abstract class Academy extends Fortification{
 		boolean anydone=false;
 		for(Order o:training.queue){
 			s+=o+"\n";
-			anydone=anydone||o.completed(Javelin.gettime());
+			anydone=anydone||o.completed(Period.gettime());
 		}
 		s+="\n";
 		if(anydone)

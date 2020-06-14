@@ -1,9 +1,9 @@
 package javelin.controller.terrain.hazard;
 
-import javelin.Javelin;
 import javelin.controller.Weather;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.condition.Fatigued;
+import javelin.model.world.Period;
 import javelin.model.world.Season;
 import javelin.old.RPG;
 
@@ -33,9 +33,9 @@ public class Cold extends PartyHazard{
 			level+=2;
 		else if(Season.current==Season.SUMMER) level-=2;
 		if(Weather.current!=Weather.CLEAR) level+=1;
-		if(Javelin.getperiod()==Javelin.PERIODNIGHT)
+		if(Period.NIGHT.is())
 			level+=1;
-		else if(Javelin.getperiod()==Javelin.PERIODNOON) level-=1;
+		else if(Period.AFTERNOON.is()) level-=1;
 		return level>=2;
 	}
 

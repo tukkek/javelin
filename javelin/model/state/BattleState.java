@@ -15,6 +15,7 @@ import javelin.controller.walker.state.ClearPath;
 import javelin.controller.walker.state.ObstructedPath;
 import javelin.model.TeamContainer;
 import javelin.model.unit.Combatant;
+import javelin.model.world.Period;
 
 /**
  * Javelin's implementation of {@link Node}.
@@ -68,7 +69,7 @@ public class BattleState implements Node,TeamContainer{
 	 * @see Fight#period
 	 * @see Javelin#getperiod()
 	 */
-	public String period;
+	public Period period;
 
 	/**
 	 * Constructor.
@@ -77,7 +78,7 @@ public class BattleState implements Node,TeamContainer{
 	 */
 	public BattleState(final ArrayList<Combatant> blueTeam,
 			final ArrayList<Combatant> redTeam,ArrayList<Combatant> dead,
-			ArrayList<Combatant> fleeing,final Square[][] map,String period,
+			ArrayList<Combatant> fleeing,final Square[][] map,Period period,
 			ArrayList<Meld> meld){
 		this.map=map;
 		this.period=period;
@@ -226,18 +227,18 @@ public class BattleState implements Node,TeamContainer{
 
 	/**
 	 * @param range How many 5-feet squares ahead the active combatant can see.
-	 * @param periodperception Represents the light perception for the active
+	 * @param perception Represents the light perception for the active
 	 *          combatant since some monsters may have the darkvision quality or
 	 *          similar. If night or evening the character will not able to see
 	 *          past obstacles in the map.
 	 */
 	public Vision haslineofsight(final Point me,final Point target,int range,
-			String periodperception){
+			Period perception){
 		if(Walker.distance(me.x,me.y,target.x,target.y)<=1) return Vision.CLEAR;
 		final List<Point> clear=new ClearPath(me,target,this).walk();
 		List<Point> covered=null;
-		if(periodperception!=Javelin.PERIODEVENING
-				&&periodperception!=Javelin.PERIODNIGHT)
+		if(!perception.equals(Period.EVENING)
+				&&!perception.equals(Period.NIGHT))
 			covered=new ObstructedPath(me,target,this).walk();
 		if(clear==null&&covered==null) return Vision.BLOCKED;
 		if(clear==null)

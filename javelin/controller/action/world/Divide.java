@@ -13,6 +13,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
+import javelin.model.world.Period;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
@@ -89,7 +90,7 @@ public class Divide extends WorldAction{
 	void spawn(final Combatants oldsquad,Combatants newsquad,int gold){
 		Actor nearto=findtown(Squad.active.x,Squad.active.y);
 		int x,y;
-		Squad s=new Squad(0,0,Javelin.gettime(),Squad.active.lasttown);
+		Squad s=new Squad(0,0,Period.gettime(),Squad.active.lasttown);
 		s.members=newsquad;
 		s.gold=gold;
 		s.strategic=Squad.active.strategic;

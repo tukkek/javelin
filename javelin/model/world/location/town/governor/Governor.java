@@ -6,6 +6,7 @@ import java.util.Comparator;
 
 import javelin.Javelin;
 import javelin.model.unit.Squad;
+import javelin.model.world.Period;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
@@ -212,6 +213,6 @@ public abstract class Governor implements Serializable{
 	}
 
 	long getseason(){
-		return Math.min(4,Javelin.gettime()/(24*100));
+		return Math.min(4,Period.gettime()/(24*100));
 	}
 }

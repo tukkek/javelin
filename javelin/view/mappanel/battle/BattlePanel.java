@@ -11,6 +11,7 @@ import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
+import javelin.model.world.Period;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.Tile;
@@ -33,9 +34,8 @@ public class BattlePanel extends MapPanel{
 	/** Constructor. */
 	public BattlePanel(BattleState s){
 		super(s.map.length,s.map[0].length,Preferences.KEYTILEBATTLE);
-		var period=Javelin.app.fight.period;
-		daylight=period.equalsIgnoreCase(Javelin.PERIODMORNING)
-				||period.equalsIgnoreCase(Javelin.PERIODNOON);
+		var p=Javelin.app.fight.period;
+		daylight=p.equals(Period.MORNING)||p.equals(Period.AFTERNOON);
 	}
 
 	@Override
@@ -112,8 +112,8 @@ public class BattlePanel extends MapPanel{
 		state=Fight.state.clonedeeply();
 		if(previousstate==null) previousstate=state;
 		BattleTile.panel=this;
-		daylight=state.period.equals(Javelin.PERIODMORNING)
-				||state.period.equals(Javelin.PERIODNOON);
+		daylight=state.period.equals(Period.MORNING)
+				||state.period.equals(Period.AFTERNOON);
 		if(state.period!=previousstate.period){
 			for(Tile[] tiles:tiles)
 				for(Tile t:tiles){

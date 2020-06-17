@@ -19,7 +19,6 @@ import javelin.controller.generator.WorldGenerator;
 import javelin.controller.kit.Kit;
 import javelin.controller.map.Map;
 import javelin.controller.scenario.Scenario;
-import javelin.model.diplomacy.Diplomacy;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
@@ -31,7 +30,6 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.view.Images;
 import javelin.view.TextWindow;
-import javelin.view.frame.DiplomacyScreen;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 
@@ -120,8 +118,8 @@ public class Debug{
 		}
 
 		static void freezeopponents(){
-			for(Combatant c:Fight.state.redTeam)
-				c.ap=1000;
+			for(Combatant c:Fight.state.blueTeam)
+				c.ap=-1000;
 		}
 
 		static void teleport(Class<? extends Actor> type){
@@ -169,14 +167,6 @@ public class Debug{
 			if(d!=null) return d.town;
 			Javelin.message("Not in town...",false);
 			throw new RepeatTurn();
-		}
-
-		static void dodiplomacy(){
-			var d=Diplomacy.instance;
-			d.reputation=Diplomacy.TRIGGER;
-			d.hand.clear();
-			d.draw();
-			DiplomacyScreen.open();
 		}
 
 		static void test(Kit kit){

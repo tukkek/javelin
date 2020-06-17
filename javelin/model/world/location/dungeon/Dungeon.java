@@ -280,11 +280,11 @@ public class Dungeon extends Location{
 		Dungeon.active=this;
 		map=map();
 		size=map.length;
+		createdoors();
 		stepsperencounter=calculateencounterrate();
 		if(stepsperencounter<2) stepsperencounter=2;
 		generateencounters();
 		populatedungeon();
-		size=map.length;
 		visible=new boolean[size][size];
 		for(int x=0;x<size;x++)
 			for(int y=0;y<size;y++)
@@ -302,7 +302,6 @@ public class Dungeon extends Location{
 		var tables=parent==null?null:parent.tables;
 		var generator=DungeonGenerator.generate(tier.minrooms,tier.maxrooms,tables);
 		this.tables=generator.tables;
-		createdoors();
 		nrooms=generator.map.rooms.size();
 		return generator.grid;
 	}

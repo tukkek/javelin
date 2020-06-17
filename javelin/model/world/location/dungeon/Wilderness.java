@@ -59,10 +59,15 @@ import javelin.view.mappanel.Tile;
  * @author alex
  */
 public class Wilderness extends Dungeon{
+	/**
+	 * {@link Dungeon} {@link Feature}s that are not relevant to Wilderness
+	 * {@link Location}s.
+	 */
+	public static final Set<Class<? extends Feature>> FORBIDDEN=Set.of(
+			Brazier.class,Mirror.class,Throne.class,Fountain.class,Prisoner.class,
+			Crate.class);
 	/** Placeholder to prevent an uneeded call {@link #baptize(String)}.p */
 	static final String DESCRIPTION="Wilderness";
-	static final Set<Class<? extends Feature>> FORBIDDEN=Set.of(Brazier.class,
-			Mirror.class,Throne.class,Fountain.class,Prisoner.class,Crate.class);
 
 	class Entrance extends StairsUp{
 		Entrance(Point p){
@@ -181,13 +186,17 @@ public class Wilderness extends Dungeon{
 				continue;
 			}
 			var f=createfeature();
-			if(f!=null&&!FORBIDDEN.contains(f.getClass()))
-				f.place(this,getunnocupied());
+			f.place(this,getunnocupied());
 		}
 	}
 
 	@Override
 	protected Dungeon chooseentrance(){
 		return this;
+	}
+
+	@Override
+	protected void generatecrates(DungeonZoner zoner){
+		//don't
 	}
 }

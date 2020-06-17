@@ -125,4 +125,9 @@ public class Herb extends Feature{
 		String description=potions.get(0).toString().toLowerCase();
 		return (amount==1?"a":amount+"x")+" "+description;
 	}
+
+	@Override
+	public boolean validate(){
+		return super.validate()&&Dungeon.active.level<=MAXLEVEL;
+	}
 }

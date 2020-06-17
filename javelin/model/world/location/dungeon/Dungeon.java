@@ -424,10 +424,8 @@ public class Dungeon extends Location{
 	protected void createfeatures(int nfeatures,DungeonZoner zoner){
 		while(nfeatures>0){
 			var f=createfeature();
-			if(f!=null){
-				f.place(this,zoner.getpoint());
-				nfeatures-=1;
-			}
+			f.place(this,zoner.getpoint());
+			nfeatures-=1;
 		}
 	}
 
@@ -444,10 +442,8 @@ public class Dungeon extends Location{
 			if(Javelin.DEBUG) throw new RuntimeException(e);
 			return null;
 		}
-		var table=gettable(FeatureRarityTable.class).rollboolean()
-				?RareFeatureTable.class
-				:CommonFeatureTable.class;
-		return tables.get(table).rollfeature(this);
+		var t=gettable(FeatureRarityTable.class).roll();
+		return t.rollfeature(this);
 	}
 
 	static int getfeaturequantity(int quantity,float ratio){
@@ -497,6 +493,11 @@ public class Dungeon extends Location{
 			hiddenpool-=gold;
 			createchest(Chest.class,gold,zoner,true);
 		}
+		generatecrates(zoner);
+	}
+
+	/** @see Crate */
+	protected void generatecrates(DungeonZoner zoner){
 		var freebie=RewardCalculator.getgold(level);
 		int ncrates=RPG.r(1,4)-1;
 		for(var crates=ncrates;crates>0;crates--){
@@ -513,16 +514,12 @@ public class Dungeon extends Location{
 			boolean hidden){
 		var percentmodifier=gettable(FeatureModifierTable.class).rollmodifier()*2;
 		gold=Math.round(gold*(100+percentmodifier)/100f);
-		Chest c;
-		if(type==Chest.class)
-			c=new Chest(gold);
-		else if(type==Crate.class)
-			c=new Crate(gold);
-		else if(Javelin.DEBUG)
-			throw new RuntimeException("Unknown chest type: "+type);
-		else
-			return;
-		c.place(this,zoner.getpoint());
+		try{
+			var c=type.getConstructor(Integer.class).newInstance(gold);
+			c.place(this,zoner.getpoint());
+		}catch(ReflectiveOperationException e){
+			throw new RuntimeException(e);
+		}
 	}
 
 	/** @return Most special chest here. */

@@ -5,6 +5,8 @@ import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.table.Table;
+import javelin.controller.table.dungeon.feature.CommonFeatureTable;
+import javelin.controller.table.dungeon.feature.RareFeatureTable;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Perception;
@@ -94,5 +96,14 @@ public abstract class Feature implements Serializable{
 	/** Called once per feature after all {@link Dungeon} floors are generated. */
 	public void define(Dungeon current,List<Dungeon> floors){
 		// nothing by default
+	}
+
+	/**
+	 * @return If <code>false</code>, generate a new random Feature instead.
+	 * @see CommonFeatureTable
+	 * @see RareFeatureTable
+	 */
+	public boolean validate(){
+		return true;
 	}
 }

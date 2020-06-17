@@ -1,20 +1,15 @@
 package javelin.controller.table.dungeon.feature;
 
-import java.util.List;
-
 import javelin.controller.table.Table;
-import javelin.controller.table.dungeon.InhabitantTable;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Brazier;
 import javelin.model.world.location.dungeon.feature.Campfire;
 import javelin.model.world.location.dungeon.feature.Feature;
-import javelin.model.world.location.dungeon.feature.FruitTree;
-import javelin.model.world.location.dungeon.feature.Herb;
 import javelin.model.world.location.dungeon.feature.Passage;
-import javelin.model.world.location.dungeon.feature.inhabitant.Inhabitant;
 
 /**
- * Generates a common {@link Dungeon} {@link Feature}.
+ * Generates a common {@link Dungeon} {@link Feature}. Unlike with the
+ * {@link RareFeatureTable}, any of these features may appear in any Dungeon.
  *
  * @author alex
  * @see FeatureRarityTable
@@ -22,9 +17,9 @@ import javelin.model.world.location.dungeon.feature.inhabitant.Inhabitant;
 public class CommonFeatureTable extends Table implements DungeonFeatureTable{
 	/** Constructor. */
 	public CommonFeatureTable(){
-		for(var f:List.of(Brazier.class,FruitTree.class,Herb.class,Inhabitant.class,
-				Passage.class,Campfire.class))
-			add(f,ROWS);
+		add(Passage.class,1);
+		add(Brazier.class,1);
+		add(Campfire.class,getchances());
 	}
 
 	/**
@@ -32,17 +27,27 @@ public class CommonFeatureTable extends Table implements DungeonFeatureTable{
 	 * @return <code>null</code> if an invalid feature has been rolled, otherwise,
 	 *         a Feature that hasn't been positioned or placed yet.
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
-	public Feature rollfeature(@SuppressWarnings("unused") Dungeon d){
-		var type=(Class<? extends Feature>)roll();
-		if(type.equals(Herb.class)&&d.level>Herb.MAXLEVEL) return null;
-		if(type.equals(Inhabitant.class)){
-			var npctable=d.tables.get(InhabitantTable.class);
-			type=(Class<? extends Feature>)npctable.roll();
-		}
+	public Feature rollfeature(Dungeon d){
+		return generate(this,d);
+	}
+
+	/**
+	 * @param t {@link CommonFeatureTable} or {@link RareFeatureTable}.
+	 * @param d {@link Dungeon#active} (probably geing generated).
+	 * @return A valid, non-<code>null</code> feature.
+	 * @see Feature#validate()
+	 */
+	@SuppressWarnings("unchecked")
+	public static Feature generate(Table t,Dungeon d){
 		try{
-			return type.getDeclaredConstructor().newInstance();
+			Feature f=null;
+			while(f==null){
+				var type=(Class<? extends Feature>)t.roll();
+				f=type.getDeclaredConstructor().newInstance();
+				if(!f.validate()) f=null;
+			}
+			return f;
 		}catch(ReflectiveOperationException e){
 			throw new RuntimeException(e);
 		}

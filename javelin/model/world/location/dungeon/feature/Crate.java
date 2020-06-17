@@ -34,15 +34,13 @@ public class Crate extends Chest{
 		Item.ITEMS.stream()
 				.filter(i->i.consumable&&!PROHIBITED.contains(i.getClass()))
 				.forEach(i->ITEMS.add(i));
-		//		Item.ITEMS.stream().filter(i->i instanceof PreciousObject)
-		//				.forEach(i->ITEMS.add(i));
 	}
 
 	/** TODO to be used when hidden chests are implemented. */
 	int searchdc=10+Dungeon.active.level;
 
 	/** Constructor. */
-	public Crate(int pool){
+	public Crate(Integer pool){
 		super(pool);
 		nitems=1;
 		var t=DungeonTier.get(Dungeon.active.level).tier.getordinal();

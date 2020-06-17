@@ -10,13 +10,13 @@ import java.io.Serializable;
  */
 public class Rank implements Serializable{
 	/** A very small town. */
-	public static final Rank HAMLET=new Rank("Hamlet",1,5,1);
+	public static final Rank HAMLET=new Rank(1,"Hamlet",1,5);
 	/** A small to medium town. */
-	public static final Rank VILLAGE=new Rank("Village",6,10,2);
+	public static final Rank VILLAGE=new Rank(2,"Village",6,10);
 	/** A medium to big town. */
-	public static final Rank TOWN=new Rank("Town",11,15,3);
+	public static final Rank TOWN=new Rank(3,"Town",11,15);
 	/** A very big town. */
-	public static final Rank CITY=new Rank("City",16,20,4);
+	public static final Rank CITY=new Rank(4,"City",16,Integer.MAX_VALUE);
 	/** All Town ranks from smallest to biggest. */
 	public static final Rank[] RANKS=new Rank[]{HAMLET,VILLAGE,TOWN,CITY};
 
@@ -30,7 +30,7 @@ public class Rank implements Serializable{
 	public int rank;
 
 	/** See field documentation. */
-	public Rank(String name,int minsize,int maxsize,int rank){
+	Rank(int rank,String name,int minsize,int maxsize){
 		title=name;
 		minpopulation=minsize;
 		maxpopulation=maxsize;

@@ -333,16 +333,11 @@ public class Town extends Location{
 		return Images.get(image);
 	}
 
-	/**
-	 * @return A rank between [1,4] based on current {@link #population}.
-	 * @see Rank#RANKS
-	 */
+	/** @see Rank */
 	public Rank getrank(){
-		for(int i=0;i<Rank.RANKS.length-1;i++){
-			final Rank r=Rank.RANKS[i];
+		for(var r:Rank.RANKS)
 			if(population<=r.maxpopulation) return r;
-		}
-		return Rank.CITY;
+		throw new RuntimeException("Unknown rank for population "+population);
 	}
 
 	@Override

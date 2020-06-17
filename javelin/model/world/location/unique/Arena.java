@@ -26,6 +26,8 @@ import javelin.model.world.Period;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.District;
+import javelin.model.world.location.town.Rank;
+import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
 import javelin.view.Images;
 
@@ -49,6 +51,12 @@ import javelin.view.Images;
  * "business hours" but if that's not enough, it might be necessary to have
  * events only on certain days and have a UI indicator for that as well.
  *
+ * Another anti-grinding incentive is that the {@link ArenaFight}'s EL is capped
+ * by the starting {@link Town}'s {@link Rank#maxpopulation}. This soft-prevents
+ * players from grinding to level 20 by simply playing Arena endlessly and also
+ * thematically such silly scenarios as waves of epic level 20 heroes coming to
+ * participate in tournaments in a lowly {@link Rank#HAMLET}.
+ *
  * TODO should be considered a winnable game objective?
  *
  * TODO allow escape at any point (even if engaged) - just moving all units to
@@ -71,10 +79,10 @@ public class Arena extends UniqueLocation{
 	static final String DESCRIPTION="The Arena";
 	static final String CLOSED="The arena is closed. Come back from noon to midnight...";
 
-	class ColosseumMap extends LocationMap{
+	class ArenaMap extends LocationMap{
 		List<Point> minionspawn=new ArrayList<>();
 
-		public ColosseumMap(){
+		public ArenaMap(){
 			super("colosseum");
 			wall=Images.get("terrainorcwall");
 			floor=Images.get("terraindesert");
@@ -89,21 +97,20 @@ public class Arena extends UniqueLocation{
 
 	//TODO change map name
 	//TODO need to reward gold only after discounting ally's share
-	class ColosseumFight extends WavesFight{
+	class ArenaFight extends WavesFight{
 		ArrayList<Combatant> fighters;
 		int allyel=0;
 		int teamel;
 		int waveel;
 
-		public ColosseumFight(ArrayList<Combatant> fighters){
-			super(Arena.this,new ColosseumMap(),
-					ChallengeCalculator.calculateel(fighters));
+		ArenaFight(ArrayList<Combatant> fighters,int el){
+			super(Arena.this,new ArenaMap(),el);
 			friendly=true;
 			friendlylevel=Combatant.STATUSINJURED;
 			message="New gladiators enter the arena!";
 			this.fighters=fighters;
 			period=Period.AFTERNOON;
-			teamel=ChallengeCalculator.calculateel(fighters);
+			teamel=el;
 		}
 
 		@Override
@@ -121,7 +128,7 @@ public class Arena extends UniqueLocation{
 				a.automatic=true;
 				a.mercenary=true;
 			}
-			add(allies,Fight.state.blueTeam,((ColosseumMap)map).minionspawn);
+			add(allies,Fight.state.blueTeam,((ArenaMap)map).minionspawn);
 			waveel=ChallengeCalculator.calculateel(Fight.state.blueTeam)
 					+getelmodifier();
 		}
@@ -139,9 +146,12 @@ public class Arena extends UniqueLocation{
 		}
 	}
 
+	Town town;
+
 	/** Constructor. */
-	public Arena(){
+	public Arena(Town t){
 		super(DESCRIPTION,DESCRIPTION,15,20);
+		town=t;
 		generategarrison=false;
 	}
 
@@ -177,7 +187,9 @@ public class Arena extends UniqueLocation{
 		//TODO use the confirm prompt to pay an entry fee
 		var team=new Combatants(Squad.active.members);
 		if(Javelin.prompt(CONFIRM+Javelin.group(team)+".")!='\n') return false;
-		var f=new ColosseumFight(team);
+		var el=ChallengeCalculator.calculateel(team);
+		el=Math.min(el,town.getrank().maxpopulation);
+		var f=new ArenaFight(team,el);
 		/*TODO would be cool to be able to generate fights in advance so here we could check if EmcounterGenerator was able to come up with something or not*/
 		throw new StartBattle(f);
 	}

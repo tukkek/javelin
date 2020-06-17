@@ -193,7 +193,7 @@ public class LocationGenerator implements Serializable{
 			return difference>0?1:-1;
 		});
 		spawnnear(t,new AdventurersGuild(),w,2,3,true);
-		spawnnear(t,new Arena(),w,2,3,false);
+		spawnnear(t,new Arena(t),w,2,3,false);
 		placedeepdungeon(w,t);
 		w.discovered.addAll(t.getdistrict().getarea());
 	}

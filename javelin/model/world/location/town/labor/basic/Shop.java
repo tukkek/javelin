@@ -177,7 +177,7 @@ public class Shop extends Location{
 					return OptionsByPriority.INSTANCE.compare(a,b);
 				var itema=(PurchaseOption)a;
 				var itemb=(PurchaseOption)b;
-				var difference=Math.round(Math.round(itema.price-itemb.price));
+				var difference=Math.round(Math.round(itemb.price-itema.price));
 				return difference==0?a.name.compareTo(b.name):difference;
 			};
 		}
@@ -232,8 +232,11 @@ public class Shop extends Location{
 	protected void stock(){
 		var tier=Tier.TIERS.get(level-1);
 		var items=RPG.shuffle(new ArrayList<>(Item.BYTIER.get(tier)));
-		for(int i=0;i<items.size()&&i<5;i++)
-			selection.add(items.get(i));
+		items.retainAll(Item.NONPRECIOUS);
+		for(var i:items){
+			if(selection.size()>=tier.maxlevel) break;
+			selection.add(i);
+		}
 	}
 
 	@Override
@@ -272,5 +275,10 @@ public class Shop extends Location{
 	@Override
 	public boolean canupgrade(){
 		return super.canupgrade()&&crafting.isempty();
+	}
+
+	/** @param i Add this as a {@link PurchaseOption}. */
+	public void add(Item i){
+		selection.add(i);
 	}
 }

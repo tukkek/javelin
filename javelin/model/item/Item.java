@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.action.UseItem;
@@ -24,6 +25,7 @@ import javelin.model.item.potion.Flask;
 import javelin.model.item.potion.Potion;
 import javelin.model.item.precious.ArtPiece;
 import javelin.model.item.precious.Gem;
+import javelin.model.item.precious.PreciousObject;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
@@ -57,6 +59,9 @@ public abstract class Item implements Serializable,Cloneable{
 	public static final HashMap<Tier,ItemSelection> BYTIER=new HashMap<>();
 	/** @see Artifact */
 	public static final ItemSelection ARTIFACT=new ItemSelection();
+	/** All utility items (not {@link PreciousObject}s). */
+	public static final ItemSelection NONPRECIOUS=new ItemSelection();
+
 	/** Price of the cheapest {@link Artifact} after loot registration. */
 	public static Integer cheapestartifact=null;
 
@@ -98,6 +103,8 @@ public abstract class Item implements Serializable,Cloneable{
 		Eidolon.generate();
 		cheapestartifact=ITEMS.stream().filter(i->i instanceof Artifact)
 				.map(i->i.price).min(Integer::compare).get();
+		NONPRECIOUS.addAll(ITEMS.stream().filter(i->!(i instanceof PreciousObject))
+				.collect(Collectors.toList()));
 	}
 
 	/** Name to show the player. */
@@ -161,7 +168,7 @@ public abstract class Item implements Serializable,Cloneable{
 		this.price=Javelin.round(Math.round(Math.round(price)));
 	}
 
-	/** Register this item as a generation/purhcase option. */
+	/** Register this item as a generation/purchase option. */
 	protected void register(){
 		if(ITEMS.add(this)) BYTIER.get(Tier.get(getlevel())).add(this);
 	}

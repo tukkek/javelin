@@ -55,7 +55,6 @@ public class EncounterGenerator{
 	static{
 		minel=checklimit(0,-1);
 		maxel=checklimit(0,+1);
-		System.out.println(List.of("minel",minel,"maxel",maxel));
 	}
 
 	/**

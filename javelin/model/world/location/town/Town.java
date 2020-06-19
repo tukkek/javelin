@@ -221,20 +221,25 @@ public class Town extends Location{
 			strike-=1;
 			if(strike==0&&notifyplayer())
 				events.add(this+" resumes its normal labors.");
-		}else{
-			var labor=getdailylabor(true);
-			if(labor>0) getgovernor().work(labor,getdistrict());
+			return;
 		}
+		var d=getdistrict();
+		var labor=getdailylabor(true,d);
+		if(labor>0) getgovernor().work(labor,d);
 	}
 
 	/**
 	 * @param randomize If <code>true</code>, result is modified by
 	 *          {@link RPG#randomize(int)}.
+	 * @param d
 	 * @return Daily amount of work done.
 	 * @see Labor#work(float)
 	 */
-	public float getdailylabor(boolean randomize){
+	public float getdailylabor(boolean randomize,District d){
 		var resources=1+this.resources.size()*0.1f;
+		var population=this.population;
+		for(var l:d.getlocations())
+			population+=l.work;
 		var labor=population*DAILYLABOR*resources*World.scenario.boost
 				*World.scenario.labormodifier;
 		if(randomize) labor+=RPG.randomize(Math.round(labor))/10f;
@@ -246,7 +251,7 @@ public class Town extends Location{
 	 *         easier representation on UI.
 	 */
 	public int getweeklylabor(boolean randomize){
-		return Math.round(getdailylabor(randomize)*7);
+		return Math.round(getdailylabor(randomize,getdistrict())*7);
 	}
 
 	/**

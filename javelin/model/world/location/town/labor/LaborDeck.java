@@ -59,7 +59,7 @@ public class LaborDeck extends ArrayList<Labor>{
 
 	static final Labor[] BASE=new Labor[]{
 			/*new BuildDwelling(),*/new BuildLodge(),new Cancel(),new Growth(),
-			new Redraw(),new BuildShop(),new BuildMiniatureParlor()};
+			new Redraw(),new BuildShop(),new BuildMiniatureParlor(),new BuildMine()};
 	static final Labor[] CRIMINAL=new Labor[]{new BuildNinjaDojo(),
 			new BuildSewers(),new BuildSlums(),new BuildThievesGuild(),
 			BlackDragoon.INSTANCE.buildguild()};
@@ -74,8 +74,7 @@ public class LaborDeck extends ArrayList<Labor>{
 	static final Labor[] MILITARY=new Labor[]{new BuildMercenariesGuild(),
 			new BuildMonastery(),Fighter.INSTANCE.buildguild(),
 			RedDragoon.INSTANCE.buildguild()};
-	static final Labor[] MERCANTILE=new Labor[]{new BuildMine(),
-			new Deforestate()};
+	static final Labor[] MERCANTILE=new Labor[]{new Deforestate()};
 	static final Labor[] RELIGIOUS=new Labor[]{new BuildShrine(),
 			new BuildSanctuary()};
 

@@ -106,6 +106,11 @@ public abstract class Location extends Actor{
 	 * @see Squad#spot(List)
 	 */
 	protected boolean showgarrison=true;
+	/**
+	 * Each unit of work equals 1 daily {@link Town#population} if inside a
+	 * {@link District}.
+	 */
+	public int work=0;
 
 	/**
 	 * @param descriptionknown What to show a player on a succesfull

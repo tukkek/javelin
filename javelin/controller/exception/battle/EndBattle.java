@@ -90,10 +90,8 @@ public class EndBattle extends BattleEvent{
 				Squad.active.updateavatar();
 			}
 		}
-		if(combatresult==null|skipresultmessage) return;
-		Javelin.message(combatresult+"\nPress any key to continue...",
-				Javelin.Delay.BLOCK);
-		BattleScreen.active.getUserInput();
+		if(combatresult!=null&&!skipresultmessage)
+			Javelin.message(combatresult,true);
 	}
 
 	static void updateoriginal(List<Combatant> originalteam){

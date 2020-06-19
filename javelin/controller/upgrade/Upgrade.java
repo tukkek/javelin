@@ -2,11 +2,13 @@ package javelin.controller.upgrade;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.fight.Fight;
 import javelin.controller.kit.Kit;
@@ -40,6 +42,7 @@ public abstract class Upgrade implements Serializable{
 	/** Constructor. */
 	public Upgrade(final String name){
 		super();
+		if(Javelin.DEBUG&&name==null) throw new InvalidParameterException();
 		this.name=name;
 	}
 

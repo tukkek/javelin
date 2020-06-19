@@ -1,51 +1,92 @@
 package javelin.model.world.location.town.labor.productive;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.Point;
-import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
-import javelin.controller.terrain.Mountains;
+import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;
-import javelin.model.Equipment;
+import javelin.controller.terrain.Underground;
+import javelin.model.item.Tier;
 import javelin.model.item.consumable.Ruby;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Combatants;
+import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
-import javelin.model.world.Actor;
+import javelin.model.world.Incursion;
+import javelin.model.world.Period;
 import javelin.model.world.World;
 import javelin.model.world.location.Fortification;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.Outpost;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Build;
-import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
-import javelin.model.world.location.unique.AdventurersGuild;
 import javelin.old.RPG;
-import javelin.view.screen.Option;
 import javelin.view.screen.WorldScreen;
-import javelin.view.screen.town.SelectScreen;
 
 /**
- * Found only on {@link Mountains}, mines allow a {@link Squad} to mine gold
- * over a period of time or leave {@link Combatant}s there for long-term mining
- * - in which case the resulting gold needs to be gathered there by a
- * {@link Squad} later on.
+ * Gold mines provides 1 {@link Location#work}, with a limit of at most one mine
+ * per Town {@link Rank}.
+ *
+ * Mines will work themselves, level-up, amass gold, possibly a {@link Ruby}
+ * with time. It will dig into an {@link Underground} {@link Monster} lair at
+ * random intervals, at which point it will require a {@link Squad} to
+ * intervene, which will result in the amssed rewards being given to the player.
+ *
+ * Mines have a maximum depth determined at random upon creation. Once the limit
+ * is reached, it runs dry and it will {@link #remove()} itself from the game
+ * {@link World}.
+ *
+ * TODO this redesign is already better than the previous iteration but even
+ * more interactity is possible, like some control of whether to dig deeper,
+ * possibly through {@link Labor}, etc. Whether more complexity is desired or
+ * not is another question entirely.
  *
  * @author alex
  */
 public class Mine extends Fortification{
+	class MineFight extends Fight{
+		public MineFight(){
+			terrain=Terrain.UNDERGROUND;
+			hide=false;
+			bribe=false;
+		}
+
+		@Override
+		public ArrayList<Combatant> getfoes(Integer teamel){
+			return monsters;
+		}
+
+		@Override
+		public boolean onend(){
+			if(!victory) return false;
+			var s=Squad.active;
+			gold=Javelin.round(gold+RPG.randomize(gold));
+			s.gold+=gold;
+			var award="The miners award you with $%s!";
+			award=String.format(award,Javelin.format(gold));
+			Javelin.message(award,true);
+			if(rubies>0){
+				for(var i=0;i<rubies;i++)
+					s.equipment.add(new Ruby());
+				award="The miners also award you with %s wish rubies!";
+				award=String.format(award,rubies);
+				Javelin.message(award,true);
+			}
+			clear();
+			return true;
+		}
+	}
+
 	static final String DESCRIPTION="Gold mine";
-	static final Option MINEDAY=new Option("",0,'d');
-	static final Option MINEWEEK=new Option("",0,'w');
-	static final Option PLACEMINER=new Option(
-			"Assign an unit to work on this mine",0,'a');
-	static final Option RECALLMINER=new Option("Recall a miner",0,'r');
+	static final String DRY="A gold mine has run dry...";
+	static final String MONSTERS="A gold mine needs help with monsters!";
 
 	/**
 	 * {@link Town} {@link Labor}.
@@ -55,7 +96,7 @@ public class Mine extends Fortification{
 	public static class BuildMine extends Build{
 		/** Constructor. */
 		public BuildMine(){
-			super("Build mine",10,Rank.HAMLET,null);
+			super("Build mine",1,Rank.HAMLET,null);
 		}
 
 		@Override
@@ -65,132 +106,30 @@ public class Mine extends Fortification{
 
 		@Override
 		public boolean validate(District d){
-			return super.validate(d)&&d.getlocationtype(Mine.class).isEmpty()
+			return super.validate(d)
+					&&d.getlocationtype(Mine.class).size()<d.town.getrank().rank
 					&&getsitelocation()!=null;
 		}
 
 		@Override
 		protected Point getsitelocation(){
-			ArrayList<Point> free=town.getdistrict().getfreespaces();
+			var free=town.getdistrict().getfreespaces();
 			for(Point p:free)
 				if(Terrain.get(p.x,p.y).equals(Terrain.MOUNTAINS)) return p;
 			return null;
 		}
 	}
 
-	class UpgradeMine extends BuildingUpgrade{
-		public UpgradeMine(Mine mine){
-			super("Ruby mine",Math.max(0,10-mine.miners.size()),5,mine,Rank.VILLAGE);
-		}
-
-		@Override
-		public Location getgoal(){
-			return previous;
-		}
-
-		@Override
-		public void done(Location l){
-			super.done(l);
-			Mine m=(Mine)l;
-			m.rename("Ruby mine");
-			m.minesrubies=true;
-		}
-
-		@Override
-		public boolean validate(District d){
-			return !((Mine)previous).minesrubies&&super.validate(d);
-		}
-	}
-
-	class MineScreen extends SelectScreen{
-		MineScreen(){
-			super("You find yourself at the entrance of a "
-					+descriptionknown.toLowerCase()+".",null);
-			stayopen=false;
-		}
-
-		@Override
-		public String getCurrency(){
-			return "";
-		}
-
-		@Override
-		public String printinfo(){
-			return "";
-		}
-
-		@Override
-		public boolean select(Option o){
-			if(o==MINEDAY){
-				Squad.active.gold+=mine(1);
-				Squad.active.delay(24);
-				return true;
-			}
-			if(o==MINEWEEK){
-				Squad.active.gold+=mine(7);
-				Squad.active.delay(7*24);
-				return true;
-			}
-			if(o==PLACEMINER){
-				ArrayList<Combatant> eligible=geteligible();
-				int choice=Javelin.choose(
-						"Note that only rational, non-mercenary units in decent health can be stationed.\n\n"
-								+"Which unit will stay mining?",
-						eligible,true,false);
-				if(choice>=0) assign(eligible.get(choice),Squad.active.members,miners,
-						Squad.active.equipment,equipment);
-				return false;
-			}
-			if(o==RECALLMINER){
-				int choice=Javelin.choose("Recall which miner?",miners,true,false);
-				if(choice>=0) assign(miners.get(choice),miners,Squad.active.members,
-						equipment,Squad.active.equipment);
-				return false;
-			}
-			throw new RuntimeException(o.name+" #unknownmineoption");
-		}
-
-		public int mine(int days){
-			return Math.round(AdventurersGuild.pay(0,days,Squad.active.members));
-		}
-
-		void assign(Combatant recruit,List<Combatant> from,List<Combatant> to,
-				Equipment fromequipment,Equipment toequipment){
-			toequipment.put(recruit,fromequipment.get(recruit));
-			fromequipment.remove(recruit);
-			from.remove(recruit);
-			to.add(recruit);
-		}
-
-		@Override
-		public List<Option> getoptions(){
-			ArrayList<Option> options=new ArrayList<>();
-			MINEDAY.name="Mine for a day ($"+mine(1)+")";
-			MINEWEEK.name="Mine for a week ($"+mine(7)+")";
-			options.add(MINEDAY);
-			options.add(MINEWEEK);
-			if(Squad.active.members.size()>1) options.add(PLACEMINER);
-			if(!miners.isEmpty()) options.add(RECALLMINER);
-			return options;
-		}
-
-		@Override
-		protected Comparator<Option> sort(){
-			return (o1,o2)->o1.name.compareTo(o2.name);
-		}
-
-		@Override
-		public String printpriceinfo(Option o){
-			return "";
-		}
-	}
-
-	List<Combatant> miners=new ArrayList<>();
-	float gold=0;
-	/** TODO should use a normal map instead */
-	Equipment equipment=new Equipment(null);
-	boolean minesrubies=false;
+	int gold=0;
 	int rubies=0;
+	int level=1;
+	/**
+	 * Different than garrison so a mine can continue working under hostile
+	 * control.
+	 */
+	Combatants monsters=new Combatants(0);
+	int progress=0;
+	int maxdepth=RPG.r(1,20);
 
 	/** Constructor. */
 	public Mine(){
@@ -198,6 +137,7 @@ public class Mine extends Fortification{
 		terrain=Terrain.UNDERGROUND;
 		allowedinscenario=false;
 		gossip=true;
+		work=1;
 	}
 
 	/**
@@ -210,97 +150,73 @@ public class Mine extends Fortification{
 		this.y=y;
 	}
 
-	ArrayList<Combatant> geteligible(){
-		ArrayList<Combatant> eligible=new ArrayList<>();
-		for(Combatant c:Squad.active.members)
-			if(!c.mercenary&&c.getnumericstatus()>=Combatant.STATUSHURT
-					&&c.source.think(-1))
-				eligible.add(c);
-		return eligible;
-	}
-
-	@Override
-	public Integer getel(Integer attackerel){
-		return miners.isEmpty()?Integer.MIN_VALUE
-				:ChallengeCalculator.calculateel(miners);
-	}
-
 	@Override
 	public void turn(long time,WorldScreen world){
+		if(ishostile()||!monsters.isEmpty()) return;
+		var population=getdistrict().town.population;
+		progress+=population+RPG.randomize(population);
+		var upgrade=level*Period.Time.YEAR/20;
+		if(progress>upgrade){
+			progress-=upgrade;
+			upgrade();
+		}
+	}
+
+	void upgrade(){
+		level+=1;
+		if(level>maxdepth){
+			remove();
+			getdistrict().town.events.add(DRY);
+			return;
+		}
 		if(ishostile()) return;
-		gold+=AdventurersGuild.pay(0,1,miners);
-		if(minesrubies&&RPG.random()<1/30f) rubies+=1;
-	}
-
-	@Override
-	public boolean hasupgraded(){
-		return gold>=1;
-	}
-
-	@Override
-	public boolean hascrafted(){
-		return rubies>0;
+		gold+=RewardCalculator.getgold(level);
+		if(RPG.chancein(20)) rubies+=1;
+		if(RPG.chancein(20/Tier.TIERS.size())){
+			monsters=EncounterGenerator.generate(level,Terrain.UNDERGROUND);
+			getdistrict().town.events.add(MONSTERS);
+		}
 	}
 
 	@Override
 	public boolean isworking(){
-		return !miners.isEmpty();
+		return !monsters.isEmpty();
 	}
 
 	@Override
 	public boolean interact(){
 		if(!super.interact()) return false;
-		String collected="";
-		if(gold>=1){
-			int g=Math.round(Math.round(Math.ceil(gold)));
-			Squad.active.gold+=g;
-			gold=0;
-			collected+="You collect $"+Javelin.format(g)+" from the mine!\n";
+		if(monsters.isEmpty()){
+			Javelin.message("This gold mine is operating normally.",false);
+			return false;
 		}
-		if(rubies>0){
-			collected+="You collect "+rubies+" rubies from the mine!\n";
-			for(int i=0;i<rubies;i++)
-				new Ruby().grab();
-			rubies=0;
-		}
-		if(!collected.isEmpty()) Javelin.message(collected,false);
-		new MineScreen().show();
-		return true;
+		var description="This mine shaft has run into a lair of monsters!";
+		description=describe(monsters,description,true,this);
+		if(!headsup(description)) return true;
+		throw new StartBattle(new MineFight());
 	}
 
 	@Override
 	protected void generate(){
 		if(x!=-1) return;
-		while(x==-1||!Terrain.get(x,y).equals(Terrain.MOUNTAINS)
-				||!validatedistance())
+		while(x==-1||!Terrain.get(x,y).equals(Terrain.MOUNTAINS))
 			super.generate();
-	}
-
-	boolean validatedistance(){
-		for(Actor mine:World.getall(Mine.class))
-			if(mine!=this&&distance(mine.x,mine.y)<Outpost.VISIONRANGE*2)
-				return false;
-		return true;
-	}
-
-	@Override
-	protected Fight fight(){
-		var s=super.fight();
-		s.terrain=Terrain.UNDERGROUND;
-		return s;
 	}
 
 	@Override
 	public List<Combatant> getcombatants(){
-		ArrayList<Combatant> combatants=new ArrayList<>(garrison);
-		combatants.addAll(miners);
-		return combatants;
+		return monsters;
+	}
+
+	void clear(){
+		gold=0;
+		rubies=0;
+		monsters.clear();
 	}
 
 	@Override
-	public ArrayList<Labor> getupgrades(District d){
-		ArrayList<Labor> upgrades=super.getupgrades(d);
-		upgrades.add(new UpgradeMine(this));
-		return upgrades;
+	protected void captureforai(Incursion attacker){
+		super.captureforai(attacker);
+		if(attacker.getel()>level) clear();
 	}
 }

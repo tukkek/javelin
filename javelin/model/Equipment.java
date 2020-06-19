@@ -80,6 +80,7 @@ public class Equipment implements Serializable{
 			get(c);
 	}
 
+	/** @param i Adds to a random bag, with no user interaction. */
 	public void add(Item i){
 		get(RPG.pick(squad.members)).add(i);
 	}

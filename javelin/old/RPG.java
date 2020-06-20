@@ -1,11 +1,13 @@
 package javelin.old;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import javelin.Javelin;
 import javelin.controller.ai.BattleAi;
 
 public class RPG{
@@ -60,11 +62,45 @@ public class RPG{
 	 *
 	 * @param sides Given a die X...
 	 * @return the result of 1dX - 1dX.
+	 * @deprecated See {@link #randomize()}.
 	 */
+	@Deprecated
 	public static int randomize(int sides){
 		if(sides==0) return sides;
 		if(sides<0) sides=Math.abs(sides);
 		return r(1,sides)-r(1,sides);
+	}
+
+	/**
+	 * This improves on {@link #randomize(int)} in two levels: first syntactically
+	 * you don't need the <code>x + randomize(x)</code> idiom, which is awkward
+	 * and very error prone; second, it is not predictable or deterministic as it
+	 * can scale up and down infinitely (although increasingly unlikely) - while
+	 * the original method has a once-derived defined range.
+	 *
+	 * TODO replace old users of {@link #randomize(int)}, test and remove it.
+	 *
+	 * Note that the semantics of this method are different from
+	 * {@link #randomize(int)}, this is not a syntatic-sugar signature!
+	 *
+	 * @param value The original value, which will be randomized between one and
+	 *          an infinite amount of times. Each pass is a <code>+1dx-1dX</code>
+	 *          sum, where X equals the value itself.
+	 * @param min Will cap the result to this lower bound.
+	 * @param max Will cap the result to this higher bound.
+	 * @return The original value plus the sum of all random iterations it went
+	 *         through.
+	 */
+	public static int randomize(int value,int min,int max){
+		if(value==0) return value;
+		if(Javelin.DEBUG&&min>max) throw new InvalidParameterException();
+		var result=value;
+		value=Math.abs(value); //TODO needed?
+		for(var go=true;go;go=RPG.chancein(2))
+			result+=r(1,value)-r(1,value);
+		if(result<min) return min;
+		if(result>max) return max;
+		return result;
 	}
 
 	/**

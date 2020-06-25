@@ -7,7 +7,6 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.exception.RepeatTurn;
-import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
@@ -94,16 +93,8 @@ public class Divide extends WorldAction{
 		s.members=newsquad;
 		s.gold=gold;
 		s.strategic=Squad.active.strategic;
-		s.move(true,Terrain.current(),Squad.active.x,Squad.active.y);
-		placement:for(x=Squad.active.x-1;x<=Squad.active.x+1;x++)
-			for(y=Squad.active.y-1;y<=Squad.active.y+1;y++)
-				if(!Divide.istown(x,y,false)
-						&&(nearto==null||findtown(x,y) instanceof Town)
-						&&(s.swim()||!World.getseed().map[x][y].equals(Terrain.WATER))){
-					s.x=x;
-					s.y=y;
-					break placement;
-				}
+		s.x=Squad.active.x;
+		s.y=Squad.active.y;
 		Squad.active.members=oldsquad;
 		Squad.active.gold-=gold;
 		s.place();
@@ -113,6 +104,8 @@ public class Divide extends WorldAction{
 			s.equipment.put(c,items);
 		}
 		Squad.active.updateavatar();
+		Squad.active=s;
+		throw new RepeatTurn();
 	}
 
 	int transfergold(char input,ArrayList<Combatant> newsquad){

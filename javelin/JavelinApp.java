@@ -112,6 +112,8 @@ public class JavelinApp extends QuestApp{
 			}catch(final EndBattle end){
 				EndBattle.end();
 			}
+			Javelin.app.fight=null;
+			Fight.state=null;
 		}
 	}
 

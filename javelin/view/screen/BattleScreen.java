@@ -421,7 +421,6 @@ public class BattleScreen extends Screen{
 	}
 
 	public void center(){
-		//		Javelin.app.switchScreen(this);
-		center(current.location[0],current.location[1]);
+		if(current!=null) center(current.location[0],current.location[1]);
 	}
 }

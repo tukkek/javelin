@@ -8,6 +8,7 @@ import javelin.controller.db.EncounterIndex;
 import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.fight.Fight;
 import javelin.controller.terrain.Terrain;
+import javelin.controller.terrain.Water;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
@@ -45,7 +46,7 @@ public class EncounterGenerator{
 			for(var t:Terrain.NONWATER){
 				if(Javelin.DEBUG&&PRINTINFO)
 					failure=String.format("Failure: %s el%s",t,el);
-				if(EncounterGenerator.generate(el,t)==null){
+				if(generate(el,t)==null){
 					if(failure!=null) System.out.println(failure);
 					return el-step;
 				}
@@ -65,8 +66,11 @@ public class EncounterGenerator{
 	 *          {@link javelin.model.world.location.Location#garrison}, which uses
 	 *          the local terrain instead.
 	 * @return Enemy units for an encounter. <code>null</code> should not be
-	 *         thrown to external calls of this class, as Encounter Levels should
-	 *         be padded to safety.
+	 *         returned to external calls of this class, as Encounter Levels
+	 *         should be padded to safety - the exception would be when using a
+	 *         very limited pools like only {@link Water}, or a terran that
+	 *         happens to have an empty gap in EL for some reason. In most typical
+	 *         cases it should be safe to not expect a <code>null</code> return.
 	 */
 	public static Combatants generate(int el,List<Terrain> terrains){
 		if(el<minel) el=minel;

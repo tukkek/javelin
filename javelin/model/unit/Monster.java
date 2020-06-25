@@ -712,7 +712,7 @@ public class Monster implements Cloneable,Serializable{
 	 * @see Terrain#toString()
 	 */
 	public List<String> getterrains(){
-		return Monster.TERRAINDATA.get(name);
+		return TERRAINDATA.get(name);
 	}
 
 	/**

@@ -166,7 +166,9 @@ public class TownScreen extends PurchaseScreen{
 		}
 		var r=town.diplomacy;
 		if(!r.treaties.isEmpty()){
-			var treaties="Available treaties:\n";
+			var treaties="Available treaties (reputation: %s):\n";
+			var reputation=town.diplomacy.describestatus().toLowerCase();
+			treaties=String.format(treaties,reputation);
 			treaties+=r.treaties.parallelStream().map(m->"- "+m)
 					.collect(Collectors.joining("\n"));
 			treaties+="\n\nReputation: "+r.describestatus().toLowerCase()+".";

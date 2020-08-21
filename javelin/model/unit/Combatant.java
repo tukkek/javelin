@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.CountingSet;
@@ -406,7 +407,8 @@ public class Combatant implements Serializable,Cloneable{
 			case 1:
 				if(p.equals(Period.NIGHT)) return Period.EVENING;
 				if(p.equals(Period.EVENING))
-					return Javelin.app.fight.denydarkvision?Period.EVENING:Period.AFTERNOON;
+					return Javelin.app.fight.denydarkvision?Period.EVENING
+							:Period.AFTERNOON;
 		}
 		return p;
 	}
@@ -458,8 +460,9 @@ public class Combatant implements Serializable,Cloneable{
 		else if(v==Vision.BLOCKED) statuslist.add("blocked");
 		if(source.fly==0&&s.map[location[0]][location[1]].flooded)
 			statuslist.add("on water");
-		for(Condition c:conditions)
-			statuslist.add(c.toString().toLowerCase());
+		var conditions=this.conditions.stream().map(c->c.toString().toLowerCase())
+				.collect(Collectors.toSet());
+		statuslist.addAll(conditions);
 		statuslist.sort(null);
 		return statuslist;
 	}

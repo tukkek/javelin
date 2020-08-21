@@ -7,7 +7,6 @@ import javelin.Javelin;
 import javelin.controller.action.world.WorldMove;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.condition.TemporarySpell;
 import javelin.model.world.Period;
@@ -82,10 +81,12 @@ public class Throne extends Feature{
 		}
 		combatant.addcondition(new TemporarySpell("Throne gift",spell,combatant));
 		lastuse=Period.gettime();
-		var result=combatant+" has been gifted with a use of "+name+"!";
-		Javelin.app.switchScreen(WorldScreen.current);
-		Javelin.message(result,false);
-		revealed=true;
+		if(!revealed){
+			var result=combatant+" has been gifted with a use of "+name+"!";
+			Javelin.app.switchScreen(WorldScreen.current);
+			Javelin.message(result,false);
+			revealed=true;
+		}
 		return true;
 	}
 }

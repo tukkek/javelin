@@ -12,6 +12,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.world.location.Location;
 import javelin.old.RPG;
+import javelin.view.screen.BattleScreen;
 
 /**
  * Baseline class for a fight that is composed of distinct "waves", with each
@@ -68,6 +69,8 @@ public abstract class WavesFight extends LocationFight{
 			if(wave==null) return;
 			add(wave,Fight.state.redTeam,((LocationMap)map).spawnred);
 			Javelin.redraw();
+			var p=RPG.pick(wave).getlocation();
+			BattleScreen.active.center(p.x,p.y);
 			Javelin.message(message,true);
 		}finally{
 			super.checkend();

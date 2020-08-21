@@ -54,11 +54,12 @@ public class RareFeatureTable extends Table implements DungeonFeatureTable{
 	static final Map<Class<? extends Feature>,Integer> ALL=new HashMap<>();
 
 	static{
+		var tier=Dungeon.active.gettier().tier.getordinal();
 		for(var f:COMMON)
 			ALL.put(f,ROWS*2);
-		for(var f:AVERAGE)
+		if(tier>=1) for(var f:AVERAGE)
 			ALL.put(f,ROWS);
-		for(var f:RARE)
+		if(tier>=2) for(var f:RARE)
 			ALL.put(f,ROWS/2);
 	}
 

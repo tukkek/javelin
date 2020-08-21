@@ -2,9 +2,11 @@ package javelin.model.world.location.dungeon.feature;
 
 import java.util.stream.Collectors;
 
+import javelin.Debug;
 import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.model.item.Item;
+import javelin.model.item.Tier;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -64,13 +66,18 @@ public class Recipe extends Feature{
 	Item item=null;
 
 	/** Constructor. */
-	public Recipe(){
+	public Recipe(int dungeonlevel){
 		super("dungeonrecipe");
-		var from=RewardCalculator.getgold(Dungeon.active.level-1);
-		var to=RewardCalculator.getgold(Dungeon.active.level+1);
+		var from=RewardCalculator.getgold(dungeonlevel-1);
+		var to=RewardCalculator.getgold(dungeonlevel+1);
 		var candidates=Item.NONPRECIOUS.stream()
 				.filter(i->from>=i.price&&i.price<=to).collect(Collectors.toList());
 		if(!candidates.isEmpty()) item=RPG.pick(candidates);
+	}
+
+	/** Constructor. */
+	public Recipe(){
+		this(Dungeon.active.level);
 	}
 
 	@Override
@@ -82,5 +89,18 @@ public class Recipe extends Feature{
 	public boolean activate(){
 		new CraftingRecipe().grab();
 		return true;
+	}
+
+	/**
+	 * Helper method to determine which {@link Dungeon} levels can generate
+	 * recipes.
+	 *
+	 * @see Debug
+	 */
+	public static void test(){
+		for(var level=Tier.LOW.minlevel;level<=Tier.EPIC.maxlevel;level++){
+			var valid=new Recipe(level).validate()?"valid":"invalid";
+			System.out.println(String.format("Recippe level %s: %s.",level,valid));
+		}
 	}
 }

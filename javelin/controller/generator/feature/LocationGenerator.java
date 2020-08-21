@@ -140,9 +140,9 @@ public class LocationGenerator implements Serializable{
 	 * @param max Maximum distance.
 	 * @param clear Whether to capture the garrison, if the given actor is a
 	 *          {@link Location}.
+	 * @return The given actor, for call-chaining.
 	 */
-	public static void spawnnear(Town t,Actor a,World w,int min,int max,
-			boolean clear){
+	static Actor spawnnear(Town t,Actor a,World w,int min,int max,boolean clear){
 		Point p=null;
 		ArrayList<Actor> actors=World.getactors();
 		while(p==null||World.get(t.x+p.x,t.y+p.y,actors)!=null
@@ -157,6 +157,7 @@ public class LocationGenerator implements Serializable{
 		Location l=a instanceof Location?(Location)a:null;
 		a.place();
 		if(l!=null&&clear) l.capture();
+		return a;
 	}
 
 	void generatestaticlocations(){
@@ -191,8 +192,8 @@ public class LocationGenerator implements Serializable{
 			if(difference==0) return 0;
 			return difference>0?1:-1;
 		});
-		spawnnear(t,new AdventurersGuild(),w,2,3,true);
-		spawnnear(t,new Arena(t),w,2,3,false);
+		spawnnear(t,new AdventurersGuild(),w,2,3,true).reveal();
+		spawnnear(t,new Arena(t),w,2,3,false).reveal();
 		placedeepdungeon(w,t);
 		w.discovered.addAll(t.getdistrict().getarea());
 	}
@@ -208,9 +209,9 @@ public class LocationGenerator implements Serializable{
 		var allowed=Set.of(Terrain.FOREST,Terrain.HILL,Terrain.PLAIN);
 		while(deep.x<0||!allowed.contains(Terrain.get(deep.x,deep.y))){
 			deep.remove();
-			spawnnear(t,deep,w,4,6,false);
+			spawnnear(t,deep,w,4,4,false);
 		}
-		w.discovered.add(deep.getlocation());
+		deep.reveal();
 	}
 
 	/**

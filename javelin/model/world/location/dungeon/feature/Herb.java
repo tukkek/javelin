@@ -1,6 +1,7 @@
 package javelin.model.world.location.dungeon.feature;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,7 +42,7 @@ public class Herb extends Feature{
 	static final List<Potion> POTIONS=Item.ITEMS.stream()
 			.filter(i->i.getClass().equals(Potion.class)).map(i->(Potion)i)
 			.collect(Collectors.toList());
-	static final int MAXCOPIES=5;
+	static final int MAXCOPIES=2;
 
 	static{
 		if(Javelin.DEBUG&&POTIONS.isEmpty())
@@ -100,14 +101,15 @@ public class Herb extends Feature{
 	 * @see RewardCalculator
 	 * @see #MAXLEVEL
 	 */
-	static List<Potion> generate(int level){
+	List<Potion> generate(int level){
+		if(!validate()) return Collections.EMPTY_LIST;
 		RPG.shuffle(POTIONS).sort(ItemsByPrice.SINGLETON);
-		ArrayList<Potion> potions=new ArrayList<>(MAXCOPIES);
+		var potions=new ArrayList<Potion>(MAXCOPIES);
 		int reward=RewardCalculator.getgold(level);
 		for(var p:POTIONS){
 			potions.clear();
 			int pool=reward;
-			for(int i=0;i<MAXCOPIES&&pool>0;i++){
+			for(var i=0;i<MAXCOPIES&&pool>0;i++){
 				potions.add((Potion)p.clone());
 				pool-=p.price;
 			}

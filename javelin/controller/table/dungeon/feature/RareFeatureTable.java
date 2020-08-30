@@ -60,7 +60,7 @@ public class RareFeatureTable extends Table implements DungeonFeatureTable{
 		var tier=Dungeon.active.gettier().tier.getordinal();
 		var features=define(tier);
 		var types=RPG.shuffle(new ArrayList<>(features.keySet()));
-		var ntypes=RPG.randomize(RPG.rolldice(tier+1,4),1,types.size());
+		var ntypes=RPG.randomize(RPG.rolldice(tier+1,4),2,types.size());
 		for(var f:types.subList(0,ntypes))
 			add(f,features.get(f));
 	}

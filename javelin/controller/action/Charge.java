@@ -108,9 +108,9 @@ public class Charge extends Fire implements AiAction{
 		return chances;
 	}
 
+	//TODO inline
 	void charge(Combatant me){
 		me.addcondition(new Charging(me.ap+ActionCost.FULL,me));
-		me.acmodifier-=2;
 	}
 
 	static boolean outoufbounds(final BattleState s,final int x,final int y){

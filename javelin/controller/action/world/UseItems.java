@@ -99,7 +99,7 @@ public class UseItems extends WorldAction{
 		Combatant owner=findowner(i);
 		owner.unequip(i);
 		Squad s=Squad.active;
-		s.equipment.get(owner).remove(i);
+		s.equipment.remove(i);
 		var prompt="Transfer "+i.name+" to who?";
 		s.equipment.get(selectmember(s.members,i,prompt)).add(i);
 	}

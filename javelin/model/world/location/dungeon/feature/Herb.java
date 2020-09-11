@@ -82,7 +82,8 @@ public class Herb extends Feature{
 			return true;
 		}
 		if(RPG.chancein(2)&&!Debug.disablecombat){
-			String interupted="You are interrupted while extracting the herbs!";
+			String interupted="You are interrupted while extracting the "+description
+					+" herbs!";
 			Javelin.message(interupted,false);
 			throw new StartBattle(new RandomDungeonEncounter(Dungeon.active));
 		}

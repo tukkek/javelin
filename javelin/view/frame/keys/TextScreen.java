@@ -17,7 +17,8 @@ import javelin.view.frame.Frame;
  * @author alex
  */
 public abstract class TextScreen extends Frame{
-	final TextArea text=new TextArea(loadtext(),30,80);
+	final TextArea text=new TextArea(loadtext(),30,80,
+			TextArea.SCROLLBARS_VERTICAL_ONLY);
 
 	/** Constructor. */
 	public TextScreen(String title){

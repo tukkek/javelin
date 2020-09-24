@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
@@ -77,7 +78,8 @@ public class Arena extends UniqueLocation{
 	static final String CONFIRM="Begin an Arena match with these fighters?\n"
 			+"Press ENTER to confirm or any other key to cancel...\n\n";
 	static final String DESCRIPTION="The Arena";
-	static final String CLOSED="The arena is closed. Come back from noon to midnight...";
+	static final String CLOSED="The arena is closed. Come back from noon to midnight...\n"
+			+"Press w to wait or any other key to continue...";
 
 	class ArenaMap extends LocationMap{
 		List<Point> minionspawn=new ArrayList<>();
@@ -174,7 +176,10 @@ public class Arena extends UniqueLocation{
 	public boolean interact(){
 		if(!super.interact()) return false;
 		if(!Period.AFTERNOON.is()&&!Period.EVENING.is()){
-			Javelin.message(CLOSED,false);
+			Javelin.message(CLOSED,Delay.NONE);
+			/*TODO this could easily be refactored into Squad#waitfor(Period) */
+			if(Javelin.input().getKeyChar()=='w')
+				Squad.active.delay(12-Period.gethour());
 			return false;
 		}
 		var hurt=Squad.active.members.stream()

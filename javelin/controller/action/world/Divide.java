@@ -116,7 +116,7 @@ public class Divide extends WorldAction{
 		while(input!='\n'){
 			clear();
 			String prompt="How much gold do you want to transfer to the new squad? Use the + and - keys to change and ENTER to confirm.\n"
-					+gold;
+					+Javelin.format(gold);
 			input=Javelin.prompt(prompt);
 			if(input=='+'){
 				gold+=increment;

@@ -9,6 +9,7 @@ import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.comparator.OptionsByPriority;
+import javelin.controller.kit.Kit;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.ability.RaiseAbility;
@@ -33,6 +34,14 @@ import javelin.view.screen.upgrading.AcademyScreen;
 /**
  * A place where units can go to learn about a general topic - be it physical
  * feats or intellectual or magical prowess.
+ *
+ * TODO would it be any easier to have an internal {@link Squad} to keep track
+ * of training units, equipment, etc?
+ *
+ * TODO as of 2.0+ it would probably be a good idea to have only one
+ * {@link Academy}, with each {@link Kit} as a tab. This would reduce
+ * {@link WorldScreen} clutter, the need for individual images, micro-managing
+ * unit training, etc.
  *
  * @author alex
  */

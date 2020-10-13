@@ -48,12 +48,12 @@ public class Flee extends Action implements AiAction{
 	}
 
 	public static boolean flee(Combatant active,BattleState s){
-		if(!ALLOWFLEE||!Javelin.app.fight.canflee||s.isengaged(active))
+		if(!ALLOWFLEE||!Javelin.app.fight.canflee||!s.redTeam.contains(s.next)
+				||s.isengaged(active))
 			return false;
-		if(s.blueTeam.isEmpty()||s.redTeam.isEmpty()) return false;
-		final int eldifference=ChallengeCalculator.calculateel(s.redTeam)
-				-ChallengeCalculator.calculateel(s.blueTeam);
-		return eldifference<=FLEEAT&&s.redTeam.contains(s.next);
+		var red=ChallengeCalculator.calculateel(s.redTeam);
+		var blue=ChallengeCalculator.calculateel(s.blueTeam);
+		return red-blue<=FLEEAT;
 	}
 
 	@Override

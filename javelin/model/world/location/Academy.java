@@ -306,6 +306,8 @@ public abstract class Academy extends Fortification{
 	@Override
 	public void turn(long time,WorldScreen world){
 		super.turn(time,world);
+		if(ishostile()) return;
+		if(training.queue.isEmpty()) return;
 		if(training.reportalldone()&&Squad.getsquads().isEmpty())
 			completetraining(false);
 	}

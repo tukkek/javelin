@@ -141,7 +141,7 @@ public class AttackResolver{
 	public AttackResolver(AbstractAttack action,Combatant attacker,
 			Combatant target,AttackSequence sequence,BattleState state){
 		this.action=action;
-		this.sequence=sequence;
+		this.sequence=new AttackSequence(sequence);
 		sequence.sort();
 		critical=new ArrayList<>(sequence.size());
 		maneuver=action.maneuver;

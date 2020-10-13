@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.generator.NpcGenerator;
 import javelin.controller.kit.Kit;
@@ -116,6 +115,7 @@ public abstract class Guild extends Academy{
 
 	@Override
 	public final void turn(long time,WorldScreen world){
+		super.turn(time,world);
 		if(ishostile()) return;
 		generatehires();
 		if(RPG.chancein(100)){

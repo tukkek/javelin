@@ -5,11 +5,16 @@ import java.awt.Image;
 import javelin.controller.fight.Fight;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.condition.Condition;
 import javelin.view.Images;
 
 /**
  * A crystal that is evolved after a {@link Combatant} leaves the battle-field
  * and can be used as power-up later on.
+ *
+ * TODO now that we have (slightly) more developd {@link Condition}s, we might
+ * want to make Meld's HP restore temporary, to prevent plaeyrs from scumming
+ * for max heals before a {@link Fight} is over.
  *
  * @author alex
  */

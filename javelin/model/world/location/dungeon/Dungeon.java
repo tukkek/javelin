@@ -594,6 +594,7 @@ public class Dungeon extends Location{
 	}
 
 	public void setvisible(int x,int y){
+		if(!valid(x)||!valid(y)) return;
 		visible[x][y]=true;
 		BattleScreen.active.mappanel.tiles[x][y].discovered=true;
 	}

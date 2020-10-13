@@ -62,7 +62,12 @@ public class UseItems extends WorldAction{
 			return false;
 		}
 		if(input=='d'){
-			Squad.active.equipment.remove(select(allitems,infoscreen));
+			var i=select(allitems,infoscreen);
+			if(i==null) return false;
+			Javelin.app
+					.switchScreen(new InfoScreen("Are you sure you want to discard "+i
+							+"?\n\n"+"Press d to discard, any other key to cancel..."));
+			if(InfoScreen.feedback()=='d') Squad.active.equipment.remove(i);
 			return false;
 		}
 		Item selected=select(allitems,input);

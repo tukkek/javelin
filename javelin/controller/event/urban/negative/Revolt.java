@@ -8,6 +8,7 @@ import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.unit.Combatants;
+import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.Rank;
@@ -16,6 +17,9 @@ import javelin.old.RPG;
 
 /**
  * A {@link Town#population} is so livid that they retake their home!
+ *
+ * TODO should only generate {@link Monster#think(int)} intelligent encounters
+ * (at least 1 leader).
  *
  * @author alex
  * @see Diplomacy#REVOLTING

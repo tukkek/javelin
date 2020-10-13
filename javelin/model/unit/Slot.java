@@ -97,7 +97,7 @@ public class Slot implements Serializable{
 
 	@Override
 	public boolean equals(Object obj){
-		return obj instanceof Slot&&name==((Slot)obj).name;
+		return obj instanceof Slot&&name.equals(((Slot)obj).name);
 	}
 
 	@Override

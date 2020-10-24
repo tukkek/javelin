@@ -25,6 +25,7 @@ import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
+import javelin.model.world.Period;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
@@ -54,6 +55,10 @@ public class Debug{
 		public DebugFight(Combatants foes){
 			super();
 			this.foes=foes;
+			onready.add(()->{
+				for(var c:state.redTeam)
+					c.ap=1000;
+			});
 		}
 
 		@Override
@@ -108,12 +113,14 @@ public class Debug{
 		}
 
 		static void fight(Map m){
-			var f=new DebugFight(
-					new Combatants(List.of(new Combatant(Monster.get("orc"),false))));
+			var c=new Combatant(Monster.get("orc"),false);
+			c.ap=1000;
+			var f=new DebugFight(new Combatants(List.of(c)));
 			f.win=false;
 			f.map=m;
 			f.bribe=false;
 			f.hide=false;
+			f.period=Period.AFTERNOON;
 			throw new StartBattle(f);
 		}
 

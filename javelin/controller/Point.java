@@ -139,6 +139,7 @@ public class Point implements Cloneable,Serializable{
 		return range;
 	}
 
+	/** Displace each axis between [-1,+1]. */
 	public void displace(){
 		x+=RPG.r(-1,+1);
 		y+=RPG.r(-1,+1);

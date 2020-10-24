@@ -73,14 +73,14 @@ public class Preferences{
 	public static int messagewait;
 	/** Font color. */
 	public static String textcolor;
+	/** How often to save the game, in minutes. */
+	public static int saveinterval;
 	/**
 	 * If <code>true</code> backups the game on initialization.
 	 *
 	 * @see StateManager
 	 */
-	public static boolean backup;
-	/** How often to save the game, in minutes. */
-	public static int saveinterval;
+	public static int backupinterval;
 	/** Tile size for {@link BattleScreen}. */
 	public static int tilesizebattle;
 	/** Tile size for {@link WorldScreen}. */
@@ -189,8 +189,8 @@ public class Preferences{
 		}else
 			ThreadManager.performance=Integer.MIN_VALUE;
 
-		backup=getstring("fs.backup").equals("true");
 		saveinterval=getinteger("fs.saveinterval",9);
+		backupinterval=getinteger("fs.backupinterval",15);
 
 		tilesizeworld=getinteger(KEYTILEWORLD,32);
 		tilesizebattle=getinteger(KEYTILEBATTLE,32);

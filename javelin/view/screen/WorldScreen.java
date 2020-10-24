@@ -177,7 +177,7 @@ public class WorldScreen extends BattleScreen{
 			System.exit(0);
 		}else
 			Javelin.lose();
-		StateManager.save(false,StateManager.SAVEFILE);
+		StateManager.save(false);
 		endturn();
 		if(World.getall(Squad.class).isEmpty()) return;
 		if(Squad.active!=null) act();

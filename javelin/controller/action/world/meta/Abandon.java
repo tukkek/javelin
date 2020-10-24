@@ -23,7 +23,7 @@ public class Abandon extends WorldAction{
 				+"Press c to confirm or any other key to cancel...";
 		if(Javelin.prompt(prompt)=='c'){
 			StateManager.abandoned=true;
-			StateManager.save(true,StateManager.SAVEFILE);
+			StateManager.save(true);
 			System.exit(0);
 		}
 	}

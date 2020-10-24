@@ -32,7 +32,7 @@ public abstract class KeysScreen extends Frame{
 			for(String s:Preferences.getfile().split("\n"))
 				if(!s.startsWith(optionname)) clean+=s+"\n";
 			Preferences.savefile(clean);
-			StateManager.save(true,StateManager.SAVEFILE);
+			StateManager.save(true);
 			System.exit(0);
 		}
 	}
@@ -50,16 +50,20 @@ public abstract class KeysScreen extends Frame{
 		}
 
 		@Override
-		public void mouseReleased(MouseEvent e){}
+		public void mouseReleased(MouseEvent e){
+		}
 
 		@Override
-		public void mouseEntered(MouseEvent e){}
+		public void mouseEntered(MouseEvent e){
+		}
 
 		@Override
-		public void mouseExited(MouseEvent e){}
+		public void mouseExited(MouseEvent e){
+		}
 
 		@Override
-		public void mousePressed(MouseEvent e){}
+		public void mousePressed(MouseEvent e){
+		}
 	}
 
 	static final int COLUMNS=4;

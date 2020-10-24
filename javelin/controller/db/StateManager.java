@@ -37,17 +37,20 @@ import javelin.view.screen.WorldScreen;
 /**
  * Saves and loads game progress to a file.
  *
+ * TODO would be nice to have a backup save every half an hour or so...?
+ *
  * @author alex
  */
 public class StateManager{
-	public static final String SAVEFOLDER=System.getProperty("user.dir");
-	/** Normal save file. */
-	public static final File SAVEFILE=JavelinApp.minigame==null
+	static final String SAVEFOLDER=System.getProperty("user.dir");
+	static final File BACKUPFOLDER=new File(SAVEFOLDER,"backup");
+	static final File SAVEFILE=JavelinApp.minigame==null
 			?new File(SAVEFOLDER,World.scenario.getsaveprefix()+".save")
 			:null;
+	static final int MINUTE=60*1000;
 
 	/**
-	 * Always called on normal exit.
+	 * Always called on normal exit. Saves a backup.
 	 */
 	public static final WindowAdapter SAVEONCLOSE=new WindowAdapter(){
 		@Override
@@ -62,8 +65,10 @@ public class StateManager{
 						JOptionPane.OK_CANCEL_OPTION)!=JOptionPane.OK_OPTION)
 					return;
 				w.dispose();
-				if(BattleScreen.active!=null&&BattleScreen.active==WorldScreen.current)
-					save(true,SAVEFILE);
+				if(BattleScreen.active!=null&&BattleScreen.active==WorldScreen.current){
+					save(true);
+					backup(true);
+				}
 				System.exit(0);
 			}catch(RuntimeException exception){
 				w.dispose();
@@ -73,24 +78,13 @@ public class StateManager{
 		}
 	};
 
-	static final int MINUTE=60*1000;
-
 	public static boolean abandoned=false;
 	public static boolean nofile=false;
-	static long lastsave=System.currentTimeMillis();
 
-	/**
-	 * This should only be called from one place during normal execution of the
-	 * game! Saving can be a slow process, especially on late game and very
-	 * error-prone if not done carefully! Any error could potentially represent
-	 * the loss of dozens of hours of gameplay so don't call this method unless
-	 * absolutely necessary!
-	 *
-	 * @param force If <code>false</code> will only save once upon a certain
-	 *          number of calls.
-	 * @param to
-	 */
-	public static synchronized void save(boolean force,File to){
+	static long lastsave=System.currentTimeMillis();
+	static long lastbackup=System.currentTimeMillis();
+
+	static synchronized void save(boolean force,File to){
 		long now=System.currentTimeMillis();
 		if(!force){
 			if(now-lastsave<Preferences.saveinterval*MINUTE) return;
@@ -118,10 +112,11 @@ public class StateManager{
 		}catch(final IOException e){
 			throw new RuntimeException(e);
 		}
+		if(to==SAVEFILE) backup(false);
 	}
 
 	/**
-	 * Loads {@link #SAVEFILE} and saves a backup of it.
+	 * Loads {@link #SAVEFILE}.
 	 *
 	 * @return <code>false</code> if starting a new game (no previous save).
 	 */
@@ -156,7 +151,6 @@ public class StateManager{
 			Miniatures.miniatures=(ArrayList<Monster>)stream.readObject();
 			stream.close();
 			filestream.close();
-			backup();
 			return true;
 		}catch(final Throwable e1){
 			e1.printStackTrace(System.out);
@@ -169,24 +163,27 @@ public class StateManager{
 		}
 	}
 
-	private static void backup(){
-		if(!Preferences.backup) return;
-		Calendar now=Calendar.getInstance();
-		String timestamp="";
+	static void backup(boolean force){
+		if(Preferences.backupinterval==0) return;
+		var now=Calendar.getInstance();
+		if(!force
+				&&now.getTimeInMillis()-lastbackup<Preferences.backupinterval*MINUTE)
+			return;
+		lastbackup=now.getTimeInMillis();
+		var timestamp="";
 		timestamp+=now.get(Calendar.YEAR)+"-";
 		timestamp+=format(now.get(Calendar.MONTH)+1)+"-";
 		timestamp+=format(now.get(Calendar.DAY_OF_MONTH))+"-";
 		timestamp+=format(now.get(Calendar.HOUR_OF_DAY))+".";
 		timestamp+=format(now.get(Calendar.MINUTE))+".";
 		timestamp+=format(now.get(Calendar.SECOND));
-		File folder=new File(SAVEFOLDER,"backup");
-		folder.mkdir();
-		File backup=new File(folder,
-				World.scenario.getsaveprefix()+"-"+timestamp+".save");
+		var prefix=World.scenario.getsaveprefix();
+		BACKUPFOLDER.mkdir();
+		var backup=new File(BACKUPFOLDER,prefix+"-"+timestamp+".save");
 		save(true,backup);
 	}
 
-	private static String format(int i){
+	static String format(int i){
 		return i>=10?String.valueOf(i):"0"+i;
 	}
 
@@ -196,6 +193,20 @@ public class StateManager{
 	 */
 	public static void clear(){
 		abandoned=true;
-		save(true,StateManager.SAVEFILE);
+		save(true);
+	}
+
+	/**
+	 * This should only be called from one place during normal execution of the
+	 * game! Saving can be a slow process, especially on late game and very
+	 * error-prone if not done carefully! Any error could potentially represent
+	 * the loss of dozens of hours of gameplay so don't call this method unless
+	 * absolutely necessary!
+	 *
+	 * @param force If <code>false</code> will only save according to
+	 *          {@link Preferences#saveinterval}.
+	 */
+	public static void save(boolean force){
+		save(force,SAVEFILE);
 	}
 }

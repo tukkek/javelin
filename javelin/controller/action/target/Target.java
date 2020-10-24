@@ -8,6 +8,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.action.Action;
+import javelin.controller.action.Examine;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.controller.walker.Walker;
@@ -107,6 +108,7 @@ public abstract class Target extends Action{
 		return true;
 	}
 
+	/** TODO rename to select() */
 	void selecttarget(Combatant c,List<Combatant> targets,BattleState state){
 		var targeti=0;
 		locktarget(c,targets.get(0),state);
@@ -125,8 +127,8 @@ public abstract class Target extends Action{
 			}else if(key=='v'&&!targets.get(targeti).source.passive)
 				new StatisticsScreen(targets.get(targeti));
 			else{
-				MapPanel.overlay.clear();
-				MessagePanel.active.clear();
+				Examine.lastlooked=null;
+				Javelin.redraw();
 				throw new RepeatTurn();
 			}
 			int max=targets.size()-1;
@@ -171,6 +173,7 @@ public abstract class Target extends Action{
 				targets.remove(target);
 	}
 
+	/** TODO rename to lock() */
 	void locktarget(Combatant c,Combatant target,BattleState state){
 		MapPanel.overlay=new TargetOverlay(target.location[0],target.location[1]);
 		MessagePanel.active.clear();
@@ -178,7 +181,7 @@ public abstract class Target extends Action{
 				+" to confirm, v to view target's sheet, q to quit.\n\n";
 		prompt+=describehitchance(c,target,state);
 		Javelin.message(prompt,Javelin.Delay.NONE);
-		Javelin.app.switchScreen(BattleScreen.active);
+		Examine.lastlooked=target;
 		BattleScreen.active.center(target.location[0],target.location[1]);
 	}
 

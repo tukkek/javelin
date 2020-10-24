@@ -20,6 +20,8 @@ import javelin.old.RPG;
 public class AiThread extends Thread{
 	public static final TreeMap<Integer,List<ChanceNode>> FINISHED=new TreeMap<>();
 	static final ArrayList<Thread> STARTED=new ArrayList<>();
+	/** TODO https://github.com/tukkek/javelin/issues/266 */
+	static final int MAX_DEPTH=100;
 
 	public static ThreadGroup group=regroup();
 	/**
@@ -63,6 +65,7 @@ public class AiThread extends Thread{
 	 */
 	synchronized public void setdepth(){
 		depth=depthincremeneter;
+		if(depth>=MAX_DEPTH) throw new StopThinking();
 		setName("Javelin AI "+depth);
 		depthincremeneter+=1;
 	}

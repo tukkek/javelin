@@ -378,8 +378,9 @@ public class Javelin{
 
 	/** Updates the {@link MapPanel} and {@link MessagePanel}. */
 	public static void redraw(){
-		//		BattleScreen.active.validate();
-		BattleScreen.active.mappanel.refresh();
+		var b=BattleScreen.active;
+		b.mappanel.refresh();
+		if(b.statuspanel!=null) b.statuspanel.repaint();
 		MessagePanel.active.repaint();
 	}
 

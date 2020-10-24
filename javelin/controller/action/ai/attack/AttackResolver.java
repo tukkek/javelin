@@ -142,8 +142,8 @@ public class AttackResolver{
 			Combatant target,AttackSequence sequence,BattleState state){
 		this.action=action;
 		this.sequence=new AttackSequence(sequence);
-		sequence.sort();
-		critical=new ArrayList<>(sequence.size());
+		this.sequence.sort();
+		critical=new ArrayList<>(this.sequence.size());
 		maneuver=action.maneuver;
 		if(maneuver!=null) ap=maneuver.ap;
 		attackbonus-=action.getpenalty(attacker,target,state);

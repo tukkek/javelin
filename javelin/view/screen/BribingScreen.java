@@ -42,6 +42,7 @@ public class BribingScreen{
 				}
 				nogold=true;
 			}
+			//TODO this isn't taking into account the 10x for Dungeons (because payment is handled internally by #recruit)
 			if(canhire&&choice=='h'){
 				if(Squad.active.gold>=dailyfee){
 					for(Combatant foe:foes)

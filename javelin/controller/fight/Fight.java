@@ -459,7 +459,7 @@ public abstract class Fight{
 			throw new RepeatTurn();
 		}
 		if(Javelin.DEBUG) withdrawall(true);
-		if(Fight.state.isengaged(combatant)){
+		if(!friendly&&Fight.state.isengaged(combatant)){
 			Javelin.prompt("Disengage first!");
 			throw new RepeatTurn();
 		}

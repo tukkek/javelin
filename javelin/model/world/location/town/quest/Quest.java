@@ -120,7 +120,7 @@ public abstract class Quest implements Serializable{
 				}
 			}
 			super.place();
-			WorldScreen.current.mappanel.tiles[x][y].discovered=true;
+			WorldScreen.discover(x,y);
 		}
 	}
 

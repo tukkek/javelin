@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javelin.Debug;
 import javelin.Javelin;
 import javelin.controller.action.world.WorldMove;
 import javelin.controller.ai.BattleAi;
@@ -254,6 +255,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 
 	@Override
 	public Boolean destroy(Incursion i){
+		if(Javelin.DEBUG&&Debug.disablecombat) return false;
 		Javelin.message("You are attacked by: "+i.toString().toLowerCase()+"!",
 				true);
 		Squad.active=this;

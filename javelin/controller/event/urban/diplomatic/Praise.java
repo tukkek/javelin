@@ -27,10 +27,7 @@ public class Praise extends DiplomaticEvent{
 	@Override
 	public void happen(Squad s){
 		town.diplomacy.reputation+=town.population+RPG.randomize(town.population);
-		//		Diplomacy.instance.reputation+=reputation;
 		String message="People in "+town+" are celebrating you!";
-		//		if(Diplomacy.instance.reputation>=Diplomacy.TRIGGER)
-		//			message+=" You can now make a diplomatic action!";
 		notify(message);
 	}
 }

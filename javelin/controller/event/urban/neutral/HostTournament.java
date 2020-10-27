@@ -1,6 +1,5 @@
 package javelin.controller.event.urban.neutral;
 
-import javelin.Javelin;
 import javelin.controller.event.urban.UrbanEvent;
 import javelin.controller.fight.tournament.Exhibition;
 import javelin.controller.fight.tournament.Match;
@@ -31,6 +30,6 @@ public class HostTournament extends UrbanEvent{
 			var e=RPG.r(1,2)==1?RPG.pick(Exhibition.SPECIALEVENTS):new Match();
 			town.exhibitions.add(e);
 		}
-		Javelin.message(town+" is now hosting a tournament!",true);
+		town.events.add(town+" is hosting a tournament!");
 	}
 }

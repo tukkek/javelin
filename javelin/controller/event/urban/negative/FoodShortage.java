@@ -30,6 +30,6 @@ public class FoodShortage extends UrbanEvent{
 	@Override
 	public void happen(Squad s){
 		town.population-=1;
-		notify("The rough winter causes a food shortage in "+town+"...");
+		town.events.add("The rough winter caused a food shortage in "+town+"...");
 	}
 }

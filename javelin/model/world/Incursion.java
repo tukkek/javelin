@@ -186,7 +186,7 @@ public class Incursion extends Actor{
 			return;
 		}
 		var el=getel();
-		targets.sort((o1,o2)->o1.getel(el)-o2.getel(el));
+		targets.sort((o1,o2)->Integer.compare(o1.getel(el),o2.getel(el)));
 		for(var a:targets)
 			if(a instanceof Incursion&&realm==a.realm){
 				target=a;
@@ -373,25 +373,4 @@ public class Incursion extends Actor{
 			if(a instanceof Incursion) all.add((Incursion)a);
 		return all;
 	}
-
-	//	/** @param l Possibly spawns an Incursion here. */
-	//	public static void raid(Location l){
-	//		if(l.garrison.size()<2) return;
-	//		var f=l instanceof Fortification?(Fortification)l:null;
-	//		int target;
-	//		if(l instanceof Town)
-	//			target=((Town)l).population;
-	//		else if(f!=null&&f.targetel!=null)
-	//			target=f.targetel;
-	//		else{
-	//			var day=Math.round(Math.round(WorldScreen.lastday));
-	//			target=Math.min(20,20*day/400);
-	//		}
-	//		if(ChallengeCalculator.calculateel(l.garrison)<=target+2) return;
-	//		l.garrison.sort(CombatantByCr.SINGLETON);
-	//		var incursion=new ArrayList<>(l.garrison.subList(0,l.garrison.size()/2));
-	//		l.garrison.removeAll(incursion);
-	//		place(l.realm,l.x,l.y,incursion);
-	//		if(f!=null&&f.targetel!=null) f.targetel+=1;
-	//	}
 }

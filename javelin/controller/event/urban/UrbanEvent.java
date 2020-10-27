@@ -17,7 +17,7 @@ import javelin.old.RPG;
 public abstract class UrbanEvent extends EventCard{
 	/**
 	 * How many days until a {@link Town} has an event happen.
-	 * 
+	 *
 	 * @see RPG#chancein(int)
 	 */
 	public static final int CHANCE=30;
@@ -78,6 +78,6 @@ public abstract class UrbanEvent extends EventCard{
 	 * @see Town#ishostile()
 	 */
 	protected void notify(String message){
-		if(notify) Javelin.message(message,true);
+		if(notify) town.events.add(message);
 	}
 }

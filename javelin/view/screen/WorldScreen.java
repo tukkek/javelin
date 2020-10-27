@@ -243,6 +243,10 @@ public class WorldScreen extends BattleScreen{
 			dofights(time,incursions);
 			if(World.getall(Squad.class).isEmpty()) Javelin.redraw();
 			if(Javelin.lose()) break;
+			if(day-lastday>1){ //redraw day for long waits
+				Javelin.redraw();
+				updateplayerinformation();
+			}
 		}
 	}
 

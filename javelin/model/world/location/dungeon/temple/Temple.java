@@ -5,19 +5,16 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import javelin.Debug;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.TempleEncounter;
 import javelin.controller.scenario.Campaign;
-import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.wish.Win;
 import javelin.model.Realm;
 import javelin.model.item.Tier;
-import javelin.model.item.key.TempleKey;
 import javelin.model.item.relic.Relic;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -31,7 +28,6 @@ import javelin.model.world.location.dungeon.feature.Altar;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.unique.UniqueLocation;
-import javelin.old.RPG;
 import javelin.view.Images;
 
 /**
@@ -61,7 +57,9 @@ public abstract class Temple extends UniqueLocation{
 	 * Create the temples during world generation.
 	 */
 	public static void generatetemples(){
-		var els=RPG.shuffle(new LinkedList<>(List.of(3,5,8,10,13,15,18)));
+		var els=new LinkedList<Integer>();
+		for(var i=0;i<7;i++)
+			els.add(Tier.EPIC.getrandomel(false));
 		new AirTemple(els.pop()).place();
 		new EarthTemple(els.pop()).place();
 		new FireTemple(els.pop()).place();
@@ -80,14 +78,6 @@ public abstract class Temple extends UniqueLocation{
 	 * @see TempleDungeon#deepest
 	 */
 	public Relic relic;
-	/**
-	 * A temple needs to be opened by a {@link TempleKey} or other method before
-	 * being explored.
-	 *
-	 * @see TempleKey
-	 * @see Scenario#lockedtemples
-	 */
-	public boolean open=!World.scenario.lockedtemples;
 	/**
 	 * Each floor has a {@link Chest} with a ruby in it and there is also an
 	 * {@link Altar} on the deepest level.
@@ -159,39 +149,9 @@ public abstract class Temple extends UniqueLocation{
 
 	@Override
 	public boolean interact(){
-		if(open)
-			floors.get(0).activate(false);
-		else{
-			if(!Debug.unlocktemples&&!open()) return true;
-			open=true;
-			Javelin.message(fluff,true);
-		}
+		Javelin.message(fluff,true);
+		floors.get(0).activate(false);
 		return true;
-	}
-
-	boolean open(){
-		@SuppressWarnings("deprecation")
-		TempleKey key=new TempleKey(realm);
-		if(Squad.active.equipment.pop(key)!=null){
-			Javelin.message(
-					"Temple entrance opened by the "+key.toString().toLowerCase()+"!",
-					true);
-			return true;
-		}
-		Combatant unlock=unlock();
-		if(unlock!=null){
-			Javelin.message("Temple entrance unlocked by "+unlock+"!",true);
-			return true;
-		}
-		Combatant force=force();
-		if(force!=null){
-			Javelin.message("Temple entrance forced by "+force+"!",true);
-			return true;
-		}
-		var difficulty=Difficulty.describe(level-Squad.active.getel());
-		var locked="The "+descriptionknown+" is locked ("+difficulty+").";
-		Javelin.message(locked,true);
-		return false;
 	}
 
 	Combatant force(){

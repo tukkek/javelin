@@ -199,7 +199,6 @@ public class Dungeon extends Location{
 
 	/** Create or recreate dungeon. */
 	public void activate(@SuppressWarnings("unused") boolean loading){
-		//		active=this;
 		if(features.isEmpty()) generatefloors();
 		active=chooseentrance();
 		if(active==null) throw new RepeatTurn();
@@ -523,8 +522,7 @@ public class Dungeon extends Location{
 
 	/** @return Most special chest here. */
 	protected Feature createspecialchest(){
-		var iitem=World.scenario.openspecialchest();
-		return new Chest(iitem,true);
+		return new Chest(World.scenario.openspecialchest(),true);
 	}
 
 	public boolean isoccupied(Point p){

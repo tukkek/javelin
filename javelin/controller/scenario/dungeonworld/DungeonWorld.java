@@ -25,7 +25,6 @@ public class DungeonWorld extends Campaign{
 	/** Constructor. */
 	public DungeonWorld(){
 		size=size*2;
-		lockedtemples=false;
 		minigames=false;
 		record=false;
 		respawnlocations=false;

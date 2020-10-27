@@ -8,13 +8,11 @@ import javelin.controller.challenge.Difficulty;
 import javelin.controller.fight.Fight;
 import javelin.controller.table.dungeon.feature.CommonFeatureTable;
 import javelin.controller.terrain.Terrain;
-import javelin.model.item.consumable.Ruby;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonZoner;
 import javelin.model.world.location.dungeon.feature.Altar;
-import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Fountain;
 import javelin.old.RPG;
@@ -71,7 +69,7 @@ public class TempleDungeon extends Dungeon{
 	@Override
 	protected Feature createspecialchest(){
 		if(floors.indexOf(this)==floors.size()-1) return new Altar(temple);
-		return new Chest(new Ruby(),true);
+		return super.createspecialchest();
 	}
 
 	@Override

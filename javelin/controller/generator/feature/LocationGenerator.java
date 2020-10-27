@@ -164,9 +164,9 @@ public class LocationGenerator implements Serializable{
 		var locations=new ArrayList<Location>();
 		locations.add(new PillarOfSkulls());
 		locations.addAll(makehaunts());
-		for(var level=Tier.LOW.minlevel;level<=Tier.EPIC.maxlevel;level++)
+		for(var level=Tier.LOW.minlevel;level<=Tier.HIGH.maxlevel;level++)
 			locations.add(Dungeon.generate(level));
-		for(var i=0;i<10;i++)
+		for(var i=0;i<Tier.HIGH.maxlevel;i++)
 			locations.add(new Wilderness());
 		for(Location l:RPG.shuffle(locations))
 			l.place();

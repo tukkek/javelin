@@ -28,7 +28,6 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.controller.wish.Win;
 import javelin.model.Realm;
 import javelin.model.item.Item;
-import javelin.model.item.key.TempleKey;
 import javelin.model.transport.Ship;
 import javelin.model.transport.Transport;
 import javelin.model.unit.Combatant;
@@ -127,8 +126,6 @@ public class Scenario implements Serializable{
 	 * to make it easier to process visually.
 	 */
 	public boolean normalizemap=true;
-	/** Wheter {@link TempleKey}s should exist at all. */
-	public boolean lockedtemples=false;
 	/**
 	 * <code>true</code> if first {@link Town} should be located on
 	 * {@link Terrain#PLAIN} or {@link Terrain#HILL}.

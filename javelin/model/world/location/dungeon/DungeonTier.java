@@ -3,17 +3,19 @@ package javelin.model.world.location.dungeon;
 import java.util.List;
 
 import javelin.model.item.Tier;
+import javelin.model.world.location.dungeon.temple.Temple;
 
 public class DungeonTier{
 	public static final DungeonTier CAVE=new DungeonTier("Cave",Tier.LOW,"cave");
 	public static final DungeonTier DUNGEON=new DungeonTier("Dungeon",Tier.MID,
 			"");
 	public static final DungeonTier KEEP=new DungeonTier("Keep",Tier.HIGH,"keep");
-	public static final DungeonTier RUINS=new DungeonTier("Ruins",Tier.EPIC,
+	/** @see Temple */
+	public static final DungeonTier TEMPLE=new DungeonTier("Temple",Tier.EPIC,
 			"ruins");
 
-	public static final List<DungeonTier> TIERS=List.of(CAVE,DUNGEON,KEEP,RUINS);
-	public static final DungeonTier HIGHEST=RUINS;
+	public static final List<DungeonTier> TIERS=List.of(CAVE,DUNGEON,KEEP,TEMPLE);
+	public static final DungeonTier HIGHEST=TEMPLE;
 
 	public String name;
 	public int minrooms;

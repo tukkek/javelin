@@ -8,7 +8,6 @@ import java.util.List;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
-import javelin.model.item.key.TempleKey;
 import javelin.model.item.precious.PreciousObject;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.town.Town;
@@ -84,10 +83,6 @@ public class Caravan extends Actor{
 		while(inventory.size()<withartifacts){
 			Item i=RPG.pick(Item.ARTIFACT);
 			inventory.add(i);
-		}
-		if(World.scenario.lockedtemples){
-			TempleKey k=TempleKey.generate();
-			if(k.price>0) inventory.add(k);
 		}
 	}
 

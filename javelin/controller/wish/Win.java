@@ -6,7 +6,6 @@ import javelin.controller.Highscore;
 import javelin.controller.db.StateManager;
 import javelin.model.Realm;
 import javelin.model.item.Item;
-import javelin.model.item.key.TempleKey;
 import javelin.model.item.relic.Relic;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;

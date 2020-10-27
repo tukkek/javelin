@@ -2,6 +2,9 @@ package javelin.model.item;
 
 import java.util.List;
 
+import javelin.controller.challenge.Difficulty;
+import javelin.old.RPG;
+
 /**
  *
  *
@@ -54,5 +57,17 @@ public class Tier{
 	/** @return 0 for {@link #LOW}, 1 for {@link #MID}... */
 	public int getordinal(){
 		return TIERS.indexOf(this);
+	}
+
+	/**
+	 * @param randomdifficulty If <code>true</code>, will add a
+	 *          {@link Difficulty#get()} result.
+	 * @return An encounter rolled between {@link #minlevel} and
+	 *         {@link #maxlevel}.
+	 */
+	public Integer getrandomel(boolean randomdifficulty){
+		var el=RPG.r(minlevel,maxlevel);
+		if(randomdifficulty) el+=Difficulty.get();
+		return el;
 	}
 }

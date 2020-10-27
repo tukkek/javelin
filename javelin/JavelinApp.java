@@ -183,14 +183,15 @@ public class JavelinApp extends QuestApp{
 	}
 
 	void generatedungeons(){
-		var s=new InfoScreen("Generating dungeons:\n");
-		for(var d:Dungeon.getdungeons()){
-			s.printline(d+"...");
-			d.generatefloors();
-		}
-		for(var t:Temple.gettemples()){
-			s.printline(t+"...");
-			t.floors.get(0).generatefloors();
+		var s=new InfoScreen("");
+		var dungeons=Dungeon.getdungeons();
+		for(var t:Temple.gettemples())
+			dungeons.add(t.floors.get(0));
+		int ndungeons=dungeons.size();
+		for(var i=0;i<ndungeons;i++){
+			var progress=Math.round(100*i/Float.valueOf(ndungeons));
+			s.print("Generating dungeons: "+progress+"%.");
+			dungeons.get(i).generatefloors();
 		}
 		Dungeon.active=null;
 	}

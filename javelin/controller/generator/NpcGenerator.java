@@ -11,6 +11,7 @@ import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.kit.Kit;
 import javelin.controller.terrain.Terrain;
+import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.classes.Commoner;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -107,11 +108,24 @@ public class NpcGenerator{
 		return crs;
 	}
 
+	/**
+	 * @return As {@link #generatenpc(Monster, Kit, float)} but uses
+	 *         {@link Kit#getpreferred(Monster, boolean)}t.
+	 */
 	public static final Combatant generatenpc(Monster m,float cr){
-		Kit k=RPG.pick(Kit.getpreferred(m,true));
-		return generatenpc(m,k,cr);
+		var kits=Kit.getpreferred(m,true);
+		if(kits.isEmpty()) return null;
+		var kit=RPG.pick(kits);
+		return generatenpc(m,kit,cr);
 	}
 
+	/**
+	 * @param m Monster to generate a NPC off of.
+	 * @param k Kit to be used for {@link Upgrade}s.
+	 * @param targetcr Target challenge rating.
+	 * @return A fully generated NPC or <code>null</code> if failed to generate
+	 *         one with the given parameters.
+	 */
 	public static Combatant generatenpc(Monster m,Kit k,float targetcr){
 		Float originalcr=m.cr;
 		int tries=10000;

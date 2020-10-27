@@ -17,7 +17,6 @@ import javelin.controller.db.StateManager;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
-import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.generator.WorldGenerator;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -52,8 +51,6 @@ public class JavelinApp extends QuestApp{
 	/** Lower-case operating system name. */
 	public static final String SYSTEM=System.getProperty("os.name").toLowerCase();
 
-	/** Bootstrapper for minigames. */
-	public static Minigame minigame=null;
 	/** TODO change into actual context (separate from UI code). */
 	static public WorldScreen context;
 
@@ -73,7 +70,7 @@ public class JavelinApp extends QuestApp{
 	public void run(){
 		Preferences.setup();// pre
 		initialize();
-		if(minigame==null&&!StateManager.load()){
+		if(!StateManager.load()){
 			if(StateManager.nofile) disclaimer();
 			startcampaign();
 		}
@@ -91,10 +88,6 @@ public class JavelinApp extends QuestApp{
 
 	void loop(){
 		try{
-			if(minigame!=null){
-				if(!minigame.start()) System.exit(1);
-				throw new StartBattle(minigame);
-			}
 			if(Dungeon.active==null)
 				context=new WorldScreen(true);
 			else

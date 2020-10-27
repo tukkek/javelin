@@ -9,7 +9,6 @@ import javelin.controller.action.world.WorldMove;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.kit.Kit;
-import javelin.controller.scenario.dungeondelve.DungeonDelve;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;

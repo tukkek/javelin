@@ -1,6 +1,5 @@
 package javelin.model.item.key.door;
 
-import javelin.controller.scenario.dungeondelve.Megadungeon;
 import javelin.model.item.Item;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonZoner;

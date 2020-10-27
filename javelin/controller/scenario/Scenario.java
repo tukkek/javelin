@@ -18,8 +18,6 @@ import javelin.controller.generator.WorldGenerator;
 import javelin.controller.generator.feature.Frequency;
 import javelin.controller.generator.feature.LocationGenerator;
 import javelin.controller.kit.Kit;
-import javelin.controller.scenario.dungeondelve.DungeonDelve;
-import javelin.controller.scenario.dungeonworld.DungeonWorld;
 import javelin.controller.terrain.Desert;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.Water;

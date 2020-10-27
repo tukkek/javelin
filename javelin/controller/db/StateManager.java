@@ -44,9 +44,8 @@ import javelin.view.screen.WorldScreen;
 public class StateManager{
 	static final String SAVEFOLDER=System.getProperty("user.dir");
 	static final File BACKUPFOLDER=new File(SAVEFOLDER,"backup");
-	static final File SAVEFILE=JavelinApp.minigame==null
-			?new File(SAVEFOLDER,World.scenario.getsaveprefix()+".save")
-			:null;
+	static final File SAVEFILE=new File(SAVEFOLDER,
+			World.scenario.getsaveprefix()+".save");
 	static final int MINUTE=60*1000;
 
 	/**

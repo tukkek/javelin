@@ -11,6 +11,7 @@ import java.util.List;
 import javelin.controller.Point;
 import javelin.controller.generator.WorldGenerator;
 import javelin.controller.generator.feature.LocationGenerator;
+import javelin.controller.scenario.Campaign;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;
@@ -32,7 +33,7 @@ import javelin.view.screen.WorldScreen;
  */
 public class World implements Serializable{
 	/** Ruleset of the current game. */
-	public static Scenario scenario=null;
+	public static Scenario scenario=new Campaign();
 	/**
 	 * Randomly generated world map.
 	 *

@@ -11,7 +11,6 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.comparator.ActorByDistance;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.scenario.Scenario;
-import javelin.controller.scenario.dungeonworld.DungeonWorld;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
 import javelin.model.Realm;

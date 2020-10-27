@@ -1,13 +1,16 @@
 package javelin.model.world.location.dungeon.temple;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.fight.Fight;
+import javelin.controller.kit.Kit;
 import javelin.controller.table.dungeon.feature.CommonFeatureTable;
 import javelin.controller.terrain.Terrain;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -96,10 +99,17 @@ public class TempleDungeon extends Dungeon{
 	@Override
 	protected Combatants generateencounter(int level,List<Terrain> terrains){
 		terrains=temple.getterrains();
-		Combatants encounter=super.generateencounter(level-RPG.r(1,4),terrains);
+		Combatants encounter=null;
+		while(encounter==null)
+			encounter=super.generateencounter(level-RPG.r(1,4),terrains);
 		if(!temple.validate(encounter.getmonsters())) return null;
-		while(ChallengeCalculator.calculateel(encounter)<level)
-			encounter.getweakest().upgrade();
+		var kits=new HashMap<Combatant,List<Kit>>(encounter.size());
+		for(var c:encounter)
+			kits.put(c,Kit.getpreferred(c.source,true));
+		while(ChallengeCalculator.calculateel(encounter)<level){
+			var weakest=encounter.getweakest();
+			RPG.pick(kits.get(weakest)).upgrade(weakest);
+		}
 		return encounter;
 	}
 }

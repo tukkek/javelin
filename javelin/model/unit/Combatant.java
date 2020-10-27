@@ -598,8 +598,8 @@ public class Combatant implements Serializable,Cloneable{
 	 * @see Upgrade#upgrade(Combatant)
 	 */
 	public boolean upgrade(){
-		var kit=RPG.pick(Kit.getpreferred(source,source.cr>=5));
-		return kit.upgrade(this);
+		var kits=Kit.getpreferred(source,source.cr>=5);
+		return RPG.pick(kits).upgrade(this);
 	}
 
 	/** @return All squares that are visible by this unit. */

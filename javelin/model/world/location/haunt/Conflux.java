@@ -27,7 +27,7 @@ import javelin.view.Images;
  */
 public class Conflux extends Haunt{
 	static final List<String> SUBTYPES=List.of("mephit");
-	static final List<Monster> POOL=Monster.MONSTERS.stream()
+	static final List<Monster> POOL=Monster.ALL.stream()
 			.filter(m->m.type.equals(MonsterType.ELEMENTAL)||include(m,SUBTYPES))
 			.filter(m->m.walk>0||m.fly>0||m.burrow>0).collect(Collectors.toList());
 	static final List<Terrain> TERRAINS=List.of(Terrain.DESERT,Terrain.MOUNTAINS,

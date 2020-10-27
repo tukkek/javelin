@@ -70,7 +70,7 @@ public class Monster implements Cloneable,Serializable{
 	 */
 	public static final TreeMap<String,String> DESCRIPTIONS=new TreeMap<>();
 	/** All loaded XML {@link Monster}s. See {@link MonsterReader}. */
-	public static final List<Monster> MONSTERS=new ArrayList<>();
+	public static final List<Monster> ALL=new ArrayList<>();
 	/** All loaded monster mapped by challenge rating. */
 	public static final TreeMap<Float,List<Monster>> BYCR=new TreeMap<>();
 
@@ -781,7 +781,7 @@ public class Monster implements Cloneable,Serializable{
 	 */
 	public static Monster get(String name){
 		Monster monster=null;
-		for(Monster m:Monster.MONSTERS)
+		for(Monster m:Monster.ALL)
 			if(m.name.equalsIgnoreCase(name)){
 				monster=m.clone();
 				break;
@@ -796,7 +796,7 @@ public class Monster implements Cloneable,Serializable{
 	 */
 	public static List<Monster> get(MonsterType type){
 		ArrayList<Monster> monsters=new ArrayList<>();
-		for(Monster m:Monster.MONSTERS)
+		for(Monster m:Monster.ALL)
 			if(m.type==type) monsters.add(m);
 		return monsters;
 	}

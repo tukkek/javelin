@@ -111,4 +111,9 @@ public class InfoScreen extends Screen{
 		text=current;
 		return c;
 	}
+
+	/** @param line Appends this line to existing text. */
+	public void printline(String line){
+		print(text+"\n"+line);
+	}
 }

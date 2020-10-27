@@ -317,7 +317,7 @@ public class MonsterReader extends DefaultHandler{
 		debugSpecials(unimplementedqualities,"Special qualities:");
 		debugSpecials(debugfeats,"Feats:");
 		postprocessspells();
-		for(Monster m:Monster.MONSTERS){
+		for(Monster m:Monster.ALL){
 			if(m.passive) continue;
 			List<Monster> list=Monster.BYCR.get(m.cr);
 			if(list==null){
@@ -342,7 +342,7 @@ public class MonsterReader extends DefaultHandler{
 		log(nMonsters+"/"+total+" monsters succesfully loaded.",log);
 		var types=new CountingSet();
 		types.comparator=(a,b)->a.toString().compareTo(b.toString());
-		for(var m:Monster.MONSTERS){
+		for(var m:Monster.ALL){
 			if(!m.group.isEmpty()) types.add(m.group);
 			types.addAll(m.subtypes);
 		}
@@ -364,7 +364,7 @@ public class MonsterReader extends DefaultHandler{
 		ArrayList<Summon> summonspell=new ArrayList<>();
 		ArrayList<Monster> summoncaster=new ArrayList<>();
 		ArrayList<Monster> updated=new ArrayList<>();
-		for(Monster m:Monster.MONSTERS){
+		for(Monster m:Monster.ALL){
 			if(m.spells.isEmpty()) continue;
 			updated.add(m);
 			for(Spell s:m.spells)
@@ -470,7 +470,7 @@ public class MonsterReader extends DefaultHandler{
 		}catch(final Exception e){
 			throw new RuntimeException("Challenge rating issue "+monster.name,e);
 		}
-		Monster.MONSTERS.add(monster);
+		Monster.ALL.add(monster);
 	}
 
 	/** To be used to log <code>monsters.xml</xml> processing. */

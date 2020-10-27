@@ -65,7 +65,7 @@ public class BossFight extends Fight{
 
 	Monster findboss(int el,List<Terrain> terrains){
 		var canditates=new ArrayList<Monster>();
-		for(var m:Monster.MONSTERS){
+		for(var m:Monster.ALL){
 			if(!ChallengeCalculator.eltocr(el).equals(m.cr)) continue;
 			var terrainnames=m.getterrains();
 			for(var t:terrains){

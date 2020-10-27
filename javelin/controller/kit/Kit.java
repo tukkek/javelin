@@ -32,9 +32,9 @@ import javelin.model.unit.abilities.discipline.serpent.SteelSerpent;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.world.location.Academy;
+import javelin.model.world.location.Academy.BuildAcademy;
 import javelin.model.world.location.Guild;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.Academy.BuildAcademy;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Labor;
@@ -158,7 +158,8 @@ public abstract class Kit implements Serializable{
 	 * @see CombatExpertiseDiscipline
 	 */
 	@Deprecated
-	public Kit(){}
+	public Kit(){
+	}
 
 	/**
 	 * Registers around 3-5 {@link Upgrade}s that all (or most) members of this
@@ -316,5 +317,15 @@ public abstract class Kit implements Serializable{
 		ChallengeCalculator.calculatecr(c.source);
 		c.source.elite=true;
 		return true;
+	}
+
+	/**
+	 * Checks that every {@link Monster} in the game has at least one preferred
+	 * Kit.
+	 */
+	public static void test(){
+		for(var m:Monster.ALL)
+			if(Kit.getpreferred(m,true).isEmpty())
+				throw new RuntimeException("No kit for "+m+"!");
 	}
 }

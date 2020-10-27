@@ -22,7 +22,7 @@ import javelin.view.Images;
 public class DarkShrine extends Haunt{
 
 	static final List<String> SUBTYPES=List.of("demon (tanar'ri)","devil","evil");
-	static final List<Monster> POOL=Monster.MONSTERS
+	static final List<Monster> POOL=Monster.ALL
 			.stream().filter(m->m.type.equals(MonsterType.OUTSIDER)
 					&&m.alignment.isevil()&&include(m,SUBTYPES))
 			.collect(Collectors.toList());

@@ -401,7 +401,7 @@ public abstract class Terrain implements Serializable{
 	 */
 	public ArrayList<Monster> getmonsters(){
 		ArrayList<Monster> recruits=new ArrayList<>();
-		for(Monster m:Monster.MONSTERS)
+		for(Monster m:Monster.ALL)
 			if(m.getterrains().contains(name)) recruits.add(m);
 		return recruits;
 	}

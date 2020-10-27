@@ -20,7 +20,7 @@ public class OrcSettlement extends Haunt{
 			Terrain.PLAIN);
 	static final List<String> SUBTYPES=List.of("reptilian","goblinoid","orc",
 			"gnoll");
-	static final List<Monster> POOL=Monster.MONSTERS.stream()
+	static final List<Monster> POOL=Monster.ALL.stream()
 			.filter(m->m.type.equals(MonsterType.HUMANOID)&&include(m,SUBTYPES))
 			.collect(Collectors.toList());
 

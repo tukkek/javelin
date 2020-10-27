@@ -22,8 +22,10 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.old.QuestApp;
 import javelin.old.RPG;
+import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -171,12 +173,26 @@ public class JavelinApp extends QuestApp{
 	void startcampaign(){
 		World.scenario.setup();
 		WorldGenerator.build();
+		generatedungeons();
 		World.scenario.ready();
 		if(Javelin.DEBUG){
 			new ContentSummary().produce();
 			Debug.oncampaignstart();
 			StateManager.save(true);
 		}
+	}
+
+	void generatedungeons(){
+		var s=new InfoScreen("Generating dungeons:\n");
+		for(var d:Dungeon.getdungeons()){
+			s.printline(d+"...");
+			d.generatefloors();
+		}
+		for(var t:Temple.gettemples()){
+			s.printline(t+"...");
+			t.floors.get(0).generatefloors();
+		}
+		Dungeon.active=null;
 	}
 
 	void preparedebug(){

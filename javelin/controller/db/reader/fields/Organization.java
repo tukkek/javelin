@@ -26,7 +26,7 @@ public class Organization extends FieldReader{
 
 	/** Don't use, temporary. */
 	public static HashMap<String,Monster> monstersbyname=new HashMap<>(
-			Monster.MONSTERS.size());
+			Monster.ALL.size());
 
 	/**
 	 * Possible encounters by terrain type.
@@ -78,7 +78,7 @@ public class Organization extends FieldReader{
 	 * Uses organization data to create {@link Encounter}s.
 	 */
 	static public void setup(){
-		for(Monster m:Monster.MONSTERS)
+		for(Monster m:Monster.ALL)
 			monstersbyname.put(m.toString().toLowerCase(),m);
 		inform("\n== Encounters==");
 		for(final EncounterData group:data)

@@ -18,7 +18,7 @@ import javelin.view.Images;
  */
 public class HolyGrounds extends Haunt{
 	static final List<String> SUBTYPES=List.of("celestial","good","lawful");
-	static final List<Monster> POOL=Monster.MONSTERS.stream()
+	static final List<Monster> POOL=Monster.ALL.stream()
 			.filter(m->m.type.equals(MonsterType.OUTSIDER)||include(m,SUBTYPES))
 			.filter(m->m.alignment.isgood()).collect(Collectors.toList());
 	static final List<Terrain> TERRAINS=List.of(Terrain.DESERT,Terrain.HILL,

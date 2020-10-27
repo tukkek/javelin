@@ -20,7 +20,7 @@ import javelin.view.Images;
  */
 public class ShatteredTemple extends Haunt{
 	static final List<String> SUBTYPES=List.of("chaotic","good","evil","lawful");
-	static final List<Monster> POOL=new ArrayList<>(Monster.MONSTERS.stream()
+	static final List<Monster> POOL=new ArrayList<>(Monster.ALL.stream()
 			.filter(m->m.type.equals(MonsterType.OUTSIDER)||include(m,SUBTYPES))
 			.collect(Collectors.toList()));
 	static final List<Terrain> TERRAINS=List.of(Terrain.DESERT,Terrain.FOREST,

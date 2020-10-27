@@ -28,7 +28,7 @@ public class DungeonTier{
 		this.name=name;
 		this.tier=tier;
 		minrooms=tier.maxlevel;
-		maxrooms=tier.maxlevel*4;
+		maxrooms=tier.maxlevel*3;
 		floor="dungeonfloor"+tilesuffix;
 		wall="dungeonwall"+tilesuffix;
 	}

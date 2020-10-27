@@ -147,7 +147,7 @@ public class ContentSummary{
 	}
 
 	void printmisc() throws IOException{
-		print(Monster.MONSTERS.size()+" monsters");
+		print(Monster.ALL.size()+" monsters");
 		var itemtypes="";
 		for(var type:ITEMTYPES){
 			var n=Item.ITEMS.stream().filter(i->type.equals(i.getClass())).count();

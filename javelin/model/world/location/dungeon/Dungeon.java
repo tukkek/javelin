@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.Javelin.Delay;
 import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.action.world.WorldMove;
@@ -51,7 +50,6 @@ import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.model.world.location.dungeon.feature.inhabitant.Leader;
 import javelin.model.world.location.dungeon.feature.trap.Trap;
 import javelin.old.RPG;
-import javelin.old.messagepanel.MessagePanel;
 import javelin.view.mappanel.dungeon.DungeonTile;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.DungeonScreen;
@@ -235,14 +233,9 @@ public class Dungeon extends Location{
 	 * Calls {@link #define()} on all floors and then {@link Feature#define()} on
 	 * each floor's {@link #features}. Should be called only once, from top-level.
 	 */
-	void generatefloors(){
-		MessagePanel.active.clear();
+	public void generatefloors(){
 		for(int i=0;i<floors.size();i++){
 			active=floors.get(i);
-			var progress=Math.round(100f*i/floors.size());
-			MessagePanel.active.clear();
-			Javelin.message("Generating dungeon ("+progress+"%)...",Delay.NONE);
-			MessagePanel.active.repaint();
 			active.define();
 		}
 		for(var floor:floors){

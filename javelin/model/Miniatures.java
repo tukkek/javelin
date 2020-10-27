@@ -172,7 +172,7 @@ public class Miniatures{
 		var collection=new ArrayList<Monster>(size);
 		while(collection.size()<size){
 			var cr=averagecr+RPG.randomize(4);
-			var tier=Monster.MONSTERS.stream().filter(m->m.cr==cr&&!m.passive)
+			var tier=Monster.ALL.stream().filter(m->m.cr==cr&&!m.passive)
 					.collect(Collectors.toList());
 			if(!tier.isEmpty()) add(RPG.pick(tier),collection);
 		}

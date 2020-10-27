@@ -112,7 +112,7 @@ public class ArenaMinigame extends Minigame{
 	}
 
 	Combatants choosegladiators(){
-		List<Monster> candidates=Monster.MONSTERS.stream()
+		List<Monster> candidates=Monster.ALL.stream()
 				.filter(m->!m.internal&&m.cr<=GLADIATORMAXCR)
 				.collect(Collectors.toList());
 		Squad s=new SquadScreen(candidates){

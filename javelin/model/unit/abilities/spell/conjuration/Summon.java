@@ -211,7 +211,7 @@ public class Summon extends Spell{
 	 * @see MonsterReader
 	 */
 	public static void setupsummons(){
-		SUMMONS.addAll(Monster.MONSTERS.stream().filter(m->!m.passive)
+		SUMMONS.addAll(Monster.ALL.stream().filter(m->!m.passive)
 				.map(m->new Summon(m.name,1)).collect(Collectors.toList()));
 		for(var k:Kit.KITS)
 			k.finish();

@@ -17,7 +17,7 @@ import javelin.view.Images;
  * @author alex
  */
 public class Graveyard extends Haunt{
-	static final List<Monster> POOL=Monster.MONSTERS.stream()
+	static final List<Monster> POOL=Monster.ALL.stream()
 			.filter(m->m.type.equals(MonsterType.UNDEAD))
 			.collect(Collectors.toList());
 	static final List<Terrain> TERRAINS=List.of(Terrain.FOREST,Terrain.HILL,

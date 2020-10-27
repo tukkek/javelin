@@ -25,7 +25,7 @@ import javelin.old.RPG;
 public abstract class Settlement extends Haunt{
 	static final List<MonsterType> TYPES=List.of(MonsterType.MONSTROUSHUMANOID,
 			MonsterType.HUMANOID);
-	static final List<Monster> POOL=Monster.MONSTERS.stream()
+	static final List<Monster> POOL=Monster.ALL.stream()
 			.filter(m->TYPES.contains(m.type)).collect(Collectors.toList());
 
 	class SettlementMap extends LocationMap{

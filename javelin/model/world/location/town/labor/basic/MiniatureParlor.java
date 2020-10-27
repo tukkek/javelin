@@ -173,7 +173,7 @@ public class MiniatureParlor extends Location{
 			maxlevel=d.town.population;
 			stock=Math.max(maxlevel,MINIMUMSTOCK);
 		}
-		var valid=Monster.MONSTERS.stream().filter(m->m.cr<=maxlevel&&!m.passive)
+		var valid=Monster.ALL.stream().filter(m->m.cr<=maxlevel&&!m.passive)
 				.collect(Collectors.toList());
 		while(miniatures.size()<stock)
 			miniatures.add(RPG.pick(valid));

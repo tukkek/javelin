@@ -17,7 +17,7 @@ import javelin.view.Images;
 public class AbandonedManor extends Haunt{
 	static final List<MonsterType> TYPES=List.of(MonsterType.CONSTRUCT,
 			MonsterType.VERMIN,MonsterType.PLANT,MonsterType.MAGICALBEAST);
-	static final List<Monster> POOL=Monster.MONSTERS.stream()
+	static final List<Monster> POOL=Monster.ALL.stream()
 			.filter(m->!m.passive&&TYPES.contains(m.type))
 			.collect(Collectors.toList());
 	static final List<Terrain> TERRAINS=List.of(Terrain.FOREST,Terrain.MARSH,

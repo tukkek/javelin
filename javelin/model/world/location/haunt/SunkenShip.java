@@ -17,7 +17,7 @@ import javelin.view.Images;
  * @author alex
  */
 public class SunkenShip extends Haunt{
-	static final List<Monster> POOL=Monster.MONSTERS.stream().filter(m->m.swim>0)
+	static final List<Monster> POOL=Monster.ALL.stream().filter(m->m.swim>0)
 			.collect(Collectors.toList());
 
 	public static class SunkenShipMap extends LocationMap{

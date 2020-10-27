@@ -33,7 +33,12 @@ public class MartialTraining extends Feat{
 	private static final String[] RANK=new String[]{"Novice","Student","Teacher",
 			"Master","Grandmaster","Legend",};
 
-	Discipline discipline;
+	/**
+	 * Stored as a name to prevent circular dependency with {@link Discipline}.
+	 *
+	 * @see Discipline#ALL
+	 */
+	String discipline;
 	int level=0;
 	/**
 	 * Number of {@link Maneuver}s that can be learned after upgrading this.
@@ -46,7 +51,7 @@ public class MartialTraining extends Feat{
 
 	public MartialTraining(Discipline d){
 		super(d.name+" training");
-		discipline=d;
+		discipline=d.name;
 	}
 
 	@Override
@@ -71,13 +76,18 @@ public class MartialTraining extends Feat{
 		return bab>=minimum||knowledge>=minimum;
 	}
 
+	Discipline getdiscipline(){
+		return Discipline.ALL.get(discipline);
+	}
+
 	ArrayList<Maneuver> gettrainable(Combatant c,int picks){
-		Maneuvers trainable=discipline.getmaneuvers(level);
-		Maneuvers known=c.disciplines.get(discipline);
+		var d=getdiscipline();
+		Maneuvers trainable=d.getmaneuvers(level);
+		Maneuvers known=c.disciplines.get(d);
 		if(known!=null) trainable.removeAll(known);
 		if(trainable.size()<picks){
-			final String error="Not enough trainable maneuvers for discipline "
-					+discipline+" at level "+level+"!";
+			final String error="Not enough trainable maneuvers for discipline "+d
+					+" at level "+level+"!";
 			throw new RuntimeException(error);
 		}
 		return trainable;
@@ -91,13 +101,14 @@ public class MartialTraining extends Feat{
 			while(pick>0){
 				ArrayList<Maneuver> trainable=gettrainable(c,pick);
 				trainable.sort((a,b)->a.level-b.level);
+				var d=getdiscipline();
 				String prompt="You have advanced to being a "+getrank().toLowerCase()
-						+" in the path of the "+discipline+"!\n"+"You can now select "+pick
+						+" in the path of the "+d+"!\n"+"You can now select "+pick
 						+" extra maneuver(s). What will you learn?";
 				List<String> options=trainable.stream().map(m->m+" (level "+m.level+")")
 						.collect(Collectors.toList());
 				int choice=Javelin.choose(prompt,options,true,true);
-				c.addmaneuver(discipline,trainable.get(choice));
+				c.addmaneuver(d,trainable.get(choice));
 				pick-=1;
 				slots-=1;
 			}
@@ -126,7 +137,7 @@ public class MartialTraining extends Feat{
 			if(m.level==level&&m.validate(c)) tier.add(m);
 		if(tier.isEmpty()) return false;
 		Maneuver m=RPG.pick(tier);
-		boolean failed=!c.addmaneuver(discipline,m);
+		boolean failed=!c.addmaneuver(getdiscipline(),m);
 		if(Javelin.DEBUG&&failed){
 			var error="Invalid maneuver "+m+" for "+c;
 			throw new RuntimeException(error);
@@ -150,7 +161,7 @@ public class MartialTraining extends Feat{
 
 	@Override
 	public Feat generate(String name2){
-		return new MartialTraining(discipline);
+		throw new RuntimeException("Internal feat");
 	}
 
 	@Override

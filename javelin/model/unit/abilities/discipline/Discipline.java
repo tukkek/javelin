@@ -1,5 +1,7 @@
 package javelin.model.unit.abilities.discipline;
 
+import java.util.HashMap;
+
 import javelin.controller.action.maneuver.ExecuteManeuver;
 import javelin.controller.generator.feature.LocationGenerator;
 import javelin.controller.kit.Kit;
@@ -27,6 +29,13 @@ import javelin.model.world.location.town.labor.military.DisciplineAcademy.BuildD
  * @author alex
  */
 public abstract class Discipline extends Kit{
+	/**
+	 * AAl instances by {@link Discipline#name}.
+	 *
+	 * @see MartialTraining
+	 */
+	public static final HashMap<String,Discipline> ALL=new HashMap<>();
+
 	/**
 	 * Whether {@link LocationGenerator} should generate a DisciplineAcademy or
 	 * not. Useful for emulating abilities that are not {@link Maneuvers} as
@@ -70,6 +79,7 @@ public abstract class Discipline extends Kit{
 		basic.add(knowledgeupgrade.getupgrade());
 		extension.add(trainingupgrade);
 		prestige=true;
+		ALL.put(name,this);
 	}
 
 	/**

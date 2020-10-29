@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
@@ -49,6 +50,8 @@ import javelin.model.world.location.dungeon.feature.StairsUp;
 import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.model.world.location.dungeon.feature.inhabitant.Leader;
 import javelin.model.world.location.dungeon.feature.trap.Trap;
+import javelin.model.world.location.dungeon.temple.Temple;
+import javelin.model.world.location.dungeon.temple.TempleDungeon;
 import javelin.old.RPG;
 import javelin.view.mappanel.dungeon.DungeonTile;
 import javelin.view.screen.BattleScreen;
@@ -134,6 +137,8 @@ public class Dungeon extends Location{
 	 * @see Leader
 	 */
 	public List<Combatants> encounters=new ArrayList<>();
+	/** All available lore about this dungeon. */
+	public Set<Lore> lore=new HashSet<>();
 
 	float ratiomonster=RPG.r(25,50)/100f;
 	float ratiofeatures=RPG.r(50,95)/100f;
@@ -230,19 +235,26 @@ public class Dungeon extends Location{
 	}
 
 	/**
-	 * Calls {@link #define()} on all floors and then {@link Feature#define()} on
-	 * each floor's {@link #features}. Should be called only once, from top-level.
+	 * Calls {@link #define()} on all floors; then {@link Feature#define()} on
+	 * each floor's {@link #features}; then generates {@link Lore}. Should be
+	 * called only once, from top-level.
 	 */
 	public void generatefloors(){
 		for(int i=0;i<floors.size();i++){
 			active=floors.get(i);
 			active.define();
 		}
-		for(var floor:floors){
+		for(int i=0;i<floors.size();i++){
+			var floor=floors.get(i);
 			active=floor;
 			for(var feature:floor.features.getall())
 				feature.define(floor,floors);
+			lore.addAll(Lore.generate(floor));
 		}
+		var byvalue=RPG.shuffle(new ArrayList<>(lore));
+		byvalue.sort((a,b)->Integer.compare(b.value,a.value));
+		var keep=Math.min(byvalue.size(),RPG.r(1,4));
+		lore.retainAll(byvalue.subList(0,keep));
 	}
 
 	/**
@@ -668,5 +680,16 @@ public class Dungeon extends Location{
 			parent=floor;
 		}
 		return top;
+	}
+
+	/**
+	 * @return All {@link Dungeon}s and {@link TempleDungeon}s (first
+	 *         {@link #floors} only).
+	 */
+	static public List<Dungeon> getdungeonsandtemples(){
+		List<Dungeon> dungeons=Dungeon.getdungeons();
+		for(var t:Temple.gettemples())
+			dungeons.add(t.floors.get(0));
+		return dungeons;
 	}
 }

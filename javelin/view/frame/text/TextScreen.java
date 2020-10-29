@@ -1,4 +1,4 @@
-package javelin.view.frame.keys;
+package javelin.view.frame.text;
 
 import java.awt.BorderLayout;
 import java.awt.Button;
@@ -17,8 +17,11 @@ import javelin.view.frame.Frame;
  * @author alex
  */
 public abstract class TextScreen extends Frame{
-	final TextArea text=new TextArea(loadtext(),30,80,
+	/** Text widget. */
+	TextArea text=new TextArea(loadtext(),30,80,
 			TextArea.SCROLLBARS_VERTICAL_ONLY);
+	/** If <code>true</code> text is for show only. */
+	protected boolean readonly;
 
 	/** Constructor. */
 	public TextScreen(String title){
@@ -38,6 +41,7 @@ public abstract class TextScreen extends Frame{
 	@Override
 	protected Container generate(){
 		JPanel panel=new JPanel(new BorderLayout());
+		if(readonly) text.setEditable(false);
 		panel.add(text,BorderLayout.CENTER);
 		var save=new Button();
 		save.setLabel("Save");
@@ -59,7 +63,7 @@ public abstract class TextScreen extends Frame{
 			}
 		});
 		super.show();
-		text.requestFocus();
+		if(!readonly) text.requestFocus();
 	}
 
 	@Override

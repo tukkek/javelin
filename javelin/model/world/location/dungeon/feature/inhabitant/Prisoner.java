@@ -13,7 +13,7 @@ import javelin.old.RPG;
 public class Prisoner extends Inhabitant{
 	public Prisoner(){
 		super(Dungeon.active.level+Difficulty.VERYEASY+1,
-				Dungeon.active.level+Difficulty.EASY);
+				Dungeon.active.level+Difficulty.EASY,"prisoner");
 	}
 
 	@Override

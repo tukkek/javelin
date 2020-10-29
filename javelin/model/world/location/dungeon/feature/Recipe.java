@@ -67,7 +67,7 @@ public class Recipe extends Feature{
 
 	/** Constructor. */
 	public Recipe(int dungeonlevel){
-		super("dungeonrecipe");
+		super("dungeonrecipe","recipe");
 		var from=RewardCalculator.getgold(dungeonlevel-1);
 		var to=RewardCalculator.getgold(dungeonlevel+1);
 		var candidates=Item.NONPRECIOUS.stream()
@@ -102,5 +102,10 @@ public class Recipe extends Feature{
 			var valid=new Recipe(level).validate()?"valid":"invalid";
 			System.out.println(String.format("Recippe level %s: %s.",level,valid));
 		}
+	}
+
+	@Override
+	public String toString(){
+		return "Recipe ("+item.name.toLowerCase()+")";
 	}
 }

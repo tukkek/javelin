@@ -52,7 +52,7 @@ public class Mirror extends Feature{
 
 	/** Java Reflection-friendly constructor. */
 	public Mirror(){
-		super("dungeonmirror");
+		super("dungeonmirror","mirror");
 		enter=true;
 		remove=true;
 	}

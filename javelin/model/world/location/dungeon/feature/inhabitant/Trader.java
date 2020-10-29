@@ -36,7 +36,7 @@ public class Trader extends Inhabitant{
 	/** Reflection-friendly constructor. */
 	public Trader(){
 		super(Dungeon.active.level+Difficulty.DIFFICULT,
-				Dungeon.active.level+Difficulty.DEADLY);
+				Dungeon.active.level+Difficulty.DEADLY,"trader");
 		var cr=Math.max(1,Math.round(inhabitant.source.cr));
 		sell=Javelin.round(RewardCalculator.getgold(cr));
 		var min=cr;
@@ -126,10 +126,5 @@ public class Trader extends Inhabitant{
 			sort();
 			Squad.active.gold+=Math.min(sold.price,sell);
 		}
-	}
-
-	@Override
-	public String toString(){
-		return "Vendor: "+inventory;
 	}
 }

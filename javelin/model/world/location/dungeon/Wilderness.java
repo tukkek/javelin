@@ -23,6 +23,7 @@ import javelin.model.world.location.dungeon.feature.Crate;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Fountain;
 import javelin.model.world.location.dungeon.feature.LearningStone;
+import javelin.model.world.location.dungeon.feature.LoreNote;
 import javelin.model.world.location.dungeon.feature.Mirror;
 import javelin.model.world.location.dungeon.feature.StairsUp;
 import javelin.model.world.location.dungeon.feature.Throne;
@@ -65,7 +66,7 @@ public class Wilderness extends Dungeon{
 	 */
 	public static final Set<Class<? extends Feature>> FORBIDDEN=Set.of(
 			Brazier.class,Mirror.class,Throne.class,Fountain.class,Prisoner.class,
-			Crate.class);
+			Crate.class,LoreNote.class);
 	/** Placeholder to prevent an uneeded call {@link #baptize(String)}.p */
 	static final String DESCRIPTION="Wilderness";
 

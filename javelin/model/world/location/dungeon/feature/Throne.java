@@ -32,7 +32,7 @@ public class Throne extends Feature{
 
 	/** @param dungeonlevel Caster level to base {@link #spell} selection on. */
 	public Throne(int dungeonlevel){
-		super("dungeonthrone");
+		super("dungeonthrone","throne");
 		enter=true;
 		remove=false;
 		for(var level=dungeonlevel;spell==null;level--){
@@ -88,5 +88,10 @@ public class Throne extends Feature{
 			revealed=true;
 		}
 		return true;
+	}
+
+	@Override
+	public String toString(){
+		return "Throne ("+spell.name.toLowerCase()+")";
 	}
 }

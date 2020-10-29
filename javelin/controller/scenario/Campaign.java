@@ -19,7 +19,6 @@ import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.governor.HumanGovernor;
 import javelin.model.world.location.town.governor.MonsterGovernor;
@@ -112,11 +111,6 @@ public class Campaign extends Scenario{
 	@Override
 	public Item openspecialchest(){
 		return new Ruby();
-	}
-
-	@Override
-	public Item openaltar(Temple t){
-		return t.relic;
 	}
 
 	@Override

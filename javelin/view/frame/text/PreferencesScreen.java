@@ -1,4 +1,4 @@
-package javelin.view.frame.keys;
+package javelin.view.frame.text;
 
 import javelin.Javelin;
 import javelin.controller.db.Preferences;

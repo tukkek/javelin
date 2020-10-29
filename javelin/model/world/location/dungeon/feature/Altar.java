@@ -3,7 +3,6 @@ package javelin.model.world.location.dungeon.feature;
 import javelin.Javelin;
 import javelin.model.item.Item;
 import javelin.model.item.relic.Relic;
-import javelin.model.world.World;
 import javelin.model.world.location.dungeon.temple.Temple;
 
 /**
@@ -17,22 +16,27 @@ public class Altar extends Feature{
 
 	/** Constructor. */
 	public Altar(Temple temple){
-		super("dungeonchestrelic");
+		super("dungeonchestrelic","altar");
 		this.temple=temple;
 		remove=false;
 	}
 
 	@Override
 	public boolean activate(){
-		Item reward=World.scenario.openaltar(temple);
-		if(Item.getplayeritems().contains(reward))
-			Javelin.message("The "+reward+" is not here anymore...",true);
+		var r=temple.relic;
+		if(Item.getplayeritems().contains(r))
+			Javelin.message("The "+r+" is not here anymore...",true);
 		else{
-			String text="This chest contains the "+reward+"!";
+			String text="This chest contains the "+r+"!";
 			text+="\nIf it is lost for any reason it shall be teleported back to safety here.";
 			Javelin.message(text,true);
-			reward.clone().grab();
+			r.clone().grab();
 		}
 		return true;
+	}
+
+	@Override
+	public String toString(){
+		return temple.relic.name;
 	}
 }

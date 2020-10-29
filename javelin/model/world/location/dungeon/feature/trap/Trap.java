@@ -38,7 +38,7 @@ public abstract class Trap extends Feature{
 	public int searchdc;
 
 	public Trap(int cr,String avatarfilep){
-		super(avatarfilep);
+		super(avatarfilep,"trap");
 		this.cr=cr;
 		draw=!Dungeon.gettable(TrapVisibilityTable.class).rollboolean();
 		remove=false;

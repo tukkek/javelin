@@ -32,6 +32,7 @@ public abstract class WorldAction implements ActionDescription{
 			new Divide(), // d
 			new UseItems(), // i
 			OpenJournal.getsingleton(), // j
+			new ShowLore(), // l
 			ShowOptions.getsingleton(), // o
 			new Park(), // p
 			new Rename(), // r

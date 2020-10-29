@@ -47,10 +47,12 @@ public abstract class Feature implements Serializable{
 	 * {@link DungeonTile} as a feature.
 	 */
 	public boolean enter=true;
+	public final String description;
 
 	/** @param avatar File name for {@link Images#get(String)}. */
-	public Feature(String avatar){
+	public Feature(String avatar,String description){
 		avatarfile=avatar;
+		this.description=description;
 	}
 
 	/**
@@ -105,5 +107,11 @@ public abstract class Feature implements Serializable{
 	 */
 	public boolean validate(){
 		return true;
+	}
+
+	@Override
+	public String toString(){
+		return Character.toUpperCase(description.charAt(0))
+				+description.substring(1);
 	}
 }

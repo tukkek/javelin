@@ -38,7 +38,6 @@ import javelin.model.world.World;
 import javelin.model.world.location.Fortification;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.feature.Altar;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.order.Order;
@@ -295,18 +294,6 @@ public class Scenario implements Serializable{
 	 */
 	@SuppressWarnings("static-method")
 	public Item openspecialchest(){
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * The deepest floor of each {@link Temple} doesn't contain a special
-	 * {@link Chest} but an {@link Altar} instead.
-	 *
-	 * @return Item inside the Altar.
-	 * @see #openspecialchest(Dungeon)
-	 */
-	@SuppressWarnings("unused")
-	public Item openaltar(Temple t){
 		throw new UnsupportedOperationException();
 	}
 

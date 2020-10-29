@@ -33,7 +33,7 @@ public class Passage extends Feature{
 	transient boolean generated=false;
 
 	public Passage(){
-		super("dungeonpassage");
+		super("dungeonpassage","passage");
 		remove=false;
 	}
 

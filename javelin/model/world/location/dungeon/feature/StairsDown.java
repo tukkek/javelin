@@ -14,7 +14,7 @@ public class StairsDown extends Feature{
 
 	/** Constructor. */
 	public StairsDown(){
-		super("dungeonstairsdown");
+		super("dungeonstairsdown","stairs down");
 		remove=false;
 		enter=true;
 	}

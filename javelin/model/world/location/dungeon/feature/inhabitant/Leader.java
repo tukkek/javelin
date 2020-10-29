@@ -195,7 +195,7 @@ public class Leader extends Inhabitant{
 	/** Constructor. */
 	public Leader(){
 		super(Dungeon.active.level+Difficulty.MODERATE,
-				Dungeon.active.level+Difficulty.DEADLY);
+				Dungeon.active.level+Difficulty.DEADLY,"leader");
 		base=Monster.get(inhabitant.source.name);
 		guards.add(inhabitant);
 		while(ChallengeCalculator.calculateel(guards)<Dungeon.active.level)

@@ -27,6 +27,7 @@ import javelin.model.world.location.dungeon.feature.Altar;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.unique.UniqueLocation;
+import javelin.old.RPG;
 import javelin.view.Images;
 
 /**
@@ -101,7 +102,7 @@ public abstract class Temple extends UniqueLocation{
 	 * @param fluffp Text description of temple and surrounding area.
 	 */
 	public Temple(Realm r,int level,Relic relicp,String fluffp){
-		super("Temple of "+r.getname(),"Temple of "+r.getname(),level,level);
+		super("The temple of "+r.getname(),"Temple of "+r.getname(),level,level);
 		allowedinscenario=false;
 		realm=r;
 		this.level=level;
@@ -113,16 +114,8 @@ public abstract class Temple extends UniqueLocation{
 	}
 
 	void generatefloors(int level){
-		Tier tier=Tier.get(level);
-		int nfloors;
-		if(tier==Tier.LOW)
-			nfloors=2;
-		else if(tier==Tier.EPIC)
-			nfloors=4;
-		else
-			nfloors=3;
 		TempleDungeon parent=null;
-		for(int i=0;i<nfloors;i++){
+		for(int i=0;i<RPG.randomize(4,1,Integer.MAX_VALUE);i++){
 			parent=new TempleDungeon(el+i,parent,this);
 			floors.add(parent);
 		}

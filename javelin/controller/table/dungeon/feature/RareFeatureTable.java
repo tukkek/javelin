@@ -42,6 +42,8 @@ import javelin.old.RPG;
  * @see FeatureRarityTable
  */
 public class RareFeatureTable extends Table implements DungeonFeatureTable{
+	public static final List<Class<? extends Feature>> ALL=new ArrayList<>();
+
 	static final Class<? extends Feature> DEBUG=null;
 	static final List<Class<? extends Feature>> COMMON=List.of(FruitTree.class,
 			Herb.class);
@@ -50,6 +52,12 @@ public class RareFeatureTable extends Table implements DungeonFeatureTable{
 			Trader.class,Recipe.class);
 	static final List<Class<? extends Feature>> RARE=List.of(Mirror.class,
 			Throne.class,Leader.class,DungeonMap.class);
+
+	static{
+		ALL.addAll(COMMON);
+		ALL.addAll(AVERAGE);
+		ALL.addAll(RARE);
+	}
 
 	/** Constructor. */
 	public RareFeatureTable(){

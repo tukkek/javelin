@@ -5,6 +5,7 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Brazier;
 import javelin.model.world.location.dungeon.feature.Campfire;
 import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.LoreNote;
 import javelin.model.world.location.dungeon.feature.Passage;
 
 /**
@@ -19,6 +20,7 @@ public class CommonFeatureTable extends Table implements DungeonFeatureTable{
 	public CommonFeatureTable(){
 		add(Passage.class,1);
 		add(Brazier.class,1);
+		add(LoreNote.class,2);
 		add(Campfire.class,getchances());
 	}
 

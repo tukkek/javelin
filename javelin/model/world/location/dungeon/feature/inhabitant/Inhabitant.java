@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
-import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.generator.NpcGenerator;
 import javelin.controller.table.dungeon.feature.FeatureModifierTable;
@@ -53,8 +52,8 @@ public abstract class Inhabitant extends Feature{
 	 */
 	protected int diplomacydc;
 
-	public Inhabitant(float crmin,float crmax){
-		super(null);
+	public Inhabitant(float crmin,float crmax,String description){
+		super(null,description);
 		this.crmin=crmin;
 		this.crmax=crmax;
 		remove=false;
@@ -111,5 +110,10 @@ public abstract class Inhabitant extends Feature{
 			td=(TempleDungeon)Dungeon.active;
 		List<Monster> aslist=Arrays.asList(new Monster[]{m});
 		return td==null||td.temple.validate(aslist);
+	}
+
+	@Override
+	public String toString(){
+		return inhabitant+" "+description.toLowerCase();
 	}
 }

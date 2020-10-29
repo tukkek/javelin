@@ -61,7 +61,7 @@ public class Herb extends Feature{
 
 	/** Constructor. */
 	public Herb(){
-		super("dungeonherb");
+		super("dungeonherb","herb");
 		remove=false;
 	}
 
@@ -132,5 +132,10 @@ public class Herb extends Feature{
 	@Override
 	public boolean validate(){
 		return super.validate()&&Dungeon.active.level<=MAXLEVEL;
+	}
+
+	@Override
+	public String toString(){
+		return "Herb ("+loot.get(0).name.toLowerCase()+")";
 	}
 }

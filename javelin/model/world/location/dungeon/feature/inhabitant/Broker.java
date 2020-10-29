@@ -163,7 +163,7 @@ public class Broker extends Inhabitant{
 	/** Constructor. */
 	public Broker(){
 		super(Dungeon.active.level+Difficulty.DIFFICULT,
-				Dungeon.active.level+Difficulty.DEADLY);
+				Dungeon.active.level+Difficulty.DEADLY,"broker");
 		int nkeys=RPG.r(1,4);
 		for(int i=0;i<nkeys;i++){
 			var key=generatekey();

@@ -15,7 +15,7 @@ import javelin.controller.terrain.Terrain;
 import javelin.controller.wish.Win;
 import javelin.model.Realm;
 import javelin.model.item.Tier;
-import javelin.model.item.relic.Relic;
+import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -34,7 +34,7 @@ import javelin.view.Images;
  * Temples are the key to winning Javelin's {@link Campaign} mode. Each temple
  * is locked and needs to be unlocked by a {@link TempleKey}, brute
  * {@link Monster#strength} or {@link DisableDevice}. Inside the Temple there
- * will be a {@link Relic}, and once all of those are collected the player can
+ * will be a {@link Artifact}, and once all of those are collected the player can
  * make the {@link Win} wish to finish the game.
  *
  * Each temple is a multi-level {@link TempleDungeon}, where on each floor can
@@ -77,7 +77,7 @@ public abstract class Temple extends UniqueLocation{
 	 * @see Altar
 	 * @see TempleDungeon#deepest
 	 */
-	public Relic relic;
+	public Artifact relic;
 	/**
 	 * Each floor has a {@link Chest} with a ruby in it and there is also an
 	 * {@link Altar} on the deepest level.
@@ -101,7 +101,7 @@ public abstract class Temple extends UniqueLocation{
 	 * @param r Temple's defining characteristic.
 	 * @param fluffp Text description of temple and surrounding area.
 	 */
-	public Temple(Realm r,int level,Relic relicp,String fluffp){
+	public Temple(Realm r,int level,Artifact relicp,String fluffp){
 		super("The temple of "+r.getname(),"Temple of "+r.getname(),level,level);
 		allowedinscenario=false;
 		realm=r;

@@ -11,16 +11,17 @@ import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.action.UseItem;
-import javelin.controller.action.world.UseItems;
+import javelin.controller.action.world.inventory.EquipGear;
+import javelin.controller.action.world.inventory.UseItems;
 import javelin.controller.comparator.ItemsByPrice;
 import javelin.controller.exception.battle.StartBattle;
-import javelin.model.item.artifact.Artifact;
-import javelin.model.item.artifact.CasterRing;
 import javelin.model.item.consumable.Eidolon;
 import javelin.model.item.consumable.Scroll;
 import javelin.model.item.focus.Rod;
 import javelin.model.item.focus.Staff;
 import javelin.model.item.focus.Wand;
+import javelin.model.item.gear.CasterRing;
+import javelin.model.item.gear.Gear;
 import javelin.model.item.potion.Flask;
 import javelin.model.item.potion.Potion;
 import javelin.model.item.precious.ArtPiece;
@@ -57,12 +58,12 @@ public abstract class Item implements Serializable,Cloneable{
 	public static final TreeMap<Integer,ItemSelection> BYPRICE=new TreeMap<>();
 	/** Map of items by price {@link Tier} */
 	public static final HashMap<Tier,ItemSelection> BYTIER=new HashMap<>();
-	/** @see Artifact */
+	/** @see Gear */
 	public static final ItemSelection ARTIFACT=new ItemSelection();
 	/** All utility items (not {@link PreciousObject}s). */
 	public static final ItemSelection NONPRECIOUS=new ItemSelection();
 
-	/** Price of the cheapest {@link Artifact} after loot registration. */
+	/** Price of the cheapest {@link Gear} after loot registration. */
 	public static Integer cheapestartifact=null;
 
 	/** If not <code>null</code> will be used for {@link #describefailure()}. */
@@ -101,8 +102,8 @@ public abstract class Item implements Serializable,Cloneable{
 		Gem.generate();
 		ArtPiece.generate();
 		Eidolon.generate();
-		cheapestartifact=ITEMS.stream().filter(i->i instanceof Artifact)
-				.map(i->i.price).min(Integer::compare).get();
+		cheapestartifact=ITEMS.stream().filter(i->i instanceof Gear).map(i->i.price)
+				.min(Integer::compare).get();
 		NONPRECIOUS.addAll(ITEMS.stream().filter(i->!(i instanceof PreciousObject))
 				.collect(Collectors.toList()));
 	}
@@ -265,7 +266,8 @@ public abstract class Item implements Serializable,Cloneable{
 	 * item and updates {@link Squad#equipment}.
 	 */
 	public void grab(Squad s){
-		String list=UseItems.listitems(null,false)+"\n";
+		var action=this instanceof Gear?EquipGear.INSTANCE:UseItems.INSTANCE;
+		String list=action.listitems(null,false)+"\n";
 		list+="Who will take the "+toString().toLowerCase()+"?";
 		s.equipment.get(UseItems.selectmember(s.members,this,list)).add(this);
 	}

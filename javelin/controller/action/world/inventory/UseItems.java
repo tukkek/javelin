@@ -1,4 +1,4 @@
-package javelin.controller.action.world;
+package javelin.controller.action.world.inventory;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,8 +9,9 @@ import java.util.stream.Collectors;
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.CountingSet;
+import javelin.controller.action.world.WorldAction;
 import javelin.model.item.Item;
-import javelin.model.item.artifact.Artifact;
+import javelin.model.item.gear.Gear;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.view.screen.InfoScreen;
@@ -24,13 +25,21 @@ import javelin.view.screen.town.SelectScreen;
  * @author alex
  */
 public class UseItems extends WorldAction{
+	/** Singleton. */
+	public static final UseItems INSTANCE=new UseItems();
+
 	static final ArrayList<Character> KEYS=SelectScreen.filterkeys("deq");
 
 	public static boolean skiperror=false;
 
 	/** Constructor. */
-	public UseItems(){
-		super("Inventory",new int[]{},new String[]{"i"});
+	UseItems(){
+		super("Use items",new int[]{},new String[]{"i"});
+	}
+
+	/** Constructor for subclasses. */
+	protected UseItems(String name,int[] keysp,String[] morekeysp){
+		super(name,keysp,morekeysp);
 	}
 
 	@Override
@@ -75,7 +84,7 @@ public class UseItems extends WorldAction{
 	}
 
 	boolean use(InfoScreen infoscreen,Item i){
-		boolean isartifact=i instanceof Artifact;
+		boolean isartifact=i instanceof Gear;
 		Combatant target=null;
 		if(isartifact)
 			target=findowner(i);
@@ -136,25 +145,31 @@ public class UseItems extends WorldAction{
 		return members.get(Javelin.choose(message,choices,true,true));
 	}
 
+	/** @return Items to be shown on this screen, from all given. */
+	protected List<Item> filter(List<Item> items){
+		return items.stream().filter(i->!(i instanceof Gear))
+				.collect(Collectors.toList());
+	}
+
 	/**
 	 * @param allitems Adds items to this list if not <code>null</code>.
 	 * @param showkeys If <code>true</code> will prepend each item with a key from
 	 *          #KEYS.
 	 * @return A textual listing.
 	 */
-	static public String listitems(ArrayList<Item> allitems,boolean showkeys){
-		String s="";
+	public String listitems(ArrayList<Item> allitems,boolean showkeys){
+		var s="";
 		var keys=KEYS.iterator();
-		for(Combatant c:filtermercenaries(Squad.active.members)){
+		for(var c:filtermercenaries(Squad.active.members)){
 			s+="\n"+c+":\n";
-			ArrayList<Item> bag=Squad.active.equipment.get(c);
+			var bag=filter(Squad.active.equipment.get(c));
 			s+=listbag(allitems,showkeys,bag,c,keys);
 		}
 		return s;
 	}
 
-	static String listbag(ArrayList<Item> allitems,boolean showkeys,
-			ArrayList<Item> bag,Combatant c,Iterator<Character> keys){
+	static String listbag(List<Item> allitems,boolean showkeys,List<Item> bag,
+			Combatant c,Iterator<Character> keys){
 		if(bag.isEmpty()) return "  carrying no items.\n";
 		CountingSet count=new CountingSet();
 		count.casesensitive=true;

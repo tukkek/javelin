@@ -4,6 +4,8 @@ import java.awt.event.KeyEvent;
 
 import javelin.controller.action.Action;
 import javelin.controller.action.ActionDescription;
+import javelin.controller.action.world.inventory.EquipGear;
+import javelin.controller.action.world.inventory.UseItems;
 import javelin.controller.action.world.meta.Abandon;
 import javelin.controller.action.world.meta.Automate;
 import javelin.controller.action.world.meta.ClearHighscore;
@@ -30,7 +32,8 @@ public abstract class WorldAction implements ActionDescription{
 			new Automate(), // a
 			new Camp(), // c
 			new Divide(), // d
-			new UseItems(), // i
+			EquipGear.INSTANCE,//e
+			UseItems.INSTANCE, // i
 			OpenJournal.getsingleton(), // j
 			new ShowLore(), // l
 			ShowOptions.getsingleton(), // o

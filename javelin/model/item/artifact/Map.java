@@ -1,4 +1,4 @@
-package javelin.model.item.relic;
+package javelin.model.item.artifact;
 
 import java.util.ArrayList;
 
@@ -15,7 +15,7 @@ import javelin.view.screen.BattleScreen;
  *
  * @author alex
  */
-public class Map extends Relic{
+public class Map extends Artifact{
 	static final int RADIUS=2;
 
 	/** Constructor. */

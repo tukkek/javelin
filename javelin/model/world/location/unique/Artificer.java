@@ -5,7 +5,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
-import javelin.model.item.artifact.Artifact;
+import javelin.model.item.gear.Gear;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Period;
@@ -41,7 +41,7 @@ public class Artificer extends Fortification{
 	}
 
 	/**
-	 * {@link Artifact}s this artificer can craft. This generically represents the
+	 * {@link Gear}s this artificer can craft. This generically represents the
 	 * base components the Artificer has at the moment to create this selection of
 	 * magic items. Will randomly replace an item once per month, representing not
 	 * only a possible sell but also getting new alchemical components, old ones

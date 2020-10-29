@@ -6,7 +6,7 @@ import javelin.Javelin;
 import javelin.controller.terrain.Marsh;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
-import javelin.model.item.relic.Skull;
+import javelin.model.item.artifact.Skull;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;

@@ -1,4 +1,4 @@
-package javelin.model.item.artifact;
+package javelin.model.item.gear;
 
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Slot;
@@ -8,7 +8,7 @@ import javelin.model.unit.Slot;
  *
  * @author alex
  */
-public class RingOfProtection extends Artifact{
+public class RingOfProtection extends Gear{
 	private int bonus;
 
 	/** Constructor. */

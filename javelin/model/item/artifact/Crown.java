@@ -1,4 +1,4 @@
-package javelin.model.item.relic;
+package javelin.model.item.artifact;
 
 import javelin.Javelin;
 import javelin.model.unit.Combatant;
@@ -9,7 +9,7 @@ import javelin.model.unit.condition.Condition;
  *
  * @author alex
  */
-public class Crown extends Relic{
+public class Crown extends Artifact{
 	class Knowledgeable extends Condition{
 		/** Constructor. */
 		public Knowledgeable(Combatant c){

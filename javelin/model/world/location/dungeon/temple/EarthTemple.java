@@ -3,7 +3,7 @@ package javelin.model.world.location.dungeon.temple;
 import javelin.controller.terrain.Forest;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
-import javelin.model.item.relic.Map;
+import javelin.model.item.artifact.Map;
 import javelin.model.world.location.dungeon.feature.FruitTree;
 
 /**

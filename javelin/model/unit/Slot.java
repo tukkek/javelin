@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-import javelin.model.item.artifact.Artifact;
+import javelin.model.item.gear.Gear;
 
 /**
  * TODO pathfinder has a very useful table of body types to determine which
@@ -78,13 +78,13 @@ public class Slot implements Serializable{
 	}
 
 	/**
-	 * To be called before equipping an {@link Artifact}.
+	 * To be called before equipping an {@link Gear}.
 	 *
-	 * @see Artifact#usepeacefully(javelin.model.unit.Combatant)
+	 * @see Gear#usepeacefully(javelin.model.unit.Combatant)
 	 * @param c Removes all incompatible items from this unit.
 	 */
 	public void clear(Combatant c){
-		for(Artifact a:new ArrayList<>(c.equipped))
+		for(Gear a:new ArrayList<>(c.equipped))
 			if(conflicts(a.slot)){
 				c.equipped.remove(a);
 				a.remove(c);

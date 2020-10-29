@@ -1,4 +1,4 @@
-package javelin.model.item.artifact;
+package javelin.model.item.gear;
 
 import java.security.InvalidParameterException;
 import java.util.List;
@@ -22,7 +22,7 @@ import javelin.model.unit.abilities.spell.Spell;
  *
  * @author alex
  */
-public class CasterRing extends Artifact{
+public class CasterRing extends Gear{
 	/**
 	 * Available number of {@link #uses} tiers in the game. Higher than 5 is
 	 * discouraged since 5 equals to "at will" in the Challenging Challenge
@@ -30,7 +30,7 @@ public class CasterRing extends Artifact{
 	 *
 	 * TODO this is currently artifically limited but could be converted to [1,5]
 	 * at most at any point in time. The reason for this is we don't want 95% of
-	 * the {@link Artifact}s in the game to be Caster Rings. Right now, 60% of the
+	 * the {@link Gear}s in the game to be Caster Rings. Right now, 60% of the
 	 * Artifacts are CasterRings, which is much more acceptable, with around 50%
 	 * or less being the current goal.
 	 */

@@ -1,4 +1,4 @@
-package javelin.model.item.relic;
+package javelin.model.item.artifact;
 
 import javelin.Javelin;
 import javelin.model.transport.FlyingNimbus;
@@ -12,7 +12,7 @@ import javelin.view.screen.BattleScreen;
  *
  * @author alex
  */
-public class Flute extends Relic{
+public class Flute extends Artifact{
 	/** Constructor. */
 	public Flute(Integer level){
 		super("Flute of Wind",level);

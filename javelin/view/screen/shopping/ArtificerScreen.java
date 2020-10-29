@@ -7,7 +7,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
-import javelin.model.item.artifact.Artifact;
+import javelin.model.item.gear.Gear;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.unique.Artificer;
@@ -96,7 +96,7 @@ public class ArtificerScreen extends ShoppingScreen{
 	}
 
 	void sell(Combatant seller,Item sold){
-		Artifact a=sold instanceof Artifact?(Artifact)sold:null;
+		Gear a=sold instanceof Gear?(Gear)sold:null;
 		if(a!=null&&seller.equipped.contains(a)) a.remove(seller);
 		getbag(seller).remove(sold);
 		Squad.active.gold+=sold.price/2;

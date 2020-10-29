@@ -3,7 +3,7 @@ package javelin.controller.wish;
 import java.util.ArrayList;
 
 import javelin.model.item.Item;
-import javelin.model.item.artifact.Artifact;
+import javelin.model.item.gear.Gear;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -33,7 +33,7 @@ public class Rebirth extends Wish{
 		ArrayList<Item> equipment=Squad.active.equipment.get(target);
 		Squad.active.equipment.remove(target);
 		Squad.active.equipment.add(reborn,equipment);
-		for(Artifact a:new ArrayList<>(target.equipped)){
+		for(Gear a:new ArrayList<>(target.equipped)){
 			target.unequip(a);
 			reborn.equip(a);
 		}

@@ -2,11 +2,11 @@ package javelin.model.world.location.dungeon.feature;
 
 import javelin.Javelin;
 import javelin.model.item.Item;
-import javelin.model.item.relic.Relic;
+import javelin.model.item.artifact.Artifact;
 import javelin.model.world.location.dungeon.temple.Temple;
 
 /**
- * Holds the {@link Relic} for this temple. If for any reason the {@link Relic}
+ * Holds the {@link Artifact} for this temple. If for any reason the {@link Artifact}
  * is lost by the player it shall be available for pickup here again.
  *
  * @author alex

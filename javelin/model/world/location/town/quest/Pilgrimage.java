@@ -13,7 +13,7 @@ import javelin.controller.kit.Monk;
 import javelin.controller.kit.Paladin;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
-import javelin.model.item.artifact.Artifact;
+import javelin.model.item.gear.Gear;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
@@ -167,7 +167,7 @@ public class Pilgrimage extends Quest{
 				if(!followers.contains(pilgrim)) continue;
 				inprogress=true;
 				for(var i:s.equipment.get(pilgrim)){
-					if(i instanceof Artifact) ((Artifact)i).remove(pilgrim);
+					if(i instanceof Gear) ((Gear)i).remove(pilgrim);
 					items.add(i);
 				}
 				s.remove(pilgrim);

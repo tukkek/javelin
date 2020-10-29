@@ -6,7 +6,7 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.terrain.Hill;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
-import javelin.model.item.relic.Amulet;
+import javelin.model.item.artifact.Amulet;
 import javelin.model.world.location.dungeon.feature.Portal;
 
 /**

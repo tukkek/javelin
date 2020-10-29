@@ -14,7 +14,7 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
-import javelin.model.item.artifact.Artifact;
+import javelin.model.item.gear.Gear;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -102,8 +102,8 @@ public class PillarOfSkulls extends UniqueLocation{
 			if(choice==-1) return false;
 			Item i=items.get(choice);
 			Combatant owner=owners.get(choice);
-			if(i instanceof Artifact){
-				Artifact a=(Artifact)i;
+			if(i instanceof Gear){
+				Gear a=(Gear)i;
 				if(owner.equipped.contains(a)) a.remove(owner);
 			}
 			Squad.active.equipment.get(owner).remove(i);

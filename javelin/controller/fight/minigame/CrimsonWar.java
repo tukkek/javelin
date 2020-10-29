@@ -26,7 +26,7 @@ import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.map.Map;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.item.Item;
-import javelin.model.item.artifact.Artifact;
+import javelin.model.item.gear.Gear;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -69,7 +69,7 @@ public class CrimsonWar extends Minigame{
 		for(var upgrade:Upgrade.getall())
 			if(upgrade.isusedincombat()) UPGRADES.add(upgrade);
 		for(var item:Item.ITEMS)
-			if(!(item instanceof Artifact)&&item.usedinbattle) ITEMS.add(item);
+			if(!(item instanceof Gear)&&item.usedinbattle) ITEMS.add(item);
 	}
 
 	class CrimsonDirector extends TensionDirector{

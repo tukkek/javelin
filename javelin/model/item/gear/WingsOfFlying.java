@@ -1,4 +1,4 @@
-package javelin.model.item.artifact;
+package javelin.model.item.gear;
 
 import javelin.controller.db.reader.fields.Speed;
 import javelin.model.unit.Combatant;
@@ -9,7 +9,7 @@ import javelin.model.unit.Slot;
  *
  * @author alex
  */
-public class WingsOfFlying extends Artifact{
+public class WingsOfFlying extends Gear{
 	static final int FLIGHT=Math.min(60,Speed.MAXSPEED);
 
 	int originalfly;

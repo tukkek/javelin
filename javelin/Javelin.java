@@ -26,7 +26,7 @@ import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.item.Item;
-import javelin.model.item.artifact.Artifact;
+import javelin.model.item.gear.Gear;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
@@ -99,7 +99,7 @@ public class Javelin{
 		MonsterReader.closelogs();
 		Summon.setupsummons();
 		Spell.setup();
-		Artifact.setup();
+		Gear.setup();
 		Item.setup();
 		Debug.oninit();
 	}

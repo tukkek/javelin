@@ -1,4 +1,4 @@
-package javelin.model.item.relic;
+package javelin.model.item.artifact;
 
 import javelin.Javelin;
 import javelin.controller.action.target.Target;
@@ -6,7 +6,7 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 
 /** Brings a single creature to 1hp. */
-public class Candle extends Relic{
+public class Candle extends Artifact{
 	/** Constructor. */
 	public Candle(int level){
 		super("Candle of searing",level);

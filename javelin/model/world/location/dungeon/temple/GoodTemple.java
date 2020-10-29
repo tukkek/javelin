@@ -5,7 +5,7 @@ import java.util.List;
 import javelin.controller.terrain.Plains;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
-import javelin.model.item.relic.Ankh;
+import javelin.model.item.artifact.Ankh;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Monster.MonsterType;
 import javelin.model.world.location.dungeon.feature.Feature;

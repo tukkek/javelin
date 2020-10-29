@@ -6,7 +6,7 @@ import javelin.controller.Highscore;
 import javelin.controller.db.StateManager;
 import javelin.model.Realm;
 import javelin.model.item.Item;
-import javelin.model.item.relic.Relic;
+import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
@@ -60,7 +60,7 @@ public class Win extends Wish{
 		for(Combatant c:Squad.active.members){
 			ArrayList<Item> bag=Squad.active.equipment.get(c);
 			for(Item i:new ArrayList<>(bag))
-				if(i instanceof Relic) bag.remove(i);
+				if(i instanceof Artifact) bag.remove(i);
 		}
 		for(Actor a:World.getactors())
 			if(a instanceof Temple) a.remove();
@@ -99,7 +99,7 @@ public class Win extends Wish{
 		int nrelics=0;
 		for(Combatant c:Squad.active.members)
 			for(Item i:Squad.active.equipment.get(c))
-				if(i instanceof Relic) nrelics+=1;
+				if(i instanceof Artifact) nrelics+=1;
 		int all=Realm.values().length;
 		return nrelics==all?null:"You need the "+all+" relics first!";
 	}

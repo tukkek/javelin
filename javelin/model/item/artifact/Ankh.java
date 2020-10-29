@@ -1,4 +1,4 @@
-package javelin.model.item.relic;
+package javelin.model.item.artifact;
 
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -9,7 +9,7 @@ import javelin.model.unit.condition.Heroic;
  *
  * @author alex
  */
-public class Ankh extends Relic{
+public class Ankh extends Artifact{
 	/** Constructor. */
 	public Ankh(Integer level){
 		super("Ankh of Life",level);

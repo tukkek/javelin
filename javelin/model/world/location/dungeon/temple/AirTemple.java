@@ -9,7 +9,7 @@ import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.terrain.Mountains;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
-import javelin.model.item.relic.Flute;
+import javelin.model.item.artifact.Flute;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.old.RPG;

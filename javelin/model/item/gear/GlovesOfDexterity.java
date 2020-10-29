@@ -1,4 +1,4 @@
-package javelin.model.item.artifact;
+package javelin.model.item.gear;
 
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -9,7 +9,7 @@ import javelin.model.unit.Slot;
  *
  * @author alex
  */
-public class GlovesOfDexterity extends Artifact{
+public class GlovesOfDexterity extends Gear{
 	private int bonus;
 
 	/** Constructor. */

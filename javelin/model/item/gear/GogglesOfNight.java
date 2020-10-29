@@ -1,4 +1,4 @@
-package javelin.model.item.artifact;
+package javelin.model.item.gear;
 
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -10,7 +10,7 @@ import javelin.model.unit.Slot;
  * @see Monster#vision
  * @author alex
  */
-public class GogglesOfNight extends Artifact{
+public class GogglesOfNight extends Gear{
 
 	private int originalvision;
 

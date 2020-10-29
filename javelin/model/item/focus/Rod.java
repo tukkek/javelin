@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import javelin.Javelin;
 import javelin.controller.action.CastSpell;
 import javelin.controller.exception.RepeatTurn;
-import javelin.model.item.artifact.Artifact;
+import javelin.model.item.gear.Gear;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Slot;
 import javelin.model.unit.abilities.spell.Spell;
@@ -24,7 +24,7 @@ import javelin.model.unit.abilities.spell.Touch;
  * @see Spell#isrod
  * @author alex
  */
-public class Rod extends Artifact{
+public class Rod extends Gear{
 	Spell spell;
 
 	/**

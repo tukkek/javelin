@@ -1,4 +1,4 @@
-package javelin.model.item.relic;
+package javelin.model.item.artifact;
 
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -10,7 +10,7 @@ import javelin.model.unit.condition.Condition;
  *
  * @author alex
  */
-public class Amulet extends Relic{
+public class Amulet extends Artifact{
 
 	/** Constructor. */
 	public Amulet(Integer level){

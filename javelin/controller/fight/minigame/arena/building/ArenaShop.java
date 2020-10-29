@@ -10,7 +10,7 @@ import javelin.controller.fight.minigame.arena.ArenaMinigame;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.Tier;
-import javelin.model.item.artifact.Artifact;
+import javelin.model.item.gear.Gear;
 import javelin.model.unit.Combatant;
 import javelin.old.RPG;
 import javelin.view.screen.Option;
@@ -70,7 +70,7 @@ public class ArenaShop extends ArenaBuilding{
 
 	void restock(){
 		var selection=Item.BYTIER.get(Tier.TIERS.get(level)).stream()
-				.filter(i->i.usedinbattle&&!(i instanceof Artifact))
+				.filter(i->i.usedinbattle&&!(i instanceof Gear))
 				.collect(Collectors.toList());
 		RPG.shuffle(selection);
 		var replace=Math.min(stock.size(),selection.size());

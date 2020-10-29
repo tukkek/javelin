@@ -3,7 +3,7 @@ package javelin.model.world.location.dungeon.temple;
 import javelin.controller.terrain.Desert;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
-import javelin.model.item.relic.Candle;
+import javelin.model.item.artifact.Candle;
 import javelin.model.world.location.dungeon.feature.Brazier;
 
 /**

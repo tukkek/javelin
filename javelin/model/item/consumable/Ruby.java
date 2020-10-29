@@ -3,7 +3,7 @@ package javelin.model.item.consumable;
 import java.util.ArrayList;
 
 import javelin.Javelin;
-import javelin.controller.action.world.UseItems;
+import javelin.controller.action.world.inventory.UseItems;
 import javelin.controller.fight.Fight;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;

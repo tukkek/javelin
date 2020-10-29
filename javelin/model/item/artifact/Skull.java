@@ -1,4 +1,4 @@
-package javelin.model.item.relic;
+package javelin.model.item.artifact;
 
 import java.util.ArrayList;
 
@@ -13,7 +13,7 @@ import javelin.old.RPG;
  *
  * @author alex
  */
-public class Skull extends Relic{
+public class Skull extends Artifact{
 	/** Constructor. */
 	public Skull(Integer level){
 		super("Skull of Pain",level);

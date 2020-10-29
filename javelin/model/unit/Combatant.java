@@ -31,9 +31,9 @@ import javelin.controller.walker.Walker;
 import javelin.controller.wish.Ressurect;
 import javelin.model.TeamContainer;
 import javelin.model.item.Item;
-import javelin.model.item.artifact.Artifact;
 import javelin.model.item.consumable.Scroll;
 import javelin.model.item.focus.Wand;
+import javelin.model.item.gear.Gear;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
 import javelin.model.state.Square;
@@ -139,7 +139,7 @@ public class Combatant implements Serializable,Cloneable{
 	 */
 	public boolean summoned=false;
 	/** Equipment this unit is currently wearing. */
-	public ArrayList<Artifact> equipped=new ArrayList<>(0);
+	public ArrayList<Gear> equipped=new ArrayList<>(0);
 	/** See {@link MercenariesGuild} */
 	public boolean mercenary=false;
 	/** See {@link Monster#burrow}. */
@@ -203,7 +203,7 @@ public class Combatant implements Serializable,Cloneable{
 			c.spells=(Spells)spells.clone();
 			c.disciplines=disciplines.clone();
 			c.xp=c.xp.add(new BigDecimal(0));
-			if(c.equipped!=null) c.equipped=(ArrayList<Artifact>)c.equipped.clone();
+			if(c.equipped!=null) c.equipped=(ArrayList<Gear>)c.equipped.clone();
 			return c;
 		}catch(CloneNotSupportedException e){
 			throw new RuntimeException(e);
@@ -677,10 +677,10 @@ public class Combatant implements Serializable,Cloneable{
 	}
 
 	public void unequip(Item i){
-		if(equipped.remove(i)) ((Artifact)i).remove(this);
+		if(equipped.remove(i)) ((Gear)i).remove(this);
 	}
 
-	public boolean equip(Artifact a){
+	public boolean equip(Gear a){
 		return a.equip(this);
 	}
 

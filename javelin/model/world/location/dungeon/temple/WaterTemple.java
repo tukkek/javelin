@@ -6,7 +6,7 @@ import javelin.controller.fight.Fight;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.Water;
 import javelin.model.Realm;
-import javelin.model.item.relic.Crown;
+import javelin.model.item.artifact.Crown;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Fountain;

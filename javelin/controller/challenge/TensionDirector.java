@@ -6,7 +6,6 @@ import java.util.List;
 
 import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
-import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;

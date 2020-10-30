@@ -11,7 +11,6 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;

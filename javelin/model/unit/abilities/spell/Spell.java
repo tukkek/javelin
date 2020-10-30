@@ -13,7 +13,6 @@ import javelin.controller.action.Action;
 import javelin.controller.action.CastSpell;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.factor.CrFactor;
-import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.kit.Kit;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.item.Item;

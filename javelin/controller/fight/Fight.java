@@ -18,7 +18,6 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.EndBattle;
-import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.fight.setup.BattleSetup;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.map.Map;

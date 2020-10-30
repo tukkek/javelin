@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import javelin.controller.Point;
-import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.map.DndMap;
 import javelin.controller.map.Map;
 import javelin.controller.terrain.Water;

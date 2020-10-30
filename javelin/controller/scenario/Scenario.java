@@ -13,7 +13,6 @@ import javelin.controller.db.StateManager;
 import javelin.controller.event.urban.UrbanEvents;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomEncounter;
-import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.generator.WorldGenerator;
 import javelin.controller.generator.feature.Frequency;
 import javelin.controller.generator.feature.LocationGenerator;

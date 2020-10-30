@@ -6,7 +6,6 @@ import javelin.Debug;
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.fight.Fight;
-import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.fight.setup.BattleSetup;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
@@ -46,7 +45,7 @@ public class StartBattle extends BattleEvent{
 		final int elred=ChallengeCalculator.calculateel(Fight.state.redTeam);
 		final int elblue=ChallengeCalculator.calculateel(Fight.state.blueTeam);
 		int diffifculty=elred-elblue;
-		if(fight instanceof Minigame||!Squad.active.skipcombat(diffifculty)){
+		if(!Squad.active.skipcombat(diffifculty)){
 			BattlePanel.current=Fight.state.next;
 			BattleScreen screen=new BattleScreen(true,true);
 			fight.draw();

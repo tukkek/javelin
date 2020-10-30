@@ -85,8 +85,10 @@ public class UseItems extends WorldAction{
 		if(use(infoscreen,selected)) return !stayopen;
 		if(skiperror) return false;
 		var error=selected.describefailure();
-		infoscreen.print(infoscreen.text+"\n\n"+error+"...");
-		InfoScreen.feedback();
+		if(error!=null){
+			infoscreen.print(infoscreen.text+"\n\n"+error+"...");
+			InfoScreen.feedback();
+		}
 		return false;
 	}
 

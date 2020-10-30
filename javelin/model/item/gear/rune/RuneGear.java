@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.action.CastSpell;
+import javelin.model.item.Item;
 import javelin.model.item.gear.Gear;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Slot;
@@ -76,8 +77,24 @@ public class RuneGear extends Gear{
 		provokesaoo=false;
 	}
 
+	static int price(Condition prefix){
+		var p=prefix.casterlevel*prefix.spelllevel*2000;
+		if(prefix.longterm==null)
+			p*=4;
+		else if(prefix.longterm==0)
+			p*=2;
+		else if(prefix.longterm<=2)
+			p*=1.5;
+		else if(prefix.longterm>=24) p/=2;
+		return p;
+	}
+
+	static int price(Spell suffix){
+		return suffix==null?0:suffix.casterlevel*suffix.level*2000;
+	}
+
 	void define(){
-		var suffixprice=suffix==null?0:suffix.casterlevel*suffix.level*2000;
+		var suffixprice=price(suffix);
 		price=baseprice+prefixprice+suffixprice+Math.min(prefixprice,suffixprice)/2;
 		assert price>baseprice;
 		price*=slot==Slot.SLOTLESS?2:1.5;
@@ -100,14 +117,7 @@ public class RuneGear extends Gear{
 			return;
 		}
 		this.prefix=prefix.clone();
-		prefixprice=prefix.casterlevel*prefix.spelllevel*2000;
-		if(prefix.longterm==null)
-			prefixprice*=4;
-		else if(prefix.longterm==0)
-			prefixprice*=2;
-		else if(prefix.longterm<=2)
-			prefixprice*=1.5;
-		else if(prefix.longterm>=24) prefixprice/=2;
+		prefixprice=price(prefix);
 		define();
 		this.prefix.expireat=Float.MAX_VALUE;
 		this.prefix.longterm=Integer.MAX_VALUE;
@@ -123,8 +133,12 @@ public class RuneGear extends Gear{
 
 	@Override
 	public String toString(){
+		return getname(prefix,this,suffix);
+	}
+
+	static String getname(Condition prefix,Item i,Spell suffix){
 		var name=prefix==null?"":prefix.toString()+" ";
-		name+=super.toString().toLowerCase();
+		name+=i.name.toLowerCase();
 		if(suffix!=null) name+=" of "+suffix.name.toLowerCase();
 		return Javelin.capitalize(name);
 	}

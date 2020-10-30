@@ -20,6 +20,7 @@ import javelin.model.item.focus.Rod;
 import javelin.model.item.focus.Staff;
 import javelin.model.item.focus.Wand;
 import javelin.model.item.gear.Gear;
+import javelin.model.item.gear.rune.Rune;
 import javelin.model.item.gear.rune.RuneGear;
 import javelin.model.item.potion.Flask;
 import javelin.model.item.potion.Potion;
@@ -99,6 +100,7 @@ public abstract class Item implements Serializable,Cloneable{
 		ArtPiece.generate();
 		Eidolon.generate();
 		RuneGear.generate();
+		Rune.generate();
 		cheapestartifact=ITEMS.stream().filter(i->i instanceof Gear).map(i->i.price)
 				.min(Integer::compare).get();
 		NONPRECIOUS.addAll(ITEMS.stream().filter(i->!(i instanceof PreciousObject))
@@ -204,6 +206,7 @@ public abstract class Item implements Serializable,Cloneable{
 	 *
 	 * @param m Unit using the item.
 	 * @return <code>true</code> if item is to be expended.
+	 * @see #failure
 	 */
 	public boolean usepeacefully(Combatant user){
 		throw new RuntimeException("Not used peacefully: "+this);
@@ -248,7 +251,7 @@ public abstract class Item implements Serializable,Cloneable{
 	 * Use this to customize the error message if the item is not expended.
 	 */
 	public String describefailure(){
-		return "Can only be used in battle.";
+		return failure;
 	}
 
 	/**
@@ -370,5 +373,14 @@ public abstract class Item implements Serializable,Cloneable{
 	 */
 	public void refresh(int hours){
 		//most items do not refresh
+	}
+
+	/**
+	 * @return List with all {@link Item#ITEMS} of the given class after
+	 *         {@link #randomize()}.
+	 */
+	public static <K> List<K> getall(Class<K> type){
+		return randomize(Item.ITEMS).stream().filter(i->type.isInstance(i))
+				.map(i->(K)i).collect(Collectors.toList());
 	}
 }

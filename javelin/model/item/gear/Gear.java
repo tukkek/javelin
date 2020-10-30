@@ -2,6 +2,7 @@ package javelin.model.item.gear;
 
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.item.Item;
+import javelin.model.unit.Body;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Slot;
 
@@ -55,10 +56,12 @@ public abstract class Gear extends Item{
 		new WingsOfFlying(54_000);
 	}
 
+	/** Which part of the {@link Body} this goes to. */
 	public Slot slot;
 	/** Unit currently wearing this gear. */
-	protected Combatant owner=null;
+	public Combatant owner=null;
 
+	/** Constructor. */
 	protected Gear(String name,int price,Slot slotp){
 		super(name,price,true);
 		ARTIFACT.add(this);

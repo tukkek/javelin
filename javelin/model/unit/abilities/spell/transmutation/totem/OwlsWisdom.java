@@ -23,7 +23,7 @@ public class OwlsWisdom extends TotemsSpell{
 
 		@Override
 		public void end(Combatant c){
-			c.source.changewisdomscore(+4);
+			c.source.changewisdomscore(-4);
 		}
 	}
 

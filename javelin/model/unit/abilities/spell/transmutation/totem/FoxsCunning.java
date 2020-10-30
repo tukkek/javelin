@@ -24,7 +24,7 @@ public class FoxsCunning extends TotemsSpell{
 
 		@Override
 		public void end(Combatant c){
-			c.source.intelligence+=4;
+			c.source.intelligence-=4;
 		}
 	}
 

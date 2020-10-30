@@ -2,6 +2,7 @@ package javelin.model.state;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.Point;
@@ -227,18 +228,17 @@ public class BattleState implements Node,TeamContainer{
 
 	/**
 	 * @param range How many 5-feet squares ahead the active combatant can see.
-	 * @param perception Represents the light perception for the active
-	 *          combatant since some monsters may have the darkvision quality or
-	 *          similar. If night or evening the character will not able to see
-	 *          past obstacles in the map.
+	 * @param perception Represents the light perception for the active combatant
+	 *          since some monsters may have the darkvision quality or similar. If
+	 *          night or evening the character will not able to see past obstacles
+	 *          in the map.
 	 */
 	public Vision haslineofsight(final Point me,final Point target,int range,
 			Period perception){
 		if(Walker.distance(me.x,me.y,target.x,target.y)<=1) return Vision.CLEAR;
 		final List<Point> clear=new ClearPath(me,target,this).walk();
 		List<Point> covered=null;
-		if(!perception.equals(Period.EVENING)
-				&&!perception.equals(Period.NIGHT))
+		if(!perception.equals(Period.EVENING)&&!perception.equals(Period.NIGHT))
 			covered=new ObstructedPath(me,target,this).walk();
 		if(clear==null&&covered==null) return Vision.BLOCKED;
 		if(clear==null)
@@ -266,26 +266,23 @@ public class BattleState implements Node,TeamContainer{
 	 * @return all that can be seen by the given {@link Combatant}.
 	 */
 	public List<Combatant> gettargets(Combatant combatant,List<Combatant> team){
-		final List<Combatant> targets=new ArrayList<>();
-		for(final Combatant targetc:team)
-			if(haslineofsight(combatant,targetc)!=Vision.BLOCKED)
-				targets.add(targetc);
-		return targets;
+		return team.stream().filter(c->haslineofsight(combatant,c)!=Vision.BLOCKED)
+				.collect(Collectors.toList());
 	}
 
 	/**
 	 * @return <code>true</code> if the target {@link Combatant} can be seen.
 	 */
 	public Vision haslineofsight(Combatant me,Combatant target){
-		return haslineofsight(me,new Point(target.location[0],target.location[1]));
+		return haslineofsight(me,target.getlocation());
 	}
 
 	/**
 	 * @return <code>true</code> if the target {@link Point} can be seen.
 	 */
 	public Vision haslineofsight(Combatant me,Point target){
-		return haslineofsight(new Point(me.location[0],me.location[1]),
-				new Point(target.x,target.y),me.view(period),me.perceive(period));
+		return haslineofsight(me.getlocation(),target,me.view(period),
+				me.perceive(period));
 	}
 
 	/**

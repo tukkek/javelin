@@ -96,8 +96,9 @@ public abstract class Target extends Action{
 			throw new RepeatTurn();
 		}
 		Combatant combatant=state.clone(c);
-		List<Combatant> targets=state.gettargets(combatant,state.getcombatants());
+		List<Combatant> targets=state.getcombatants();
 		filtertargets(combatant,targets,state);
+		targets=state.gettargets(combatant,targets);
 		if(targets.isEmpty()){
 			MessagePanel.active.clear();
 			Javelin.message("No valid targets...",Javelin.Delay.WAIT);
@@ -168,9 +169,7 @@ public abstract class Target extends Action{
 	protected void filtertargets(Combatant active,List<Combatant> targets,
 			BattleState s){
 		for(Combatant target:new ArrayList<>(targets))
-			if(target.isally(active,s)
-					||s.haslineofsight(active,target)==Vision.BLOCKED)
-				targets.remove(target);
+			if(target.isally(active,s)) targets.remove(target);
 	}
 
 	/** TODO rename to lock() */

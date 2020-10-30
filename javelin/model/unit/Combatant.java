@@ -423,10 +423,10 @@ public class Combatant implements Serializable,Cloneable{
 	 * @see #perceive(String)
 	 */
 	public int view(Period p){
-		if(source.vision==2||source.vision==1&&p.equals(Period.EVENING)) return 12;
-		if(p.equals(Period.EVENING)||source.vision==1) return 8;
-		if(p.equals(Period.NIGHT)) return 4;
-		return Integer.MAX_VALUE;
+		if(source.vision==2||p.equals(Period.MORNING)||p.equals(Period.AFTERNOON))
+			return Integer.MAX_VALUE;
+		if(source.vision==1) return p.equals(Period.EVENING)?12:8;
+		return p.equals(Period.EVENING)?8:4;
 	}
 
 	@Override

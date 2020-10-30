@@ -19,7 +19,7 @@ public abstract class AbilityDamage extends Condition{
 	int damage;
 
 	public AbilityDamage(int damage,Combatant c,String description){
-		super(c,description,Effect.NEGATIVE,null,Float.MAX_VALUE,Integer.MAX_VALUE);
+		super(description,null,Float.MAX_VALUE,Integer.MAX_VALUE,Effect.NEGATIVE);
 		this.damage=damage;
 	}
 

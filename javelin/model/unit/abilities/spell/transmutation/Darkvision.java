@@ -7,6 +7,7 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.Touch;
 import javelin.model.unit.condition.Condition;
 
@@ -22,8 +23,8 @@ public class Darkvision extends Touch{
 		 *
 		 * @param casterlevelp
 		 */
-		public DarkvisionCondition(Combatant c,Integer casterlevelp){
-			super(c,"darkvision",Effect.NEUTRAL,casterlevelp,Float.MAX_VALUE,3);
+		public DarkvisionCondition(Spell s){
+			super("darkvision",s,Float.MAX_VALUE,3,Effect.NEUTRAL);
 		}
 
 		@Override
@@ -45,12 +46,13 @@ public class Darkvision extends Touch{
 		castonallies=true;
 		castoutofbattle=true;
 		ispotion=true;
+		isrune=new DarkvisionCondition(this);
 	}
 
 	@Override
 	public String castpeacefully(Combatant caster,Combatant target,
 			List<Combatant> squad){
-		target.addcondition(new DarkvisionCondition(target,casterlevel));
+		target.addcondition(new DarkvisionCondition(this));
 		return target+"'s eyes glow!";
 	}
 

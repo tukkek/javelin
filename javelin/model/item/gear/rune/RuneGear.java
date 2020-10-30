@@ -26,11 +26,16 @@ import javelin.old.RPG;
 public class RuneGear extends Gear{
 	static final HashMap<Slot,List<String>> NAMES=new HashMap<>();
 	static final HashMap<Slot,List<Integer>> PRICE=new HashMap<>();
+	static final List<Condition> PREFIXES=new ArrayList<>();
 	static final List<Spell> SUFFIXES=new ArrayList<>();
 
 	/** Creates item instances. */
 	@SuppressWarnings("unused")
 	public static void generate(){
+		PREFIXES.addAll(Spell.SPELLS.stream().filter(s->s.isrune!=null)
+				.map(s->s.isrune).collect(Collectors.toList()));
+		SUFFIXES.addAll(Spell.SPELLS.stream().filter(s->!(s instanceof Summon))
+				.collect(Collectors.toList()));
 		new RuneGear("Tabard",5,Slot.ARMOR);
 		new RuneGear("Vest",30,Slot.ARMOR);
 		new RuneGear("Glasses",5,Slot.EYES);
@@ -54,11 +59,10 @@ public class RuneGear extends Gear{
 		new RuneGear("Belt",1,Slot.WAIST);
 		new RuneGear("Brooch",5,Slot.SLOTLESS);
 		new RuneGear("Medal",5,Slot.SLOTLESS);
-		SUFFIXES.addAll(Spell.SPELLS.stream().filter(s->!(s instanceof Summon))
-				.collect(Collectors.toList()));
 	}
 
 	Condition prefix=null;
+	int prefixprice=0;
 	Spell suffix=null;
 	int baseprice;
 
@@ -73,13 +77,12 @@ public class RuneGear extends Gear{
 	}
 
 	void define(){
-		var prefixprice=prefix==null?0:0; //TODO
 		var suffixprice=suffix==null?0:suffix.casterlevel*suffix.level*2000;
 		price=baseprice+prefixprice+suffixprice+Math.min(prefixprice,suffixprice)/2;
 		assert price>baseprice;
 		price*=slot==Slot.SLOTLESS?2:1.5;
 		price=Javelin.round(price);
-		if(owner==null){
+		if(owner==null||suffix==null){
 			usedinbattle=false;
 			usedoutofbattle=false;
 		}else{
@@ -91,8 +94,23 @@ public class RuneGear extends Gear{
 	/** @param prefix Add this prefix. */
 	public void set(Condition prefix){
 		if(owner!=null&&this.prefix!=null) negate(owner);
+		if(prefix==null){
+			this.prefix=null;
+			prefixprice=0;
+			return;
+		}
 		this.prefix=prefix.clone();
+		prefixprice=prefix.casterlevel*prefix.spelllevel*2000;
+		if(prefix.longterm==null)
+			prefixprice*=4;
+		else if(prefix.longterm==0)
+			prefixprice*=2;
+		else if(prefix.longterm<=2)
+			prefixprice*=1.5;
+		else if(prefix.longterm>=24) prefixprice/=2;
 		define();
+		this.prefix.expireat=Float.MAX_VALUE;
+		this.prefix.longterm=Integer.MAX_VALUE;
 		if(owner!=null) apply(owner);
 	}
 
@@ -113,12 +131,12 @@ public class RuneGear extends Gear{
 
 	@Override
 	protected void apply(Combatant c){
-		//TODO prefix
+		c.addcondition(prefix);
 	}
 
 	@Override
 	protected void negate(Combatant c){
-		//TODO prefix
+		c.removecondition(prefix);
 	}
 
 	@Override
@@ -143,15 +161,15 @@ public class RuneGear extends Gear{
 		assert owner==null;
 		var g=(RuneGear)super.randomize();
 		g.prefix=null;
+		g.prefixprice=0;
 		g.suffix=null;
 		var hasprefix=false;
 		var hassuffix=false;
 		while(!hasprefix&&!hassuffix){
 			hasprefix=RPG.chancein(2);
-			hasprefix=false;//TODO
 			hassuffix=RPG.chancein(2);
 		}
-		if(hasprefix) g.set((Condition)null); //TODO
+		if(hasprefix) g.set(RPG.pick(PREFIXES));
 		if(hassuffix) g.set(RPG.pick(SUFFIXES));
 		return g;
 	}

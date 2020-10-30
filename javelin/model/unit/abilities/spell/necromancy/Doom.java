@@ -23,7 +23,7 @@ public class Doom extends Spell{
 			BattleState s,ChanceNode cn){
 		if(cn!=null) cn.overlay=new AiOverlay(target.getlocation());
 		if(saved) return target+" resists!";
-		target.addcondition(new Shaken(Float.MAX_VALUE,target,casterlevel));
+		target.addcondition(new Shaken(Float.MAX_VALUE,this));
 		return target+" is shaken!";
 	}
 

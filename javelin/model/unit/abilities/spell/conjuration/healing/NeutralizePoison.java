@@ -27,13 +27,14 @@ public class NeutralizePoison extends Touch{
 	 * @author alex
 	 */
 	public class Neutralized extends Condition{
-		Neutralized(Combatant c,Integer casterlevel){
-			super(c,"poison-neutral",Effect.POSITIVE,casterlevel,Float.MAX_VALUE,1);
+		Neutralized(Spell s){
+			super("poison-neutral",s.level,s.casterlevel,Float.MAX_VALUE,1,
+					Effect.POSITIVE);
 		}
 
 		@Override
 		public void start(Combatant c){
-			Poisoned p=(Poisoned)c.hascondition(Poisoned.class);
+			Poisoned p=c.hascondition(Poisoned.class);
 			if(p!=null){
 				p.neutralized=true;
 				c.removecondition(p);
@@ -55,6 +56,7 @@ public class NeutralizePoison extends Touch{
 		castoutofbattle=true;
 		castonallies=true;
 		provokeaoo=false;
+		isrune=new Neutralized(this);
 	}
 
 	@Override
@@ -99,7 +101,7 @@ public class NeutralizePoison extends Touch{
 	@Override
 	public String castpeacefully(Combatant caster,Combatant target,
 			List<Combatant> squad){
-		target.addcondition(new Neutralized(target,casterlevel));
+		target.addcondition(new Neutralized(this));
 		return target+" is immune to poison!";
 	}
 }

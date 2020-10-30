@@ -52,7 +52,7 @@ public class LesserRestoration extends Touch{
 		remove(Fatigued.class,target,dispelled);
 		Condition exhausted=remove(Exhausted.class,target,dispelled);
 		if(exhausted!=null)
-			target.addcondition(new Fatigued(target,null,exhausted.longterm));
+			target.addcondition(new Fatigued(null,exhausted.longterm));
 		if(target.source.poison>0){
 			target.detox(1);
 			return target+" heals 2 constitution damage!";

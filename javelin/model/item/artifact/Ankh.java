@@ -21,7 +21,7 @@ public class Ankh extends Artifact{
 	protected boolean activate(Combatant user){
 		for(Combatant c:Squad.active.members){
 			c.heal(c.maxhp,true);
-			c.addcondition(new Heroic(c,20,24));
+			c.addcondition(new Heroic(null,24));
 		}
 		return true;
 	}

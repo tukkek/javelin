@@ -7,6 +7,7 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.Touch;
 import javelin.model.unit.condition.Condition;
 
@@ -23,8 +24,8 @@ public class ResistEnergy extends Touch{
 		 * @param resistance Number of {@link Monster#energyresistance} points.
 		 * @param casterlevelp
 		 */
-		Resistant(Combatant c,int resistance,Integer casterlevelp){
-			super(c,"resistant",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE,1);
+		Resistant(int resistance,Spell s){
+			super("resistant",s,Float.MAX_VALUE,1,Effect.POSITIVE);
 			r=resistance;
 		}
 
@@ -50,12 +51,13 @@ public class ResistEnergy extends Touch{
 		castonallies=true;
 		castoutofbattle=true;
 		ispotion=true;
+		isrune=new Resistant(resistance,this);
 	}
 
 	@Override
 	public String castpeacefully(Combatant caster,Combatant target,
 			List<Combatant> squad){
-		target.addcondition(new Resistant(target,resistance,casterlevel));
+		target.addcondition(new Resistant(resistance,this));
 		return target+" is looking reflective!";
 	}
 

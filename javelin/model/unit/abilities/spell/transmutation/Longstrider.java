@@ -21,8 +21,8 @@ import javelin.model.world.location.dungeon.Dungeon;
  */
 public class Longstrider extends Spell{
 	class Strider extends Condition{
-		Strider(Combatant c,Integer casterlevelp){
-			super(c,"striding",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE,1);
+		Strider(Spell s){
+			super("striding",s,Float.MAX_VALUE,1,Effect.POSITIVE);
 		}
 
 		@Override
@@ -44,12 +44,13 @@ public class Longstrider extends Spell{
 		castinbattle=true;
 		castonallies=false;
 		ispotion=true;
+		isrune=new Strider(this);
 	}
 
 	@Override
 	public String cast(Combatant caster,Combatant target,boolean saved,
 			BattleState s,ChanceNode cn){
-		caster.addcondition(new Strider(caster,casterlevel));
+		caster.addcondition(new Strider(this));
 		return "Walking speed for "+caster+" is now "+caster.source.walk+"ft!";
 	}
 

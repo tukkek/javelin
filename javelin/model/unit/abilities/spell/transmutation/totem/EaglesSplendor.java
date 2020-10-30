@@ -4,6 +4,7 @@ import javelin.controller.ai.ChanceNode;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.condition.Condition;
 
 /**
@@ -11,8 +12,8 @@ import javelin.model.unit.condition.Condition;
  */
 public class EaglesSplendor extends TotemsSpell{
 	class Splendid extends Condition{
-		Splendid(Combatant c,Integer casterlevelp){
-			super(c,"splendid",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE);
+		Splendid(Spell s){
+			super("splendid",s,Float.MAX_VALUE,Effect.POSITIVE);
 		}
 
 		@Override
@@ -29,12 +30,13 @@ public class EaglesSplendor extends TotemsSpell{
 	/** Constructor. */
 	public EaglesSplendor(){
 		super("Eagle's splendor");
+		isrune=new Splendid(this);
 	}
 
 	@Override
 	public String cast(final Combatant caster,final Combatant target,
 			final boolean saved,final BattleState s,ChanceNode cn){
-		target.addcondition(new Splendid(target,casterlevel));
+		target.addcondition(new Splendid(this));
 		return target+"'s charisma is now "
 				+Monster.getsignedbonus(target.source.charisma)+"!";
 	}

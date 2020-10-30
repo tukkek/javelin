@@ -22,7 +22,7 @@ public class HoldMonster extends Spell{
 			BattleState s,ChanceNode cn){
 		if(saved) return target+" resists.";
 		var duration=calculateduration(target.source.getwill(),caster);
-		target.addcondition(new Paralyzed(caster.ap+duration,target,casterlevel));
+		target.addcondition(new Paralyzed(caster.ap+duration,this));
 		if(cn!=null) cn.overlay=new AiOverlay(target);
 		return target+" is paralyzed for "+duration+" turns!";
 	}

@@ -1,6 +1,7 @@
 package javelin.model.unit.condition;
 
 import javelin.model.unit.Combatant;
+import javelin.model.unit.abilities.spell.Spell;
 
 /**
  * A fatigued character can neither run nor charge and takes a -2 penalty to
@@ -10,14 +11,18 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public class Fatigued extends Condition{
-
-	protected Fatigued(Combatant c,String descriptionp,Integer casterlevelp,
-			Integer hours){
-		super(c,descriptionp,Effect.NEGATIVE,casterlevelp,Float.MAX_VALUE,hours);
+	/** Full constructor for subclasses. */
+	protected Fatigued(Integer spelllevel,Integer casterlevel,float expireatp,
+			Integer longtermp,Effect effectp){
+		super("fatigued",spelllevel,casterlevel,expireatp,longtermp,effectp);
 	}
 
-	public Fatigued(Combatant c,Integer casterlevelp,Integer hours){
-		this(c,"fatigued",casterlevelp,hours);
+	protected Fatigued(String descriptionp,Spell s,Integer hours){
+		super(descriptionp,s,Float.MAX_VALUE,hours,Effect.NEGATIVE);
+	}
+
+	public Fatigued(Spell s,Integer hours){
+		this("fatigued",s,hours);
 	}
 
 	@Override

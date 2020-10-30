@@ -9,7 +9,7 @@ import javelin.model.unit.feat.attack.expertise.ImprovedTrip;
  */
 public class Prone extends Condition{
 	public Prone(float expireatp,Combatant c){
-		super(c,"prone",Effect.NEGATIVE,null,expireatp);
+		super("prone",null,expireatp,Effect.NEGATIVE);
 	}
 
 	@Override

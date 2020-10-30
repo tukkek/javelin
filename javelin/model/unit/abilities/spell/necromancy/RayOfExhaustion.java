@@ -28,8 +28,8 @@ public class RayOfExhaustion extends Ray{
 	public String cast(Combatant caster,Combatant target,boolean saved,
 			BattleState s,ChanceNode cn){
 		Condition c=!saved||target.hascondition(Fatigued.class)!=null
-				?new Exhausted(target,casterlevel)
-				:new Fatigued(target,casterlevel,0);
+				?new Exhausted(this)
+				:new Fatigued(this,0);
 		target.addcondition(c);
 		return target+" is "+c.description+".";
 	}

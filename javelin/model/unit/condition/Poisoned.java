@@ -4,6 +4,7 @@ import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
+import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.healing.NeutralizePoison.Neutralized;
 import javelin.model.unit.skill.Heal;
 import javelin.model.unit.skill.Skill;
@@ -33,8 +34,8 @@ public class Poisoned extends Condition{
 	 *
 	 * @see Monster#changeconstitutionmodifier(Combatant, int)
 	 */
-	public Poisoned(Combatant c,int secondary,int dcp,Integer casterlevelp){
-		super(c,"poisoned",Effect.NEGATIVE,casterlevelp,Float.MAX_VALUE,1);
+	public Poisoned(Combatant c,int secondary,int dcp,Spell s){
+		super("poisoned",s,Float.MAX_VALUE,1,Effect.NEGATIVE);
 		this.secondary=secondary;
 		dc=dcp;
 		neutralized=c.hascondition(Neutralized.class)!=null;

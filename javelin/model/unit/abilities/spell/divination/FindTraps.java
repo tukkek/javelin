@@ -25,8 +25,9 @@ public class FindTraps extends Spell{
 		 *
 		 * @param casterlevelp
 		 */
-		FindingTraps(Combatant c,Integer casterlevelp){
-			super(c,"finding traps",Effect.NEUTRAL,casterlevelp,Float.MAX_VALUE,1);
+		FindingTraps(Spell s){
+			super("trapfinder",s.level,s.casterlevel,Float.MAX_VALUE,1,
+					Effect.NEUTRAL);
 		}
 
 		@Override
@@ -47,12 +48,13 @@ public class FindTraps extends Spell{
 		castinbattle=false;
 		castonallies=false;
 		castoutofbattle=true;
+		isrune=new FindingTraps(this);
 	}
 
 	@Override
 	public String castpeacefully(Combatant caster,Combatant target,
 			List<Combatant> squad){
-		caster.addcondition(new FindingTraps(caster,casterlevel));
+		caster.addcondition(new FindingTraps(this));
 		return caster+" is finding traps more easily!";
 	}
 }

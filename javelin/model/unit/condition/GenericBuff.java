@@ -14,8 +14,8 @@ public abstract class GenericBuff extends Condition{
 	 * @param bonus Positive bonus for a buff or negative bonus for a debuff.
 	 */
 	public GenericBuff(Combatant c,int bonus,String description,int longterm){
-		super(c,description,bonus>0?Effect.POSITIVE:Effect.NEGATIVE,null,
-				Float.MAX_VALUE,longterm);
+		super(description,null,null,Float.MAX_VALUE,longterm,
+				bonus>0?Effect.POSITIVE:Effect.NEGATIVE);
 		this.bonus=bonus;
 	}
 

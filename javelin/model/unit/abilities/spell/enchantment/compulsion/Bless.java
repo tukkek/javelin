@@ -18,8 +18,8 @@ public class Bless extends Spell{
 	class Blessed extends Condition{
 		int bonus=+1;
 
-		Blessed(Combatant c){
-			super(c,"blessed",Effect.POSITIVE,1,Float.MAX_VALUE);
+		Blessed(Spell s){
+			super("blessed",s,Float.MAX_VALUE,Effect.POSITIVE);
 		}
 
 		@Override
@@ -47,7 +47,7 @@ public class Bless extends Spell{
 			BattleState s,ChanceNode cn){
 		s=s.clone();
 		for(Combatant c:s.getteam(caster))
-			s.clone(c).addcondition(new Blessed(c));
+			s.clone(c).addcondition(new Blessed(this));
 		return "All allies are blessed!";
 	}
 

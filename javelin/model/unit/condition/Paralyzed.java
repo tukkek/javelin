@@ -1,6 +1,7 @@
 package javelin.model.unit.condition;
 
 import javelin.model.unit.Combatant;
+import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.enchantment.compulsion.HoldMonster;
 
 /**
@@ -11,8 +12,8 @@ public class Paralyzed extends Condition{
 	private int dex;
 	private int delta;
 
-	public Paralyzed(float expireatp,Combatant c,Integer casterlevelp){
-		super(c,"paralyzed",Effect.NEGATIVE,casterlevelp,expireatp);
+	public Paralyzed(float expireatp,Spell s){
+		super("paralyzed",s,expireatp,Effect.NEGATIVE);
 	}
 
 	@Override

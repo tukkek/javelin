@@ -4,6 +4,7 @@ import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.Touch;
 import javelin.model.unit.condition.Condition;
 
@@ -19,8 +20,8 @@ public class Fly extends Touch{
 		 *
 		 * @param casterlevelp
 		 */
-		public Flying(Combatant c,Integer casterlevelp){
-			super(c,"flying",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE);
+		public Flying(Spell s){
+			super("flying",s,Float.MAX_VALUE,Effect.POSITIVE);
 		}
 
 		@Override
@@ -41,12 +42,13 @@ public class Fly extends Touch{
 		castinbattle=true;
 		castonallies=true;
 		ispotion=true;
+		isrune=new Flying(this);
 	}
 
 	@Override
 	public String cast(Combatant caster,Combatant target,boolean saved,
 			BattleState s,ChanceNode cn){
-		target.addcondition(new Flying(target,casterlevel));
+		target.addcondition(new Flying(this));
 		return target+" floats above the ground!";
 	}
 }

@@ -20,6 +20,7 @@ import javelin.model.item.consumable.Scroll;
 import javelin.model.item.focus.Rod;
 import javelin.model.item.focus.Staff;
 import javelin.model.item.focus.Wand;
+import javelin.model.item.gear.rune.RuneGear;
 import javelin.model.item.potion.Potion;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
@@ -94,6 +95,8 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
 	public boolean iswand=false;
 	/** @see Rod */
 	public boolean isrod=false;
+	/** @see RuneGear */
+	volatile public Condition isrune=null;
 
 	/**
 	 * If <code>false</code> will not consider this threatening (ignores attacks

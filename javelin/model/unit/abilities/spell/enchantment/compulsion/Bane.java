@@ -3,6 +3,7 @@ package javelin.model.unit.abilities.spell.enchantment.compulsion;
 import javelin.controller.ai.ChanceNode;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.abilities.spell.Spell;
 
 /**
  * See SRD.
@@ -11,8 +12,8 @@ import javelin.model.unit.Combatant;
  */
 public class Bane extends Bless{
 	class Baned extends Blessed{
-		Baned(Combatant c){
-			super(c);
+		Baned(Spell s){
+			super(s);
 			description="baned";
 			bonus=-1;
 			effect=Effect.NEGATIVE;
@@ -30,7 +31,7 @@ public class Bane extends Bless{
 		String result="";
 		for(Combatant c:s.getcombatants())
 			if(!c.isally(caster,s)&&getsavetarget(c.source.getwill(),caster)>10){
-				c.addcondition(new Baned(c));
+				c.addcondition(new Baned(this));
 				result+=c.toString()+", ";
 			}
 		return result.isEmpty()?"No creatures were affected..."

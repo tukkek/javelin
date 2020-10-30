@@ -35,7 +35,7 @@ public class SoundBurst extends Spell{
 			c=s.clone(c);
 			c.damage(RPG.average(1,8),s,0);
 			if(getsavetarget(c.source.getfortitude(),caster)>10)
-				c.addcondition(new Stunned(c,casterlevel));
+				c.addcondition(new Stunned(c,this));
 		}
 		return caster+" bursts out a tremendous wall of sound!";
 	}

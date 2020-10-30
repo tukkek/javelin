@@ -4,6 +4,7 @@ import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.Touch;
 import javelin.model.unit.condition.Condition;
 
@@ -14,8 +15,8 @@ import javelin.model.unit.condition.Condition;
  */
 public class Displacement extends Touch{
 	class Blinking extends Condition{
-		Blinking(float expireatp,Combatant c,Integer casterlevelp){
-			super(c,"blinking",Effect.POSITIVE,casterlevelp,expireatp);
+		Blinking(float expireatp,Spell s){
+			super("blinking",s,expireatp,Effect.POSITIVE);
 		}
 
 		@Override
@@ -36,6 +37,7 @@ public class Displacement extends Touch{
 	/** Constructor. */
 	public Displacement(){
 		this("Displacement",3,ChallengeCalculator.ratespell(3));
+		isrune=new Blinking(Float.MAX_VALUE,this);
 	}
 
 	/** Constructor. */
@@ -49,7 +51,7 @@ public class Displacement extends Touch{
 	@Override
 	public String cast(Combatant caster,Combatant target,boolean saved,
 			BattleState s,ChanceNode cn){
-		target.addcondition(new Blinking(caster.ap+turns,caster,casterlevel));
+		target.addcondition(new Blinking(caster.ap+turns,this));
 		return target+" is blinking!";
 	}
 }

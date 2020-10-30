@@ -17,12 +17,13 @@ public class Heroism extends Touch{
 		castonallies=true;
 		castinbattle=true;
 		ispotion=true;
+		isrune=new Heroic(this);
 	}
 
 	@Override
 	public String cast(Combatant caster,Combatant target,boolean saved,
 			BattleState s,ChanceNode cn){
-		target.addcondition(new Heroic(target,casterlevel));
+		target.addcondition(new Heroic(this));
 		return target+" is heroic!";
 	}
 

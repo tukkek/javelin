@@ -37,7 +37,7 @@ public class Poison extends Touch{
 		else if(ratio>1) ratio=1;
 		final int damage=Math.round(3*ratio);
 		if(damage<=0) return target+" resists the poison!";
-		Poisoned p=new Poisoned(target,damage,dc,nonmagical?null:casterlevel);
+		Poisoned p=new Poisoned(target,damage,dc,nonmagical?null:this);
 		if(p.neutralized) return target+" is immune to poison.";
 		target.addcondition(p);
 		if(target.hp<1) target.hp=1;

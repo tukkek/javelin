@@ -6,6 +6,7 @@ import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.Touch;
 import javelin.model.unit.condition.Condition;
 
@@ -16,8 +17,8 @@ import javelin.model.unit.condition.Condition;
  */
 public class Barkskin extends Touch{
 	class BarkskinCondition extends Condition{
-		BarkskinCondition(Combatant c,Integer casterlevelp){
-			super(c,"barkskin",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE,1);
+		BarkskinCondition(Spell s){
+			super("barkskin",s.level,s.casterlevel,Float.MAX_VALUE,1,Effect.POSITIVE);
 		}
 
 		@Override
@@ -39,12 +40,13 @@ public class Barkskin extends Touch{
 		castoutofbattle=true;
 		castonallies=true;
 		ispotion=true;
+		isrune=new BarkskinCondition(this);
 	}
 
 	@Override
 	public String castpeacefully(Combatant caster,Combatant target,
 			List<Combatant> squad){
-		target.addcondition(new BarkskinCondition(target,casterlevel));
+		target.addcondition(new BarkskinCondition(this));
 		return target+" now has an armor class of "+target.getac()+"!";
 	}
 

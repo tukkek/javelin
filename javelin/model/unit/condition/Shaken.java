@@ -3,6 +3,7 @@ package javelin.model.unit.condition;
 import java.util.ArrayList;
 
 import javelin.model.unit.Combatant;
+import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.necromancy.Doom;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
@@ -13,8 +14,8 @@ import javelin.model.unit.attack.AttackSequence;
  */
 public class Shaken extends Condition{
 	/** Constructor. */
-	public Shaken(float expireatp,Combatant c,Integer casterlevel){
-		super(c,"shaken",Effect.NEGATIVE,casterlevel,expireatp,1);
+	public Shaken(float expireatp,Spell s){
+		super("shaken",s,expireatp,1,Effect.NEGATIVE);
 	}
 
 	@Override

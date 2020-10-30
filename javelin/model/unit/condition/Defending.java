@@ -13,7 +13,7 @@ public class Defending extends Condition{
 	int acbonus=4;
 
 	public Defending(float expireatp,Combatant c){
-		super(c,"defending",Effect.POSITIVE,null,expireatp);
+		super("defending",null,expireatp,Effect.POSITIVE);
 		acbonus=Skill.ACROBATICS.getranks(c)>=3?6:4;
 	}
 

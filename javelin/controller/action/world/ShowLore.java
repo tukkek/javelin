@@ -3,7 +3,6 @@ package javelin.controller.action.world;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-import javelin.Javelin;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.LoreNote;
 import javelin.view.frame.text.TextScreen;
@@ -15,8 +14,6 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class ShowLore extends WorldAction{
-	static final boolean DEBUG=false;
-
 	class LoreScreen extends TextScreen{
 		public LoreScreen(){
 			super("Known lore");
@@ -38,8 +35,8 @@ public class ShowLore extends WorldAction{
 				return tiera!=tierb?tierb-tiera:a.toString().compareTo(b.toString());
 			});
 			for(var d:dungeons){
-				var lore=d.lore.stream().filter(l->l.discovered||Javelin.DEBUG&&DEBUG)
-						.map(l->"- "+l.text).sorted().collect(Collectors.toList());
+				var lore=d.lore.stream().filter(l->l.discovered).map(l->"- "+l.text)
+						.sorted().collect(Collectors.toList());
 				if(!lore.isEmpty()) text.add(d+":\n"+String.join("\n",lore));
 			}
 			return text.isEmpty()?"No lore discovered yet..."

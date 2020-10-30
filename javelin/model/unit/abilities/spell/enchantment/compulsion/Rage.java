@@ -15,8 +15,8 @@ import javelin.model.unit.condition.Condition;
  */
 public class Rage extends Spell{
 	class Raging extends Condition{
-		Raging(float expireatp,Combatant c,Integer casterlevel){
-			super(c,"raging",Effect.POSITIVE,casterlevel,expireatp);
+		Raging(float expireatp,Spell s){
+			super("raging",s,expireatp,Effect.POSITIVE);
 		}
 
 		@Override
@@ -45,6 +45,7 @@ public class Rage extends Spell{
 		this("Rage",3,ChallengeCalculator.ratespell(3));
 		ispotion=true;
 		iswand=true;
+		isrune=new Raging(Float.MAX_VALUE,this);
 	}
 
 	/** Subclass constructor. */
@@ -58,7 +59,7 @@ public class Rage extends Spell{
 	public String cast(Combatant caster,Combatant target,boolean saved,
 			BattleState s,ChanceNode cn){
 		float expiresat=caster.ap+getduration(target);
-		target.addcondition(new Raging(expiresat,target,casterlevel));
+		target.addcondition(new Raging(expiresat,this));
 		return target+" is raging!";
 	}
 

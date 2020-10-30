@@ -2,11 +2,12 @@ package javelin.model.unit.condition;
 
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.abilities.spell.Spell;
 
 public class Stunned extends Condition{
 
-	public Stunned(Combatant c,Integer casterlevelp){
-		super(c,"stunned",Effect.NEGATIVE,casterlevelp,c.ap+1);
+	public Stunned(Combatant c,Spell s){
+		super("stunned",s,c.ap+1,Effect.NEGATIVE);
 	}
 
 	@Override

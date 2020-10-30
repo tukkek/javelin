@@ -21,12 +21,13 @@ import javelin.model.world.location.dungeon.feature.LoreNote;
  */
 public class Lore implements Serializable{
 	/**
-	 * Allow {@link Dungeon#lore} to keep all possible entries. Useful for having
-	 * quick overview of dungeons for unrelaed reasons.
+	 * Allow {@link Dungeon#lore} to keep all possible entries and for all of them
+	 * to be {@link #discovered}. Useful for having quick overview of dungeons for
+	 * unrelaed reasons.
 	 *
 	 * @see Javelin#DEBUG
 	 */
-	public static final boolean FULL=false;
+	public static final boolean DEBUG=true;
 
 	/** Dungeon spoiler. */
 	public String text;
@@ -40,7 +41,7 @@ public class Lore implements Serializable{
 	 * <code>true</code> if the player has discovered this information. Used to
 	 * display information through the LoreScreen.
 	 */
-	public boolean discovered=false;
+	public boolean discovered=Javelin.DEBUG&&DEBUG;
 
 	/** Constructor. */
 	public Lore(String text,int value){

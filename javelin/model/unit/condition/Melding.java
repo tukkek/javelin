@@ -12,7 +12,7 @@ import javelin.model.unit.attack.AttackSequence;
 public class Melding extends Condition{
 	/** Constructor. */
 	public Melding(Combatant c){
-		super(c,"melding",Effect.POSITIVE,null,Float.MAX_VALUE);
+		super("melding",null,Float.MAX_VALUE,Effect.POSITIVE);
 	}
 
 	@Override

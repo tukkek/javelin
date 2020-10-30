@@ -34,6 +34,7 @@ import javelin.model.item.Item;
 import javelin.model.item.consumable.Scroll;
 import javelin.model.item.focus.Wand;
 import javelin.model.item.gear.Gear;
+import javelin.model.item.gear.rune.RuneGear;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
 import javelin.model.state.Square;
@@ -60,6 +61,7 @@ import javelin.model.world.Period;
 import javelin.model.world.World;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.old.RPG;
+import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.mappanel.battle.action.BattleMouseAction;
 import javelin.view.screen.BattleScreen;
 
@@ -448,23 +450,25 @@ public class Combatant implements Serializable,Cloneable{
 	}
 
 	public ArrayList<String> liststatus(BattleState s){
-		var statuslist=new ArrayList<String>();
-		if(s.isengaged(this)){
-			statuslist.add("engaged");
-			if(isflanked(s)) statuslist.add("flanked");
-		}
-		if(surprise()!=0) statuslist.add("flat-footed");
-		var v=s.haslineofsight(s.next,this);
-		if(RangedAttack.iscovered(v,this,s))
-			statuslist.add("covered");
-		else if(v==Vision.BLOCKED) statuslist.add("blocked");
-		if(source.fly==0&&s.map[location[0]][location[1]].flooded)
-			statuslist.add("on water");
+		var all=new ArrayList<String>();
 		var conditions=this.conditions.stream().map(c->c.toString().toLowerCase())
-				.collect(Collectors.toSet());
-		statuslist.addAll(conditions);
-		statuslist.sort(null);
-		return statuslist;
+				.sorted().collect(Collectors.toSet());
+		all.addAll(conditions);
+		if(s!=null){
+			if(s.isengaged(this)){
+				all.add("engaged");
+				if(isflanked(s)) all.add("flanked");
+			}
+			if(surprise()!=0) all.add("flat-footed");
+			var v=s.haslineofsight(BattlePanel.current,this);
+			if(RangedAttack.iscovered(v,this,s))
+				all.add("covered");
+			else if(v==Vision.BLOCKED) all.add("blocked");
+			if(source.fly==0&&s.map[location[0]][location[1]].flooded)
+				all.add("on water");
+		}
+		all.sort(null);
+		return all;
 	}
 
 	boolean isflanked(BattleState s){
@@ -502,14 +506,23 @@ public class Combatant implements Serializable,Cloneable{
 	/**
 	 * Validates, merge (if necessary) and if everything checks add
 	 * {@link Condition}.
+	 *
+	 * Even for conditions thar aren't {@link Condition#stack}ing, will still
+	 * effectively add multiple instances, except it won't trigger subsequent ones
+	 * to {@link Condition#start(Combatant)}. This is necessary when multiple
+	 * sources (like {@link RuneGear}) add the same condition - we don't want the
+	 * first removal or {@link Condition#expireat} to end the effect if other
+	 * instances should still keep it going.
+	 *
+	 * @see #removecondition(Condition)
 	 */
 	public void addcondition(Condition c){
 		if(source.passive||!c.validate(this)) return;
-		Condition previous=hascondition(c.getClass());
-		if(previous==null||previous.stack){
+		var previous=hascondition(c.getClass());
+		conditions.add(c);
+		if(previous==null||previous.stack)
 			c.start(this);
-			conditions.add(c);
-		}else
+		else
 			previous.merge(this,c);
 	}
 
@@ -531,18 +544,23 @@ public class Combatant implements Serializable,Cloneable{
 	}
 
 	/**
+	 * If a condition is not {@link Condition#stack}ing, will only truly end it
+	 * when all instances are removed.
+	 *
 	 * @param c Tries to remove this exact instance from {@link #conditions}
 	 *          first. If fails, resorts to {@link List#remove(Object)}, which
 	 *          will look for an equal object.
 	 */
 	public void removecondition(Condition c){
-		c.end(this);
+		boolean removed=false;
 		for(int i=0;i<conditions.size();i++)
 			if(c==conditions.get(i)){
 				conditions.remove(i);
-				return;
+				removed=true;
+				break;
 			}
-		conditions.remove(c);
+		if(!removed) conditions.remove(c);
+		if(c.stack||!conditions.contains(c)) c.end(this);
 	}
 
 	public void finishconditions(BattleState s,BattleScreen screen){

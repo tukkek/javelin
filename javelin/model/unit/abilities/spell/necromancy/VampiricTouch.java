@@ -4,6 +4,7 @@ import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.Touch;
 import javelin.model.unit.condition.Condition;
 
@@ -14,8 +15,8 @@ public class VampiricTouch extends Touch{
 	class Vampiric extends Condition{
 		int steal;
 
-		Vampiric(float expireat,Combatant caster,int steal,Integer casterlevelp){
-			super(caster,"vampiric",Effect.POSITIVE,casterlevelp,expireat,1);
+		Vampiric(float expireat,int steal,Spell s){
+			super("vampiric",s,expireat,1,Effect.POSITIVE);
 			this.steal=steal;
 		}
 
@@ -54,7 +55,7 @@ public class VampiricTouch extends Touch{
 		target.damage(steal,s,target.source.energyresistance);
 		var originalhp=caster.hp;
 		caster.heal(steal,true);
-		var c=new Vampiric(Float.MAX_VALUE,caster,caster.hp-originalhp,casterlevel);
+		var c=new Vampiric(Float.MAX_VALUE,caster.hp-originalhp,this);
 		caster.addcondition(c);
 		return describe(target)+"\n"+describe(caster);
 	}

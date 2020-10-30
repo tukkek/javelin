@@ -15,7 +15,7 @@ public class Feint extends ExpertiseAction{
 	public class Feigned extends Condition{
 
 		public Feigned(float expireatp,Combatant c){
-			super(c,"feigned",Effect.NEGATIVE,null,expireatp);
+			super("feigned",null,expireatp,Effect.NEGATIVE);
 		}
 
 		@Override

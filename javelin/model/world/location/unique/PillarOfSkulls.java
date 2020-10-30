@@ -176,7 +176,7 @@ public class PillarOfSkulls extends UniqueLocation{
 			if(choice==-1) return false;
 			sacrifices.get(choice).hp=1;
 			for(Combatant c:Squad.active.members)
-				c.addcondition(new Heroic(c,20,24));
+				c.addcondition(new Heroic(null,24));
 			return true;
 		}
 	}

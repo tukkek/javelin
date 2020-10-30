@@ -13,7 +13,7 @@ import javelin.model.unit.feat.attack.GreatCleave;
  */
 public class Cleaving extends Condition{
 	public Cleaving(Combatant c){
-		super(c,"cleaving",Effect.NEUTRAL,null,c.ap+1);
+		super("cleaving",null,c.ap+1,Effect.NEUTRAL);
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package javelin.model.unit.condition;
 
 import javelin.model.unit.Combatant;
+import javelin.model.unit.abilities.spell.Spell;
 
 /**
  * Moves at half speed and takes a -6 penalty to Strength and Dexterity.
@@ -10,8 +11,8 @@ import javelin.model.unit.Combatant;
 public class Exhausted extends Fatigued{
 	private int[] originalspeeds;
 
-	public Exhausted(Combatant c,Integer casterlevelp){
-		super(c,"exhausted",casterlevelp,0);
+	public Exhausted(Spell s){
+		super("exhausted",s,0);
 	}
 
 	@Override
@@ -38,6 +39,8 @@ public class Exhausted extends Fatigued{
 		m.walk=Math.max(m.walk,originalspeeds[3]);
 		m.changestrengthmodifier(+3);
 		m.changedexteritymodifier(+3);
-		c.addcondition(new Fatigued(c,casterlevel,0));
+		var f=new Fatigued(spelllevel,casterlevel,Float.MAX_VALUE,0,
+				Effect.NEGATIVE);
+		c.addcondition(f);
 	}
 }

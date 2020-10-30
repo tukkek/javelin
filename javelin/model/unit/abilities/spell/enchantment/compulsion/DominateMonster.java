@@ -10,6 +10,7 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.Ray;
+import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.condition.Condition;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
 
@@ -34,8 +35,8 @@ public class DominateMonster extends Ray{
 		Combatant target;
 
 		/** Constructor. */
-		public Dominated(float expireatp,Combatant c,Integer casterlevelp){
-			super(c,"dominated",Effect.NEUTRAL,casterlevelp,expireatp);
+		public Dominated(Combatant c,float expireatp,Spell s){
+			super("dominated",s,expireatp,Effect.NEUTRAL);
 			target=c;
 		}
 
@@ -74,7 +75,7 @@ public class DominateMonster extends Ray{
 		if(saved) return target+" resists!";
 		switchteams(target,s);
 		var duration=calculateduration(target.source.getwill()+2,caster);
-		var d=new Dominated(duration,target,casterlevel);
+		var d=new Dominated(target,duration,this);
 		target.addcondition(d);
 		return "Dominated "+target+" for "+duration+" round(s)!";
 	}

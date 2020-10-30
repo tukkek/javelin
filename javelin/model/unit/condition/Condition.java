@@ -8,6 +8,7 @@ import javelin.model.Cloneable;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.abjuration.DispelMagic;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
@@ -79,6 +80,8 @@ public abstract class Condition
 	 * @see Fight#originalblueteam
 	 */
 	public Integer longterm;
+	/** {@link Spell#level} or <code>null</code>. */
+	public Integer spelllevel;
 	/**
 	 * <code>null</code> if this is not magical and can't be affected by
 	 * {@link DispelMagic}.
@@ -91,19 +94,28 @@ public abstract class Condition
 	 */
 	public boolean stack=false;
 
-	public Condition(final Combatant c,String description,final Effect effectp,
-			Integer casterlevel,float expireatp){
-		this(c,description,effectp,casterlevel,expireatp,null);
-	}
-
-	/** See fields. */
-	public Condition(Combatant c,String descriptionp,Effect effectp,
-			Integer casterlevel,float expireatp,Integer longtermp){
+	/** Full constructor. */
+	public Condition(String descriptionp,Integer spelllevel,Integer casterlevel,
+			float expireatp,Integer longtermp,Effect effectp){
 		expireat=expireatp;
 		effect=effectp;
 		description=descriptionp;
 		longterm=longtermp;
+		this.spelllevel=spelllevel;
 		this.casterlevel=casterlevel;
+	}
+
+	/** Constructor with {@link Spell} and {@link #longterm}. */
+	public Condition(String description,Spell s,float expireatp,Integer longtermp,
+			final Effect effectp){
+		this(description,s==null?null:s.level,s==null?null:s.casterlevel,expireatp,
+				longtermp,effectp);
+	}
+
+	/** Constructor with {@link Spell} and no {@link #longterm}. */
+	public Condition(String description,Spell s,float expireatp,
+			final Effect effectp){
+		this(description,s,expireatp,null,effectp);
 	}
 
 	public abstract void start(Combatant c);
@@ -115,11 +127,9 @@ public abstract class Condition
 	 * @see #expireat
 	 */
 	public boolean expireinbattle(final Combatant c){
-		if(c.ap>=expireat){
-			c.removecondition(this);
-			return true;
-		}
-		return false;
+		if(c.ap<expireat) return false;
+		c.removecondition(this);
+		return true;
 	}
 
 	/**
@@ -166,8 +176,6 @@ public abstract class Condition
 	/**
 	 * Expire out of battle.
 	 *
-	 * @param c
-	 *
 	 * @param Time elapsed, in hours.
 	 * @return <code>true</code> if is over and has to be removed.
 	 * @see #longterm
@@ -200,21 +208,9 @@ public abstract class Condition
 		return true;
 	}
 
-	/**
-	 * Merge two conditions of the same type, as long as they don't
-	 * {@link #stack}. By the time this is called, {@link #validate(Combatant)}
-	 * has already been verified.
-	 *
-	 * The default implementation just extends the previous condition to whichever
-	 * {@link #expireat} is higher between both.
-	 *
-	 * @param condition Condition to be merged. Will be discarded afterwards.
-	 * @return <code>false</code> if merge is not supported. <code>true</code> if
-	 *         merge is supported and performed succesfully. In either case, the
-	 *         new condition is discarded.
-	 */
+	/** @param condition Condition to be merged. Will be discarded afterwards. */
 	public void merge(Combatant c,Condition condition){
-		if(condition.expireat>expireat) expireat=condition.expireat;
+		//nothing by default
 	}
 
 	@Override

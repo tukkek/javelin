@@ -11,7 +11,7 @@ import javelin.model.unit.Combatant;
  */
 public class Sickened extends Condition{
 	public Sickened(float expireatp,Combatant c,Integer longterm){
-		super(c,"sickened",Effect.NEGATIVE,null,expireatp,longterm);
+		super("sickened",null,expireatp,longterm,Effect.NEGATIVE);
 	}
 
 	@Override

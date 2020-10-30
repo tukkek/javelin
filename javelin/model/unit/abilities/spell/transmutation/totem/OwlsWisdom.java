@@ -4,6 +4,7 @@ import javelin.controller.ai.ChanceNode;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.condition.Condition;
 
 /**
@@ -11,8 +12,8 @@ import javelin.model.unit.condition.Condition;
  */
 public class OwlsWisdom extends TotemsSpell{
 	class Wise extends Condition{
-		Wise(Combatant c,Integer casterlevelp){
-			super(c,"wise",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE);
+		Wise(Spell s){
+			super("wise",s,Float.MAX_VALUE,Effect.POSITIVE);
 		}
 
 		@Override
@@ -29,12 +30,13 @@ public class OwlsWisdom extends TotemsSpell{
 	/** Constructor. */
 	public OwlsWisdom(){
 		super("Owl's wisdom");
+		isrune=new Wise(this);
 	}
 
 	@Override
 	public String cast(Combatant caster,Combatant target,boolean saved,
 			BattleState s,ChanceNode cn){
-		target.addcondition(new Wise(target,casterlevel));
+		target.addcondition(new Wise(this));
 		return target+"'s wisdom is now "
 				+Monster.getsignedbonus(target.source.wisdom)+"!";
 	}

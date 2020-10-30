@@ -22,6 +22,8 @@ import javelin.model.unit.skill.Skill;
  * @author alex
  */
 public class StatisticsScreen extends InfoScreen{
+	static final String TOGGLE="Press v to see the monster description, any other key to exit";
+	static final String DESCRIPTIONHEADER="(The text below is taken from the d20 SRD and doesn't necessarily reflect the in-game enemy)\n\n";
 	static final boolean DEBUG=false;
 
 	/**
@@ -31,8 +33,8 @@ public class StatisticsScreen extends InfoScreen{
 		super("");
 		text=gettext(c,true);
 		if(updatescreens().equals('v')){
-			text="(The text below is taken from the d20 SRD and doesn't necessarily reflect the in-game enemy)\n\n"
-					+Monster.DESCRIPTIONS.get(c.source.name);
+			var header=DESCRIPTIONHEADER;
+			print(header+Monster.DESCRIPTIONS.get(c.source.name));
 			updatescreens();
 		}
 		Javelin.app.switchScreen(BattleScreen.active);
@@ -55,14 +57,13 @@ public class StatisticsScreen extends InfoScreen{
 		lines.add("");
 		showattacks(m,lines);
 		describequalities(c,lines);
+		var status=String.join(", ",c.liststatus(Fight.state));
+		if(!status.isEmpty()) lines.add("Conditions: "+status+".\n");
 		showsaves(m,lines);
 		showabilities(m,lines);
 		showfeats(m,lines);
 		showskills(c,lines);
-		if(toggle){
-			String describe="Press v to see the monster description, any other key to exit";
-			lines.add(describe);
-		}
+		if(toggle) lines.add(TOGGLE);
 		return String.join("\n",lines);
 	}
 

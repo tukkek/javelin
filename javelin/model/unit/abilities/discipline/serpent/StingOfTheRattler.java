@@ -22,7 +22,7 @@ public class StingOfTheRattler extends Strike{
 
 	public class RattlerSting extends Condition{
 		public RattlerSting(float expireatp,Combatant c){
-			super(c,"Rattler sting",Effect.NEGATIVE,null,expireatp);
+			super("Rattler sting",null,expireatp,Effect.NEGATIVE);
 			stack=true;
 		}
 

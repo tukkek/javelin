@@ -13,7 +13,7 @@ public class Crown extends Artifact{
 	class Knowledgeable extends Condition{
 		/** Constructor. */
 		public Knowledgeable(Combatant c){
-			super(c,"all-knowing",Effect.NEUTRAL,20,Float.MAX_VALUE,24*7);
+			super("all-knowing",null,null,Float.MAX_VALUE,24*7,Effect.NEUTRAL);
 		}
 
 		@Override

@@ -4,6 +4,7 @@ import javelin.controller.ai.ChanceNode;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.condition.Condition;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
 
@@ -12,8 +13,8 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
  */
 public class FoxsCunning extends TotemsSpell{
 	class Cunning extends Condition{
-		Cunning(Combatant c,Integer casterlevelp){
-			super(c,"cunning",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE);
+		Cunning(Spell s){
+			super("cunning",s,Float.MAX_VALUE,Effect.POSITIVE);
 		}
 
 		@Override
@@ -30,12 +31,13 @@ public class FoxsCunning extends TotemsSpell{
 	/** Constructor. */
 	public FoxsCunning(){
 		super("Fox's cunning");
+		isrune=new Cunning(this);
 	}
 
 	@Override
 	public String cast(final Combatant caster,final Combatant target,
 			final boolean saved,final BattleState s,ChanceNode cn){
-		target.addcondition(new Cunning(target,casterlevel));
+		target.addcondition(new Cunning(this));
 		cn.overlay=new AiOverlay(target);
 		return target+"'s intelligence is now "
 				+Monster.getsignedbonus(target.source.intelligence)+"!";

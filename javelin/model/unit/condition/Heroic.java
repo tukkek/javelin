@@ -2,6 +2,7 @@ package javelin.model.unit.condition;
 
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.enchantment.compulsion.Heroism;
 
 /**
@@ -10,12 +11,12 @@ import javelin.model.unit.abilities.spell.enchantment.compulsion.Heroism;
  * @author alex
  */
 public class Heroic extends Condition{
-	public Heroic(final Combatant c,Integer casterlevelp,Integer longtermp){
-		super(c,"heroic",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE,longtermp);
+	public Heroic(Spell s,Integer longtermp){
+		super("heroic",s,Float.MAX_VALUE,longtermp,Effect.POSITIVE);
 	}
 
-	public Heroic(Combatant c,Integer casterlevelp){
-		this(c,casterlevelp,1);
+	public Heroic(Spell s){
+		this(s,1);
 	}
 
 	@Override

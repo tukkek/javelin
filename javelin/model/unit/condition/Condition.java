@@ -144,9 +144,9 @@ public abstract class Condition
 	}
 
 	@Override
-	public Cloneable clone(){
+	public Condition clone(){
 		try{
-			return (Cloneable)super.clone();
+			return (Condition)super.clone();
 		}catch(CloneNotSupportedException e){
 			throw new RuntimeException(e);
 		}

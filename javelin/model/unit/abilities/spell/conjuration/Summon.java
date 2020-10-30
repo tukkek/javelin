@@ -77,7 +77,6 @@ public class Summon extends Spell{
 		this.chance=chance;
 		castinbattle=true;
 		if(!Monster.BYCR.isEmpty()) postloadmonsters();
-		isring=false;
 		isscroll=false;
 	}
 

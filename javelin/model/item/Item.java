@@ -20,8 +20,8 @@ import javelin.model.item.consumable.Scroll;
 import javelin.model.item.focus.Rod;
 import javelin.model.item.focus.Staff;
 import javelin.model.item.focus.Wand;
-import javelin.model.item.gear.CasterRing;
 import javelin.model.item.gear.Gear;
+import javelin.model.item.gear.rune.RuneGear;
 import javelin.model.item.potion.Flask;
 import javelin.model.item.potion.Potion;
 import javelin.model.item.precious.ArtPiece;
@@ -94,14 +94,12 @@ public abstract class Item implements Serializable,Cloneable{
 					new Staff(s);
 			else if(s.isscroll&&!s.provokeaoo) new Scroll(s);
 			//use-activated
-			if(s.isrod)
-				new Rod(s);
-			else if(s.isring) for(int uses:CasterRing.VARIATIONS)
-				new CasterRing(s,uses);
+			if(s.isrod) new Rod(s);
 		}
 		Gem.generate();
 		ArtPiece.generate();
 		Eidolon.generate();
+		RuneGear.generate();
 		cheapestartifact=ITEMS.stream().filter(i->i instanceof Gear).map(i->i.price)
 				.min(Integer::compare).get();
 		NONPRECIOUS.addAll(ITEMS.stream().filter(i->!(i instanceof PreciousObject))
@@ -328,9 +326,9 @@ public abstract class Item implements Serializable,Cloneable{
 	/**
 	 * @param from A sample of items (like {@link #ITEMS} or from
 	 *          {@link #BYTIER}).
-	 * @return The same items but with randomized parameters, from cheapest to
-	 *         most expensive (previously shuffled to introduce order randomness
-	 *         for items with exact same price).
+	 * @return A new list with the same items but with randomized parameters, from
+	 *         cheapest to most expensive (previously shuffled to introduce order
+	 *         randomness for items with exact same price).
 	 * @see Item#randomize()
 	 */
 	public static List<Item> randomize(Collection<Item> from){

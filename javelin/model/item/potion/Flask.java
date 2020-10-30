@@ -66,4 +66,11 @@ public class Flask extends Potion{
 	public String toString(){
 		return super.toString()+" "+charges;
 	}
+
+	@Override
+	public Flask clone(){
+		var f=(Flask)super.clone();
+		f.charges=charges.clone();
+		return f;
+	}
 }

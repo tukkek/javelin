@@ -11,7 +11,6 @@ import javelin.JavelinApp;
 import javelin.controller.CountingSet;
 import javelin.controller.action.world.WorldAction;
 import javelin.model.item.Item;
-import javelin.model.item.gear.Gear;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.view.screen.InfoScreen;
@@ -32,6 +31,8 @@ public class UseItems extends WorldAction{
 
 	public static boolean skiperror=false;
 
+	boolean stayopen=false;
+
 	/** Constructor. */
 	UseItems(){
 		super("Use items",new int[]{},new String[]{"i"});
@@ -49,7 +50,7 @@ public class UseItems extends WorldAction{
 		while(true){
 			InfoScreen infoscreen=new InfoScreen("");
 			String actions;
-			actions="Press number to use an item\n";
+			actions="Press key to use an item\n";
 			actions+="Press d to discard an item\n";
 			actions+="Press e to exchange an item\n";
 			actions+="Press q to quit the inventory\n";
@@ -79,26 +80,24 @@ public class UseItems extends WorldAction{
 			if(InfoScreen.feedback()=='d') Squad.active.equipment.remove(i);
 			return false;
 		}
-		Item selected=select(allitems,input);
-		return selected!=null&&selected.usedoutofbattle&&use(infoscreen,selected);
-	}
-
-	boolean use(InfoScreen infoscreen,Item i){
-		boolean isartifact=i instanceof Gear;
-		Combatant target=null;
-		if(isartifact)
-			target=findowner(i);
-		else if(i.targeted) target=inputmember(
-				"Which member will use the "+i.toString().toLowerCase()+"?");
-		if(i.usepeacefully(target)){
-			if(i.consumable) i.expend();
-			return !isartifact;
-		}
+		var selected=select(allitems,input);
+		if(selected==null) return false;
+		if(use(infoscreen,selected)) return !stayopen;
 		if(skiperror) return false;
-		String error=i.describefailure();
+		var error=selected.describefailure();
 		infoscreen.print(infoscreen.text+"\n\n"+error+"...");
 		InfoScreen.feedback();
 		return false;
+	}
+
+	boolean use(InfoScreen infoscreen,Item i){
+		if(!i.usedoutofbattle) return false;
+		Combatant target=null;
+		if(i.targeted) target=inputmember(
+				"Which member will use the "+i.toString().toLowerCase()+"?");
+		if(!i.usepeacefully(target)) return false;
+		if(i.consumable) i.expend();
+		return true;
 	}
 
 	Item select(ArrayList<Item> allitems,Character input){
@@ -147,7 +146,7 @@ public class UseItems extends WorldAction{
 
 	/** @return Items to be shown on this screen, from all given. */
 	protected List<Item> filter(List<Item> items){
-		return items.stream().filter(i->!(i instanceof Gear))
+		return items.stream().filter(i->i.usedoutofbattle)
 				.collect(Collectors.toList());
 	}
 

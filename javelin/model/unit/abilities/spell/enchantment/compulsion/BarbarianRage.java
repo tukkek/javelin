@@ -20,7 +20,6 @@ public class BarbarianRage extends Rage{
 		super("Barbarian rage",1,ChallengeCalculator.ratespell(1));
 		provokeaoo=false;
 		isscroll=false;
-		isring=false;
 	}
 
 	@Override

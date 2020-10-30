@@ -12,7 +12,7 @@ import javelin.model.unit.Combatant;
  * @see Item#refresh(int)
  * @author alex
  */
-public class Recharger implements Serializable{
+public class Recharger implements Serializable,Cloneable{
 	int capacity;
 	int used=0;
 	double recharging=0;
@@ -77,5 +77,14 @@ public class Recharger implements Serializable{
 		if(!discharge(used)) return name+" ("+used+" times)";
 		bag.remove(i);
 		return "exhausted "+name;
+	}
+
+	@Override
+	public Recharger clone(){
+		try{
+			return (Recharger)super.clone();
+		}catch(CloneNotSupportedException e){
+			throw new RuntimeException(e);
+		}
 	}
 }

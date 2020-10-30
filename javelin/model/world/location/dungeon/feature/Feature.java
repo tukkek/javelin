@@ -3,6 +3,7 @@ package javelin.model.world.location.dungeon.feature;
 import java.io.Serializable;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.table.Table;
 import javelin.controller.table.dungeon.feature.CommonFeatureTable;
@@ -111,7 +112,6 @@ public abstract class Feature implements Serializable{
 
 	@Override
 	public String toString(){
-		return Character.toUpperCase(description.charAt(0))
-				+description.substring(1);
+		return Javelin.capitalize(description);
 	}
 }

@@ -3,22 +3,10 @@ package javelin.model.item.gear;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Monster;
 import javelin.model.unit.Slot;
-import javelin.model.world.Caravan;
-import javelin.model.world.location.dungeon.feature.Chest;
-import javelin.model.world.location.town.Town;
 
 /**
- * A special kind of item that is equipabble and is not allowed to be crafted on
- * {@link Town}s but can be found on other occasions such as in a
- * {@link Caravan}s' possession, {@link Chest} chests and at the Arcane
- * University.
- *
- * The name of this class is a big misnomer from d20 standards. Technically
- * there are just non-consumable, passive normal magic items. They're supposed
- * to be just a simple way to expand inventory management possibilities in a
- * hopefully worthwhile yet simple manner.
+ * An equipabble item.
  *
  * Since stacking bonuses is complicated on d20 a few items have been adapted to
  * solve this with {@link Slot} types instead.
@@ -68,12 +56,14 @@ public abstract class Gear extends Item{
 	}
 
 	public Slot slot;
-	Combatant owner=null;
+	/** Unit currently wearing this gear. */
+	protected Combatant owner=null;
 
 	protected Gear(String name,int price,Slot slotp,boolean register){
 		super(name,price,register);
 		ARTIFACT.add(this);
 		usedinbattle=false;
+		usedoutofbattle=false;
 		consumable=false;
 		slot=slotp;
 		waste=false;
@@ -85,12 +75,12 @@ public abstract class Gear extends Item{
 
 	@Override
 	public boolean use(Combatant user){
-		throw new RuntimeException("Not used in battle");
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public boolean usepeacefully(Combatant c){
-		return equip(c);
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -99,8 +89,7 @@ public abstract class Gear extends Item{
 	 * work as well as a toggle on/off function.
 	 *
 	 * @param c Equipping unit.
-	 * @return <code>false</code> if not {@link Monster#humanoid}, in which case
-	 *         the operation is aborted.
+	 * @return <code>false</code> if not {@link #canuse(Combatant)} .
 	 */
 	public boolean equip(Combatant c){
 		failure=canuse(c);

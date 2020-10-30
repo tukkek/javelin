@@ -21,7 +21,6 @@ import javelin.model.item.consumable.Scroll;
 import javelin.model.item.focus.Rod;
 import javelin.model.item.focus.Staff;
 import javelin.model.item.focus.Wand;
-import javelin.model.item.gear.CasterRing;
 import javelin.model.item.potion.Potion;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
@@ -90,8 +89,6 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
 	public boolean isritual=false;
 	/** When not {@link #iswand}, is {@link Scroll} by default. */
 	public boolean isscroll=true;
-	/** When not {@link #isrod}, is {@link CasterRing} by default. */
-	public boolean isring=true;
 	/** @see Potion */
 	public boolean ispotion=false;
 	/** See {@link Wand} and {@link Staff}. */

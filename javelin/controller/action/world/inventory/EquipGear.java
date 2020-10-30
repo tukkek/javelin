@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import javelin.model.item.Item;
 import javelin.model.item.gear.Gear;
+import javelin.model.item.gear.rune.RuneGear;
+import javelin.view.screen.InfoScreen;
 
 /**
  * {@link Gear} management.
@@ -19,11 +21,18 @@ public class EquipGear extends UseItems{
 	/** Constructor. */
 	EquipGear(){
 		super("Equip gear",new int[]{'e'},new String[]{"e"});
+		stayopen=true;
 	}
 
 	@Override
 	protected List<Item> filter(List<Item> items){
 		return items.stream().filter(i->i instanceof Gear)
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	boolean use(InfoScreen infoscreen,Item i){
+		var g=(RuneGear)i;
+		return g.equip(findowner(g));
 	}
 }

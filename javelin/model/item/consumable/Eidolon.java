@@ -84,4 +84,12 @@ public class Eidolon extends Item{
 		if(charges==null) super.waste(resourcesused,c,bag);
 		return charges.waste(c,this,resourcesused,bag);
 	}
+
+	@Override
+	public Eidolon clone(){
+		var e=(Eidolon)super.clone();
+		e.m=m.clone();
+		if(e.charges!=null) e.charges=charges.clone();
+		return e;
+	}
 }

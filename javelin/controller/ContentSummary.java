@@ -25,7 +25,7 @@ import javelin.model.item.consumable.Scroll;
 import javelin.model.item.focus.Rod;
 import javelin.model.item.focus.Staff;
 import javelin.model.item.focus.Wand;
-import javelin.model.item.gear.CasterRing;
+import javelin.model.item.gear.rune.RuneGear;
 import javelin.model.item.potion.Flask;
 import javelin.model.item.potion.Potion;
 import javelin.model.item.precious.ArtPiece;
@@ -52,15 +52,15 @@ import javelin.model.world.location.unique.UniqueLocation;
 public class ContentSummary{
 	/** Will catch subclasses too. */
 	static final List<Class<? extends Item>> ITEMTYPES=List.of(Potion.class,
-			Flask.class,Scroll.class,Wand.class,Staff.class,Rod.class,
-			CasterRing.class,Eidolon.class,ArtPiece.class,Gem.class);
+			Flask.class,Scroll.class,Wand.class,Staff.class,Rod.class,RuneGear.class,
+			Eidolon.class,ArtPiece.class,Gem.class);
 
 	static final Map<Class<? extends Item>,String> NAMES=new HashMap<>();
 
 	static{
 		for(var type:ITEMTYPES)
 			NAMES.put(type,type.getSimpleName().toLowerCase()+"s");
-		NAMES.put(CasterRing.class,"caster rings");
+		NAMES.put(RuneGear.class,"rune gear");
 		NAMES.put(ArtPiece.class,"art pieces");
 	}
 	/**

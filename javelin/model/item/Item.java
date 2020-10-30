@@ -13,7 +13,6 @@ import javelin.Javelin;
 import javelin.controller.action.UseItem;
 import javelin.controller.action.world.inventory.EquipGear;
 import javelin.controller.action.world.inventory.UseItems;
-import javelin.controller.comparator.ItemsByPrice;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.model.item.consumable.Eidolon;
 import javelin.model.item.consumable.Scroll;
@@ -326,17 +325,14 @@ public abstract class Item implements Serializable,Cloneable{
 	/**
 	 * @param from A sample of items (like {@link #ITEMS} or from
 	 *          {@link #BYTIER}).
-	 * @return A new list with the same items but with randomized parameters, from
-	 *         cheapest to most expensive (previously shuffled to introduce order
-	 *         randomness for items with exact same price).
-	 * @see Item#randomize()
+	 * @return A new, shuffled list with the same items but with
+	 *         {@link Item#randomize()} instances.
 	 */
 	public static List<Item> randomize(Collection<Item> from){
-		ArrayList<Item> randomized=new ArrayList<>(from.size());
-		for(Item i:from)
+		var randomized=new ArrayList<Item>(from.size());
+		for(var i:from)
 			randomized.add(i.randomize());
 		Collections.shuffle(randomized);
-		randomized.sort(ItemsByPrice.SINGLETON);
 		return randomized;
 	}
 

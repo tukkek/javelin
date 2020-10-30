@@ -2,7 +2,6 @@ package javelin.model.item;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
 import javelin.controller.comparator.ItemsByPrice;
@@ -13,7 +12,7 @@ import javelin.controller.comparator.ItemsByPrice;
  *
  * @author alex
  */
-public class ItemSelection extends HashSet<Item>{
+public class ItemSelection extends ArrayList<Item>{
 	/** Constructor. */
 	public ItemSelection(){
 		super();
@@ -29,8 +28,12 @@ public class ItemSelection extends HashSet<Item>{
 	 * @see ItemsByPrice
 	 */
 	public List<Item> sort(){
-		var sorted=new ArrayList<>(this);
-		sorted.sort(ItemsByPrice.SINGLETON);
-		return sorted;
+		sort(ItemsByPrice.SINGLETON);
+		return this;
+	}
+
+	@Override
+	public boolean add(Item i){
+		return !contains(i)&&super.add(i);
 	}
 }

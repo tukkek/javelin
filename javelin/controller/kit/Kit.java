@@ -126,6 +126,7 @@ public abstract class Kit implements Serializable{
 	 *
 	 * @see #rename(Monster)
 	 */
+	@Deprecated
 	protected String[] titles;
 
 	/**
@@ -241,11 +242,7 @@ public abstract class Kit implements Serializable{
 	 * Sets {@link Monster#customName} to one of the appropriate {@link #titles}.
 	 */
 	public void rename(Monster m){
-		var index=Tier.TIERS.indexOf(Tier.get(Math.round(m.cr)));
-		var title=titles[Math.min(index,titles.length-1)];
-		var name=m.name;
-		if(title.charAt(0)!='$') name=name.toLowerCase();
-		m.customName=title.replace("$",name);
+		m.customName=m.name+" "+name.toLowerCase();
 	}
 
 	/**

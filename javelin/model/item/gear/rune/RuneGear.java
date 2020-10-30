@@ -1,7 +1,9 @@
 package javelin.model.item.gear.rune;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.action.CastSpell;
@@ -9,6 +11,7 @@ import javelin.model.item.gear.Gear;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Slot;
 import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.unit.condition.Condition;
 import javelin.old.RPG;
 
@@ -23,6 +26,7 @@ import javelin.old.RPG;
 public class RuneGear extends Gear{
 	static final HashMap<Slot,List<String>> NAMES=new HashMap<>();
 	static final HashMap<Slot,List<Integer>> PRICE=new HashMap<>();
+	static final List<Spell> SUFFIXES=new ArrayList<>();
 
 	/** Creates item instances. */
 	@SuppressWarnings("unused")
@@ -40,7 +44,7 @@ public class RuneGear extends Gear{
 		new RuneGear("Scarf",5,Slot.NECK);
 		new RuneGear("Pendant",10,Slot.NECK);
 		new RuneGear("Locket",10,Slot.NECK);
-		new RuneGear("Bandy",5,Slot.RING);
+		new RuneGear("Band",5,Slot.RING);
 		new RuneGear("Ring",5,Slot.RING);
 		new RuneGear("Cape",5,Slot.SHOULDERS);
 		new RuneGear("Cloak",5,Slot.SHOULDERS);
@@ -50,6 +54,8 @@ public class RuneGear extends Gear{
 		new RuneGear("Belt",1,Slot.WAIST);
 		new RuneGear("Brooch",5,Slot.SLOTLESS);
 		new RuneGear("Medal",5,Slot.SLOTLESS);
+		SUFFIXES.addAll(Spell.SPELLS.stream().filter(s->!(s instanceof Summon))
+				.collect(Collectors.toList()));
 	}
 
 	Condition prefix=null;
@@ -146,7 +152,7 @@ public class RuneGear extends Gear{
 			hassuffix=RPG.chancein(2);
 		}
 		if(hasprefix) g.set((Condition)null); //TODO
-		if(hassuffix) g.set(RPG.pick(Spell.SPELLS));
+		if(hassuffix) g.set(RPG.pick(SUFFIXES));
 		return g;
 	}
 

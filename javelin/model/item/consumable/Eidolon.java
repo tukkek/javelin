@@ -41,7 +41,7 @@ public class Eidolon extends Item{
 			this.charges=new Recharger(charges);
 			consumable=false;
 		}
-		name+=" ("+m.name.toLowerCase()+")";
+		name+=" ["+m.name.toLowerCase()+"]";
 		provokesaoo=true;
 		targeted=false;
 		usedinbattle=true;

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.stream.Collectors;
 
+import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.table.dungeon.feature.RareFeatureTable;
 import javelin.model.item.Item;
@@ -19,6 +20,14 @@ import javelin.model.world.location.dungeon.feature.LoreNote;
  * @author alex
  */
 public class Lore implements Serializable{
+	/**
+	 * Allow {@link Dungeon#lore} to keep all possible entries. Useful for having
+	 * quick overview of dungeons for unrelaed reasons.
+	 *
+	 * @see Javelin#DEBUG
+	 */
+	public static final boolean FULL=false;
+
 	/** Dungeon spoiler. */
 	public String text;
 	/**

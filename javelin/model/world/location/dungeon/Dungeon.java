@@ -251,10 +251,12 @@ public class Dungeon extends Location{
 				feature.define(floor,floors);
 			lore.addAll(Lore.generate(floor));
 		}
-		var byvalue=RPG.shuffle(new ArrayList<>(lore));
-		byvalue.sort((a,b)->Integer.compare(b.value,a.value));
-		var keep=Math.min(byvalue.size(),RPG.r(1,4));
-		lore.retainAll(byvalue.subList(0,keep));
+		if(Javelin.DEBUG&&!Lore.FULL){
+			var byvalue=RPG.shuffle(new ArrayList<>(lore));
+			byvalue.sort((a,b)->Integer.compare(b.value,a.value));
+			var keep=Math.min(byvalue.size(),RPG.r(1,4));
+			lore.retainAll(byvalue.subList(0,keep));
+		}
 	}
 
 	/**

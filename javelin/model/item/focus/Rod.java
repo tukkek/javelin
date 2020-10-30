@@ -32,8 +32,8 @@ public class Rod extends Gear{
 	 *
 	 * @param register
 	 */
-	protected Rod(String name,int price,Spell s,boolean register){
-		super(Wand.name(name,s),price,Slot.HANDS,register);
+	protected Rod(String name,int price,Spell s){
+		super(Wand.name(name,s),price,Slot.HANDS);
 		if(Javelin.DEBUG&&!s.iswand) throw new InvalidParameterException();
 		spell=s.clone();
 		spell.provokeaoo=false;
@@ -44,7 +44,7 @@ public class Rod extends Gear{
 
 	/** Constructor. */
 	public Rod(Spell s){
-		this("Rod",s.level*s.casterlevel*2000+s.components*100,s,true);
+		this("Rod",s.level*s.casterlevel*2000+s.components*100,s);
 	}
 
 	@Override

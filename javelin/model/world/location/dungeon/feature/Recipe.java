@@ -7,6 +7,7 @@ import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.model.item.Item;
 import javelin.model.item.Tier;
+import javelin.model.item.gear.rune.RuneGear;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -71,7 +72,8 @@ public class Recipe extends Feature{
 		var from=RewardCalculator.getgold(dungeonlevel-1);
 		var to=RewardCalculator.getgold(dungeonlevel+1);
 		var candidates=Item.NONPRECIOUS.stream()
-				.filter(i->from>=i.price&&i.price<=to).collect(Collectors.toList());
+				.filter(i->from>=i.price&&i.price<=to)
+				.filter(i->!(i instanceof RuneGear)).collect(Collectors.toList());
 		if(!candidates.isEmpty()) item=RPG.pick(candidates);
 	}
 

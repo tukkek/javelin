@@ -23,7 +23,7 @@ public class Staff extends Rod{
 
 	/** Constructor. */
 	public Staff(Spell s){
-		super("Staff",0,s,false);
+		super("Staff",0,s);
 		if(Javelin.DEBUG&&s.level<MINLEVEL)
 			throw new InvalidParameterException(s.name);
 		consumable=true;

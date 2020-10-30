@@ -59,18 +59,14 @@ public abstract class Gear extends Item{
 	/** Unit currently wearing this gear. */
 	protected Combatant owner=null;
 
-	protected Gear(String name,int price,Slot slotp,boolean register){
-		super(name,price,register);
+	protected Gear(String name,int price,Slot slotp){
+		super(name,price,true);
 		ARTIFACT.add(this);
 		usedinbattle=false;
 		usedoutofbattle=false;
 		consumable=false;
 		slot=slotp;
 		waste=false;
-	}
-
-	protected Gear(String name,int price,Slot slotp){
-		this(name,price,slotp,true);
 	}
 
 	@Override

@@ -72,13 +72,8 @@ public class Slums extends Location{
 
 	Item generateitem(){
 		int limit=getlimit();
-		List<Item> items=new ArrayList<>();
-		for(Item i:Item.ITEMS){
-			if(i.price>limit) break;
-			items.add(i.clone());
-		}
-		items=Item.randomize(items);
-		return items.isEmpty()?null:RPG.pick(items);
+		return Item.randomize(Item.ITEMS).stream().filter(i->i.price<limit)
+				.findAny().orElse(null);
 	}
 
 	int getlimit(){

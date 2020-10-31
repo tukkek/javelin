@@ -59,7 +59,7 @@ public class Wand extends Item{
 	 *          errors.
 	 */
 	public Wand(Spell s,boolean checklevel){
-		super(name("Wand",s),0,false);
+		super(name("Wand",s),0,true);
 		if(Javelin.DEBUG&&checklevel&(!s.iswand||s.level>MAXLEVEL))
 			throw new InvalidParameterException();
 		spell=s.clone();
@@ -70,7 +70,6 @@ public class Wand extends Item{
 		apcost=s.apcost;
 		pricepercharge=s.level*s.casterlevel*750.0/FULL+s.components;
 		define(FULL);
-		register();
 	}
 
 	/** Constructor. */

@@ -26,7 +26,6 @@ import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
-import javelin.old.RPG;
 import javelin.view.screen.Option;
 import javelin.view.screen.shopping.ShoppingScreen;
 import javelin.view.screen.town.PurchaseOption;
@@ -96,19 +95,24 @@ public class Shop extends Location{
 	 * @author alex
 	 */
 	public static class BuildShop extends Build{
+		Class<? extends Shop> type;
+
 		/** Constructor. */
 		public BuildShop(){
-			super("Build shop",5,Rank.HAMLET,null);
+			super("Build",5,Rank.HAMLET,null);
+			var g=getgoal();
+			name+=" "+g.toString().toLowerCase();
+			type=g.getClass();
 		}
 
 		@Override
-		public Location getgoal(){
+		public Shop getgoal(){
 			return new Shop();
 		}
 
 		@Override
 		public boolean validate(District d){
-			return super.validate(d)&&d.getlocationtype(Shop.class).isEmpty();
+			return super.validate(d)&&d.getlocationtype(type).isEmpty();
 		}
 	}
 
@@ -186,7 +190,7 @@ public class Shop extends Location{
 	class UpgradeShop extends BuildingUpgrade{
 		public UpgradeShop(Shop s,int newlevel){
 			super("",5,newlevel,s,Rank.HAMLET);
-			name="Upgrade shop";
+			name="Upgrade "+description.toLowerCase();
 		}
 
 		@Override
@@ -209,20 +213,27 @@ public class Shop extends Location{
 
 	/** Items for sale. */
 	protected ItemSelection selection=new ItemSelection();
+	/** Roughly equivalent to {@link Rank#rank}. */
+	protected int level=Rank.HAMLET.rank;
 
 	OrderQueue crafting=new OrderQueue();
-	int level=1;
 
 	/**
 	 * @param r Determines selection of {@link Item}s sold.
 	 * @see Realm#getitems()
 	 */
-	public Shop(){
+	protected Shop(Integer level){
 		super("Shop");
+		if(level!=null) this.level=level;
 		allowentry=false;
 		discard=false;
 		gossip=true;
 		stock();
+	}
+
+	/** Constructor. */
+	public Shop(){
+		this(null);
 	}
 
 	/**
@@ -231,12 +242,20 @@ public class Shop extends Location{
 	 */
 	protected void stock(){
 		var tier=Tier.TIERS.get(level-1);
-		var items=RPG.shuffle(new ArrayList<>(Item.BYTIER.get(tier)));
-		items.retainAll(Item.NONPRECIOUS);
-		for(var i:items){
+		var items=Item.randomize(Item.BYTIER.get(tier));
+		for(var i:filter(items)){
 			if(selection.size()>=tier.maxlevel) break;
 			selection.add(i);
 		}
+	}
+
+	/**
+	 * @return A version of the {@link #stock()} candidates with any undesired
+	 *         elements removed.
+	 */
+	protected List<Item> filter(List<Item> items){
+		items.retainAll(Item.NONPRECIOUS);
+		return items;
 	}
 
 	@Override

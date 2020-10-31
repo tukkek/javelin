@@ -101,6 +101,10 @@ public abstract class Item implements Serializable,Cloneable{
 		Eidolon.generate();
 		RuneGear.generate();
 		Rune.generate();
+		for(var i=0;i<ITEMS.size();i++)
+			ITEMS.set(i,ITEMS.get(i).randomize());
+		for(var i:ITEMS)
+			BYTIER.get(Tier.get(i.getlevel())).add(i);
 		cheapestartifact=ITEMS.stream().filter(i->i instanceof Gear).map(i->i.price)
 				.min(Integer::compare).get();
 		NONPRECIOUS.addAll(ITEMS.stream().filter(i->!(i instanceof PreciousObject))
@@ -157,7 +161,7 @@ public abstract class Item implements Serializable,Cloneable{
 	public Item(final String name,double price,boolean register){
 		this.name=name;
 		setprice(price);
-		if(register) register();
+		if(register) ITEMS.add(this);
 	}
 
 	/**
@@ -166,11 +170,6 @@ public abstract class Item implements Serializable,Cloneable{
 	 */
 	protected void setprice(double price){
 		this.price=Javelin.round(Math.round(Math.round(price)));
-	}
-
-	/** Register this item as a generation/purchase option. */
-	protected void register(){
-		if(ITEMS.add(this)) BYTIER.get(Tier.get(getlevel())).add(this);
 	}
 
 	/**

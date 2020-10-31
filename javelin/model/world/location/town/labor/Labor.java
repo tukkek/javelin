@@ -2,6 +2,8 @@ package javelin.model.world.location.town.labor;
 
 import java.io.Serializable;
 
+import javelin.Javelin;
+import javelin.model.unit.Squad;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
@@ -138,7 +140,9 @@ public abstract class Labor implements Serializable,Cloneable{
 	protected void ready(){
 		done();
 		cancel();
-		if(cost!=0) town.events.add("Project finished: "+name+".");
+		var debugging=Javelin.DEBUG
+				&&town.getdistrict().getsquads().contains(Squad.active);
+		if(cost>0&&!debugging) town.events.add("Project finished: "+name+".");
 	}
 
 	/**

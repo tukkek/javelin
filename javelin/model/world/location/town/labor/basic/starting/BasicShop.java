@@ -1,14 +1,10 @@
 package javelin.model.world.location.town.labor.basic.starting;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.model.item.Item;
 import javelin.model.item.Tier;
-import javelin.model.item.precious.PreciousObject;
 import javelin.model.world.location.town.labor.basic.Shop;
-import javelin.old.RPG;
 
 /**
  * Same as shop but with a fixed selection of {@link Tier#LOW} items ti prevent
@@ -34,11 +30,9 @@ public class BasicShop extends Shop{
 			super.stock();
 			return;
 		}
-		List<Item> cheap=RPG.shuffle(new ArrayList<>(Item.ITEMS.stream()
-				.filter(i->i.price<100&&!(i instanceof PreciousObject))
-				.collect(Collectors.toList())));
-		if(cheap.size()>5) cheap=cheap.subList(0,5);
-		selection.addAll(cheap);
+		var cheap=Item.randomize(Item.NONPRECIOUS.stream().filter(i->i.price<100)
+				.collect(Collectors.toList()));
+		selection.addAll(cheap.subList(0,Math.min(5,cheap.size())));
 	}
 
 	@Override

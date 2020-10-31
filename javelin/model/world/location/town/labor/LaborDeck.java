@@ -28,6 +28,7 @@ import javelin.model.world.location.town.labor.criminal.Slums.BuildSlums;
 import javelin.model.world.location.town.labor.criminal.ThievesGuild.BuildThievesGuild;
 import javelin.model.world.location.town.labor.cultural.BardsGuild.BuildBardsGuild;
 import javelin.model.world.location.town.labor.cultural.MagesGuild.BuildMagesGuild;
+import javelin.model.world.location.town.labor.cultural.RuneShop.BuildRuneShop;
 import javelin.model.world.location.town.labor.ecological.ArcheryRange.BuildArcheryRange;
 import javelin.model.world.location.town.labor.ecological.Henge.BuildHenge;
 import javelin.model.world.location.town.labor.ecological.MeadHall.BuildMeadHall;
@@ -64,7 +65,8 @@ public class LaborDeck extends ArrayList<Labor>{
 			new BuildSewers(),new BuildSlums(),new BuildThievesGuild(),
 			BlackDragoon.INSTANCE.buildguild()};
 	static final Labor[] MAGICAL=new Labor[]{new BuildMagesGuild(),
-			new BuildArtificer(),new BuildSummoningCircle(),new BuildBardsGuild()};
+			new BuildArtificer(),new BuildSummoningCircle(),new BuildBardsGuild(),
+			new BuildRuneShop()};
 	static final Labor[] NATURAL=new Labor[]{new BuildHenge(),
 			new BuildArcheryRange(),new BuildMeadHall(),SteelSerpent.LABOR,
 			GreenDragoon.INSTANCE.buildguild(),BlueDragoon.INSTANCE.buildguild(),

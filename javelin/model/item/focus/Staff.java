@@ -31,7 +31,6 @@ public class Staff extends Rod{
 		price=wand.price;
 		usedinbattle=s.castinbattle;
 		usedoutofbattle=s.castoutofbattle;
-		register();
 	}
 
 	@Override

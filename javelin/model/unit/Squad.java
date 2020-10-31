@@ -118,7 +118,8 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 	public void updateavatar(){
 		if(members.isEmpty()) return;
 		if(transport!=null&&Dungeon.active==null){
-			image=Images.get(transport.name.replaceAll(" ","").toLowerCase());
+			var file=transport.name.replaceAll(" ","").toLowerCase();
+			image=Images.get(List.of("world","transport",file));
 			return;
 		}
 		ArrayList<Combatant> squad=new Combatants(members);

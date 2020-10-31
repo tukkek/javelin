@@ -29,9 +29,9 @@ public class HolyGrounds extends Haunt{
 		/** Constructor. */
 		public HolyGroundsMap(){
 			super("Holy grounds");
-			wall=Images.get("terrainrockwall");
-			obstacle=Images.get("terrainbush2");
-			floor=Images.get("terrainwoodfloor2");
+			wall=Images.get(List.of("terrain","rockwall"));
+			obstacle=Images.get(List.of("terrain","bush2"));
+			floor=Images.get(List.of("terrain","woodfloor2"));
 		}
 
 		@Override

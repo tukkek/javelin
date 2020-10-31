@@ -118,9 +118,9 @@ public class TownMap extends Map{
 	 */
 	public TownMap(int rank){
 		super("Town map",DndMap.SIZE,DndMap.SIZE);
-		floor=Images.get("terraintowngrass");
-		obstacle=Images.get("terrainbush");
-		wall=Images.get("terrainshipfloor");
+		floor=Images.get(List.of("terrain","towngrass"));
+		obstacle=Images.get(List.of("terrain","bush"));
+		wall=Images.get(List.of("terrain","shipfloor"));
 		define(rank);
 	}
 

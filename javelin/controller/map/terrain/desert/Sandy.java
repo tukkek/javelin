@@ -1,5 +1,7 @@
 package javelin.controller.map.terrain.desert;
 
+import java.util.List;
+
 import javelin.controller.Weather;
 import javelin.controller.map.DndMap;
 import javelin.model.world.Season;
@@ -12,7 +14,7 @@ public class Sandy extends DndMap{
 	/** Constructor. */
 	public Sandy(){
 		super("Sandy desert",0,.1,0);
-		floor=Images.get("terraindesert");
+		floor=Images.get(List.of("terrain","desert"));
 		maxflooding=Weather.CLEAR;
 		obstacle=rock;
 	}

@@ -26,9 +26,9 @@ public class Graveyard extends Haunt{
 	public static class GraveyardMap extends LocationMap{
 		public GraveyardMap(){
 			super("graveyard");
-			wall=Images.get("terraintombstone");
-			obstacle=Images.get("terrainbush");
-			floor=Images.get("dungeonfloortempleevil");
+			wall=Images.get(List.of("terrain","tombstone"));
+			obstacle=Images.get(List.of("terrain","bush"));
+			floor=Images.get(List.of("dungeon","floortempleevil"));
 		}
 
 		@Override

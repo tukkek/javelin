@@ -1,5 +1,7 @@
 package javelin.controller.map.terrain.forest;
 
+import java.util.List;
+
 import javelin.controller.map.DndMap;
 import javelin.controller.map.Map;
 import javelin.controller.terrain.Forest;
@@ -18,6 +20,6 @@ public class Medium extends DndMap{
 	/** Sets {@link Forest} look and feel. */
 	public static void standarize(Map m){
 		m.wallfloor=m.floor;
-		m.wall=Images.get("terraintreeforest");
+		m.wall=Images.get(List.of("terrain","treeforest"));
 	}
 }

@@ -1,6 +1,7 @@
 package javelin.controller.map.terrain.hill;
 
 import java.awt.Image;
+import java.util.List;
 
 import javelin.controller.map.DndMap;
 import javelin.old.RPG;
@@ -13,13 +14,13 @@ public class Gentle extends DndMap{
 	/** Constructor. */
 	public Gentle(){
 		super("Gentle hill",.1,.4,0);
-		floor=Images.get("terrainforestfloor");
+		floor=Images.get(List.of("terrain","forestfloor"));
 		wallfloor=floor;
-		wall=Images.get("terraintree");
+		wall=Images.get(List.of("terrain","tree"));
 	}
 
 	@Override
-	public Image getobstacle(int x, int y){
+	public Image getobstacle(int x,int y){
 		return RPG.r(1,2)==1?rock:obstacle;
 	}
 }

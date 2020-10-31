@@ -28,9 +28,9 @@ public class Spire extends Haunt{
 		/** Constructor. */
 		public SpireMap(){
 			super("Spire");
-			wall=Images.get("terrainwall");
-			obstacle=Images.get("terrainrock2");
-			floor=Images.get("terrainruggedwall");
+			wall=Images.get(List.of("terrain","wall"));
+			obstacle=Images.get(List.of("terrain","rock2"));
+			floor=Images.get(List.of("terrain","ruggedwall"));
 		}
 
 		@Override

@@ -1,5 +1,7 @@
 package javelin.controller.map;
 
+import java.util.List;
+
 import javelin.view.Images;
 
 /**
@@ -11,6 +13,6 @@ public class Stadium extends DndMap{
 	/** Constructor. */
 	public Stadium(){
 		super("Arena",0,0,0);
-		floor=Images.get("terrainarena");
+		floor=Images.get(List.of("terrain","arena"));
 	}
 }

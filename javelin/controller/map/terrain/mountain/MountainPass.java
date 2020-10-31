@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,9 +28,9 @@ public class MountainPass extends Map{
 	/** Constructor. */
 	public MountainPass(){
 		super("Mountain pass",DndMap.SIZE,DndMap.SIZE);
-		wall=Images.get("terrainrockwall");
-		floor=Images.get("terraintowngrass");
-		obstacle=Images.get("terrainbush2");
+		wall=Images.get(List.of("terrain","rockwall"));
+		floor=Images.get(List.of("terrain","towngrass"));
+		obstacle=Images.get(List.of("terrain","bush2"));
 	}
 
 	@Override

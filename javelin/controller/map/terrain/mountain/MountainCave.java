@@ -3,6 +3,7 @@ package javelin.controller.map.terrain.mountain;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javelin.controller.Point;
@@ -18,17 +19,17 @@ import javelin.view.Images;
  */
 public class MountainCave extends Map{
 	static final int SIZE=DndMap.SIZE;
-	static final Image TREE=Images.get("terraintree");
-	static final Image GRASS=Images.get("terraintowngrass");
+	static final Image TREE=Images.get(List.of("terrain","tree"));
+	static final Image GRASS=Images.get(List.of("terrain","towngrass"));
 
 	Set<Point> mountain=new HashSet<>();
 	Set<Point> outside=new HashSet<>();
 
 	public MountainCave(){
 		super("Mountain cave",SIZE,SIZE);
-		floor=Images.get("terraindirt");
-		wall=Images.get("terrainruggedwall");
-		obstacle=Images.get("terrainrock3");
+		floor=Images.get(List.of("terrain","dirt"));
+		wall=Images.get(List.of("terrain","ruggedwall"));
+		obstacle=Images.get(List.of("terrain","rock3"));
 	}
 
 	void buildwall(){

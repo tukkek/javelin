@@ -1,5 +1,7 @@
 package javelin.controller.map.terrain.water;
 
+import java.util.List;
+
 import javelin.controller.map.DndMap;
 import javelin.view.Images;
 
@@ -12,7 +14,7 @@ public class DeepWaters extends DndMap{
 	/** Constructor. */
 	public DeepWaters(){
 		super("Water",0,0,1);
-		flooded=Images.get("terrainaquatic");
+		flooded=Images.get(List.of("terrain","aquatic"));
 		standard=false;
 	}
 }

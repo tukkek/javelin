@@ -2,6 +2,7 @@ package javelin.old.underground;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.map.DndMap;
@@ -17,8 +18,8 @@ public class Complex extends Map{
 
 	public Complex(){
 		super("Underground complex",DndMap.SIZE,DndMap.SIZE);
-		floor=Images.get("terraindungeonfloor");
-		wall=Images.get("terraindungeonwall");
+		floor=Images.get(List.of("terrain","dungeonfloor"));
+		wall=Images.get(List.of("terrain","dungeonwall"));
 		area=map.length*map[0].length;
 		flying=false;
 	}

@@ -85,8 +85,8 @@ public class Arena extends UniqueLocation{
 
 		public ArenaMap(){
 			super("colosseum");
-			wall=Images.get("terrainorcwall");
-			floor=Images.get("terraindesert");
+			wall=Images.get(List.of("terrain","orcwall"));
+			floor=Images.get(List.of("terrain","desert"));
 		}
 
 		@Override

@@ -43,9 +43,9 @@ public class Conflux extends Haunt{
 		/** Constructor. */
 		public ConfluxMap(){
 			super("Conflux");
-			floor=Images.get("terraintowngrass");
-			wall=Images.get("terrainwall");
-			obstacle=Images.get("terrainbush");
+			floor=Images.get(List.of("terrain","towngrass"));
+			wall=Images.get(List.of("terrain","wall"));
+			obstacle=Images.get(List.of("terrain","bush"));
 		}
 
 		@Override

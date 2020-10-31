@@ -27,7 +27,7 @@ public class OrcSettlement extends Haunt{
 	public static class OrcSettlementMap extends LocationMap{
 		public OrcSettlementMap(){
 			super("Orc settlement");
-			wall=Images.get("terrainorcwall");
+			wall=Images.get(List.of("terrain","orcwall"));
 			flying=false;
 		}
 

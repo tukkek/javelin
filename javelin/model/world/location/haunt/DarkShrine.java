@@ -37,8 +37,8 @@ public class DarkShrine extends Haunt{
 		/** Constructor. */
 		public ShrineMap(){
 			super("Dark shrine");
-			wall=Images.get("terrainorcwall");
-			floor=Images.get("terraintraininghall");
+			wall=Images.get(List.of("terrain","orcwall"));
+			floor=Images.get(List.of("terrain","traininghall"));
 		}
 
 		@Override

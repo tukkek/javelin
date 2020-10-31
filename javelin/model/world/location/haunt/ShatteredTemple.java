@@ -35,9 +35,9 @@ public class ShatteredTemple extends Haunt{
 	public static class ShatteredTempleMap extends LocationMap{
 		public ShatteredTempleMap(){
 			super("Shattered temple");
-			floor=Images.get("dungeonfloortempleevil");
-			wall=Images.get("terrainrockwall2");
-			obstacle=Images.get("terrainbush");
+			floor=Images.get(List.of("dungeon","floortempleevil"));
+			wall=Images.get(List.of("terrain","rockwall2"));
+			obstacle=Images.get(List.of("terrain","bush"));
 		}
 
 		@Override

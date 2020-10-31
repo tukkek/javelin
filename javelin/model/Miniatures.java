@@ -42,8 +42,8 @@ public class Miniatures{
 			this.redcollection=redcollection;
 			map=RPG.pick(Map.getall().stream().filter(m->m.standard)
 					.collect(Collectors.toList()));
-			map.floor=Images.get("terrainboardfloor");
-			map.wall=Images.get("terrainboardwall");
+			map.floor=Images.get(List.of("terrain","boardfloor"));
+			map.wall=Images.get(List.of("terrain","boardwall"));
 			bribe=false;
 			hide=false;
 			meld=true;

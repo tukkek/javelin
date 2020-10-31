@@ -1,5 +1,7 @@
 package javelin.controller.map.terrain.mountain;
 
+import java.util.List;
+
 import javelin.controller.map.terrain.forest.ForestPath;
 import javelin.controller.terrain.Mountains;
 import javelin.old.RPG;
@@ -13,9 +15,9 @@ import javelin.view.Images;
 public class MountainPath extends ForestPath{
 	/** Constructor. */
 	public MountainPath(){
-		wall=Images.get("terrainruggedwall");
-		floor=Images.get("terraindesert");
-		obstacle=Images.get("terrainrock2");
+		wall=Images.get(List.of("terrain","ruggedwall"));
+		floor=Images.get(List.of("terrain","desert"));
+		obstacle=Images.get(List.of("terrain","rock2"));
 		paths=RPG.r(1,4)+4;
 		river=RPG.chancein(9);
 		riverwidth=new int[]{1,2};

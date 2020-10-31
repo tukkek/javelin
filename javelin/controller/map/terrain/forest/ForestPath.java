@@ -1,6 +1,7 @@
 package javelin.controller.map.terrain.forest;
 
 import java.util.HashSet;
+import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.map.DndMap;
@@ -33,7 +34,7 @@ public class ForestPath extends Map{
 	public ForestPath(){
 		super("Forest path",DndMap.SIZE,DndMap.SIZE);
 		Medium.standarize(this);
-		obstacle=Images.get("terrainbush2");
+		obstacle=Images.get(List.of("terrain","bush2"));
 	}
 
 	private void flood(){

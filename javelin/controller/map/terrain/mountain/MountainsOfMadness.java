@@ -8,6 +8,7 @@ import java.util.Set;
 import javelin.controller.Point;
 import javelin.controller.map.DndMap;
 import javelin.controller.map.Map;
+import javelin.model.world.location.haunt.Haunt;
 import javelin.old.RPG;
 import javelin.view.Images;
 
@@ -34,7 +35,7 @@ public class MountainsOfMadness extends Map{
 	/** Default constructor. */
 	public MountainsOfMadness(){
 		super("Mountains of madness",DndMap.SIZE,DndMap.SIZE);
-		floor=Images.get("terrainice");
+		floor=Images.get(List.of("terrain","ice"));
 	}
 
 	@Override

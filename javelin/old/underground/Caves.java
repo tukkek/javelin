@@ -32,8 +32,8 @@ public class Caves extends Map{
 			floor=Images.get(List.of("dungeon",Dungeon.active.tilefloor));
 			wall=Images.get(List.of("dungeon",Dungeon.active.tilewall));
 		}else{
-			floor=Images.get("terraindungeonfloor");
-			wall=Images.get("terraindungeonwall");
+			floor=Images.get(List.of("terrain","dungeonfloor"));
+			wall=Images.get(List.of("terrain","dungeonwall"));
 		}
 		obstacle=rock;
 		flying=false;

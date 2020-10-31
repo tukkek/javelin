@@ -26,9 +26,9 @@ public class AbandonedManor extends Haunt{
 	public static class AbandonedManorMap extends LocationMap{
 		public AbandonedManorMap(){
 			super("Abandoned manor");
-			floor=Images.get("dungeonfloortempleevil");
-			wall=Images.get("terrainmoldwall");
-			obstacle=Images.get("terraintreeforest");
+			floor=Images.get(List.of("dungeon","floortempleevil"));
+			wall=Images.get(List.of("terrain","moldwall"));
+			obstacle=Images.get(List.of("terrain","treeforest"));
 			flying=false;
 		}
 	}

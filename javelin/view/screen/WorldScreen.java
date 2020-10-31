@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Debug;
@@ -439,7 +440,7 @@ public class WorldScreen extends BattleScreen{
 
 	@Override
 	public Image gettile(int x,int y){
-		return Images.get("terrain"+Terrain.get(x,y).toString());
+		return Images.get(List.of("terrain",Terrain.get(x,y).toString()));
 	}
 
 	/**

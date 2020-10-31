@@ -1,5 +1,7 @@
 package javelin.controller.map.terrain.mountain;
 
+import java.util.List;
+
 import javelin.controller.map.DndMap;
 import javelin.view.Images;
 
@@ -13,7 +15,7 @@ public class Forbidding extends DndMap{
 	/** Constructor. */
 	public Forbidding(){
 		super("Forbidding mountain",.4,0,0);
-		floor=Images.get("terrainruggedwall");
-		wall=Images.get("terrainorcwall");
+		floor=Images.get(List.of("terrain","ruggedwall"));
+		wall=Images.get(List.of("terrain","orcwall"));
 	}
 }

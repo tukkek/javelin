@@ -23,8 +23,8 @@ public class SunkenShip extends Haunt{
 	public static class SunkenShipMap extends LocationMap{
 		public SunkenShipMap(){
 			super("Sunken ship");
-			floor=Images.get("terrainshipfloor");
-			flooded=Images.get("terrainaquatic");
+			floor=Images.get(List.of("terrain","shipfloor"));
+			flooded=Images.get(List.of("terrain","aquatic"));
 		}
 
 		@Override

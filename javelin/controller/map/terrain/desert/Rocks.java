@@ -1,5 +1,7 @@
 package javelin.controller.map.terrain.desert;
 
+import java.util.List;
+
 import javelin.controller.Point;
 import javelin.model.state.Square;
 import javelin.old.RPG;
@@ -9,7 +11,7 @@ public class Rocks extends Sandy{
 	public Rocks(){
 		super();
 		name="Desert rocks";
-		wall=Images.get("terrainruggedwall");
+		wall=Images.get(List.of("terrain","ruggedwall"));
 	}
 
 	@Override

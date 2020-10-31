@@ -36,7 +36,8 @@ public class Underground extends Terrain{
 			if(d!=null){
 				m.floor=Images.get(d.tilefloor);
 				m.wall=Images.get(d.tilewall);
-				if(m.wall==m.obstacle) m.obstacle=Images.get("terrainrock2");
+				if(m.wall==m.obstacle)
+					m.obstacle=Images.get(List.of("terrain","rock2"));
 			}
 			maps.add(m);
 		}

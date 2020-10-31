@@ -23,20 +23,20 @@ import javelin.view.Images;
  */
 public abstract class Map{
 	/** Background image. */
-	public Image floor=Images.get("terraindirt");
+	public Image floor=Images.get(List.of("terrain","dirt"));
 	/** Represents {@link Square#blocked}. */
-	public Image wall=Images.get("terrainwall");
+	public Image wall=Images.get(List.of("terrain","wall"));
 	/**
 	 * If given, instead of using {@link #wall} on top of a {@link #floor}
 	 * bakcground will use this instead.
 	 */
 	public Image wallfloor=null;
 	/** Represents an {@link Square#obstructed} item. */
-	public Image obstacle=Images.get("terrainbush");
+	public Image obstacle=Images.get(List.of("terrain","bush"));
 	/** Used often as an {@link #obstacle}. */
-	public Image rock=Images.get("terrainrock");
+	public Image rock=Images.get(List.of("terrain","rock"));
 	/** Represents {@link Square#flooded}. */
-	public Image flooded=Images.get("terrainflooded");
+	public Image flooded=Images.get(List.of("terrain","flooded"));
 
 	/**
 	 * Two-dimensional array of squares. map[point.x][point.y]

@@ -35,10 +35,10 @@ public class BeastLair extends Haunt{
 		/** Constructor. */
 		public LairMap(){
 			super("Beast lair");
-			obstacle=Images.get("terrainbush2");
-			wall=Images.get("terraintreeforest");
-			flooded=Images.get("terrainaquatic");
-			floor=Images.get("terrainforestfloor");
+			obstacle=Images.get(List.of("terrain","bush2"));
+			wall=Images.get(List.of("terrain","treeforest"));
+			flooded=Images.get(List.of("terrain","aquatic"));
+			floor=Images.get(List.of("terrain","forestfloor"));
 		}
 
 		@Override

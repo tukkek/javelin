@@ -121,6 +121,6 @@ public abstract class Inhabitant extends Feature{
 
 	@Override
 	public Image getimage(){
-		return Images.get(avatarfile); //TODO should be monster/
+		return Images.get(List.of("monster",avatarfile));
 	}
 }

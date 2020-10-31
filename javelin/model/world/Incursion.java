@@ -317,7 +317,7 @@ public class Incursion extends Actor{
 		Combatant leader=null;
 		for(Combatant c:squad)
 			if(leader==null||c.source.cr>leader.source.cr) leader=c;
-		return Images.get(leader.source.avatarfile);
+		return Images.get(List.of("monster",leader.source.avatarfile));
 	}
 
 	@Override

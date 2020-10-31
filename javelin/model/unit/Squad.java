@@ -114,8 +114,6 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 
 	/**
 	 * Updates {@link Actor#visual}, taking {@link #transport} into account.
-	 *
-	 * @return
 	 */
 	public void updateavatar(){
 		if(members.isEmpty()) return;
@@ -129,7 +127,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 		Combatant leader=null;
 		for(Combatant c:squad)
 			if(leader==null||c.source.cr>leader.source.cr) leader=c;
-		image=Images.get(leader.source.avatarfile);
+		image=Images.get(List.of("monster",leader.source.avatarfile));
 	}
 
 	@Override

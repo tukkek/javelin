@@ -63,14 +63,19 @@ public class Images{
 	public static final Image ELITE=Images.get("overlayelite");
 	public static final Image TEXTUREMAP=Images.get("texturemap");
 
+	static String topath(List<String> path){
+		return String.join(File.separator,path);
+	}
+
 	/**
 	 * @param combatant Unit to be shown.
 	 * @return image resource.
 	 */
 	public static Image get(Combatant combatant){
-		if(!combatant.burrowed) return get(combatant.source.avatarfile);
-		final String avatar=combatant.source.avatarfile;
-		Image buried=BURIEDCACHE.get(avatar);
+		var path=topath(List.of("monster",combatant.source.avatarfile));
+		if(!combatant.burrowed) return get(path);
+		var avatar=path;
+		var buried=BURIEDCACHE.get(avatar);
 		if(buried==null){
 			buried=maketransparent(1/3f,get(avatar));
 			BURIEDCACHE.put(avatar,buried);
@@ -105,7 +110,7 @@ public class Images{
 
 	/** @return Same as {@link #get(List)} but using a path. */
 	public static Image get(List<String> path){
-		return get(String.join(File.separator,path));
+		return get(topath(path));
 	}
 
 	/**

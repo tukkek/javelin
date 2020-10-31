@@ -41,7 +41,7 @@ public class AiMovement extends Action implements AiAction{
 	/** Unique instace of this class. */
 	public static final AiMovement SINGLETON=new AiMovement();
 	/** Image overlay representing movement. */
-	public static final Image MOVEOVERLAY=Images.get("overlaymove");
+	public static final Image MOVEOVERLAY=Images.get(List.of("overlay","move"));
 
 	class LongMove extends ChanceNode{
 		float score;

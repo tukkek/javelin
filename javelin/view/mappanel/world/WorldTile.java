@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.util.HashMap;
+import java.util.List;
 
 import javelin.JavelinApp;
 import javelin.controller.Point;
@@ -23,10 +24,14 @@ public class WorldTile extends Tile{
 	public static final HashMap<Point,Image> COASTLINES=new HashMap<>(4);
 
 	static{
-		COASTLINES.put(new Point(-1,0),Images.get("overlaycoastlineleft"));
-		COASTLINES.put(new Point(+1,0),Images.get("overlaycoastlineright"));
-		COASTLINES.put(new Point(0,-1),Images.get("overlaycoastlineup"));
-		COASTLINES.put(new Point(0,+1),Images.get("overlaycoastlinedown"));
+		COASTLINES.put(new Point(-1,0),
+				Images.get(List.of("overlay","coastlineleft")));
+		COASTLINES.put(new Point(+1,0),
+				Images.get(List.of("overlay","coastlineright")));
+		COASTLINES.put(new Point(0,-1),
+				Images.get(List.of("overlay","coastlineup")));
+		COASTLINES.put(new Point(0,+1),
+				Images.get(List.of("overlay","coastlinedown")));
 	}
 
 	public WorldTile(int xp,int yp,WorldPanel p){

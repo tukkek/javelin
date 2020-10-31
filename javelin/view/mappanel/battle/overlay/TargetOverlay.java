@@ -1,6 +1,7 @@
 package javelin.view.mappanel.battle.overlay;
 
 import java.awt.Image;
+import java.util.List;
 
 import javelin.controller.Point;
 import javelin.view.Images;
@@ -9,7 +10,7 @@ import javelin.view.mappanel.overlay.Overlay;
 import javelin.view.screen.BattleScreen;
 
 public class TargetOverlay extends Overlay{
-	public static final Image TARGET=Images.get("overlaytarget");
+	public static final Image TARGET=Images.get(List.of("overlay","target"));
 
 	public int x;
 	public int y;

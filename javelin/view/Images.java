@@ -42,26 +42,28 @@ public class Images{
 
 	/** @see {@link Combatant#ispenalized(javelin.model.state.BattleState)} */
 	public static final Image PENALIZED=Images.maketransparent(3/4f,
-			Images.get("overlaypenalized"));
+			Images.get(List.of("overlay","penalized")));
 	/** @see Location#hascrafted() */
-	public static final Image CRAFTING=Images.get("overlaycrafting");
+	public static final Image CRAFTING=Images.get(List.of("overlay","crafting"));
 	/** @see Location#hasupgraded() */
-	public static final Image UPGRADING=Images.get("overlayupgrading");
+	public static final Image UPGRADING=Images
+			.get(List.of("overlay","upgrading"));
 	/** @see Town#isworking() */
-	public static final Image LABOR=Images.get("overlaylabor");
+	public static final Image LABOR=Images.get(List.of("overlay","labor"));
 	/** Show while a {@link Meld} is being generated. */
-	public static final Image DEAD=Images.get("overlaydead");
+	public static final Image DEAD=Images.get(List.of("overlay","dead"));
 	/** Show when a {@link Meld} is generated. */
-	public static final Image MELD=Images.get("overlaymeld");
+	public static final Image MELD=Images.get(List.of("overlay","meld"));
 	/** @see Location#ishostile() */
-	public static final Image HOSTILE=Images.get("overlayhostile");
+	public static final Image HOSTILE=Images.get(List.of("overlay","hostile"));
 	/** @see Town#ishosting() */
 	public static final Image TOURNAMENT=Images
 			.get(List.of("world","tournament"));
 	/** Distinguishes {@link Combatant#mercenary} units. */
-	public static final Image MERCENARY=Images.get("overlaymercenary");
-	public static final Image SUMMONED=Images.get("overlaysummoned");
-	public static final Image ELITE=Images.get("overlayelite");
+	public static final Image MERCENARY=Images
+			.get(List.of("overlay","mercenary"));
+	public static final Image SUMMONED=Images.get(List.of("overlay","summoned"));
+	public static final Image ELITE=Images.get(List.of("overlay","elite"));
 	public static final Image TEXTUREMAP=Images.get("texturemap");
 
 	static String topath(List<String> path){

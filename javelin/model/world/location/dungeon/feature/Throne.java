@@ -32,7 +32,7 @@ public class Throne extends Feature{
 
 	/** @param dungeonlevel Caster level to base {@link #spell} selection on. */
 	public Throne(int dungeonlevel){
-		super("dungeonthrone","throne");
+		super("throne");
 		enter=true;
 		remove=false;
 		for(var level=dungeonlevel;spell==null;level--){

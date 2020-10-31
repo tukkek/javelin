@@ -71,7 +71,7 @@ public class Portal extends Feature{
 
 	/** Constructor. */
 	public Portal(){
-		super("locationportal","portal");
+		super("portal");
 		remove=false;
 	}
 

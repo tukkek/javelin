@@ -23,7 +23,7 @@ public class DungeonMap extends Feature{
 
 	/** Constructor. */
 	public DungeonMap(){
-		super("dungeonmap","map");
+		super("map");
 	}
 
 	@Override

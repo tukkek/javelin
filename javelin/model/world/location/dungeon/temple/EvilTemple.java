@@ -10,7 +10,7 @@ import javelin.model.item.artifact.Skull;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.feature.Altar;
+import javelin.model.world.location.dungeon.feature.ArtifactChest;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.StairsDown;
 import javelin.model.world.location.dungeon.feature.StairsUp;
@@ -35,8 +35,8 @@ public class EvilTemple extends Temple{
 	public EvilTemple(Integer level){
 		super(Realm.EVIL,level,new Skull(level),FLUFF);
 		terrain=Terrain.MARSH;
-		floor="dungeonfloortempleevil";
-		wall="dungeonwalltempleevil";
+		floor="floortempleevil";
+		wall="walltempleevil";
 		doorbackground=false;
 	}
 
@@ -53,8 +53,8 @@ public class EvilTemple extends Temple{
 		Class<? extends Feature> targettype;
 		if(Squad.active.equipment.get(Skull.class)==null)
 			targettype=StairsUp.class;
-		else if(d.features.has(Altar.class))
-			targettype=Altar.class;
+		else if(d.features.has(ArtifactChest.class))
+			targettype=ArtifactChest.class;
 		else
 			targettype=StairsDown.class;
 		var target=d.features.stream().filter(f->targettype.isInstance(f)).findAny()

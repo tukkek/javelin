@@ -22,8 +22,8 @@ public class EarthTemple extends Temple{
 	public EarthTemple(Integer level){
 		super(Realm.EARTH,level,new Map(level),FLUFF);
 		terrain=Terrain.FOREST;
-		floor="terraindirt";
-		wall="dungeonwalltempleearth";
+		floor="floordirt";
+		wall="walltempleearth";
 		doorbackground=false;
 		feature=FruitTree.class;
 	}

@@ -29,8 +29,8 @@ public class DungeonTier{
 		this.tier=tier;
 		minrooms=tier.maxlevel;
 		maxrooms=tier.maxlevel*3;
-		floor="dungeonfloor"+tilesuffix;
-		wall="dungeonwall"+tilesuffix;
+		floor="floor"+tilesuffix;
+		wall="wall"+tilesuffix;
 	}
 
 	static public DungeonTier get(int level){

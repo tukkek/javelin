@@ -23,8 +23,8 @@ public class FireTemple extends Temple{
 	public FireTemple(int level){
 		super(Realm.FIRE,level,new Candle(level),FLUFF);
 		terrain=Terrain.DESERT;
-		floor="dungeonfloortemplefire";
-		wall="dungeonwalltemplefire";
+		floor="floortemplefire";
+		wall="walltemplefire";
 		doorbackground=false;
 		feature=Brazier.class;
 	}

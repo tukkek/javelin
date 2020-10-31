@@ -82,7 +82,7 @@ public class Door extends Feature{
 
 	Door(String avatar,int breakdcstuck,int breakdclocked,
 			Class<? extends Key> key){
-		super(avatar,"door");
+		super("door",avatar);
 		enter=false;
 		breakdc=locked?breakdclocked:breakdcstuck;
 		breakdc=Math.max(2,breakdc+RPG.randomize(5));

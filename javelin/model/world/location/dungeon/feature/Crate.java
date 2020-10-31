@@ -44,7 +44,7 @@ public class Crate extends Chest{
 		super(pool);
 		nitems=1;
 		var t=DungeonTier.get(Dungeon.active.level).tier.getordinal();
-		avatarfile="dungeon"+AVATARS.get(t);
+		avatarfile=AVATARS.get(t);
 	}
 
 	@Override

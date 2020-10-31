@@ -4,6 +4,6 @@ import javelin.model.item.key.door.IronKey;
 
 public class IronDoor extends Door{
 	public IronDoor(){
-		super("dungeondooriron",28,28,IronKey.class);
+		super("dooriron",28,28,IronKey.class);
 	}
 }

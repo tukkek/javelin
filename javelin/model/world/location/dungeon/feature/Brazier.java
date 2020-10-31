@@ -41,7 +41,7 @@ public class Brazier extends Feature{
 
 	/** Constructor. */
 	public Brazier(){
-		super("dungeonbrazier","brazier");
+		super("brazier");
 	}
 
 	HashSet<Point> crawl(){

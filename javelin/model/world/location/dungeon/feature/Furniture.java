@@ -32,7 +32,7 @@ public class Furniture extends Feature{
 
 	/** Constructor. */
 	public Furniture(String avatar){
-		super(avatar,avatar);
+		super(avatar);
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package javelin.view.mappanel.dungeon;
 
 import java.awt.Graphics;
+import java.util.List;
 
 import javelin.JavelinApp;
 import javelin.model.unit.Squad;
@@ -22,13 +23,13 @@ public class DungeonTile extends Tile{
 			drawcover(g);
 			return;
 		}
-		draw(g,Images.get(Dungeon.active.tilefloor));
+		draw(g,Images.get(List.of("dungeon",Dungeon.active.tilefloor)));
 		draw(g,JavelinApp.context.gettile(x,y));
 		if(Dungeon.active==null) return;
 		final Feature f=Dungeon.active.features.get(x,y);
 		if(f!=null&&f.draw){
 			if(f instanceof Door&&Dungeon.active.doorbackground)
-				draw(g,Images.get(Dungeon.active.tilewall));
+				draw(g,Images.get(List.of("dungeon",Dungeon.active.tilewall)));
 			draw(g,f.getimage());
 		}
 		if(Dungeon.active.squadlocation.x==x&&Dungeon.active.squadlocation.y==y){

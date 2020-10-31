@@ -31,7 +31,7 @@ public class LoreNote extends Feature{
 
 	/** Constructor. */
 	public LoreNote(){
-		super("dungeonlorenote","lore note");
+		super("lore note");
 	}
 
 	@Override

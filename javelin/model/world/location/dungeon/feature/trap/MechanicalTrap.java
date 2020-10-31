@@ -30,7 +30,7 @@ public class MechanicalTrap extends Trap{
 	 * @param p Creates a trap at this point.
 	 */
 	public MechanicalTrap(int cr){
-		super(cr,"dungeontrap");
+		super(cr,"trap");
 		int currentcr=-1;// doesn't kill ("subdual damage", kinda)
 		while(currentcr!=cr||damagedie<1){
 			savedc=RPG.r(10,35);

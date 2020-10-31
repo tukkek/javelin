@@ -23,7 +23,7 @@ import javelin.model.unit.skill.DisableDevice;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.feature.Altar;
+import javelin.model.world.location.dungeon.feature.ArtifactChest;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.unique.UniqueLocation;
@@ -74,13 +74,13 @@ public abstract class Temple extends UniqueLocation{
 	/**
 	 * Reward found on the deepest of the {@link #floors}.
 	 *
-	 * @see Altar
+	 * @see ArtifactChest
 	 * @see TempleDungeon#deepest
 	 */
 	public Artifact relic;
 	/**
 	 * Each floor has a {@link Chest} with a ruby in it and there is also an
-	 * {@link Altar} on the deepest level.
+	 * {@link ArtifactChest} on the deepest level.
 	 */
 	public List<Dungeon> floors=new ArrayList<>();
 	/** Encounter level equivalent for {@link #level}. */

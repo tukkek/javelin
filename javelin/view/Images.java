@@ -10,8 +10,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
 
@@ -37,8 +37,8 @@ public class Images{
 	static final GraphicsConfiguration ENVIRONMENT=GraphicsEnvironment
 			.getLocalGraphicsEnvironment().getDefaultScreenDevice()
 			.getDefaultConfiguration();
-	static final TreeMap<String,Image> CACHE=new TreeMap<>();
-	static final TreeMap<String,Image> BURIEDCACHE=new TreeMap<>();
+	static final HashMap<String,Image> CACHE=new HashMap<>();
+	static final HashMap<String,Image> BURIEDCACHE=new HashMap<>();
 
 	/** @see {@link Combatant#ispenalized(javelin.model.state.BattleState)} */
 	public static final Image PENALIZED=Images.maketransparent(3/4f,
@@ -101,6 +101,11 @@ public class Images{
 			var dir=" (pwd="+System.getProperty("user.dir")+")";
 			throw new RuntimeException(file+dir,e);
 		}
+	}
+
+	/** @return Same as {@link #get(List)} but using a path. */
+	public static Image get(List<String> path){
+		return get(String.join(File.separator,path));
 	}
 
 	/**

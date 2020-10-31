@@ -21,7 +21,7 @@ public class Spirit extends Feature{
 
 	/** Constructor. */
 	public Spirit(){
-		super("dungeonspirit","spirit");
+		super("spirit");
 	}
 
 	@Override

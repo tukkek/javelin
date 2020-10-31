@@ -20,7 +20,7 @@ public class Fountain extends Feature{
 
 	/** Constructor. */
 	public Fountain(){
-		super("dungeonfountain","fountain");
+		super("fountain");
 	}
 
 	@Override

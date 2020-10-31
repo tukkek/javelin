@@ -53,7 +53,7 @@ public class LearningStone extends Feature{
 
 	/** Constructor. */
 	public LearningStone(){
-		super("dungeonlearningstone","learning stone");
+		super("learning stone");
 		remove=false;
 		var kit=RPG.pick(Kit.KITS);
 		upgrades.addAll(kit.getupgrades());

@@ -19,7 +19,7 @@ public class Campfire extends Feature{
 
 	/** Constructor. */
 	public Campfire(){
-		super("dungeoncampfire","campfire");
+		super("campfire");
 		remove=false;
 	}
 

@@ -140,7 +140,6 @@ public class Table implements Serializable,Cloneable{
 			if(roll<=0) return row;
 		}
 		return null;
-		//		throw new RuntimeException("#emptytable "+this);
 	}
 
 	/** @return The total amount of rows in this table. */

@@ -6,17 +6,18 @@ import javelin.model.item.artifact.Artifact;
 import javelin.model.world.location.dungeon.temple.Temple;
 
 /**
- * Holds the {@link Artifact} for this temple. If for any reason the {@link Artifact}
- * is lost by the player it shall be available for pickup here again.
+ * Holds the {@link Artifact} for this temple. If for any reason the
+ * {@link Artifact} is lost by the player it shall be available for pickup here
+ * again.
  *
  * @author alex
  */
-public class Altar extends Feature{
+public class ArtifactChest extends Feature{
 	Temple temple;
 
 	/** Constructor. */
-	public Altar(Temple temple){
-		super("dungeonchestrelic","altar");
+	public ArtifactChest(Temple temple){
+		super("artifact chest");
 		this.temple=temple;
 		remove=false;
 	}

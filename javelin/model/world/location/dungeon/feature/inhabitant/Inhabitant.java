@@ -1,5 +1,6 @@
 package javelin.model.world.location.dungeon.feature.inhabitant;
 
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,6 +17,7 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.temple.TempleDungeon;
 import javelin.old.RPG;
+import javelin.view.Images;
 
 /**
  * A friendly (or at least neutral) {@link Monster} living inside a
@@ -53,7 +55,7 @@ public abstract class Inhabitant extends Feature{
 	protected int diplomacydc;
 
 	public Inhabitant(float crmin,float crmax,String description){
-		super(null,description);
+		super(description);
 		this.crmin=crmin;
 		this.crmax=crmax;
 		remove=false;
@@ -115,5 +117,10 @@ public abstract class Inhabitant extends Feature{
 	@Override
 	public String toString(){
 		return inhabitant+" "+description.toLowerCase();
+	}
+
+	@Override
+	public Image getimage(){
+		return Images.get(avatarfile); //TODO should be monster/
 	}
 }

@@ -1,5 +1,7 @@
 package javelin.old.underground;
 
+import java.util.List;
+
 import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.map.DndMap;
@@ -27,8 +29,8 @@ public class Caves extends Map{
 		super(namep,SIZE,SIZE);
 		maxflooding=Weather.CLEAR;
 		if(Dungeon.active instanceof TempleDungeon){
-			floor=Images.get(Dungeon.active.tilefloor);
-			wall=Images.get(Dungeon.active.tilewall);
+			floor=Images.get(List.of("dungeon",Dungeon.active.tilefloor));
+			wall=Images.get(List.of("dungeon",Dungeon.active.tilewall));
 		}else{
 			floor=Images.get("terraindungeonfloor");
 			wall=Images.get("terraindungeonwall");

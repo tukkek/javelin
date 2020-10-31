@@ -17,7 +17,7 @@ public class FruitTree extends Feature{
 
 	/** Constructor. */
 	public FruitTree(){
-		super("dungeontreefruit","fruit tree");
+		super("fruit tree");
 	}
 
 	@Override

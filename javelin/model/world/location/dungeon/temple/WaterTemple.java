@@ -35,8 +35,8 @@ public class WaterTemple extends Temple{
 	public WaterTemple(Integer level){
 		super(Realm.WATER,level,new Crown(level),FLUFF);
 		terrain=Terrain.WATER;
-		floor="terraindungeonfloor";
-		wall="dungeonwalltemplewater";
+		floor="floordungeon";
+		wall="walltemplewater";
 		doorbackground=false;
 		feature=Fountain.class;
 	}

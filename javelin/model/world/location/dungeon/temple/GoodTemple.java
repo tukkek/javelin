@@ -29,8 +29,8 @@ public class GoodTemple extends Temple{
 	public GoodTemple(Integer level){
 		super(Realm.GOOD,level,new Ankh(level),FLUFF);
 		terrain=Terrain.PLAIN;
-		floor="terrainarena";
-		wall="terraindungeonwall";
+		floor="floortemplegood";
+		wall="walldungeon";
 		feature=Spirit.class;
 	}
 

@@ -68,7 +68,7 @@ public class Recipe extends Feature{
 
 	/** Constructor. */
 	public Recipe(int dungeonlevel){
-		super("dungeonrecipe","recipe");
+		super("recipe");
 		var from=RewardCalculator.getgold(dungeonlevel-1);
 		var to=RewardCalculator.getgold(dungeonlevel+1);
 		var candidates=Item.NONPRECIOUS.stream()

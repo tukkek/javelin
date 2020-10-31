@@ -61,7 +61,7 @@ public class Herb extends Feature{
 
 	/** Constructor. */
 	public Herb(){
-		super("dungeonherb","herb");
+		super("herb");
 		remove=false;
 	}
 

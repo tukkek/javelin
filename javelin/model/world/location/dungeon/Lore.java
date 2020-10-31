@@ -9,7 +9,7 @@ import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.table.dungeon.feature.RareFeatureTable;
 import javelin.model.item.Item;
 import javelin.model.item.key.door.Key;
-import javelin.model.world.location.dungeon.feature.Altar;
+import javelin.model.world.location.dungeon.feature.ArtifactChest;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.LoreNote;
 
@@ -90,9 +90,9 @@ public class Lore implements Serializable{
 				.collect(Collectors.toList());
 		for(var i:items)
 			lore.add(new Lore(prefix+i,i.price));
-		var altars=floor.features.stream().filter(f->f instanceof Altar)
+		var artifacts=floor.features.stream().filter(f->f instanceof ArtifactChest)
 				.collect(Collectors.toList());
-		for(var a:altars)
+		for(var a:artifacts)
 			lore.add(new Lore(prefix+a,Integer.MAX_VALUE));
 		return lore;
 	}

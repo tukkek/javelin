@@ -31,8 +31,8 @@ public class AirTemple extends Temple{
 	public AirTemple(Integer level){
 		super(Realm.AIR,level,new Flute(level),FLUFF);
 		terrain=Terrain.MOUNTAINS;
-		wall="terraindungeonwall";
-		floor="terraindungeonfloor";
+		wall="walldungeon";
+		floor="floordungeon";
 	}
 
 	@Override

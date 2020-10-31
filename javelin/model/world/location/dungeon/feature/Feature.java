@@ -51,10 +51,15 @@ public abstract class Feature implements Serializable{
 	public boolean enter=true;
 	public final String description;
 
-	/** @param avatar File name for {@link Images#get(String)}. */
-	public Feature(String avatar,String description){
-		avatarfile=avatar;
+	/** Constructor. */
+	public Feature(String description,String avatar){
 		this.description=description;
+		avatarfile=avatar;
+	}
+
+	/** Constructor, using trimmed {@link #description} as {@link #avatarfile}. */
+	public Feature(String description){
+		this(description,description.replace(" ",""));
 	}
 
 	/**
@@ -118,6 +123,6 @@ public abstract class Feature implements Serializable{
 
 	/** TODO model should not handle view */
 	public Image getimage(){
-		return Images.get(avatarfile);
+		return Images.get(List.of("dungeon",avatarfile));
 	}
 }

@@ -40,7 +40,7 @@ public class TeleporterTrap extends Trap{
 	}
 
 	public TeleporterTrap(int cr){
-		super(cr,"dungeontrap");
+		super(cr,"trap");
 	}
 
 	@Override

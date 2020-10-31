@@ -2,6 +2,7 @@ package javelin.view.screen;
 
 import java.awt.Image;
 import java.util.HashSet;
+import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.action.world.WorldMove;
@@ -106,8 +107,8 @@ public class DungeonScreen extends WorldScreen{
 
 	@Override
 	public Image gettile(int x,int y){
-		return Images.get(
-				dungeon.map[x][y]==Template.WALL?dungeon.tilewall:dungeon.tilefloor);
+		var t=dungeon.map[x][y]==Template.WALL?dungeon.tilewall:dungeon.tilefloor;
+		return Images.get(List.of("dungeon",t));
 	}
 
 	@Override

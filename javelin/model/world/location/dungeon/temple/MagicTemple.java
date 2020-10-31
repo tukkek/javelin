@@ -31,8 +31,8 @@ public class MagicTemple extends Temple{
 	public MagicTemple(Integer level){
 		super(Realm.MAGIC,level,new Amulet(level),FLUFF);
 		terrain=Terrain.HILL;
-		floor="terrainwoodfloor";
-		wall="terrainwall";
+		floor="floortemplemagic";
+		wall="walltemplemagic";
 		feature=Portal.class;
 	}
 

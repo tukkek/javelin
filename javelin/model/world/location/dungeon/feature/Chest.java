@@ -36,7 +36,7 @@ public class Chest extends Feature{
 	 * @see RewardCalculator#generateloot(int)
 	 */
 	public Chest(Integer pool){
-		super("dungeonchest","chest");
+		super("chest");
 		gold=pool;
 		if(nitems==null){
 			nitems=1;
@@ -49,7 +49,7 @@ public class Chest extends Feature{
 	public Chest(Item i,boolean special){
 		this(0);
 		items.add(i);
-		if(special) avatarfile="dungeonchestspecial";
+		if(special) avatarfile="specialchest";
 	}
 
 	/**

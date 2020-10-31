@@ -29,7 +29,7 @@ public class DungeonTile extends Tile{
 		if(f!=null&&f.draw){
 			if(f instanceof Door&&Dungeon.active.doorbackground)
 				draw(g,Images.get(Dungeon.active.tilewall));
-			draw(g,Images.get(f.avatarfile));
+			draw(g,f.getimage());
 		}
 		if(Dungeon.active.squadlocation.x==x&&Dungeon.active.squadlocation.y==y){
 			Squad.active.updateavatar();

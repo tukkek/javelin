@@ -29,6 +29,7 @@ import javelin.controller.table.dungeon.door.DoorExists;
 import javelin.controller.table.dungeon.feature.CommonFeatureTable;
 import javelin.controller.table.dungeon.feature.FeatureModifierTable;
 import javelin.controller.table.dungeon.feature.FeatureRarityTable;
+import javelin.controller.table.dungeon.feature.FurnitureTable;
 import javelin.controller.table.dungeon.feature.RareFeatureTable;
 import javelin.controller.table.dungeon.feature.SpecialTrapTable;
 import javelin.controller.terrain.Terrain;
@@ -44,6 +45,7 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Crate;
 import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.Furniture;
 import javelin.model.world.location.dungeon.feature.Passage;
 import javelin.model.world.location.dungeon.feature.StairsDown;
 import javelin.model.world.location.dungeon.feature.StairsUp;
@@ -368,6 +370,22 @@ public class Dungeon extends Location{
 		return floortiles;
 	}
 
+	/** @see Furniture */
+	protected void createfurniture(){
+		var table=gettable(FurnitureTable.class);
+		if(table.isempty()) return;
+		var unnocupied=new ArrayList<Point>(size*size/2);
+		for(var x=0;x<size;x++)
+			for(var y=0;y<size;y++){
+				var p=new Point(x,y);
+				if(!isoccupied(p)) unnocupied.add(p);
+			}
+		var target=RPG.randomize(gettier().minrooms,0,unnocupied.size());
+		RPG.shuffle(unnocupied);
+		for(var i=0;i<target;i++)
+			new Furniture((String)table.roll()).place(this,unnocupied.get(i));
+	}
+
 	/**
 	 * Place {@link StairsUp}, deifne {@link #squadlocation} and create
 	 * {@link Features}.
@@ -382,6 +400,7 @@ public class Dungeon extends Location{
 		int goldpool=createtraps(getfeaturequantity(nrooms,ratiotraps));
 		createchests(getfeaturequantity(nrooms,ratiotreasure),goldpool,zoner);
 		createfeatures(getfeaturequantity(nrooms,ratiofeatures),zoner);
+		createfurniture();
 	}
 
 	void createkeys(DungeonZoner zoner){

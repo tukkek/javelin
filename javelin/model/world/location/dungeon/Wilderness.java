@@ -200,4 +200,9 @@ public class Wilderness extends Dungeon{
 	protected void generatecrates(DungeonZoner zoner){
 		//don't
 	}
+
+	@Override
+	protected void createfurniture(){
+		//don't
+	}
 }

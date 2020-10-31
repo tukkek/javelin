@@ -27,7 +27,7 @@ public class Lore implements Serializable{
 	 *
 	 * @see Javelin#DEBUG
 	 */
-	public static final boolean DEBUG=true;
+	public static final boolean DEBUG=false;
 
 	/** Dungeon spoiler. */
 	public String text;

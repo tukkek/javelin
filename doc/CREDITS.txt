@@ -1,7 +1,7 @@
 Alex "kek" Henry
 * Main developer
 
-Wizards of the Coast http://company.wizards.com/
+Wizards of the Coast @ http://company.wizards.com/
 * d20 System Reference Document
 * Open Game License
 
@@ -20,9 +20,10 @@ John Reyst
 Mike Anderson
 * Initial Tyrant code-base http://tyrant.sourceforge.net/
 
-Dungeon Crawl Stone Soup
+Dungeon Crawl Stone Soup @ https://github.com/crawl/crawl/ 
 * Design philosphy https://github.com/crawl/crawl/blob/master/crawl-ref/docs/crawl_manual.rst#n-philosophy-pas-de-faq
 * Static map templates
+* Art
 
 Bruno Terra de Campos
 * Monster images
@@ -36,6 +37,26 @@ Ethan "Terff" Weaver
 
 Soniss.com
 * Audio from the GDC 2018 Game Audio Bundle
+
+LPC
+* LPC Tile Atlas2 https://opengameart.org/content/lpc-tile-atlas2
+* House interior and decorations https://opengameart.org/content/lpc-house-interior-and-decorations
+
+Evert
+* Cute dungeon LPC edit https://opengameart.org/content/cute-dungeon-lpc-edit
+
+bluecarrot16
+* Wooden Furniture https://opengameart.org/content/lpc-wooden-furniture
+* Containers https://opengameart.org/content/lpc-containers
+
+Jetrel
+* RPG item set https://opengameart.org/content/rpg-item-set
+
+TheraHedwig
+* LPC compatible Ancient Greek Architecture https://opengameart.org/content/lpc-compatible-ancient-greek-architecture
+
+gamesbyangelina
+* A Puzzling Present - Image Bank https://opengameart.org/content/a-puzzling-present-image-bank
 
 Special thanks
 * 11132113

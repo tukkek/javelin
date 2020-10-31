@@ -129,14 +129,18 @@ public class Table implements Serializable,Cloneable{
 		}
 	}
 
-	/** @return One of the table rows, randomly selected. */
+	/**
+	 * @return One of the table rows, randomly selected or <code>null</code> if
+	 *         table is empty.
+	 */
 	public Object roll(){
 		int roll=RPG.r(1,getchances());
 		for(Object row:rows.keySet()){
 			roll-=rows.get(row);
 			if(roll<=0) return row;
 		}
-		throw new RuntimeException("#brokentable "+this);
+		return null;
+		//		throw new RuntimeException("#emptytable "+this);
 	}
 
 	/** @return The total amount of rows in this table. */
@@ -178,5 +182,10 @@ public class Table implements Serializable,Cloneable{
 	/** As {@link #roll()} but to be used for boolean tables. */
 	public boolean rollboolean(){
 		return (Boolean)roll();
+	}
+
+	/** @return <code>true</code> if there are zero rows. */
+	public boolean isempty(){
+		return getchances()==0;
 	}
 }

@@ -112,4 +112,9 @@ public class TempleDungeon extends Dungeon{
 		}
 		return encounter;
 	}
+
+	@Override
+	protected void createfurniture(){
+		//don't
+	}
 }

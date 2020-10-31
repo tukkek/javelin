@@ -1,5 +1,6 @@
 package javelin.model.world.location.dungeon.feature;
 
+import java.awt.Image;
 import java.io.Serializable;
 import java.util.List;
 
@@ -113,5 +114,10 @@ public abstract class Feature implements Serializable{
 	@Override
 	public String toString(){
 		return Javelin.capitalize(description);
+	}
+
+	/** TODO model should not handle view */
+	public Image getimage(){
+		return Images.get(avatarfile);
 	}
 }

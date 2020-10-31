@@ -285,14 +285,14 @@ public abstract class Location extends Actor{
 
 	@Override
 	public Image getimage(){
-		return Images.get(getimagename());
+		return Images.get(List.of("world",getimagename()));
 	}
 
 	/**
 	 * @return The filename for {@link #getimage()}, without extension.
 	 */
 	public String getimagename(){
-		return "location"+getClass().getSimpleName().toLowerCase();
+		return ""+getClass().getSimpleName().toLowerCase();
 	}
 
 	/**

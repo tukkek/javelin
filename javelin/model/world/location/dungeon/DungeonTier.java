@@ -40,6 +40,6 @@ public class DungeonTier{
 	}
 
 	public String getimagename(){
-		return "location"+name.toLowerCase();
+		return name.toLowerCase();
 	}
 }

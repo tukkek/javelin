@@ -34,8 +34,8 @@ import javelin.view.Images;
  * Temples are the key to winning Javelin's {@link Campaign} mode. Each temple
  * is locked and needs to be unlocked by a {@link TempleKey}, brute
  * {@link Monster#strength} or {@link DisableDevice}. Inside the Temple there
- * will be a {@link Artifact}, and once all of those are collected the player can
- * make the {@link Win} wish to finish the game.
+ * will be a {@link Artifact}, and once all of those are collected the player
+ * can make the {@link Win} wish to finish the game.
  *
  * Each temple is a multi-level {@link TempleDungeon}, where on each floor can
  * be found a special {@link Chest}. The Relic sits on the deepest floor.
@@ -135,8 +135,8 @@ public abstract class Temple extends UniqueLocation{
 
 	@Override
 	public Image getimage(){
-		final String name="locationtemple"+realm.getname().toLowerCase();
-		return Images.get(name);
+		final String name="temple"+realm.getname().toLowerCase();
+		return Images.get(List.of("world",name));
 	}
 
 	@Override

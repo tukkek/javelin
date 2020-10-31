@@ -79,6 +79,6 @@ public abstract class Settlement extends Haunt{
 
 	@Override
 	public String getimagename(){
-		return "locationsettlement";
+		return "settlement";
 	}
 }

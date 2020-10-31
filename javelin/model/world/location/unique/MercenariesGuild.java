@@ -76,6 +76,10 @@ public class MercenariesGuild extends Fortification{
 				if(m.think(-1)&&m.body.equals(Body.HUMANOID)) candidates.add(m);
 		Monster m=RPG.pick(candidates);
 		Combatant c=NpcGenerator.generatenpc(m,cr);
+		if(c==null){
+			if(Javelin.DEBUG) System.out.println("Couldn't generate mercenary!");
+			return;
+		}
 		c.setmercenary(true);
 		mercenaries.add(c);
 		all.add(c);

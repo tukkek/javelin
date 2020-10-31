@@ -37,6 +37,6 @@ public class BasicShop extends Shop{
 
 	@Override
 	public String getimagename(){
-		return "locationshop";
+		return "shop";
 	}
 }

@@ -199,7 +199,8 @@ public class Hub extends Location{
 
 	@Override
 	public Image getimage(){
-		return Images.get("location"+getname().replaceAll(" ","").toLowerCase());
+		var image=getname().replaceAll(" ","").toLowerCase();
+		return Images.get(List.of("world",image));
 	}
 
 	@Override

@@ -209,7 +209,7 @@ public class ResourceSite extends Location{
 
 	@Override
 	public Image getimage(){
-		return Images.get("locationresource"+type.name.toLowerCase());
+		return Images.get(List.of("world","resource"+type.name.toLowerCase()));
 	}
 
 	@Override

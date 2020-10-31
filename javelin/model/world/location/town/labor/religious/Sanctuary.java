@@ -2,6 +2,7 @@ package javelin.model.world.location.town.labor.religious;
 
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.List;
 
 import javelin.controller.kit.Cleric;
 import javelin.controller.kit.Paladin;
@@ -98,7 +99,8 @@ public class Sanctuary extends Guild{
 
 	@Override
 	public Image getimage(){
-		return upgraded?Images.get("locationcathedral"):super.getimage();
+		var image=upgraded?"cathedral":super.getimagename();
+		return Images.get(List.of("world",image));
 	}
 
 	@Override

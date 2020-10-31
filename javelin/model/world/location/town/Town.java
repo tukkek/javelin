@@ -333,9 +333,9 @@ public class Town extends Location{
 
 	@Override
 	public Image getimage(){
-		String image="locationtown"+getrank().title.toLowerCase();
+		String image="town"+getrank().title.toLowerCase();
 		if(!ishostile()&&ishosting()) image+="festival";
-		return Images.get(image);
+		return Images.get(List.of("world",image));
 	}
 
 	/** @see Rank */

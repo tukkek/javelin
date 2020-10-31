@@ -102,7 +102,7 @@ public abstract class Kit implements Serializable{
 
 		@Override
 		public String getimagename(){
-			return "locationmartialacademy";
+			return "martialacademy";
 		}
 	}
 

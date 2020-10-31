@@ -646,7 +646,7 @@ public class Dungeon extends Location{
 
 	@Override
 	public String getimagename(){
-		return "location"+gettier().name.toLowerCase();
+		return gettier().name.toLowerCase();
 	}
 
 	public void discover(Feature f){

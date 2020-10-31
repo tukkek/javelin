@@ -73,7 +73,6 @@ public class Wilderness extends Dungeon{
 	class Entrance extends StairsUp{
 		Entrance(Point p){
 			super(p,Wilderness.this);
-			avatarfile="locationwilderness";
 		}
 
 		@Override
@@ -166,11 +165,6 @@ public class Wilderness extends Dungeon{
 		return e;
 	}
 
-	@Override
-	public String getimagename(){
-		return "locationwilderness";
-	}
-
 	void makechest(){
 		var gold=RewardCalculator.getgold(level+makeeasy());
 		var c=new Chest(gold);
@@ -204,5 +198,10 @@ public class Wilderness extends Dungeon{
 	@Override
 	protected void createfurniture(){
 		//don't
+	}
+
+	@Override
+	public String getimagename(){
+		return "wilderness";
 	}
 }

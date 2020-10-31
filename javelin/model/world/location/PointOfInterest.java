@@ -69,7 +69,7 @@ public class PointOfInterest extends Actor{
 
 	@Override
 	public Image getimage(){
-		return Images.get("locationpointofinterest");
+		return Images.get(List.of("world","pointofinterest"));
 	}
 
 	@Override

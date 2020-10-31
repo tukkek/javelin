@@ -56,7 +56,8 @@ public class Images{
 	/** @see Location#ishostile() */
 	public static final Image HOSTILE=Images.get("overlayhostile");
 	/** @see Town#ishosting() */
-	public static final Image TOURNAMENT=Images.get("locationtournament");
+	public static final Image TOURNAMENT=Images
+			.get(List.of("world","tournament"));
 	/** Distinguishes {@link Combatant#mercenary} units. */
 	public static final Image MERCENARY=Images.get("overlaymercenary");
 	public static final Image SUMMONED=Images.get("overlaysummoned");

@@ -41,8 +41,8 @@ public class Lodge extends Fortification{
 	public static final String[] TITLES=new String[]{"Traveller's lodge","Hotel",
 			"Hospital"};
 	/** Avatar filenames for {@link #LODGING} tiers (without extension). */
-	public static final String[] IMAGES=new String[]{"locationinn",
-			"locationinnhotel","locationinnhospital"};
+	public static final String[] IMAGES=new String[]{"inn","innhotel",
+			"innhospital"};
 	/** Labor cost for each {@link #LODGING} tier. */
 	public static final int[] LABOR=new int[]{5,10,15};
 
@@ -181,7 +181,7 @@ public class Lodge extends Fortification{
 
 	@Override
 	public Image getimage(){
-		return Images.get(IMAGES[level]);
+		return Images.get(List.of("world",IMAGES[level]));
 	}
 
 	/**

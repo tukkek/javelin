@@ -520,9 +520,8 @@ public class Dungeon extends Location{
 	/** @see Crate */
 	protected void generatecrates(DungeonZoner zoner){
 		var freebie=RewardCalculator.getgold(level);
-		int ncrates=RPG.r(1,4)-1;
-		for(var crates=ncrates;crates>0;crates--){
-			var gold=(freebie+RPG.randomize(freebie))/10;
+		for(int c=RPG.randomize(2,0,Integer.MAX_VALUE);c>0;c--){
+			var gold=RPG.randomize(freebie/10,1,Integer.MAX_VALUE);
 			createchest(Crate.class,gold,zoner,doorbackground);
 		}
 	}

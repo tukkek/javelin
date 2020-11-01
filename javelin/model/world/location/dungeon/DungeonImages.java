@@ -3,6 +3,8 @@ package javelin.model.world.location.dungeon;
 import java.util.HashMap;
 
 import javelin.model.world.location.dungeon.feature.Chest;
+import javelin.model.world.location.dungeon.feature.Crate;
+import javelin.model.world.location.dungeon.feature.Crate.TieredCrates;
 import javelin.old.RPG;
 
 /**
@@ -17,11 +19,14 @@ public class DungeonImages extends HashMap<String,String>{
 	public static final String WALL="wall";
 	/** @see Chest */
 	public static final String CHEST="chest";
+	/** @see Crate */
+	public static final String CRATE="crate";
 
 	/** Constructor. */
-	public DungeonImages(DungeonTier tier){
-		put(WALL,tier.wall);
-		put(FLOOR,tier.floor);
+	public DungeonImages(DungeonTier t){
+		put(WALL,t.wall);
+		put(FLOOR,t.floor);
 		put(CHEST,"chest"+RPG.r(1,25));
+		put(CRATE,RPG.pick(new TieredCrates(t)));
 	}
 }

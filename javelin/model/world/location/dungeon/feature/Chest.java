@@ -34,7 +34,7 @@ public class Chest extends Feature{
 	public Integer nitems=null;
 
 	/** <code>true</code> to distinguish a {@link Ruby} chest. */
-	boolean ruby=true;
+	boolean ruby=false;
 
 	/**
 	 * @param pool Value to be added in gold or {@link Item}s, preferrring

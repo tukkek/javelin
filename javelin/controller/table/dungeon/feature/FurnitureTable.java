@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javelin.controller.TieredList;
 import javelin.controller.table.Table;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonTier;
@@ -48,14 +49,11 @@ public class FurnitureTable extends Table{
 
 	/** Constructor. */
 	public FurnitureTable(){
-		var types=new ArrayList<Type>(ALL.size());
-		for(var type:ALL){
-			var t=type.rarity.tier;
-			if(Dungeon.active.level>=t.minlevel) for(var i=0;i<=t.getordinal();i++)
-				types.add(type);
-		}
-		types=new ArrayList<>(
-				types.stream().distinct().collect(Collectors.toList()));
+		var tiered=new TieredList<Type>(Dungeon.active.gettier());
+		for(var type:ALL)
+			tiered.addtiered(type,type.rarity);
+		var types=new ArrayList<>(
+				tiered.stream().distinct().collect(Collectors.toList()));
 		var ntypes=Math.min(types.size(),RPG.randomize(TYPES,0,Integer.MAX_VALUE));
 		for(var t:RPG.shuffle(types).subList(0,ntypes)){
 			var amount=RPG.randomize(2,0,Integer.MAX_VALUE);

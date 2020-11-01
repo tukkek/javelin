@@ -1,10 +1,16 @@
 package javelin.model.world.location.dungeon.feature;
 
+import java.awt.Image;
+import java.util.List;
+
 import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.town.labor.religious.Shrine;
+import javelin.view.Images;
 
 /**
  * Heals hit points and spell uses.
@@ -38,5 +44,11 @@ public class Fountain extends Feature{
 		c.heal(c.maxhp,true);
 		for(Spell s:c.spells)
 			s.used=0;
+	}
+
+	@Override
+	public Image getimage(){
+		var i=Dungeon.active.images.get(DungeonImages.FOUNTAIN);
+		return Images.get(List.of("dungeon","fountain",i));
 	}
 }

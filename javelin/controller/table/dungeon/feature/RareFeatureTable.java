@@ -42,6 +42,7 @@ import javelin.old.RPG;
  * @see FeatureRarityTable
  */
 public class RareFeatureTable extends Table implements DungeonFeatureTable{
+	/** All features in this table. */
 	public static final List<Class<? extends Feature>> ALL=new ArrayList<>();
 
 	static final Class<? extends Feature> DEBUG=null;

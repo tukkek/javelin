@@ -1,15 +1,20 @@
 package javelin.model.world.location.dungeon.feature;
 
+import java.awt.Image;
 import java.util.Collection;
+import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
+import javelin.model.item.consumable.Ruby;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.old.RPG;
+import javelin.view.Images;
 
 /**
  * Loot! A chest should normally contain only items or gold, not both.
@@ -28,6 +33,9 @@ public class Chest extends Feature{
 	/** Amount of items to generate. Random if <code>null</code>. */
 	public Integer nitems=null;
 
+	/** <code>true</code> to distinguish a {@link Ruby} chest. */
+	boolean ruby=true;
+
 	/**
 	 * @param pool Value to be added in gold or {@link Item}s, preferrring
 	 *          generated items. If zero, will not generate anything.
@@ -45,11 +53,11 @@ public class Chest extends Feature{
 		}
 	}
 
-	/** @param special If true, will show a distinguished chest image. */
-	public Chest(Item i,boolean special){
+	/** @param ruby If true, will show a distinguished chest image. */
+	public Chest(Item i,boolean ruby){
 		this(0);
+		this.ruby=ruby;
 		items.add(i);
-		if(special) avatarfile="specialchest";
 	}
 
 	/**
@@ -89,5 +97,12 @@ public class Chest extends Feature{
 	public String toString(){
 		return getClass().getSimpleName()+": "
 				+(items.isEmpty()?"$"+Javelin.format(gold):items);
+	}
+
+	@Override
+	public Image getimage(){
+		if(ruby) return Images.get(List.of("dungeon","chest","ruby"));
+		var i=Dungeon.active.images.get(DungeonImages.CHEST);
+		return Images.get(List.of("dungeon","chest",i));
 	}
 }

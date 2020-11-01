@@ -6,7 +6,7 @@ import java.util.List;
 import javelin.JavelinApp;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.Dungeon.DungeonImage;
+import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.Wilderness;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.door.Door;
@@ -27,12 +27,12 @@ public class DungeonTile extends Tile{
 			return;
 		}
 		var folder=d instanceof Wilderness?"":"dungeon";
-		draw(g,Images.get(List.of(folder,d.images.get(DungeonImage.FLOOR))));
+		draw(g,Images.get(List.of(folder,d.images.get(DungeonImages.FLOOR))));
 		draw(g,JavelinApp.context.gettile(x,y));
 		final Feature f=d.features.get(x,y);
 		if(f!=null&&f.draw){
 			if(f instanceof Door&&d.doorbackground)
-				draw(g,Images.get(List.of(folder,d.images.get(DungeonImage.WALL))));
+				draw(g,Images.get(List.of(folder,d.images.get(DungeonImages.WALL))));
 			draw(g,f.getimage());
 		}
 		if(d.squadlocation.x==x&&d.squadlocation.y==y){

@@ -14,6 +14,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.DungeonZoner;
 import javelin.model.world.location.dungeon.feature.ArtifactChest;
 import javelin.model.world.location.dungeon.feature.Feature;
@@ -54,8 +55,8 @@ public class TempleDungeon extends Dungeon{
 	@Override
 	public void activate(boolean loading){
 		doorbackground=temple.doorbackground;
-		if(temple.floor!=null) images.put(DungeonImage.FLOOR,temple.floor);
-		if(temple.wall!=null) images.put(DungeonImage.WALL,temple.wall);
+		if(temple.floor!=null) images.put(DungeonImages.FLOOR,temple.floor);
+		if(temple.wall!=null) images.put(DungeonImages.WALL,temple.wall);
 		if(loading||Dungeon.active!=null){
 			super.activate(loading);
 			return;

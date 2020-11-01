@@ -1,9 +1,13 @@
 package javelin.model.world.location.dungeon.feature;
 
+import java.awt.Image;
+import java.util.List;
+
 import javelin.Javelin;
 import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.world.location.dungeon.temple.Temple;
+import javelin.view.Images;
 
 /**
  * Holds the {@link Artifact} for this temple. If for any reason the
@@ -39,5 +43,10 @@ public class ArtifactChest extends Feature{
 	@Override
 	public String toString(){
 		return temple.relic.name;
+	}
+
+	@Override
+	public Image getimage(){
+		return Images.get(List.of("dungeon","chest","artifact"));
 	}
 }

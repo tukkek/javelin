@@ -3,6 +3,7 @@ package javelin.model.world.location.dungeon;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -72,6 +73,11 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class Dungeon extends Location{
+	/** @see #images */
+	public enum DungeonImage{
+		FLOOR,WALL
+	}
+
 	static final Class<? extends Feature> DEBUGFEATURE=null;
 	static final int MAXTRIES=1000;
 	static final int[] DELTAS={-1,0,1};
@@ -101,10 +107,8 @@ public class Dungeon extends Location{
 	public Point squadlocation=null;
 	/** How far a {@link Squad} can see inside a {@link Dungeon}. */
 	public int squadvision=4;
-	/** File to use under 'avatar' folder. */
-	public String tilefloor;
-	/** File to use under 'avatar' folder. */
-	public String tilewall;
+	/** Instance-specific dungeon images. */
+	public HashMap<DungeonImage,String> images=new HashMap<>();
 	/** Tiles already revealed. */
 	public HashSet<Point> discovered=new HashSet<>();
 	/**
@@ -166,8 +170,8 @@ public class Dungeon extends Location{
 		impermeable=true;
 		allowedinscenario=false;
 		var tier=gettier();
-		tilewall=tier.wall;
-		tilefloor=tier.floor;
+		images.put(DungeonImage.WALL,tier.wall);
+		images.put(DungeonImage.FLOOR,tier.floor);
 		description=name==null?baptize(tier.name):name;
 		allowentry=false;
 		unique=true;

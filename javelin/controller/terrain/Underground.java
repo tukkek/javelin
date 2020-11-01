@@ -7,6 +7,7 @@ import javelin.controller.map.Maps;
 import javelin.controller.map.terrain.underground.AncientCave;
 import javelin.controller.map.terrain.underground.Constructed;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.Dungeon.DungeonImage;
 import javelin.old.underground.BigCave;
 import javelin.old.underground.Caves;
 import javelin.old.underground.Complex;
@@ -34,8 +35,8 @@ public class Underground extends Terrain{
 				new Floor(),new Complex(),new Constructed(),new AncientCave())){
 			Dungeon d=Dungeon.active;
 			if(d!=null){
-				m.floor=Images.get(d.tilefloor);
-				m.wall=Images.get(d.tilewall);
+				m.floor=Images.get(List.of("dungeon",d.images.get(DungeonImage.FLOOR)));
+				m.wall=Images.get(List.of("dungeon",d.images.get(DungeonImage.WALL)));
 				if(m.wall==m.obstacle)
 					m.obstacle=Images.get(List.of("terrain","rock2"));
 			}

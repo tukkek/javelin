@@ -8,7 +8,7 @@ import javelin.controller.map.DndMap;
 import javelin.controller.map.Map;
 import javelin.model.state.Square;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.temple.TempleDungeon;
+import javelin.model.world.location.dungeon.Dungeon.DungeonImage;
 import javelin.old.RPG;
 import javelin.view.Images;
 
@@ -28,9 +28,10 @@ public class Caves extends Map{
 	public Caves(String namep){
 		super(namep,SIZE,SIZE);
 		maxflooding=Weather.CLEAR;
-		if(Dungeon.active instanceof TempleDungeon){
-			floor=Images.get(List.of("dungeon",Dungeon.active.tilefloor));
-			wall=Images.get(List.of("dungeon",Dungeon.active.tilewall));
+		var d=Dungeon.active;
+		if(d!=null){
+			floor=Images.get(List.of("dungeon",d.images.get(DungeonImage.FLOOR)));
+			wall=Images.get(List.of("dungeon",d.images.get(DungeonImage.WALL)));
 		}else{
 			floor=Images.get(List.of("terrain","dungeonfloor"));
 			wall=Images.get(List.of("terrain","dungeonwall"));

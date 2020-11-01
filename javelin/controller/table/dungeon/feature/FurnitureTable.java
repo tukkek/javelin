@@ -41,6 +41,7 @@ public class FurnitureTable extends Table{
 	static final int TYPES=2;
 	static final int AMOUNTPERTYPE=2;
 	static final Type STATUE=new Type("statue",49,DungeonTier.DUNGEON);
+	/** Actual furniture like wardrobes, drawers, tables... */
 	static final Type FURNITURE=new Type("furniture",17,DungeonTier.KEEP);
 	static final Type MISC=new Type("misc",9,DungeonTier.CAVE);
 	static final List<Type> ALL=List.of(STATUE,FURNITURE,MISC);

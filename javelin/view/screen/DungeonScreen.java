@@ -15,6 +15,8 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.Dungeon.DungeonImage;
+import javelin.model.world.location.dungeon.Wilderness;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.view.Images;
@@ -107,8 +109,11 @@ public class DungeonScreen extends WorldScreen{
 
 	@Override
 	public Image gettile(int x,int y){
-		var t=dungeon.map[x][y]==Template.WALL?dungeon.tilewall:dungeon.tilefloor;
-		return Images.get(List.of("dungeon",t));
+		var i=dungeon.images;
+		var file=dungeon.map[x][y]==Template.WALL?i.get(DungeonImage.WALL)
+				:i.get(DungeonImage.FLOOR);
+		var folder=dungeon instanceof Wilderness?"":"dungeon";
+		return Images.get(List.of(folder,file));
 	}
 
 	@Override

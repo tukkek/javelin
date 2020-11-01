@@ -129,8 +129,8 @@ public class Wilderness extends Dungeon{
 			for(var y=0;y<height;y++)
 				map[x][y]=fightmap.map[x][y].blocked?Template.WALL:Template.FLOOR;
 		generateentrance(map);
-		tilefloor=Images.NAMES.get(fightmap.floor);
-		tilewall=Images.NAMES.get(fightmap.wall);
+		images.put(DungeonImage.FLOOR,Images.NAMES.get(fightmap.floor));
+		images.put(DungeonImage.WALL,Images.NAMES.get(fightmap.wall));
 		description=baptize(fightmap.name);
 		return map;
 	}
@@ -159,8 +159,8 @@ public class Wilderness extends Dungeon{
 	@Override
 	public Fight fight(){
 		var e=new RandomDungeonEncounter(this);
-		e.map.wall=Images.get(tilewall);
-		e.map.floor=Images.get(tilefloor);
+		e.map.floor=Images.get(images.get(DungeonImage.FLOOR));
+		e.map.wall=Images.get(images.get(DungeonImage.WALL));
 		e.map.wallfloor=e.map.floor;
 		return e;
 	}

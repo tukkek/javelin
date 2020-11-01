@@ -6,6 +6,8 @@ import java.util.List;
 import javelin.JavelinApp;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.Dungeon.DungeonImage;
+import javelin.model.world.location.dungeon.Wilderness;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.view.Images;
@@ -19,20 +21,21 @@ public class DungeonTile extends Tile{
 
 	@Override
 	public void paint(Graphics g){
-		if(!discovered||Dungeon.active==null){
+		var d=Dungeon.active;
+		if(!discovered||d==null){
 			drawcover(g);
 			return;
 		}
-		draw(g,Images.get(List.of("dungeon",Dungeon.active.tilefloor)));
+		var folder=d instanceof Wilderness?"":"dungeon";
+		draw(g,Images.get(List.of(folder,d.images.get(DungeonImage.FLOOR))));
 		draw(g,JavelinApp.context.gettile(x,y));
-		if(Dungeon.active==null) return;
-		final Feature f=Dungeon.active.features.get(x,y);
+		final Feature f=d.features.get(x,y);
 		if(f!=null&&f.draw){
-			if(f instanceof Door&&Dungeon.active.doorbackground)
-				draw(g,Images.get(List.of("dungeon",Dungeon.active.tilewall)));
+			if(f instanceof Door&&d.doorbackground)
+				draw(g,Images.get(List.of(folder,d.images.get(DungeonImage.WALL))));
 			draw(g,f.getimage());
 		}
-		if(Dungeon.active.squadlocation.x==x&&Dungeon.active.squadlocation.y==y){
+		if(d.squadlocation.x==x&&d.squadlocation.y==y){
 			Squad.active.updateavatar();
 			draw(g,Squad.active.getimage());
 		}

@@ -29,8 +29,8 @@ import javelin.model.world.location.town.Town;
  */
 public class Images{
 	/**
-	 * Reverse of {@link #CACHE}, holds an Image's base filename (no extension or
-	 * dir).
+	 * Reverse of {@link #CACHE}, holds an Image's relative path without
+	 * extension..
 	 */
 	public static final Map<Image,String> NAMES=new HashMap<>();
 

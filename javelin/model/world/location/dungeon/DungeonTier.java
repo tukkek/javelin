@@ -12,7 +12,7 @@ public class DungeonTier{
 	public static final DungeonTier KEEP=new DungeonTier("Keep",Tier.HIGH,"keep");
 	/** @see Temple */
 	public static final DungeonTier TEMPLE=new DungeonTier("Temple",Tier.EPIC,
-			"ruins");
+			"temple");
 
 	public static final List<DungeonTier> TIERS=List.of(CAVE,DUNGEON,KEEP,TEMPLE);
 	public static final DungeonTier HIGHEST=TEMPLE;

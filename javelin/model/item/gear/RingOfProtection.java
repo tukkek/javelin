@@ -1,10 +1,13 @@
 package javelin.model.item.gear;
 
+import javelin.model.item.gear.rune.RuneGear;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Slot;
 
 /**
  * Adds AC bonus.
+ *
+ * TODO turn into {@link RuneGear}
  *
  * @author alex
  */

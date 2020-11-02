@@ -1,10 +1,13 @@
 package javelin.model.item.gear;
 
+import javelin.model.item.gear.rune.RuneGear;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Slot;
 
 /**
  * Adds bonus to saving throws.
+ *
+ * TODO make it a {@link RuneGear} instead
  *
  * @author alex
  */

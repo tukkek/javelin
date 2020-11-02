@@ -1,4 +1,4 @@
-package javelin.model.world.location.dungeon.feature;
+package javelin.model.world.location.dungeon.feature.chest;
 
 import java.awt.Image;
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public class Crate extends Chest{
 			addtiered("pot"+RPG.r(1,28),DungeonTier.CAVE);
 			addtiered("box"+RPG.r(1,9),DungeonTier.DUNGEON);
 			addtiered("sack"+RPG.r(1,31),DungeonTier.DUNGEON);
-			addtiered("barrel"+RPG.r(1,8),DungeonTier.KEEP);
+			addtiered("barrel"+RPG.r(1,9),DungeonTier.KEEP);
 			addtiered("crate"+RPG.r(1,7),DungeonTier.KEEP);
 			addtiered("vase"+RPG.r(1,23),DungeonTier.TEMPLE);
 		}
@@ -70,7 +70,6 @@ public class Crate extends Chest{
 	/** Constructor. */
 	public Crate(Integer pool){
 		super(pool);
-		nitems=1;
 	}
 
 	@Override

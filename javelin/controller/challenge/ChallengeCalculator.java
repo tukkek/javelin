@@ -39,6 +39,7 @@ import javelin.old.RPG;
  *
  * @see CrFactor
  * @see Difficulty
+ * @see RewardCalculator
  */
 public class ChallengeCalculator{
 	static final float PCEQUIPMENTCRPERLEVEL=.2f;

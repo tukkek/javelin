@@ -20,6 +20,11 @@ import javelin.old.RPG;
  * battle. Rules for this are found in the core d20 rules and also on Upper
  * Krust's work which is repackaged with permition on the 'doc' directory.
  *
+ * Gold- and experience- wise, a guideline is that values double every 2 levels
+ * - that doesn't hold up mathematically on a level-by-level basis but it's a
+ * decent-enough simplification and overview. This is also the baseline of how
+ * Encounter Levels work as per the official rules.
+ *
  * @author alex
  */
 public class RewardCalculator{

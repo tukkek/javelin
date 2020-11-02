@@ -15,7 +15,7 @@ public class RingOfEnergyResistance extends Gear{
 
 	/** Constructor */
 	public RingOfEnergyResistance(int bonus,int price){
-		super(getprefix(bonus)+" ring of energy resistance",price,Slot.RING);
+		super(getprefix(bonus)+" ring of energy resistance",price,Slot.FINGERS);
 		this.bonus=bonus;
 	}
 

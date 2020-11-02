@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.feature.chest.Chest;
 import javelin.model.world.location.dungeon.feature.trap.Trap;
 import javelin.view.Images;
 

@@ -10,8 +10,8 @@ import javelin.model.unit.skill.DisableDevice;
 import javelin.model.unit.skill.Perception;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.chest.Chest;
 
 /**
  * A trap is a semi-permanent strategic dungeon feature. It is balanced by

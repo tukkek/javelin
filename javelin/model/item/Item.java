@@ -33,7 +33,7 @@ import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Academy;
-import javelin.model.world.location.dungeon.feature.Chest;
+import javelin.model.world.location.dungeon.feature.chest.Chest;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.TrainingOrder;
 import javelin.model.world.location.town.Town;
@@ -381,5 +381,14 @@ public abstract class Item implements Serializable,Cloneable{
 	public static <K> List<K> getall(Class<K> type){
 		return randomize(Item.ITEMS).stream().filter(i->type.isInstance(i))
 				.map(i->(K)i).collect(Collectors.toList());
+	}
+
+	/**
+	 * @return This item instance but type-cast or <code>null</code> if not the
+	 *         given item type.
+	 */
+	@SuppressWarnings("unchecked")
+	public <K extends Item> K is(Class<K> type){
+		return type.isInstance(this)?(K)this:null;
 	}
 }

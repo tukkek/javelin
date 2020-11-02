@@ -110,8 +110,10 @@ public class DungeonZoner{
 	 *         that is very small.
 	 */
 	public Point getpoint(){
-		Point p=RPG.pick(result);
-		return dungeon.features.get(p.x,p.y)==null?p:getpoint();
+		Point p=null;
+		while(p==null||dungeon.features.get(p.x,p.y)!=null)
+			p=RPG.pick(result);
+		return p;
 	}
 
 	/**

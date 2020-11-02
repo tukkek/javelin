@@ -18,8 +18,6 @@ import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.feature.Brazier;
-import javelin.model.world.location.dungeon.feature.Chest;
-import javelin.model.world.location.dungeon.feature.Crate;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Fountain;
 import javelin.model.world.location.dungeon.feature.LearningStone;
@@ -27,6 +25,7 @@ import javelin.model.world.location.dungeon.feature.LoreNote;
 import javelin.model.world.location.dungeon.feature.Mirror;
 import javelin.model.world.location.dungeon.feature.StairsUp;
 import javelin.model.world.location.dungeon.feature.Throne;
+import javelin.model.world.location.dungeon.feature.chest.Crate;
 import javelin.model.world.location.dungeon.feature.inhabitant.Prisoner;
 import javelin.old.RPG;
 import javelin.view.Images;
@@ -144,16 +143,12 @@ public class Wilderness extends Dungeon{
 
 	@Override
 	protected void generateencounters(){
-		var target=RPG.rolldice(2,10);
-		var failures=100;
+		var target=RPG.randomize(6,1,Integer.MAX_VALUE);
 		while(encounters.size()<target){
-			var el=level+Difficulty.get()+makeeasy();
-			encounters.add(EncounterGenerator.generate(el,type));
+			var el=level+Difficulty.get()+Difficulty.EASY;
+			var e=EncounterGenerator.generate(el,type);
+			if(e!=null) encounters.add(e);
 		}
-	}
-
-	int makeeasy(){
-		return -RPG.r(1,6)+1;
 	}
 
 	@Override
@@ -165,23 +160,16 @@ public class Wilderness extends Dungeon{
 		return e;
 	}
 
-	void makechest(){
-		var gold=RewardCalculator.getgold(level+makeeasy());
-		var c=new Chest(gold);
-		if(RPG.chancein(2)) c.nitems=0;
-		c.place(this,getunnocupied());
-	}
-
 	@Override
 	protected void populatedungeon(){
-		var target=RPG.rolldice(2,10);
-		while(features.size()<target){
-			if(RPG.chancein(6)){
-				makechest();
-				continue;
-			}
-			var f=createfeature();
-			f.place(this,getunnocupied());
+		var nfeatures=RPG.randomize(5,0,Integer.MAX_VALUE);
+		for(var i=0;i<nfeatures;i++)
+			createfeature().place(this,getunnocupied());
+		var gold=RewardCalculator.getgold(level);
+		var ncrates=RPG.randomize(3,0,Integer.MAX_VALUE);
+		for(var i=0;i<ncrates;i++){
+			var c=new Crate(RPG.randomize(gold/ncrates,1,Integer.MAX_VALUE));
+			c.place(this,getunnocupied());
 		}
 	}
 

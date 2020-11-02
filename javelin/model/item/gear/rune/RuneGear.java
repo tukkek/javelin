@@ -22,13 +22,29 @@ import javelin.old.RPG;
  * and non-cumulative while the item is equipped. A suffix is an at-will spell
  * that can be cast by using the item.
  *
+ * TODO may want to remove other {@link Gear} since htey're largely unnecessary
+ * now and adding more {@link Spell}s than specific gear is gonna be much more
+ * interesting
+ *
  * @author alex
  */
 public class RuneGear extends Gear{
 	static final HashMap<Slot,List<String>> NAMES=new HashMap<>();
-	static final HashMap<Slot,List<Integer>> PRICE=new HashMap<>();
 	static final List<Condition> PREFIXES=new ArrayList<>();
 	static final List<Spell> SUFFIXES=new ArrayList<>();
+
+	static{
+		NAMES.put(Slot.EYES,List.of("Goggles","Glasses"));
+		NAMES.put(Slot.FEET,List.of("Boots","Shoes"));
+		NAMES.put(Slot.FINGERS,List.of("Ring","Band","Circlet"));
+		NAMES.put(Slot.HANDS,List.of("Gauntlet","Glove"));
+		NAMES.put(Slot.HEAD,List.of("Helm","Hat","Mask"));
+		NAMES.put(Slot.NECK,List.of("Pendant","Scarf","Locket"));
+		NAMES.put(Slot.SHOULDERS,List.of("Cloak","Cape"));
+		NAMES.put(Slot.TORSO,List.of("Fur","Poncho"));
+		NAMES.put(Slot.WAIST,List.of("Belt","Kilt"));
+		NAMES.put(Slot.SLOTLESS,List.of("Medal","Brooch"));
+	}
 
 	/** Creates item instances. */
 	@SuppressWarnings("unused")
@@ -37,29 +53,16 @@ public class RuneGear extends Gear{
 				.map(s->s.isrune).collect(Collectors.toList()));
 		SUFFIXES.addAll(Spell.SPELLS.stream().filter(s->!(s instanceof Summon))
 				.collect(Collectors.toList()));
-		new RuneGear("Tabard",5,Slot.ARMOR);
-		new RuneGear("Vest",30,Slot.ARMOR);
-		new RuneGear("Glasses",5,Slot.EYES);
-		new RuneGear("Goggles",10,Slot.EYES);
-		new RuneGear("Boots",20,Slot.FEET);
-		new RuneGear("Shoes",5,Slot.FEET);
-		new RuneGear("Glove",5,Slot.HANDS);
-		new RuneGear("Gauntlet",10,Slot.HANDS);
-		new RuneGear("Hat",30,Slot.HEAD);
-		new RuneGear("Mask",30,Slot.HEAD);
-		new RuneGear("Scarf",5,Slot.NECK);
-		new RuneGear("Pendant",10,Slot.NECK);
-		new RuneGear("Locket",10,Slot.NECK);
-		new RuneGear("Band",5,Slot.RING);
-		new RuneGear("Ring",5,Slot.RING);
-		new RuneGear("Cape",5,Slot.SHOULDERS);
-		new RuneGear("Cloak",5,Slot.SHOULDERS);
-		new RuneGear("Fur",10,Slot.TORSO);
-		new RuneGear("Poncho",1,Slot.TORSO);
-		new RuneGear("Kilt",1,Slot.WAIST);
-		new RuneGear("Belt",1,Slot.WAIST);
-		new RuneGear("Brooch",5,Slot.SLOTLESS);
-		new RuneGear("Medal",5,Slot.SLOTLESS);
+		new RuneGear(Slot.EYES,10);
+		new RuneGear(Slot.FEET,20);
+		new RuneGear(Slot.HANDS,10);
+		new RuneGear(Slot.HEAD,30);
+		new RuneGear(Slot.NECK,10);
+		new RuneGear(Slot.FINGERS,5);
+		new RuneGear(Slot.SHOULDERS,5);
+		new RuneGear(Slot.TORSO,10);
+		new RuneGear(Slot.WAIST,1);
+		new RuneGear(Slot.SLOTLESS,5);
 	}
 
 	Condition prefix=null;
@@ -68,8 +71,8 @@ public class RuneGear extends Gear{
 	int baseprice;
 
 	/** Constructor. */
-	public RuneGear(String name,int baseprice,Slot s){
-		super(name,0,s);
+	RuneGear(Slot s,int baseprice){
+		super(s+" gear",0,s);
 		this.baseprice=baseprice;
 		waste=false;
 		usedinbattle=false;
@@ -174,6 +177,7 @@ public class RuneGear extends Gear{
 	public RuneGear randomize(){
 		assert owner==null;
 		var g=(RuneGear)super.randomize();
+		g.name=Javelin.DEBUG?NAMES.get(slot).get(0):RPG.pick(NAMES.get(slot));
 		g.prefix=null;
 		g.prefixprice=0;
 		g.suffix=null;

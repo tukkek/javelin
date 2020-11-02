@@ -9,9 +9,9 @@ import javelin.controller.walker.Walker;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Spirit;
+import javelin.model.world.location.dungeon.feature.chest.Chest;
 
 /**
  * Allows player to find nearest treasure chest in a {@link Dungeon}. If no

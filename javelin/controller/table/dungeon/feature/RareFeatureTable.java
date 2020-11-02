@@ -16,7 +16,6 @@ import javelin.model.world.location.dungeon.feature.FruitTree;
 import javelin.model.world.location.dungeon.feature.Herb;
 import javelin.model.world.location.dungeon.feature.LearningStone;
 import javelin.model.world.location.dungeon.feature.Mirror;
-import javelin.model.world.location.dungeon.feature.Portal;
 import javelin.model.world.location.dungeon.feature.Recipe;
 import javelin.model.world.location.dungeon.feature.Spirit;
 import javelin.model.world.location.dungeon.feature.Throne;
@@ -49,8 +48,8 @@ public class RareFeatureTable extends Table implements DungeonFeatureTable{
 	static final List<Class<? extends Feature>> COMMON=List.of(FruitTree.class,
 			Herb.class);
 	static final List<Class<? extends Feature>> AVERAGE=List.of(Fountain.class,
-			LearningStone.class,Portal.class,Spirit.class,Broker.class,Prisoner.class,
-			Trader.class,Recipe.class);
+			LearningStone.class,Spirit.class,Broker.class,Prisoner.class,Trader.class,
+			Recipe.class);
 	static final List<Class<? extends Feature>> RARE=List.of(Mirror.class,
 			Throne.class,Leader.class,DungeonMap.class);
 

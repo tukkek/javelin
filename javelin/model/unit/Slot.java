@@ -25,7 +25,7 @@ public class Slot implements Serializable{
 	/** gloves or gauntlets */
 	public static final Slot HANDS=new Slot("hands");
 	/** one ring on each hand */
-	public static final Slot RING=new Slot("ring"){
+	public static final Slot FINGERS=new Slot("ring"){
 		@Override
 		protected boolean conflicts(Slot slot){
 			return false;
@@ -34,7 +34,7 @@ public class Slot implements Serializable{
 		@Override
 		public void clear(Combatant c){
 			super.clear(c);
-			var equipped=c.equipped.stream().filter(a->a.slot.equals(RING))
+			var equipped=c.equipped.stream().filter(a->a.slot.equals(FINGERS))
 					.collect(Collectors.toList());
 			for(int i=1;i<equipped.size();i++){
 				var a=equipped.get(i);
@@ -45,8 +45,6 @@ public class Slot implements Serializable{
 	};
 	/** boots or shoes */
 	public static final Slot FEET=new Slot("feet");
-	/** robe or suit of armor */
-	public static final Slot ARMOR=new Slot("armor");
 	/** belt */
 	public static final Slot WAIST=new Slot("waist");
 	/** vest, vestment, or shirt */

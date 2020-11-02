@@ -1,4 +1,4 @@
-package javelin.model.world.location.dungeon.feature;
+package javelin.model.world.location.dungeon.feature.chest;
 
 import java.awt.Image;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
+import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.view.Images;
 

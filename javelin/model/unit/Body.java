@@ -18,45 +18,44 @@ import javelin.Javelin;
 public class Body implements Serializable{
 	public static final HashMap<String,Body> TYPES=new HashMap<>(12);
 	/** bat, chicken, dodo, hawk */
-	public static final Body AVIAN=new Body("avian",true,Set.of(Slot.ARMOR,
-			Slot.WAIST,Slot.TORSO,Slot.EYES,Slot.HEAD,Slot.NECK,Slot.RING,Slot.ARMS));
+	public static final Body AVIAN=new Body("avian",true,Set.of(Slot.WAIST,
+			Slot.TORSO,Slot.EYES,Slot.HEAD,Slot.NECK,Slot.FINGERS,Slot.ARMS));
 	/** kangaroo, tyrannosaurus, velociraptor */
 	public static final Body BIPED_CLAW=new Body("biped, claws",true,
-			Set.of(Slot.ARMOR,Slot.WAIST,Slot.TORSO,Slot.EYES,Slot.HEAD,Slot.NECK,
-					Slot.RING,Slot.SHOULDERS,Slot.ARMS));
+			Set.of(Slot.WAIST,Slot.TORSO,Slot.EYES,Slot.HEAD,Slot.NECK,Slot.FINGERS,
+					Slot.SHOULDERS,Slot.ARMS));
 	/** humanoid */
 	public static final Body BIPED_HANDS=new Body("biped, hands",true,
-			Set.of(Slot.ARMOR,Slot.ARMS,Slot.EYES,Slot.FEET,Slot.HANDS,Slot.HEAD,
-					Slot.NECK,Slot.RING,Slot.SHOULDERS,Slot.TORSO,Slot.WAIST));
+			Set.of(Slot.ARMS,Slot.EYES,Slot.FEET,Slot.HANDS,Slot.HEAD,Slot.NECK,
+					Slot.FINGERS,Slot.SHOULDERS,Slot.TORSO,Slot.WAIST));
 	/** humanoid but with tail instead of legs */
 	public static final Body SALAMANDER=new Body("salamander",true,
-			Set.of(Slot.ARMOR,Slot.ARMS,Slot.EYES,Slot.HANDS,Slot.HEAD,Slot.NECK,
-					Slot.RING,Slot.SHOULDERS,Slot.TORSO,Slot.WAIST));
+			Set.of(Slot.ARMS,Slot.EYES,Slot.HANDS,Slot.HEAD,Slot.NECK,Slot.FINGERS,
+					Slot.SHOULDERS,Slot.TORSO,Slot.WAIST));
 	/** fish, dolphin, seal */
 	public static final Body PISCINE=new Body("piscine",false,
 			Set.of(Slot.WAIST,Slot.TORSO,Slot.EYES));
 	/** fox, hare, armadillo, cat, rat */
 	public static final Body QUADRUPED_CLAW=new Body("quadruped, claws",false,
-			Set.of(Slot.ARMOR,Slot.WAIST,Slot.TORSO,Slot.EYES,Slot.HEAD,Slot.NECK,
-					Slot.SHOULDERS,Slot.ARMS));
+			Set.of(Slot.WAIST,Slot.TORSO,Slot.EYES,Slot.HEAD,Slot.NECK,Slot.SHOULDERS,
+					Slot.ARMS));
 	/** camel, elephant, hippopotamus, mammoth, rhinoceros */
 	public static final Body QUADRUPED_FEET=new Body("quadruped, feet",false,
-			Set.of(Slot.ARMOR,Slot.WAIST,Slot.TORSO,Slot.EYES,Slot.HEAD,Slot.NECK,
-					Slot.SHOULDERS,Slot.ARMS));
+			Set.of(Slot.WAIST,Slot.TORSO,Slot.EYES,Slot.HEAD,Slot.NECK,Slot.SHOULDERS,
+					Slot.ARMS));
 	/** ant, mantis, wasp, */
-	public static final Body HEXAPOD=new Body("hexapod",false,
-			Set.of(Slot.ARMOR,Slot.WAIST,Slot.TORSO,Slot.EYES,Slot.HEAD,Slot.NECK,
-					Slot.SHOULDERS,Slot.ARMS));
+	public static final Body HEXAPOD=new Body("hexapod",false,Set.of(Slot.WAIST,
+			Slot.TORSO,Slot.EYES,Slot.HEAD,Slot.NECK,Slot.SHOULDERS,Slot.ARMS));
 	/** bison, boar, buffalo, cattle, elk, giraffe, horse, llama */
 	public static final Body QUADRUPED_HOOVES=new Body("quadruped, hooves",false,
-			Set.of(Slot.ARMOR,Slot.WAIST,Slot.TORSO,Slot.EYES,Slot.FEET,Slot.HEAD,
-					Slot.NECK,Slot.SHOULDERS));
+			Set.of(Slot.WAIST,Slot.TORSO,Slot.EYES,Slot.FEET,Slot.HEAD,Slot.NECK,
+					Slot.SHOULDERS));
 	/** turtle, toad */
 	public static final Body QUADRUPED_SQUAT=new Body("qaadruped, squat",false,Set
-			.of(Slot.ARMOR,Slot.EYES,Slot.HEAD,Slot.NECK,Slot.SHOULDERS,Slot.ARMS));
+			.of(Slot.TORSO,Slot.EYES,Slot.HEAD,Slot.NECK,Slot.SHOULDERS,Slot.ARMS));
 	/** Alligator, crocodile, chameleon, gecko, lizard */
 	public static final Body SAURIAN=new Body("saurian",false,
-			Set.of(Slot.ARMOR,Slot.WAIST,Slot.TORSO,Slot.EYES,Slot.HEAD,Slot.NECK));
+			Set.of(Slot.WAIST,Slot.TORSO,Slot.EYES,Slot.HEAD,Slot.NECK));
 	/** snake, eel, gar, leech, slug */
 	public static final Body SERPENTINE=new Body("serpentine",false,
 			Set.of(Slot.WAIST,Slot.EYES,Slot.HEAD));

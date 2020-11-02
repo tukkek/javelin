@@ -2,10 +2,10 @@ package javelin.model.world.location.dungeon;
 
 import java.util.HashMap;
 
-import javelin.model.world.location.dungeon.feature.Chest;
-import javelin.model.world.location.dungeon.feature.Crate;
-import javelin.model.world.location.dungeon.feature.Crate.TieredCrates;
 import javelin.model.world.location.dungeon.feature.Fountain;
+import javelin.model.world.location.dungeon.feature.chest.Chest;
+import javelin.model.world.location.dungeon.feature.chest.Crate;
+import javelin.model.world.location.dungeon.feature.chest.Crate.TieredCrates;
 import javelin.old.RPG;
 
 /**

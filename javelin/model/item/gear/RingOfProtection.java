@@ -13,7 +13,7 @@ public class RingOfProtection extends Gear{
 
 	/** Constructor. */
 	public RingOfProtection(int bonus,int price){
-		super("Ring of protection +"+bonus,price,Slot.RING);
+		super("Ring of protection +"+bonus,price,Slot.FINGERS);
 		this.bonus=bonus;
 	}
 

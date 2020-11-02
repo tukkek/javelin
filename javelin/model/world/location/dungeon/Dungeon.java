@@ -25,6 +25,7 @@ import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.table.Table;
 import javelin.controller.table.Tables;
+import javelin.controller.table.dungeon.ChestTable;
 import javelin.controller.table.dungeon.door.DoorExists;
 import javelin.controller.table.dungeon.feature.CommonFeatureTable;
 import javelin.controller.table.dungeon.feature.FeatureModifierTable;
@@ -42,13 +43,14 @@ import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.dungeon.feature.Chest;
-import javelin.model.world.location.dungeon.feature.Crate;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Furniture;
 import javelin.model.world.location.dungeon.feature.Passage;
 import javelin.model.world.location.dungeon.feature.StairsDown;
 import javelin.model.world.location.dungeon.feature.StairsUp;
+import javelin.model.world.location.dungeon.feature.chest.Chest;
+import javelin.model.world.location.dungeon.feature.chest.Crate;
+import javelin.model.world.location.dungeon.feature.chest.RubyChest;
 import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.model.world.location.dungeon.feature.inhabitant.Leader;
 import javelin.model.world.location.dungeon.feature.trap.Trap;
@@ -412,7 +414,7 @@ public class Dungeon extends Location{
 					while(p==null||isoccupied(p))
 						p=RPG.pick(area);
 					var key=door.key.getConstructor(Dungeon.class).newInstance(this);
-					new Chest(key,false).place(this,p);
+					new Chest(key).place(this,p);
 				}
 			}
 		}catch(ReflectiveOperationException e){
@@ -468,8 +470,7 @@ public class Dungeon extends Location{
 	}
 
 	static int getfeaturequantity(int quantity,float ratio){
-		quantity=Math.round(quantity*ratio);
-		return quantity+RPG.randomize(quantity);
+		return RPG.randomize(Math.round(quantity*ratio),0,Integer.MAX_VALUE);
 	}
 
 	int createtraps(int ntraps){
@@ -494,57 +495,46 @@ public class Dungeon extends Location{
 		return 0<=coordinate&&coordinate<=size;
 	}
 
-	void createchests(int chests,int pool,DungeonZoner zoner){
-		createspecialchest().place(this,zoner.getpoint());
-		var hiddenchests=0;
-		for(int i=0;i<chests;i++)
-			if(RPG.chancein(10)) hiddenchests+=1;
-		int hiddenpool=RewardCalculator.getgold(level)*chests;
-		hiddenchests=0; //TODO have actually hidden chests
-		chests+=hiddenchests; //TODO have actually hidden chests
-		chests+=RPG.r(-1,+1);
-		if(hiddenchests==0) pool+=hiddenpool;
-		for(;chests>0;chests--){
-			int gold=chests==1?pool:pool/RPG.r(2,chests);
-			pool-=gold;
-			createchest(Chest.class,gold,zoner,false);
-		}
-		for(;hiddenchests>0;hiddenchests--){
-			int gold=hiddenchests==1?hiddenpool:hiddenpool/RPG.r(2,chests);
-			hiddenpool-=gold;
-			createchest(Chest.class,gold,zoner,true);
-		}
-		generatecrates(zoner);
-	}
-
-	/** @see Crate */
-	protected void generatecrates(DungeonZoner zoner){
-		var freebie=RewardCalculator.getgold(level);
-		for(int c=RPG.randomize(2,0,Integer.MAX_VALUE);c>0;c--){
-			var gold=RPG.randomize(freebie/10,1,Integer.MAX_VALUE);
-			createchest(Crate.class,gold,zoner,doorbackground);
-		}
-	}
-
-	/**
-	 * TODO hidden chests would probably require copious amounts of decoration to
-	 * hide the actual chests as.
-	 */
-	void createchest(Class<? extends Chest> type,int gold,DungeonZoner zoner,
-			boolean hidden){
+	void createchest(Class<? extends Chest> type,int gold,DungeonZoner zoner){
 		var percentmodifier=gettable(FeatureModifierTable.class).rollmodifier()*2;
 		gold=Math.round(gold*(100+percentmodifier)/100f);
 		try{
 			var c=type.getConstructor(Integer.class).newInstance(gold);
+			if(type!=Crate.class&&!c.generateitem()){
+				c=new Chest(gold);
+				c.generateitem();
+			}
 			c.place(this,zoner.getpoint());
 		}catch(ReflectiveOperationException e){
 			throw new RuntimeException(e);
 		}
 	}
 
+	/** TODO hidden chests */
+	void createchests(int chests,int pool,DungeonZoner zoner){
+		createspecialchest().place(this,zoner.getpoint());
+		var hidden=RPG.randomize(chests/10,0,Integer.MAX_VALUE);
+		hidden=0; //TODO
+		chests-=hidden;
+		var t=gettable(ChestTable.class);
+		for(var i=0;i<chests;i++)
+			createchest(t.roll(),pool/chests,zoner);
+		generatecrates(zoner);
+	}
+
+	/** @see Crate */
+	protected void generatecrates(DungeonZoner zoner){
+		var freebie=RewardCalculator.getgold(level);
+		var ncrates=RPG.randomize(gettier().minrooms,0,Integer.MAX_VALUE);
+		for(int i=0;i<ncrates;i++){
+			var gold=RPG.randomize(freebie/ncrates,1,Integer.MAX_VALUE);
+			createchest(Crate.class,gold,zoner);
+		}
+	}
+
 	/** @return Most special chest here. */
 	protected Feature createspecialchest(){
-		return new Chest(World.scenario.openspecialchest(),true);
+		return new RubyChest();
 	}
 
 	public boolean isoccupied(Point p){

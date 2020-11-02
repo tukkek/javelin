@@ -19,6 +19,7 @@ import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.unit.skill.Survival;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.feature.chest.Chest;
 import javelin.old.RPG;
 
 /**

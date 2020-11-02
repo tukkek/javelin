@@ -10,10 +10,10 @@ import javelin.model.item.artifact.Skull;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.feature.ArtifactChest;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.StairsDown;
 import javelin.model.world.location.dungeon.feature.StairsUp;
+import javelin.model.world.location.dungeon.feature.chest.ArtifactChest;
 import javelin.old.RPG;
 
 /**

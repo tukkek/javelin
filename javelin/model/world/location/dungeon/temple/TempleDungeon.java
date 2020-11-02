@@ -16,9 +16,9 @@ import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.DungeonZoner;
-import javelin.model.world.location.dungeon.feature.ArtifactChest;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Fountain;
+import javelin.model.world.location.dungeon.feature.chest.ArtifactChest;
 import javelin.old.RPG;
 
 /**
@@ -72,8 +72,8 @@ public class TempleDungeon extends Dungeon{
 
 	@Override
 	protected Feature createspecialchest(){
-		if(floors.indexOf(this)==floors.size()-1) return new ArtifactChest(temple);
-		return super.createspecialchest();
+		return floors.indexOf(this)==floors.size()-1?new ArtifactChest(temple)
+				:super.createspecialchest();
 	}
 
 	@Override

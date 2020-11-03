@@ -31,9 +31,11 @@ import javelin.model.item.precious.PreciousObject;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureLightWounds;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Academy;
+import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.TrainingOrder;
@@ -47,6 +49,11 @@ import javelin.view.screen.WorldScreen;
  *
  * When crafting new items, it takes a day per $1000 for the process to
  * complete. Exceptions are {@link Potion}s, which always take 1 day.
+ *
+ * Any {@link Item}s that allow for unlimited casting of {@link Spell}s needs to
+ * be {@link Recharger}-based, otherwise access to a single
+ * {@link CureLightWounds} will trivialize things like travel or
+ * {@link Dungeon}s.
  *
  * @author alex
  */

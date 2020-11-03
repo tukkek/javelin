@@ -44,6 +44,7 @@ public class Recharger implements Serializable,Cloneable{
 	 * @return <code>true</code> if it has at least one usable charge.
 	 */
 	public boolean recharge(int hours){
+		if(hours==0) return !isempty();
 		recharging+=hours;
 		var hourspercharge=24.0/capacity;
 		while(recharging>=hourspercharge&&used>0){

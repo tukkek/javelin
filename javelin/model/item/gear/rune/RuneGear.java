@@ -23,9 +23,6 @@ import javelin.old.RPG;
  * and non-cumulative while the item is equipped. A suffix is an at-will spell
  * that can be cast by using the item.
  *
- * TODO having unlimited uses of any spell will trivialize things like dungeons
- * or travel. we should add a 5-per day {@link Recharger} instead.
- *
  * @author alex
  */
 public class RuneGear extends Gear{
@@ -69,9 +66,10 @@ public class RuneGear extends Gear{
 	int prefixprice=0;
 	Spell suffix=null;
 	int baseprice;
+	Recharger charges=null;
 
 	/** Constructor. */
-	RuneGear(Slot s,int baseprice){
+	public RuneGear(Slot s,int baseprice){
 		super(s+" gear",0,s);
 		this.baseprice=baseprice;
 		waste=false;
@@ -96,19 +94,33 @@ public class RuneGear extends Gear{
 		return suffix==null?0:suffix.casterlevel*suffix.level*2000;
 	}
 
+	@Override
+	public void refresh(int hours){
+		super.refresh(hours);
+		if(suffix!=null){
+			charges.recharge(hours);
+			if(charges.isempty()){
+				usedinbattle=false;
+				usedoutofbattle=false;
+			}else{
+				usedinbattle=suffix.castinbattle;
+				usedoutofbattle=suffix.castoutofbattle;
+			}
+		}
+	}
+
 	void define(){
 		var suffixprice=price(suffix);
 		price=baseprice+prefixprice+suffixprice+Math.min(prefixprice,suffixprice)/2;
 		assert price>baseprice;
 		price*=slot==Slot.SLOTLESS?2:1.5;
 		price=Javelin.round(price);
-		if(owner==null||suffix==null){
+		if(suffix==null){
 			usedinbattle=false;
 			usedoutofbattle=false;
-		}else{
-			usedinbattle=suffix.castinbattle;
-			usedoutofbattle=suffix.castoutofbattle;
+			charges=null;
 		}
+		refresh(0);
 	}
 
 	/** @param prefix Add this prefix. */
@@ -131,12 +143,15 @@ public class RuneGear extends Gear{
 	public void set(Spell suffix){
 		this.suffix=suffix.clone();
 		this.suffix.provokeaoo=false;
+		charges=new Recharger(5);
 		define();
 	}
 
 	@Override
 	public String toString(){
-		return getname(prefix,this,suffix);
+		var s=getname(prefix,this,suffix);
+		if(suffix!=null) s+=" "+charges;
+		return s;
 	}
 
 	static String getname(Condition prefix,Item i,Spell suffix){
@@ -148,29 +163,31 @@ public class RuneGear extends Gear{
 
 	@Override
 	protected void apply(Combatant c){
-		c.addcondition(prefix);
+		if(prefix!=null) c.addcondition(prefix);
 	}
 
 	@Override
 	protected void negate(Combatant c){
-		c.removecondition(prefix);
+		if(prefix!=null) c.removecondition(prefix);
 	}
 
-	@Override
-	public boolean equip(Combatant c){
-		var e=super.equip(c);
-		define();
-		return e;
+	void discharge(){
+		charges.discharge();
+		refresh(0);
 	}
 
 	@Override
 	public boolean use(Combatant user){
-		return CastSpell.SINGLETON.cast(suffix,user);
+		if(charges.isempty()||!CastSpell.SINGLETON.cast(suffix,user)) return false;
+		discharge();
+		return true;
 	}
 
 	@Override
 	public boolean usepeacefully(Combatant c){
-		return suffix.castpeacefully(c);
+		if(charges.isempty()||!suffix.castpeacefully(c)) return false;
+		discharge();
+		return true;
 	}
 
 	@Override
@@ -196,22 +213,26 @@ public class RuneGear extends Gear{
 	public RuneGear clone(){
 		var g=(RuneGear)super.clone();
 		if(prefix!=null) g.prefix=prefix.clone();
-		if(suffix!=null) g.suffix=suffix.clone();
+		if(suffix!=null){
+			g.suffix=suffix.clone();
+			g.charges=charges.clone();
+		}
 		return g;
 	}
 
 	@Override
 	public boolean canheal(Combatant c){
-		return suffix!=null&&suffix.canheal(c);
+		return owner!=null&&suffix!=null&&!charges.isempty()&&suffix.canheal(c);
 	}
 
 	@Override
 	public void heal(Combatant c){
 		suffix.heal(c);
+		discharge();
 	}
 
 	@Override
 	public int getheals(){
-		return 5;//TODO
+		return charges.getleft();
 	}
 }

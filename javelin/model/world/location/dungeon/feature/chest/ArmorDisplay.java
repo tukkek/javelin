@@ -14,12 +14,12 @@ import javelin.view.Images;
  *
  * @author alex
  */
-public class DeadFighter extends DeadAdventurer{
+public class ArmorDisplay extends Chest{
 	static final Set<Slot> SLOTS=Set.of(Slot.FEET,Slot.HANDS,Slot.SHOULDERS,
 			Slot.TORSO,Slot.HEAD);
 
 	/** Constructor. */
-	public DeadFighter(Integer pool){
+	public ArmorDisplay(Integer pool){
 		super(pool);
 	}
 
@@ -31,6 +31,6 @@ public class DeadFighter extends DeadAdventurer{
 
 	@Override
 	public Image getimage(){
-		return Images.get(List.of("dungeon","chest","deadfighter"));
+		return Images.get(List.of("dungeon","chest","armordisplay"));
 	}
 }

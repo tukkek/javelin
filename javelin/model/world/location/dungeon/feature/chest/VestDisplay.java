@@ -12,17 +12,14 @@ import javelin.view.Images;
 /**
  * Chest for miscellaneous {@link RuneGear}.
  *
- * TODO could also be a trap once we have the Undead template, or even with NPC
- * skeletons...?
- *
  * @author alex
  */
-public class DeadAdventurer extends Chest{
+public class VestDisplay extends Chest{
 	private static final Set<Slot> SLOTS=Set.of(Slot.EYES,Slot.FINGERS,Slot.NECK,
 			Slot.WAIST,Slot.SLOTLESS);
 
 	/** Constructor. */
-	public DeadAdventurer(Integer pool){
+	public VestDisplay(Integer pool){
 		super(pool);
 	}
 
@@ -34,6 +31,6 @@ public class DeadAdventurer extends Chest{
 
 	@Override
 	public Image getimage(){
-		return Images.get(List.of("dungeon","chest","deadadventurer"));
+		return Images.get(List.of("dungeon","chest","vestdisplay"));
 	}
 }

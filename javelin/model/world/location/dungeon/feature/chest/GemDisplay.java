@@ -4,11 +4,13 @@ import java.awt.Image;
 import java.util.List;
 
 import javelin.model.item.Item;
+import javelin.model.item.consumable.Eidolon;
 import javelin.model.item.precious.Gem;
 import javelin.view.Images;
 
 /**
  * @see Gem
+ * @see Eidolon
  * @author alex
  */
 public class GemDisplay extends Chest{
@@ -20,7 +22,7 @@ public class GemDisplay extends Chest{
 
 	@Override
 	protected boolean allow(Item i){
-		return i.is(Gem.class)!=null;
+		return i.is(Gem.class)!=null||i.is(Eidolon.class)!=null;
 	}
 
 	@Override

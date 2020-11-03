@@ -92,15 +92,13 @@ public class RPG{
 	 *         through.
 	 */
 	public static int randomize(int value,int min,int max){
-		if(value==0) return value;
+		if(value==0) return 0;
 		if(Javelin.DEBUG&&min>max) throw new InvalidParameterException();
 		var result=value;
 		value=Math.abs(value); //TODO needed?
-		for(var go=true;go;go=RPG.chancein(2))
-			result+=r(1,value)-r(1,value);
 		if(result<min) return min;
 		if(result>max) return max;
-		return result;
+		return RPG.chancein(2)?result:randomize(value,min,max);
 	}
 
 	/**

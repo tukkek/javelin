@@ -533,14 +533,18 @@ public class Dungeon extends Location{
 	void createchests(int chests,int pool,DungeonZoner zoner,
 			LinkedList<Furniture> tohide){
 		createspecialchest().place(this,zoner.getpoint());
-		var hidden=RPG.randomize(chests/10,0,Integer.MAX_VALUE);
-		hidden=0; //TODO
-		chests-=hidden;
-		var t=gettable(ChestTable.class);
-		for(var i=0;i<chests;i++){
-			var f=tohide==null?null:tohide.pop();
-			createchest(t.roll(),pool/chests,zoner,f);
+		if(pool==0) return;
+		if(tohide!=null){
+			var hidden=RPG.randomize(chests/10,1,chests);
+			var hiddenpool=pool/2;
+			pool-=hiddenpool;
+			for(var i=0;i<hidden;i++)
+				createchest(Chest.class,pool/hidden,zoner,tohide.pop());
+			chests-=hidden;
 		}
+		var t=gettable(ChestTable.class);
+		for(var i=0;i<chests;i++)
+			createchest(t.roll(),pool/chests,zoner,null);
 		generatecrates(zoner);
 	}
 

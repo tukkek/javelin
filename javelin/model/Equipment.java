@@ -182,4 +182,9 @@ public class Equipment implements Serializable{
 			pop(item);
 		return true;
 	}
+
+	/** Removes all items. */
+	public void clear(){
+		equipment.clear();
+	}
 }

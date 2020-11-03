@@ -32,7 +32,7 @@ public class Campfire extends Feature{
 			Javelin.message("This safe resting spot has been compromised!",true);
 			throw new StartBattle(Dungeon.active.fight());
 		}
-		Lodge.rest(1,8,true,Lodge.LODGE);
+		Lodge.rest(1,Lodge.RESTPERIOD,true,Lodge.LODGE);
 		return true;
 	}
 }

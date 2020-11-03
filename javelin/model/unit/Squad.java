@@ -17,15 +17,14 @@ import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.CombatantHealthComparator;
 import javelin.controller.comparator.CombatantsByNameAndMercenary;
-import javelin.controller.comparator.SpellLevelComparator;
 import javelin.controller.db.reader.fields.Skills;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.IncursionFight;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Equipment;
+import javelin.model.Healing;
 import javelin.model.item.Item;
 import javelin.model.transport.Transport;
-import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
@@ -553,23 +552,31 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 	}
 
 	/**
-	 * @return <code>true</code> if can use any available spell to heal
-	 *         {@link #members}.
+	 * @return All ready-to-use available spells and item to heal
+	 *         {@link #members}. Sources of healing that can be used multiple
+	 *         times will be repeated this many times in the list.
 	 * @see #quickheal()
 	 */
-	public boolean canheal(){
-		for(Spell s:getavailablespells())
-			for(Combatant c:members)
-				if(s.canheal(c)) return true;
-		return false;
-
-	}
-
-	ArrayList<Spell> getavailablespells(){
-		ArrayList<Spell> available=new ArrayList<>();
-		for(Combatant c:members)
-			for(Spell s:c.spells)
-				if(!s.exhausted()) available.add(s);
+	public List<Healing> canheal(){
+		var available=new ArrayList<Healing>();
+		for(var c:members)
+			spell:for(var s:c.spells)
+				for(var target:members)
+					if(!s.exhausted()&&s.canheal(target)){
+						var nheals=s.getheals();
+						for(var i=0;i<nheals;i++)
+							available.add(s);
+						continue spell;
+					}
+		for(var user:members)
+			items:for(var i:equipment.get(user))
+				if(i.canuse(user)==null) for(var target:members)
+					if(i.canheal(target)){
+						var nheals=i.getheals();
+						for(var j=0;j<nheals;j++)
+							available.add(i);
+						continue items;
+					}
 		return available;
 	}
 
@@ -579,16 +586,16 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 	 * @see #canheal()
 	 */
 	public void quickheal(){
-		ArrayList<Combatant> members=new ArrayList<>(this.members);
-		members.sort(CombatantHealthComparator.SINGLETON);
-		ArrayList<Spell> spells=getavailablespells();
-		spells.sort(SpellLevelComparator.SINGLETON);
-		for(Spell s:spells)
-			for(Combatant c:members)
-				while(s.canheal(c)&&!s.exhausted()){
-					s.castpeacefully(null,c,members);
-					s.used+=1;
+		var members=new ArrayList<>(this.members);
+		var healing=canheal();
+		healing:for(var h:healing){
+			members.sort(CombatantHealthComparator.SINGLETON);
+			for(var target:members)
+				if(h.canheal(target)){
+					h.heal(target);
+					continue healing;
 				}
+		}
 	}
 
 	@Override

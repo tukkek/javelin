@@ -14,6 +14,7 @@ import javelin.controller.action.UseItem;
 import javelin.controller.action.world.inventory.EquipGear;
 import javelin.controller.action.world.inventory.UseItems;
 import javelin.controller.exception.battle.StartBattle;
+import javelin.model.Healing;
 import javelin.model.item.consumable.Eidolon;
 import javelin.model.item.consumable.Scroll;
 import javelin.model.item.focus.Rod;
@@ -49,7 +50,7 @@ import javelin.view.screen.WorldScreen;
  *
  * @author alex
  */
-public abstract class Item implements Serializable,Cloneable{
+public abstract class Item implements Serializable,Cloneable,Healing{
 	/**
 	 * All available item types from cheapest to most expensive.
 	 */
@@ -390,5 +391,20 @@ public abstract class Item implements Serializable,Cloneable{
 	@SuppressWarnings("unchecked")
 	public <K extends Item> K is(Class<K> type){
 		return type.isInstance(this)?(K)this:null;
+	}
+
+	@Override
+	public boolean canheal(Combatant c){
+		return false;
+	}
+
+	@Override
+	public void heal(Combatant c){
+		//doesn't by default
+	}
+
+	@Override
+	public int getheals(){
+		return 0;
 	}
 }

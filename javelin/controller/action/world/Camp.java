@@ -30,6 +30,8 @@ public class Camp extends WorldAction{
 			+"(c)amp (d)ay (w)eek (m)onth (s)eason (y)ear?";
 	static final String INSIDETOWN="Cannot camp inside a town's district!\n"
 			+"Try moving further into the wilderness.\n";
+	static final String QUICKHEAL="Do you want to use spells and non-consumable items to heal your party?\n"
+			+"Press c to auto-heal or any other key to continue...";
 
 	static final HashMap<Character,int[]> PERIODS=new HashMap<>();
 
@@ -78,9 +80,7 @@ public class Camp extends WorldAction{
 	}
 
 	boolean quickheal(){
-		if(!Squad.active.canheal()) return false;
-		if(Javelin.prompt("Do you want to cast spells to heal your party?\n"
-				+"Press c to cast or any other key to continue...")!='c')
+		if(Squad.active.canheal().isEmpty()||Javelin.prompt(QUICKHEAL)!='c')
 			return false;
 		Squad.active.quickheal();
 		return true;

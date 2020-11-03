@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import javelin.Javelin;
 import javelin.controller.action.CastSpell;
 import javelin.model.item.Item;
+import javelin.model.item.Recharger;
 import javelin.model.item.gear.Gear;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Slot;
@@ -22,9 +23,8 @@ import javelin.old.RPG;
  * and non-cumulative while the item is equipped. A suffix is an at-will spell
  * that can be cast by using the item.
  *
- * TODO may want to remove other {@link Gear} since htey're largely unnecessary
- * now and adding more {@link Spell}s than specific gear is gonna be much more
- * interesting
+ * TODO having unlimited uses of any spell will trivialize things like dungeons
+ * or travel. we should add a 5-per day {@link Recharger} instead.
  *
  * @author alex
  */
@@ -198,5 +198,20 @@ public class RuneGear extends Gear{
 		if(prefix!=null) g.prefix=prefix.clone();
 		if(suffix!=null) g.suffix=suffix.clone();
 		return g;
+	}
+
+	@Override
+	public boolean canheal(Combatant c){
+		return suffix!=null&&suffix.canheal(c);
+	}
+
+	@Override
+	public void heal(Combatant c){
+		suffix.heal(c);
+	}
+
+	@Override
+	public int getheals(){
+		return 5;//TODO
 	}
 }

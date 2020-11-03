@@ -45,8 +45,9 @@ public class Lodge extends Fortification{
 			"innhospital"};
 	/** Labor cost for each {@link #LODGING} tier. */
 	public static final int[] LABOR=new int[]{5,10,15};
+	/** Standard amount of time for a rest. */
+	public static final int RESTPERIOD=8;
 
-	static final int RESTPERIOD=8;
 	static final int WEEKLONGREST=24*7/RESTPERIOD;
 	static final int MAXLEVEL=TITLES.length-1;
 

@@ -15,6 +15,7 @@ import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.factor.CrFactor;
 import javelin.controller.kit.Kit;
 import javelin.controller.upgrade.Upgrade;
+import javelin.model.Healing;
 import javelin.model.item.Item;
 import javelin.model.item.consumable.Scroll;
 import javelin.model.item.focus.Rod;
@@ -48,7 +49,8 @@ import javelin.model.world.location.town.labor.religious.Shrine;
  *
  * TODO extract a SpellUpgrade class
  */
-public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
+public abstract class Spell extends Upgrade
+		implements javelin.model.Cloneable,Healing{
 	/** Canonical list of all spells by lower-case name. */
 	public static final HashMap<String,Spell> BYNAME=new HashMap<>();
 	/** All spells. */
@@ -404,16 +406,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
 		casterlevel=null;// prevents dispel
 	}
 
-	/**
-	 * Note that Spells implementing this should be able to accept a
-	 * <code>null</code> parameter on
-	 * {@link #castpeacefully(Combatant, Combatant)}.
-	 *
-	 * Doesn't need to check for {@link #exhausted()}, this is done elsewhere.
-	 *
-	 * @return true if the given {@link Combatant} can be healed by this spell.
-	 * @see #firstaid(ArrayList)
-	 */
+	@Override
 	public boolean canheal(Combatant c){
 		return false;
 	}
@@ -457,5 +450,16 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
 		var savechance=Action.bind(1-rolltarget/20f);
 		var turnstosave=Math.round(Math.round(1/savechance));
 		return Math.max(1,turnstosave);
+	}
+
+	@Override
+	public void heal(Combatant c){
+		castpeacefully(null,c,Squad.active.members);
+		used+=1;
+	}
+
+	@Override
+	public int getheals(){
+		return perday-used;
 	}
 }

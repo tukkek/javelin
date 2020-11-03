@@ -73,4 +73,20 @@ public class Flask extends Potion{
 		f.charges=charges.clone();
 		return f;
 	}
+
+	@Override
+	public boolean canheal(Combatant c){
+		return !charges.isempty()&&spell.canheal(c);
+	}
+
+	@Override
+	public void heal(Combatant c){
+		spell.heal(c);
+		charges.discharge();
+	}
+
+	@Override
+	public int getheals(){
+		return charges.getleft();
+	}
 }

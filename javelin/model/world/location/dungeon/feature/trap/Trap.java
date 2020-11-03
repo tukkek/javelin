@@ -2,7 +2,6 @@ package javelin.model.world.location.dungeon.feature.trap;
 
 import javelin.Javelin;
 import javelin.controller.action.world.WorldMove;
-import javelin.controller.table.dungeon.feature.TrapVisibilityTable;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.divination.FindTraps.FindingTraps;
@@ -11,6 +10,7 @@ import javelin.model.unit.skill.Perception;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.Furniture;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
 
 /**
@@ -20,6 +20,10 @@ import javelin.model.world.location.dungeon.feature.chest.Chest;
  * In d20 traps are supposed to award XP as well as gold. This isn't done here
  * partly because since the traps are permanent (so as to be strategic) it would
  * be easy to continually step on traps to plunder XP.
+ *
+ * Traps are now always hidden on {@link Furniture} - allowing players to
+ * somewhat strategically avoid them or "search" them for high-rish high-reward
+ * outcomes (as {@link Chest}s are also hidden).
  *
  * @see DisableDevice
  * @author alex
@@ -40,7 +44,8 @@ public abstract class Trap extends Feature{
 	public Trap(int cr,String avatarfilep){
 		super("trap",avatarfilep);
 		this.cr=cr;
-		draw=!Dungeon.gettable(TrapVisibilityTable.class).rollboolean();
+		//draw=!Dungeon.gettable(TrapVisibilityTable.class).rollboolean();
+		draw=false;
 		remove=false;
 		searchdc=10+cr;
 		disarmdc=searchdc;
@@ -70,19 +75,16 @@ public abstract class Trap extends Feature{
 	}
 
 	@Override
-	public void discover(Combatant searching,int searchroll){
-		super.discover(searching,searchroll);
-		if(draw) return;
-		boolean success=searchroll>=searchdc;
-		if(!success&&searching!=null){
-			for(Combatant c:Squad.active.members){
-				int bonus=c.hascondition(FindingTraps.class)==null?0:+5;
-				searchroll=Math.max(searchroll,
-						searching.taketen(Skill.PERCEPTION)+bonus);
+	public boolean discover(Combatant searching,int searchroll){
+		if(draw) return true;
+		for(var c:Squad.active.members){
+			int bonus=c.hascondition(FindingTraps.class)==null?0:+5;
+			if(searching.taketen(Skill.PERCEPTION)+bonus>=searchdc){
+				draw=true;
+				return true;
 			}
-			success=searchroll>=searchdc;
 		}
-		if(success) draw=true;
+		return false;
 	}
 
 	protected abstract void spring();
@@ -90,5 +92,14 @@ public abstract class Trap extends Feature{
 	public static Trap generate(int cr,boolean special){
 		return special||cr<MechanicalTrap.MINIMUMCR?new TeleporterTrap(cr)
 				:new MechanicalTrap(cr);
+	}
+
+	@Override
+	public boolean reveal(boolean found){
+		if(found) return true;
+		draw=true;
+		Furniture.revealmessage="You stumble upon a hidden trap!";
+		Furniture.onreveal=()->spring();
+		return true;
 	}
 }

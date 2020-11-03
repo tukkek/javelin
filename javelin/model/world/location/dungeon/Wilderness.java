@@ -1,5 +1,6 @@
 package javelin.model.world.location.dungeon;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -20,6 +21,7 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.feature.Brazier;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Fountain;
+import javelin.model.world.location.dungeon.feature.Furniture;
 import javelin.model.world.location.dungeon.feature.LearningStone;
 import javelin.model.world.location.dungeon.feature.LoreNote;
 import javelin.model.world.location.dungeon.feature.Mirror;
@@ -184,8 +186,8 @@ public class Wilderness extends Dungeon{
 	}
 
 	@Override
-	protected void createfurniture(){
-		//don't
+	protected LinkedList<Furniture> createfurniture(int minimum){
+		return null;
 	}
 
 	@Override

@@ -63,7 +63,7 @@ public abstract class Inhabitant extends Feature{
 		avatarfile=inhabitant.source.avatarfile;
 		Skill.DIPLOMACY.getupgrade().upgrade(inhabitant);
 		diplomacydc=inhabitant.taketen(Skill.DIPLOMACY)
-				+Dungeon.gettable(FeatureModifierTable.class).rollmodifier();
+				+Dungeon.gettable(FeatureModifierTable.class).roll();
 		int d100=RPG.r(0,100);
 		gold=RewardCalculator.getgold(inhabitant.source.cr)*d100/100;
 	}

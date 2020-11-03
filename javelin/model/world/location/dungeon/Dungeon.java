@@ -369,20 +369,27 @@ public class Dungeon extends Location{
 		return floortiles;
 	}
 
-	/** @see Furniture */
-	protected void createfurniture(){
+	/**
+	 * @return Generated furniture or <code>null</code> if Dungeon doesn't have
+	 *         any.
+	 */
+	protected LinkedList<Furniture> createfurniture(int minimum){
 		var table=gettable(FurnitureTable.class);
-		if(table.isempty()) return;
 		var unnocupied=new ArrayList<Point>(size*size/2);
 		for(var x=0;x<size;x++)
 			for(var y=0;y<size;y++){
 				var p=new Point(x,y);
 				if(!isoccupied(p)) unnocupied.add(p);
 			}
-		var target=RPG.randomize(gettier().minrooms,0,unnocupied.size());
+		var target=RPG.randomize(gettier().minrooms,minimum,unnocupied.size());
 		RPG.shuffle(unnocupied);
-		for(var i=0;i<target;i++)
-			new Furniture((String)table.roll()).place(this,unnocupied.get(i));
+		var furniture=new LinkedList<Furniture>();
+		for(var i=0;i<target;i++){
+			var f=new Furniture((String)table.roll());
+			furniture.add(f);
+			f.place(this,unnocupied.get(i));
+		}
+		return furniture;
 	}
 
 	/**
@@ -396,10 +403,15 @@ public class Dungeon extends Location{
 		var zoner=new DungeonZoner(this,squadlocation);
 		createstairs(zoner);
 		createkeys(zoner);
-		int goldpool=createtraps(getfeaturequantity(nrooms,ratiotraps));
-		createchests(getfeaturequantity(nrooms,ratiotreasure),goldpool,zoner);
+		var ntraps=getfeaturequantity(nrooms,ratiotraps);
+		int ntreasure=getfeaturequantity(nrooms,ratiotreasure);
+		var tohide=createfurniture(ntraps+ntreasure);
+		var traps=createtraps(ntraps,tohide);
+		var pool=0;
+		for(var t:traps)
+			pool+=RewardCalculator.getgold(t.cr);
+		createchests(ntreasure,pool,zoner,tohide);
 		createfeatures(getfeaturequantity(nrooms,ratiofeatures),zoner);
-		createfurniture();
 	}
 
 	void createkeys(DungeonZoner zoner){
@@ -473,19 +485,22 @@ public class Dungeon extends Location{
 		return RPG.randomize(Math.round(quantity*ratio),0,Integer.MAX_VALUE);
 	}
 
-	int createtraps(int ntraps){
-		var gold=0;
+	ArrayList<Trap> createtraps(int ntraps,LinkedList<Furniture> tohide){
 		var modifier=gettable(FeatureModifierTable.class);
 		var special=gettable(SpecialTrapTable.class);
+		var traps=new ArrayList<Trap>(ntraps);
 		for(var i=0;i<ntraps;i++){
-			var cr=level+Difficulty.get()+modifier.rollmodifier();
+			var cr=level+Difficulty.get()+modifier.roll();
 			var t=Trap.generate(cr,special.rollboolean());
 			if(t!=null){
-				t.place(this,getunnocupied());
-				gold+=RewardCalculator.getgold(t.cr);
+				traps.add(t);
+				if(tohide==null)
+					t.place(this,getunnocupied());
+				else
+					tohide.pop().hide(t);
 			}
 		}
-		return gold;
+		return traps;
 	}
 
 	/**
@@ -495,14 +510,19 @@ public class Dungeon extends Location{
 		return 0<=coordinate&&coordinate<=size;
 	}
 
-	void createchest(Class<? extends Chest> type,int gold,DungeonZoner zoner){
-		var percentmodifier=gettable(FeatureModifierTable.class).rollmodifier()*2;
+	void createchest(Class<? extends Chest> type,int gold,DungeonZoner zoner,
+			Furniture tohide){
+		var percentmodifier=gettable(FeatureModifierTable.class).roll()*2;
 		gold=Math.round(gold*(100+percentmodifier)/100f);
 		try{
 			var c=type.getConstructor(Integer.class).newInstance(gold);
 			if(type!=Crate.class&&!c.generateitem()){
 				c=new Chest(gold);
 				c.generateitem();
+				if(tohide!=null){
+					tohide.hide(c);
+					return;
+				}
 			}
 			c.place(this,zoner.getpoint());
 		}catch(ReflectiveOperationException e){
@@ -510,15 +530,17 @@ public class Dungeon extends Location{
 		}
 	}
 
-	/** TODO hidden chests */
-	void createchests(int chests,int pool,DungeonZoner zoner){
+	void createchests(int chests,int pool,DungeonZoner zoner,
+			LinkedList<Furniture> tohide){
 		createspecialchest().place(this,zoner.getpoint());
 		var hidden=RPG.randomize(chests/10,0,Integer.MAX_VALUE);
 		hidden=0; //TODO
 		chests-=hidden;
 		var t=gettable(ChestTable.class);
-		for(var i=0;i<chests;i++)
-			createchest(t.roll(),pool/chests,zoner);
+		for(var i=0;i<chests;i++){
+			var f=tohide==null?null:tohide.pop();
+			createchest(t.roll(),pool/chests,zoner,f);
+		}
 		generatecrates(zoner);
 	}
 
@@ -528,7 +550,7 @@ public class Dungeon extends Location{
 		var ncrates=RPG.randomize(gettier().minrooms,0,Integer.MAX_VALUE);
 		for(int i=0;i<ncrates;i++){
 			var gold=RPG.randomize(freebie/ncrates,1,Integer.MAX_VALUE);
-			createchest(Crate.class,gold,zoner);
+			createchest(Crate.class,gold,zoner,null);
 		}
 	}
 

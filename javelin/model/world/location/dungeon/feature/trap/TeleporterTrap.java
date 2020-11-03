@@ -24,7 +24,7 @@ import javelin.old.RPG;
 public class TeleporterTrap extends Trap{
 	class TeleportCrawl extends DungeonMapCrawler{
 		public TeleportCrawl(){
-			super(new Point(x,y),Integer.MAX_VALUE,Dungeon.active);
+			super(Dungeon.active.squadlocation,Integer.MAX_VALUE,Dungeon.active);
 		}
 
 		@Override
@@ -46,16 +46,19 @@ public class TeleporterTrap extends Trap{
 	@Override
 	protected void spring(){
 		Combatant victim=null;
-		for(var m:RPG.shuffle(new ArrayList<>(Squad.active.members))){
+		for(var c:RPG.shuffle(new ArrayList<>(Squad.active.members))){
 			var roll=RPG.r(1,20); //TODO extract save logic
 			if(roll==20) continue;
-			if(roll==1||roll+m.source.ref<savedc){
-				victim=m;
+			if(roll==1||roll+c.source.ref<savedc){
+				victim=c;
 				break;
 			}
 		}
-		if(victim==null) return;
-		Javelin.message(victim+" activates the teleportation trap!",false);
+		if(victim==null){
+			Javelin.message("Your party evades the trap!",true);
+			return;
+		}
+		Javelin.message(victim+" activates the teleportation trap!",true);
 		HashSet<Point> targets=new TeleportCrawl().crawl();
 		targets.remove(new Point(x,y));
 		targets.remove(Dungeon.active.squadlocation);

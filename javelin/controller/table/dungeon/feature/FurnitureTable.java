@@ -54,9 +54,9 @@ public class FurnitureTable extends Table{
 			tiered.addtiered(type,type.rarity);
 		var types=new ArrayList<>(
 				tiered.stream().distinct().collect(Collectors.toList()));
-		var ntypes=Math.min(types.size(),RPG.randomize(TYPES,0,Integer.MAX_VALUE));
+		var ntypes=Math.min(types.size(),RPG.randomize(TYPES,1,Integer.MAX_VALUE));
 		for(var t:RPG.shuffle(types).subList(0,ntypes)){
-			var amount=RPG.randomize(2,0,Integer.MAX_VALUE);
+			var amount=RPG.randomize(2,1,Integer.MAX_VALUE);
 			for(var i=0;i<amount;i++)
 				add(t.roll(),1);
 		}

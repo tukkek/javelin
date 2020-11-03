@@ -60,7 +60,7 @@ public class Door extends Feature{
 
 	/** DC of {@link DisableDevice} to unlock. */
 	public int unlockdc=RPG.r(20,30)
-			+Dungeon.gettable(FeatureModifierTable.class).rollmodifier();
+			+Dungeon.gettable(FeatureModifierTable.class).roll();
 
 	/** Used if {@link #hidden}. TODO */
 	public int searchdc=RPG.r(20,30);
@@ -216,15 +216,15 @@ public class Door extends Feature{
 	}
 
 	@Override
-	public void discover(Combatant searching,int searchroll){
+	public boolean discover(Combatant searching,int searchroll){
 		super.discover(searching,searchroll);
-		if(!draw&&searchroll>=searchdc){
-			Dungeon.active.map[x][y]=Template.FLOOR;
-			draw=true;
-			hidden=false;
-			Javelin.redraw();
-			if(searching!=null) Javelin.message("You find a hidden door!",true);
-		}
+		if(draw||searchroll<searchdc) return false;
+		Dungeon.active.map[x][y]=Template.FLOOR;
+		draw=true;
+		hidden=false;
+		Javelin.redraw();
+		if(searching!=null) Javelin.message("You find a hidden door!",true);
+		return true;
 	}
 
 	static boolean rolltable(Class<? extends Table> table){

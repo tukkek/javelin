@@ -4,7 +4,7 @@ import javelin.controller.table.Table;
 import javelin.old.RPG;
 
 /**
- * @see #rollmodifier()
+ * @see #roll()
  * @author alex
  */
 public class FeatureModifierTable extends Table{
@@ -27,8 +27,9 @@ public class FeatureModifierTable extends Table{
 	 *         chances of being easier/normal/harder, skewed towards not being
 	 *         Very Hard.
 	 */
-	public int rollmodifier(){
-		Object modifier=roll();
+	@Override
+	public Integer roll(){
+		var modifier=super.roll();
 		if(modifier==Modifier.VERYEASY) return -RPG.r(1,8);
 		if(modifier==Modifier.EASY) return -RPG.r(1,4);
 		if(modifier==Modifier.NORMAL) return -0;

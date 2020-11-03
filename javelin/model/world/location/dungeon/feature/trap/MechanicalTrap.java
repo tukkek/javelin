@@ -57,7 +57,7 @@ public class MechanicalTrap extends Trap{
 
 	@Override
 	protected void spring(){
-		String status="You step onto a trap!\n";
+		String status="You step onto a mechanical trap!\n";
 		ArrayList<Combatant> targets=new ArrayList<>();
 		for(Combatant c:Squad.active.members)
 			if(c.hp>1) targets.add(c);

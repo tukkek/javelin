@@ -7,12 +7,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
+import javelin.controller.table.dungeon.feature.FeatureModifierTable;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.Furniture;
 import javelin.old.RPG;
 import javelin.view.Images;
 
@@ -41,6 +45,15 @@ public class Chest extends Feature{
 	public ItemSelection items=new ItemSelection();
 	/** Gold inside the chest. */
 	public int gold=0;
+
+	/**
+	 * {@link Skill#PERCEPTION} difficulty class or <code>null</code> if not
+	 * hidden.
+	 *
+	 * @see Furniture#hide(Feature)
+	 */
+	Integer searchdc=10+Dungeon.active.level
+			+Dungeon.gettable(FeatureModifierTable.class).roll();
 
 	/** Constructor. */
 	public Chest(){
@@ -118,5 +131,10 @@ public class Chest extends Feature{
 	/** @return <code>true</code> if the item is allowed on this container. */
 	protected boolean allow(Item i){
 		return true;
+	}
+
+	@Override
+	public boolean discover(Combatant searching,int searchroll){
+		return searchroll>=searchdc;
 	}
 }

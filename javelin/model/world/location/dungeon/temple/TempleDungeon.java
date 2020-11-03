@@ -1,6 +1,7 @@
 package javelin.model.world.location.dungeon.temple;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import javelin.Javelin;
@@ -18,6 +19,7 @@ import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.DungeonZoner;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Fountain;
+import javelin.model.world.location.dungeon.feature.Furniture;
 import javelin.model.world.location.dungeon.feature.chest.ArtifactChest;
 import javelin.old.RPG;
 
@@ -115,7 +117,7 @@ public class TempleDungeon extends Dungeon{
 	}
 
 	@Override
-	protected void createfurniture(){
-		//don't
+	protected LinkedList<Furniture> createfurniture(int minimum){
+		return null;
 	}
 }

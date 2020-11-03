@@ -57,7 +57,7 @@ public class Herb extends Feature{
 	}
 
 	int dc=10+Dungeon.active.level
-			+Dungeon.gettable(FeatureModifierTable.class).rollmodifier();
+			+Dungeon.gettable(FeatureModifierTable.class).roll();
 	List<Potion> loot=generate(Dungeon.active.level);
 
 	/** Constructor. */

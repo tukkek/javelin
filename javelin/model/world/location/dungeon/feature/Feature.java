@@ -80,11 +80,12 @@ public abstract class Feature implements Serializable{
 	 *          scumming). If you want to have an automatic success, inform a high
 	 *          number like 9000, because if you use {@link Integer#MAX_VALUE}, it
 	 *          may overflow after internal bonuses being applied.
+	 * @return
 	 *
 	 * @see #draw
 	 */
-	public void discover(Combatant searching,int searchroll){
-		// nothing by default
+	public boolean discover(Combatant searching,int searchroll){
+		return true;
 	}
 
 	public void place(Dungeon d,Point p){
@@ -124,5 +125,18 @@ public abstract class Feature implements Serializable{
 	/** TODO model should not handle view */
 	public Image getimage(){
 		return Images.get(List.of("dungeon",avatarfile));
+	}
+
+	/**
+	 * Called when a feature hidden in {@link Furniture} is found.
+	 *
+	 * @param found <code>true</code> if the party has beated
+	 *          {@link #getsearchdc()}.
+	 * @return <code>true</code> for the furniture be replaced with this,
+	 *         <code>false</code> to continue hidden. By the default returns
+	 *         <code>true</code> if the {@link Squad} passed the search test.
+	 */
+	public boolean reveal(boolean found){
+		return found;
 	}
 }

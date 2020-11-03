@@ -27,7 +27,7 @@ public class LoreNote extends Feature{
 	static final String FAILURE="%s could not extract any useful information from this text...";
 
 	int dc=10+Dungeon.active.level
-			+Dungeon.active.tables.get(FeatureModifierTable.class).rollmodifier();
+			+Dungeon.active.tables.get(FeatureModifierTable.class).roll();
 
 	/** Constructor. */
 	public LoreNote(){

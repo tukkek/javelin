@@ -15,6 +15,7 @@ import javelin.model.unit.Slot;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.unit.condition.Condition;
+import javelin.model.unit.condition.Condition.Effect;
 import javelin.old.RPG;
 
 /**
@@ -136,6 +137,7 @@ public class RuneGear extends Gear{
 		define();
 		this.prefix.expireat=Float.MAX_VALUE;
 		this.prefix.longterm=Integer.MAX_VALUE;
+		this.prefix.effect=Effect.NEUTRAL;
 		if(owner!=null) apply(owner);
 	}
 

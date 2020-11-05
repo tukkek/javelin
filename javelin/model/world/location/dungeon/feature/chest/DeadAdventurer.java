@@ -10,20 +10,17 @@ import javelin.model.item.potion.Potion;
 import javelin.view.Images;
 
 /**
- * Specialized chest for consumable and miscellaneous items.
- *
  * TODO change for more "thematic" container type
  *
  * @author alex
  */
-public class Backpack extends Chest{
+public class DeadAdventurer extends Chest{
 	static final Set<Class<? extends Item>> ALLOWED=Set.of(Potion.class,
 			Flask.class);
 
 	/** Constructor. */
-	public Backpack(Integer gold){
+	public DeadAdventurer(Integer gold){
 		super(gold);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -33,6 +30,6 @@ public class Backpack extends Chest{
 
 	@Override
 	public Image getimage(){
-		return Images.get(List.of("dungeon","chest","backpack"));
+		return Images.get(List.of("dungeon","chest","deadadventurer"));
 	}
 }

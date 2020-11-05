@@ -2,7 +2,6 @@ package javelin.model.world.location.dungeon.feature.chest;
 
 import java.awt.Image;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,14 +70,6 @@ public class Chest extends Feature{
 	public Chest(Item i){
 		this();
 		items.add(i);
-	}
-
-	/**
-	 * @return A list of all items that can be found. Will eventually be passed to
-	 *         {@link Item#randomize()}.
-	 */
-	protected Collection<Item> getitems(){
-		return Item.ITEMS;
 	}
 
 	/**

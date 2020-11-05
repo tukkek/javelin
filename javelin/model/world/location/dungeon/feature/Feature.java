@@ -80,7 +80,8 @@ public abstract class Feature implements Serializable{
 	 *          scumming). If you want to have an automatic success, inform a high
 	 *          number like 9000, because if you use {@link Integer#MAX_VALUE}, it
 	 *          may overflow after internal bonuses being applied.
-	 * @return
+	 * @return <code>true</code> if this feature has been seen. Does not result in
+	 *         side effects other than for {@link Furniture#hidden}.
 	 *
 	 * @see #draw
 	 */

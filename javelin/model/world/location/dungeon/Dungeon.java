@@ -405,12 +405,12 @@ public class Dungeon extends Location{
 		createkeys(zoner);
 		var ntraps=getfeaturequantity(nrooms,ratiotraps);
 		int ntreasure=getfeaturequantity(nrooms,ratiotreasure);
-		var tohide=createfurniture(ntraps+ntreasure);
-		var traps=createtraps(ntraps,tohide);
+		var furniture=createfurniture(ntraps+ntreasure);
+		var traps=createtraps(ntraps,furniture);
 		var pool=0;
 		for(var t:traps)
 			pool+=RewardCalculator.getgold(t.cr);
-		createchests(ntreasure,pool,zoner,tohide);
+		createchests(ntreasure,pool,zoner,furniture);
 		createfeatures(getfeaturequantity(nrooms,ratiofeatures),zoner);
 	}
 
@@ -485,7 +485,7 @@ public class Dungeon extends Location{
 		return RPG.randomize(Math.round(quantity*ratio),0,Integer.MAX_VALUE);
 	}
 
-	ArrayList<Trap> createtraps(int ntraps,LinkedList<Furniture> tohide){
+	List<Trap> createtraps(int ntraps,LinkedList<Furniture> furniture){
 		var modifier=gettable(FeatureModifierTable.class);
 		var special=gettable(SpecialTrapTable.class);
 		var traps=new ArrayList<Trap>(ntraps);
@@ -494,10 +494,10 @@ public class Dungeon extends Location{
 			var t=Trap.generate(cr,special.rollboolean());
 			if(t!=null){
 				traps.add(t);
-				if(tohide==null)
+				if(furniture==null)
 					t.place(this,getunnocupied());
 				else
-					tohide.pop().hide(t);
+					furniture.pop().hide(t);
 			}
 		}
 		return traps;
@@ -511,16 +511,16 @@ public class Dungeon extends Location{
 	}
 
 	void createchest(Class<? extends Chest> type,int gold,DungeonZoner zoner,
-			Furniture tohide){
+			Furniture f){
 		var percentmodifier=gettable(FeatureModifierTable.class).roll()*2;
 		gold=Math.round(gold*(100+percentmodifier)/100f);
 		try{
 			var c=type.getConstructor(Integer.class).newInstance(gold);
-			if(type!=Crate.class&&!c.generateitem()){
+			if(!c.generateitem()){
 				c=new Chest(gold);
 				c.generateitem();
-				if(tohide!=null){
-					tohide.hide(c);
+				if(f!=null){
+					f.hide(c);
 					return;
 				}
 			}
@@ -531,16 +531,18 @@ public class Dungeon extends Location{
 	}
 
 	void createchests(int chests,int pool,DungeonZoner zoner,
-			LinkedList<Furniture> tohide){
+			LinkedList<Furniture> furniture){
 		createspecialchest().place(this,zoner.getpoint());
 		if(pool==0) return;
-		if(tohide!=null){
-			var hidden=RPG.randomize(chests/10,1,chests);
+		if(chests<1) chests=1;
+		var hidden=Math.max(2,chests/10);
+		hidden=RPG.randomize(hidden,0,chests);
+		if(furniture!=null&&hidden>0){
+			chests-=hidden;
 			var hiddenpool=pool/2;
 			pool-=hiddenpool;
 			for(var i=0;i<hidden;i++)
-				createchest(Chest.class,pool/hidden,zoner,tohide.pop());
-			chests-=hidden;
+				createchest(Chest.class,pool/hidden,zoner,furniture.pop());
 		}
 		var t=gettable(ChestTable.class);
 		for(var i=0;i<chests;i++)

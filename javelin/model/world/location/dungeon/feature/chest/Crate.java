@@ -1,16 +1,15 @@
 package javelin.model.world.location.dungeon.feature.chest;
 
 import java.awt.Image;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javelin.controller.TieredList;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.model.item.Item;
+import javelin.model.item.consumable.Eidolon;
 import javelin.model.item.consumable.Scroll;
-import javelin.model.item.focus.Staff;
-import javelin.model.item.focus.Wand;
+import javelin.model.item.potion.Potion;
+import javelin.model.unit.Combatant;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.DungeonTier;
@@ -54,32 +53,37 @@ public class Crate extends Chest{
 		}
 	}
 
-	static final Collection<Item> ITEMS=new ArrayList<>();
-	static final List<Class<? extends Item>> PROHIBITED=List.of(Scroll.class,
-			Staff.class,Wand.class);
-
-	static{
-		Item.ITEMS.stream()
-				.filter(i->i.consumable&&!PROHIBITED.contains(i.getClass()))
-				.forEach(i->ITEMS.add(i));
-	}
-
-	/** TODO to be used when hidden chests are implemented. */
-	int searchdc=10+Dungeon.active.level;
+	static final List<Class<? extends Item>> ALLOWED=List.of(Potion.class,
+			Eidolon.class,Scroll.class);
 
 	/** Constructor. */
 	public Crate(Integer pool){
 		super(pool);
-	}
-
-	@Override
-	protected Collection<Item> getitems(){
-		return ITEMS;
+		draw=false;
+		searchdc=-5;
+		if(searchdc<2) searchdc=2;
 	}
 
 	@Override
 	public Image getimage(){
 		var c=Dungeon.active.images.get(DungeonImages.CRATE);
 		return Images.get(List.of("dungeon","chest","crate",c));
+	}
+
+	@Override
+	protected boolean allow(Item i){
+		return i.consumable&&ALLOWED.contains(i.getClass());
+	}
+
+	@Override
+	public boolean discover(Combatant searching,int searchroll){
+		var d=super.discover(searching,searchroll);
+		if(d) draw=true;
+		return d;
+	}
+
+	@Override
+	public boolean activate(){
+		return draw&&super.activate();
 	}
 }

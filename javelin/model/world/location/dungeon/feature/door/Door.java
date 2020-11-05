@@ -217,7 +217,6 @@ public class Door extends Feature{
 
 	@Override
 	public boolean discover(Combatant searching,int searchroll){
-		super.discover(searching,searchroll);
 		if(draw||searchroll<searchdc) return false;
 		Dungeon.active.map[x][y]=Template.FLOOR;
 		draw=true;

@@ -2,6 +2,7 @@ package javelin.model.world.location.dungeon.feature.trap;
 
 import javelin.Javelin;
 import javelin.controller.action.world.WorldMove;
+import javelin.controller.table.dungeon.feature.TrapVisibilityTable;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.divination.FindTraps.FindingTraps;
@@ -21,9 +22,9 @@ import javelin.model.world.location.dungeon.feature.chest.Chest;
  * partly because since the traps are permanent (so as to be strategic) it would
  * be easy to continually step on traps to plunder XP.
  *
- * Traps are now always hidden on {@link Furniture} - allowing players to
- * somewhat strategically avoid them or "search" them for high-rish high-reward
- * outcomes (as {@link Chest}s are also hidden).
+ * Traps are now always hidden on {@link Furniture} in {@link Dungeon}s that
+ * allow for it - letting players to somewhat strategically avoid them or pursue
+ * them for high-rish, high-reward plays (as {@link Chest}s can also be hidden).
  *
  * @see DisableDevice
  * @author alex
@@ -41,11 +42,11 @@ public abstract class Trap extends Feature{
 	/** See {@link Perception}. */
 	public int searchdc;
 
+	/** Constructor. */
 	public Trap(int cr,String avatarfilep){
 		super("trap",avatarfilep);
 		this.cr=cr;
-		//draw=!Dungeon.gettable(TrapVisibilityTable.class).rollboolean();
-		draw=false;
+		draw=!Dungeon.gettable(TrapVisibilityTable.class).rollboolean();
 		remove=false;
 		searchdc=10+cr;
 		disarmdc=searchdc;
@@ -78,8 +79,9 @@ public abstract class Trap extends Feature{
 	public boolean discover(Combatant searching,int searchroll){
 		if(draw) return true;
 		for(var c:Squad.active.members){
-			int bonus=c.hascondition(FindingTraps.class)==null?0:+5;
-			if(searching.taketen(Skill.PERCEPTION)+bonus>=searchdc){
+			int p=c.taketen(Skill.PERCEPTION);
+			if(c.hascondition(FindingTraps.class)!=null) p+=5;
+			if(p>=searchdc){
 				draw=true;
 				return true;
 			}

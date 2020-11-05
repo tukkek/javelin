@@ -7,7 +7,7 @@ import javelin.controller.table.Table;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.chest.ArmorDisplay;
 import javelin.model.world.location.dungeon.feature.chest.ArtDisplay;
-import javelin.model.world.location.dungeon.feature.chest.Backpack;
+import javelin.model.world.location.dungeon.feature.chest.DeadAdventurer;
 import javelin.model.world.location.dungeon.feature.chest.Bookcase;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
 import javelin.model.world.location.dungeon.feature.chest.DeadMage;
@@ -22,7 +22,7 @@ import javelin.old.RPG;
  */
 public class ChestTable extends Table{
 	static final List<Class<? extends Chest>> TYPES=new ArrayList<>(
-			List.of(ArmorDisplay.class,ArtDisplay.class,Backpack.class,Bookcase.class,
+			List.of(ArmorDisplay.class,ArtDisplay.class,DeadAdventurer.class,Bookcase.class,
 					DeadMage.class,GemDisplay.class,VestDisplay.class));
 
 	/** Constructor. */

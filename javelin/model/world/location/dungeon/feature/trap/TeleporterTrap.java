@@ -6,7 +6,7 @@ import java.util.HashSet;
 import javelin.Javelin;
 import javelin.controller.DungeonMapCrawler;
 import javelin.controller.Point;
-import javelin.controller.generator.dungeon.template.Template;
+import javelin.controller.generator.dungeon.template.MapTemplate;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -29,7 +29,7 @@ public class TeleporterTrap extends Trap{
 
 		@Override
 		protected boolean validate(Point p){
-			if(dungeon.map[p.x][p.y]==Template.WALL) return false;
+			if(dungeon.map[p.x][p.y]==MapTemplate.WALL) return false;
 			return super.validate(p);
 		}
 

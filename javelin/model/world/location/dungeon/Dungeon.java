@@ -21,7 +21,7 @@ import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomDungeonEncounter;
 import javelin.controller.generator.dungeon.DungeonGenerator;
-import javelin.controller.generator.dungeon.template.Template;
+import javelin.controller.generator.dungeon.template.MapTemplate;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.table.Table;
 import javelin.controller.table.Tables;
@@ -110,7 +110,7 @@ public class Dungeon extends Location{
 	/**
 	 * A grid of characters representing dungeon objects.
 	 *
-	 * @see Template
+	 * @see MapTemplate
 	 */
 	public char[][] map=null;
 	/**
@@ -341,7 +341,7 @@ public class Dungeon extends Location{
 	void createdoors(){
 		for(int x=0;x<size;x++)
 			for(int y=0;y<size;y++)
-				if(map[x][y]==Template.DOOR&&gettable(DoorExists.class).rollboolean()){
+				if(map[x][y]==MapTemplate.DOOR&&gettable(DoorExists.class).rollboolean()){
 					Door d=Door.generate(this,new Point(x,y));
 					if(d!=null) d.place(this,d.getlocation());
 				}
@@ -365,7 +365,7 @@ public class Dungeon extends Location{
 		int floortiles=0;
 		for(int x=0;x<size;x++)
 			for(int y=0;y<size;y++)
-				if(map[x][y]==Template.FLOOR) floortiles+=1;
+				if(map[x][y]==MapTemplate.FLOOR) floortiles+=1;
 		return floortiles;
 	}
 
@@ -446,7 +446,7 @@ public class Dungeon extends Location{
 		new StairsUp(squadlocation,this).place(this,squadlocation);
 		for(int x=squadlocation.x-1;x<=squadlocation.x+1;x++)
 			for(int y=squadlocation.y-1;y<=squadlocation.y+1;y++)
-				map[x][y]=Template.FLOOR;
+				map[x][y]=MapTemplate.FLOOR;
 		if(!isdeepest()) new StairsDown().place(this,zoner.getpoint());
 	}
 
@@ -566,7 +566,7 @@ public class Dungeon extends Location{
 	}
 
 	public boolean isoccupied(Point p){
-		if(map[p.x][p.y]==Template.WALL) return true;
+		if(map[p.x][p.y]==MapTemplate.WALL) return true;
 		for(Feature f:features)
 			if(f.x==p.x&&f.y==p.y) return true;
 		return false;

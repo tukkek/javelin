@@ -9,10 +9,10 @@ import java.util.List;
 import javelin.controller.Point;
 import javelin.controller.generator.dungeon.Direction;
 import javelin.controller.generator.dungeon.DungeonGenerator;
-import javelin.controller.generator.dungeon.template.Template;
+import javelin.controller.generator.dungeon.template.MapTemplate;
 import javelin.old.RPG;
 
-public class Linear extends Template{
+public class Linear extends MapTemplate{
 	static final float MAXDISTANCE=1/3f;
 	protected int minsize=7;
 

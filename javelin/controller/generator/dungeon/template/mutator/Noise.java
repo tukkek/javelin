@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import javelin.controller.Point;
-import javelin.controller.generator.dungeon.template.Template;
+import javelin.controller.generator.dungeon.template.MapTemplate;
 import javelin.old.RPG;
 
 public class Noise extends Mutator{
@@ -13,16 +13,16 @@ public class Noise extends Mutator{
 	}
 
 	@Override
-	public void apply(Template t){
+	public void apply(MapTemplate t){
 		final ArrayList<Point> free=new ArrayList<>();
 		t.iterate(t1->{
-			if(t1.c==Template.FLOOR) free.add(new Point(t1.x,t1.y));
+			if(t1.c==MapTemplate.FLOOR) free.add(new Point(t1.x,t1.y));
 		});
 		int walls=Math.round(free.size()*RPG.r(10,25)/100f);
 		Collections.shuffle(free);
-		Character glyph=t.count(Template.FLOOR)>=t.count(Template.WALL)
-				?Template.WALL
-				:Template.FLOOR;
+		Character glyph=t.count(MapTemplate.FLOOR)>=t.count(MapTemplate.WALL)
+				?MapTemplate.WALL
+				:MapTemplate.FLOOR;
 		for(int i=0;i<walls;i++){
 			Point wall=free.get(i);
 			t.tiles[wall.x][wall.y]=glyph;

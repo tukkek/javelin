@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javelin.controller.Point;
-import javelin.controller.generator.dungeon.template.Template;
+import javelin.controller.generator.dungeon.template.MapTemplate;
 
 public class VirtualMap{
 	public class Room implements DungeonArea{
@@ -64,11 +64,11 @@ public class VirtualMap{
 	 * distant rooms, etc.
 	 */
 	public ArrayList<Room> rooms=new ArrayList<>();
-	public Character fill=Template.WALL;
+	public Character fill=MapTemplate.WALL;
 
 	HashMap<Point,Character> map=new HashMap<>();
 
-	public boolean draw(Template t,int rootx,int rooty,boolean check){
+	public boolean draw(MapTemplate t,int rootx,int rooty,boolean check){
 		for(int x=0;x<t.width;x++)
 			for(int y=0;y<t.height;y++){
 				Point p=new Point(x+rootx,y+rooty);
@@ -78,7 +78,7 @@ public class VirtualMap{
 					continue;
 				}
 				Character old=map.get(p);
-				if(old!=null&&(old!=Template.WALL||c!=Template.WALL)) return false;
+				if(old!=null&&(old!=MapTemplate.WALL||c!=MapTemplate.WALL)) return false;
 			}
 		return true;
 	}
@@ -117,7 +117,7 @@ public class VirtualMap{
 		return rasterize(false);
 	}
 
-	public boolean draw(Template t,int x,int y){
+	public boolean draw(MapTemplate t,int x,int y){
 		if(!draw(t,x,y,true)) return false;
 		draw(t,x,y,false);
 		if(!t.corridor) rooms.add(new Room(x,y,t.width,t.height));

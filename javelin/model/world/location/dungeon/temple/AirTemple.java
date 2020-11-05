@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Point;
-import javelin.controller.generator.dungeon.template.Template;
+import javelin.controller.generator.dungeon.template.MapTemplate;
 import javelin.controller.terrain.Mountains;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
@@ -65,7 +65,7 @@ public class AirTemple extends Temple{
 				for(Feature f:d.features)
 					if(f.x==x&&f.y==y) continue;
 				Point step=new Point(x,y);
-				if(!steps.contains(step)&&d.map[step.x][step.y]!=Template.WALL)
+				if(!steps.contains(step)&&d.map[step.x][step.y]!=MapTemplate.WALL)
 					possibilities.add(step);
 			}
 		return possibilities.isEmpty()?null:RPG.pick(possibilities);

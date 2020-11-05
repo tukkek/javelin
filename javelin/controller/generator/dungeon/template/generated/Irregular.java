@@ -4,10 +4,10 @@ import java.util.Collections;
 import java.util.LinkedList;
 
 import javelin.controller.Point;
-import javelin.controller.generator.dungeon.template.Template;
+import javelin.controller.generator.dungeon.template.MapTemplate;
 import javelin.old.RPG;
 
-public class Irregular extends Template{
+public class Irregular extends MapTemplate{
 	private static final Point[] ADJACENT=new Point[]{new Point(-1,0),
 			new Point(+1,0),new Point(0,-1),new Point(0,+1)};
 	private static final int PERCENTMIN=15;

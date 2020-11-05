@@ -9,7 +9,7 @@ import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomDungeonEncounter;
-import javelin.controller.generator.dungeon.template.Template;
+import javelin.controller.generator.dungeon.template.MapTemplate;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.table.Tables;
 import javelin.controller.terrain.Terrain;
@@ -111,10 +111,10 @@ public class Wilderness extends Dungeon{
 			else
 				squadlocation.y=RPG.chancein(2)?0:height-1;
 			var empty=squadlocation.getadjacent().stream().filter(
-					p->p.validate(0,0,width,height)&&map[p.x][p.y]==Template.FLOOR);
+					p->p.validate(0,0,width,height)&&map[p.x][p.y]==MapTemplate.FLOOR);
 			if(empty.count()==0) squadlocation=null;
 		}
-		map[squadlocation.x][squadlocation.y]=Template.FLOOR;
+		map[squadlocation.x][squadlocation.y]=MapTemplate.FLOOR;
 		new Entrance(squadlocation).place(this,squadlocation);
 	}
 
@@ -128,7 +128,7 @@ public class Wilderness extends Dungeon{
 		var map=new char[width][height];
 		for(var x=0;x<width;x++)
 			for(var y=0;y<height;y++)
-				map[x][y]=fightmap.map[x][y].blocked?Template.WALL:Template.FLOOR;
+				map[x][y]=fightmap.map[x][y].blocked?MapTemplate.WALL:MapTemplate.FLOOR;
 		generateentrance(map);
 		images.put(DungeonImages.FLOOR,Images.NAMES.get(fightmap.floor));
 		images.put(DungeonImages.WALL,Images.NAMES.get(fightmap.wall));

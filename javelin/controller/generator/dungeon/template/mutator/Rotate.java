@@ -1,6 +1,6 @@
 package javelin.controller.generator.dungeon.template.mutator;
 
-import javelin.controller.generator.dungeon.template.Template;
+import javelin.controller.generator.dungeon.template.MapTemplate;
 
 public class Rotate extends Mutator{
 	public static final Rotate INSTANCE=new Rotate();
@@ -11,7 +11,7 @@ public class Rotate extends Mutator{
 	}
 
 	@Override
-	public void apply(Template t){
+	public void apply(MapTemplate t){
 		char[][] rotated=new char[t.height][t.width];
 		for(int x=0;x<t.width;x++)
 			for(int y=0;y<t.height;y++)

@@ -35,17 +35,16 @@ import javelin.old.RPG;
  *
  * @author alex
  */
-public abstract class Template implements Cloneable,DungeonArea{
-
+public abstract class MapTemplate implements Cloneable,DungeonArea{
 	public static final Character FLOOR='.';
 	public static final Character WALL='█';
 	public static final Character DECORATION='!';
 	public static final Character DOOR='□';
 
 	/** Procedurally generated templates only. */
-	public static final Template[] GENERATED=new Template[]{new Irregular(),
+	public static final MapTemplate[] GENERATED=new MapTemplate[]{new Irregular(),
 			new Rectangle(),new Linear()};
-	public static final Template[] CORRIDORS=new Template[]{
+	public static final MapTemplate[] CORRIDORS=new MapTemplate[]{
 			new StraightCorridor(),new WindingCorridor()};
 
 	static final ArrayList<Mutator> MUTATORS=new ArrayList<>(
@@ -133,9 +132,9 @@ public abstract class Template implements Cloneable,DungeonArea{
 		return found;
 	}
 
-	public Template create(){
+	public MapTemplate create(){
 		try{
-			Template c=null;
+			MapTemplate c=null;
 			while(c==null||!c.validate()){
 				c=clone();
 				c.tiles=null;
@@ -227,9 +226,9 @@ public abstract class Template implements Cloneable,DungeonArea{
 	}
 
 	@Override
-	protected Template clone(){
+	protected MapTemplate clone(){
 		try{
-			return (Template)super.clone();
+			return (MapTemplate)super.clone();
 		}catch(CloneNotSupportedException e){
 			throw new RuntimeException(e);
 		}
@@ -265,7 +264,7 @@ public abstract class Template implements Cloneable,DungeonArea{
 	}
 
 	public List<Point> getdoors(){
-		return find(Template.DOOR);
+		return find(MapTemplate.DOOR);
 	}
 
 	public Point getdoor(Direction d){

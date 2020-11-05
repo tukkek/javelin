@@ -9,7 +9,7 @@ import javelin.controller.action.world.WorldMove;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomEncounter;
-import javelin.controller.generator.dungeon.template.Template;
+import javelin.controller.generator.dungeon.template.MapTemplate;
 import javelin.controller.walker.Walker;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -70,7 +70,7 @@ public class DungeonScreen extends WorldScreen{
 
 	@Override
 	public boolean allowmove(int x,int y){
-		return dungeon.map[x][y]!=Template.WALL;
+		return dungeon.map[x][y]!=MapTemplate.WALL;
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public class DungeonScreen extends WorldScreen{
 		while(step.x!=target.x||step.y!=target.y){
 			if(step.x!=target.x) step.x+=step.x>target.x?-1:+1;
 			if(step.y!=target.y) step.y+=step.y>target.y?-1:+1;
-			if(!step.equals(target)&&(dungeon.map[step.x][step.y]==Template.WALL
+			if(!step.equals(target)&&(dungeon.map[step.x][step.y]==MapTemplate.WALL
 					||dungeon.features.get(step.x,step.y) instanceof Door))
 				return false;
 		}
@@ -110,7 +110,7 @@ public class DungeonScreen extends WorldScreen{
 	@Override
 	public Image gettile(int x,int y){
 		var i=dungeon.images;
-		var file=dungeon.map[x][y]==Template.WALL?i.get(DungeonImages.WALL)
+		var file=dungeon.map[x][y]==MapTemplate.WALL?i.get(DungeonImages.WALL)
 				:i.get(DungeonImages.FLOOR);
 		var folder=dungeon instanceof Wilderness?"":"dungeon";
 		return Images.get(List.of(folder,file));

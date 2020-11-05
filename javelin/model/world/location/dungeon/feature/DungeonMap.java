@@ -5,7 +5,7 @@ import java.util.HashSet;
 
 import javelin.Javelin;
 import javelin.controller.Point;
-import javelin.controller.generator.dungeon.template.Template;
+import javelin.controller.generator.dungeon.template.MapTemplate;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.old.RPG;
 import javelin.view.screen.BattleScreen;
@@ -32,7 +32,7 @@ public class DungeonMap extends Feature{
 		var floors=new HashSet<Point>();
 		for(var x=0;x<d.size;x++)
 			for(var y=0;y<d.size;y++)
-				if(d.map[x][y]!=Template.WALL) floors.add(new Point(x,y));
+				if(d.map[x][y]!=MapTemplate.WALL) floors.add(new Point(x,y));
 		for(var f:new ArrayList<>(floors))
 			floors.addAll(f.getadjacent());
 		var area=AREA;

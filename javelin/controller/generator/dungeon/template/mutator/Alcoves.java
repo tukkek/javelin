@@ -5,7 +5,7 @@ import java.util.HashSet;
 
 import javelin.controller.Point;
 import javelin.controller.generator.dungeon.Direction;
-import javelin.controller.generator.dungeon.template.Template;
+import javelin.controller.generator.dungeon.template.MapTemplate;
 import javelin.old.RPG;
 
 public class Alcoves extends Mutator{
@@ -14,7 +14,7 @@ public class Alcoves extends Mutator{
 	}
 
 	@Override
-	public void apply(Template t){
+	public void apply(MapTemplate t){
 		HashSet<Direction> directions=new HashSet<>();
 		while(directions.isEmpty())
 			for(Direction d:Direction.DIRECTIONS)
@@ -27,13 +27,13 @@ public class Alcoves extends Mutator{
 		}
 	}
 
-	void carve(Direction d,int depth,Template t){
+	void carve(Direction d,int depth,MapTemplate t){
 		grow(d,depth,t);
 		int nalcoves=RPG.r(1,4);
 		for(int i=0;i<nalcoves;i++){
 			Point p=RPG.pick(d.getborder(t));
-			while(p.validate(0,0,t.width,t.height)&&t.tiles[p.x][p.y]==Template.WALL){
-				t.tiles[p.x][p.y]=Template.FLOOR;
+			while(p.validate(0,0,t.width,t.height)&&t.tiles[p.x][p.y]==MapTemplate.WALL){
+				t.tiles[p.x][p.y]=MapTemplate.FLOOR;
 				Point step=d.takestep();
 				p.x+=step.x;
 				p.y+=step.y;
@@ -41,37 +41,37 @@ public class Alcoves extends Mutator{
 		}
 	}
 
-	void grow(Direction d,int depth,Template t){
+	void grow(Direction d,int depth,MapTemplate t){
 		char[][] grown;
 		if(d==Direction.NORTH){
 			grown=new char[t.width][t.height+depth];
 			copy(t,0,grown,0);
 			for(int x=0;x<t.width;x++)
 				for(int y=t.height;y<t.height+depth;y++)
-					grown[x][y]=Template.WALL;
+					grown[x][y]=MapTemplate.WALL;
 		}else if(d==Direction.SOUTH){
 			grown=new char[t.width][t.height+depth];
 			copy(t,0,grown,depth);
 			for(int x=0;x<t.width;x++)
 				for(int y=0;y<depth;y++)
-					grown[x][y]=Template.WALL;
+					grown[x][y]=MapTemplate.WALL;
 		}else if(d==Direction.EAST){
 			grown=new char[t.width+depth][t.height];
 			System.arraycopy(t.tiles,0,grown,0,t.tiles.length);
 			for(int x=t.width;x<t.width+depth;x++)
-				Arrays.fill(grown[x],Template.WALL);
+				Arrays.fill(grown[x],MapTemplate.WALL);
 		}else{
 			grown=new char[t.width+depth][t.height];
 			System.arraycopy(t.tiles,0,grown,depth,t.tiles.length);
 			for(int x=0;x<depth;x++)
-				Arrays.fill(grown[x],Template.WALL);
+				Arrays.fill(grown[x],MapTemplate.WALL);
 		}
 		t.tiles=grown;
 		t.width=t.tiles.length;
 		t.height=t.tiles[0].length;
 	}
 
-	void copy(Template from,int positionfrom,char[][] to,int positionto){
+	void copy(MapTemplate from,int positionfrom,char[][] to,int positionto){
 		for(int x=0;x<from.tiles.length;x++){
 			char[] sub=from.tiles[x];
 			System.arraycopy(sub,positionfrom,to[x],positionto,sub.length);

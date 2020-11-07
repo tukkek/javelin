@@ -9,6 +9,7 @@ import javelin.Javelin;
 
 public class Combatants extends ArrayList<Combatant>
 		implements Cloneable,Serializable{
+
 	public Combatants(){
 		super();
 	}

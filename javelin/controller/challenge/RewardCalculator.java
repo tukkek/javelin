@@ -34,7 +34,6 @@ public class RewardCalculator{
 		public TableLine(final double a,final double b,final double c,
 				final double d,final double e,final double f,final double g,
 				final double h){
-			super();
 			this.a=a;
 			this.b=b;
 			this.c=c;

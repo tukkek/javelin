@@ -13,7 +13,6 @@ public class Level implements Serializable{
 	int will;
 
 	public Level(int fort,int ref,int will){
-		super();
 		this.fort=fort;
 		this.ref=ref;
 		this.will=will;

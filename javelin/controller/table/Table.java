@@ -46,7 +46,6 @@ public class Table implements Serializable,Cloneable{
 		int variance;
 
 		public RowData(int min,int max,int variance){
-			super();
 			if(Javelin.DEBUG&&min>max) throw new InvalidParameterException();
 			this.min=min;
 			this.max=max;

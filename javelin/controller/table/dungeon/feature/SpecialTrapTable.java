@@ -13,7 +13,6 @@ import javelin.model.world.location.dungeon.feature.trap.Trap;
 public class SpecialTrapTable extends Table{
 	/** Constructor. */
 	public SpecialTrapTable(DungeonFloor f){
-		super();
 		add(true,1);
 		add(false,4-1,10-1);
 	}

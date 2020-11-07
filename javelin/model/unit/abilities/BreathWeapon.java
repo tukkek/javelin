@@ -34,7 +34,6 @@ public class BreathWeapon implements Serializable,javelin.model.Cloneable{
 			final int range,final int die,final int sides,final int bonus,
 			final SavingThrow savethrowp,final int savedcp,final float saveeffectp,
 			final boolean delayp){
-		super();
 		this.type=type;
 		this.range=range;
 		damage=new int[]{die,sides,bonus};

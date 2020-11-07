@@ -11,7 +11,6 @@ public class TPanel extends Panel{
 	protected Image buffer;
 
 	public TPanel(){
-		super();
 		setFocusable(true);
 		setBackground(QuestApp.PANELCOLOUR);
 		addKeyListener(new KeyAdapter(){

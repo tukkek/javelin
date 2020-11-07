@@ -52,7 +52,6 @@ public class Alignment implements Serializable{
 
 	/** Creates a custom instance. */
 	public Alignment(Ethics ethicsp,Morals moralsp){
-		super();
 		ethics=ethicsp;
 		morals=moralsp;
 	}

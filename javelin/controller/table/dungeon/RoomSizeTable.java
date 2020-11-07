@@ -5,7 +5,6 @@ import javelin.model.world.location.dungeon.DungeonFloor;
 
 public class RoomSizeTable extends Table{
 	public RoomSizeTable(DungeonFloor f){
-		super();
 		for(int size=3;size<=7;size++)
 			add(size,20);
 	}

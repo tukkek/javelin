@@ -11,7 +11,6 @@ import javelin.model.Cloneable;
  * @author alex
  */
 public class CloneableList<K extends Cloneable>extends ArrayList<K>{
-
 	public CloneableList(){
 		super();
 	}

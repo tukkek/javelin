@@ -19,7 +19,6 @@ import javelin.model.world.location.dungeon.feature.Passage;
 public class CommonFeatureTable extends Table implements DungeonFeatureTable{
 	/** Constructor. */
 	public CommonFeatureTable(DungeonFloor f){
-		super();
 		add(Passage.class,1);
 		add(Brazier.class,1);
 		add(LoreNote.class,2);

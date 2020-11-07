@@ -18,7 +18,6 @@ public class Features implements Iterable<Feature>,Serializable{
 	DungeonFloor dungeon;
 
 	public Features(DungeonFloor d){
-		super();
 		dungeon=d;
 	}
 

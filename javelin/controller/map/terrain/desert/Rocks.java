@@ -9,7 +9,6 @@ import javelin.view.Images;
 
 public class Rocks extends Sandy{
 	public Rocks(){
-		super();
 		name="Desert rocks";
 		wall=Images.get(List.of("terrain","ruggedwall"));
 	}

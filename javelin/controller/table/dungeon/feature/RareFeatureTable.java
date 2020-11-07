@@ -61,7 +61,6 @@ public class RareFeatureTable extends Table implements DungeonFeatureTable{
 
 	/** Constructor. */
 	public RareFeatureTable(DungeonFloor f){
-		super();
 		if(Javelin.DEBUG&&DEBUG!=null){
 			add(DEBUG,1);
 			return;

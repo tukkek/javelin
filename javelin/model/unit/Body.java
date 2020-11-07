@@ -85,7 +85,6 @@ public class Body implements Serializable{
 	public boolean hold;
 
 	Body(String type,boolean hold,Set<Slot> slots){
-		super();
 		type=type.toLowerCase();
 		this.type=type;
 		this.hold=hold;

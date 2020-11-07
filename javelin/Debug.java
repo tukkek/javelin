@@ -53,7 +53,6 @@ public class Debug{
 		Boolean win=null;
 
 		public DebugFight(Combatants foes){
-			super();
 			this.foes=foes;
 			onready.add(()->{
 				for(var c:state.redTeam)

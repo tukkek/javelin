@@ -19,11 +19,6 @@ import javelin.model.world.location.town.labor.basic.Shop;
  * @author alex
  */
 public class BasicShop extends Shop{
-	/** Constructor. */
-	public BasicShop(){
-		super();
-	}
-
 	@Override
 	protected void stock(){
 		if(!selection.isEmpty()){

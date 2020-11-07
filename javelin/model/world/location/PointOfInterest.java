@@ -37,7 +37,6 @@ public class PointOfInterest extends Actor{
 
 	/** Constructor. */
 	public PointOfInterest(){
-		super();
 		allowedinscenario=false;
 		impermeable=true;
 	}

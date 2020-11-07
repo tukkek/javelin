@@ -6,7 +6,6 @@ import javelin.model.world.location.dungeon.DungeonTier;
 
 public class HiddenDoor extends Table{
 	public HiddenDoor(DungeonFloor f){
-		super();
 		if(f.dungeon.gettier()!=DungeonTier.CAVE) add(true,1);
 		add(false,19);
 	}

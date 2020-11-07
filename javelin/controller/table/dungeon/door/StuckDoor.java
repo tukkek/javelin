@@ -5,7 +5,6 @@ import javelin.model.world.location.dungeon.DungeonFloor;
 
 public class StuckDoor extends Table{
 	public StuckDoor(DungeonFloor f){
-		super();
 		add(true,1);
 		add(false,9);
 	}

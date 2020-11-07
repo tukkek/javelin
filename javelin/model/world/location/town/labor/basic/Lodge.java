@@ -57,7 +57,6 @@ public class Lodge extends Fortification{
 		int quality;
 
 		Lodging(String name,int quality,float fee){
-			super();
 			this.name=name;
 			this.fee=fee;
 			this.quality=quality;

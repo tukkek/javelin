@@ -20,7 +20,6 @@ public abstract class Tile{
 	public boolean discovered;
 
 	public Tile(final int xp,final int yp,final boolean discoveredp){
-		super();
 		x=xp;
 		y=yp;
 		discovered=discoveredp;

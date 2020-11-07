@@ -29,7 +29,7 @@ public class AttackSequence extends CloneableList<Attack>{
 		super();
 	}
 
-	/** Constructor. */
+	/** Copy constructor. */
 	public AttackSequence(Collection<Attack> attacks){
 		super(attacks);
 	}

@@ -89,7 +89,6 @@ public abstract class Discipline extends Kit{
 	 */
 	@Deprecated
 	public Discipline(String name){
-		super();
 		this.name=name;
 		hasacademy=false;
 	}

@@ -5,7 +5,6 @@ import javelin.model.world.location.dungeon.DungeonFloor;
 
 public class DoorExists extends Table{
 	public DoorExists(DungeonFloor f){
-		super();
 		add(true,1);
 		add(false,3);
 	}

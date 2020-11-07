@@ -15,7 +15,6 @@ import javelin.model.unit.Squad;
 public class MirrorMatch extends Match{
 	/** Constructor. */
 	public MirrorMatch(){
-		super();
 		name="Mirror match";
 	}
 

@@ -14,7 +14,7 @@ public class DescendingLevelComparator implements Comparator<Combatant>{
 	public static final DescendingLevelComparator SINGLETON=new DescendingLevelComparator();
 
 	private DescendingLevelComparator(){
-		super();
+		//prevent instantiation
 	}
 
 	@Override

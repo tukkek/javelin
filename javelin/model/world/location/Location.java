@@ -118,7 +118,6 @@ public abstract class Location extends Actor{
 	 * @param descriptionunknown What to show otherwise.
 	 */
 	public Location(String description){
-		super();
 		this.description=description;
 	}
 

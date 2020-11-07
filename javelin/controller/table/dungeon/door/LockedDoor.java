@@ -6,7 +6,6 @@ import javelin.old.RPG;
 
 public class LockedDoor extends Table{
 	public LockedDoor(DungeonFloor f){
-		super();
 		if(RPG.chancein(2)){
 			add(true,1);
 			add(false,3);

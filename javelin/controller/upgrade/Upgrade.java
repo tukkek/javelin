@@ -41,7 +41,6 @@ public abstract class Upgrade implements Serializable{
 
 	/** Constructor. */
 	public Upgrade(final String name){
-		super();
 		if(Javelin.DEBUG&&name==null) throw new InvalidParameterException();
 		this.name=name;
 	}

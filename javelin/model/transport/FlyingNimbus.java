@@ -24,7 +24,6 @@ public class FlyingNimbus extends Airship{
 	 * @param oldtransportp
 	 */
 	public FlyingNimbus(Transport oldtransportp){
-		super();
 		name="Flying nimbus";
 		speed*=10;
 		price*=10;

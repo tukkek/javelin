@@ -27,7 +27,6 @@ public class ChestTable extends Table{
 
 	/** Constructor. */
 	public ChestTable(DungeonFloor f){
-		super();
 		var tier=f.dungeon.gettier().tier.getordinal();
 		var nhighlights=RPG.randomize(tier+1,1,TYPES.size()-1);
 		var highlights=TYPES.subList(0,nhighlights);

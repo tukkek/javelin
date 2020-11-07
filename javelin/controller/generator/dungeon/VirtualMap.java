@@ -19,7 +19,6 @@ public class VirtualMap{
 		}
 
 		public Room(int x,int y,int width,int height){
-			super();
 			this.x=x;
 			this.y=y;
 			this.width=width;
@@ -78,7 +77,8 @@ public class VirtualMap{
 					continue;
 				}
 				Character old=map.get(p);
-				if(old!=null&&(old!=MapTemplate.WALL||c!=MapTemplate.WALL)) return false;
+				if(old!=null&&(old!=MapTemplate.WALL||c!=MapTemplate.WALL))
+					return false;
 			}
 		return true;
 	}

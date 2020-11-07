@@ -13,7 +13,6 @@ import javelin.controller.comparator.ItemsByPrice;
  * @author alex
  */
 public class ItemSelection extends ArrayList<Item>{
-	/** Constructor. */
 	public ItemSelection(){
 		super();
 	}

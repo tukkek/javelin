@@ -42,7 +42,6 @@ public class StatusPanel extends TPanel{
 
 	/** Constructor. */
 	public StatusPanel(){
-		super();
 		setBackground(QuestApp.PANELCOLOUR);
 	}
 

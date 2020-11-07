@@ -58,11 +58,6 @@ public class Frequency implements Serializable{
 	 */
 	public Integer seeds=1;
 
-	/** Construct with default values. */
-	public Frequency(){
-		super();
-	}
-
 	/**
 	 * @param chance Overrides default {@link #chance} value.
 	 */

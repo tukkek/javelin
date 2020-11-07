@@ -26,7 +26,6 @@ public class Option implements Serializable{
 
 	/** Constructor. */
 	public Option(String name,double price,Character keyp){
-		super();
 		this.name=name;
 		this.price=price;
 		key=keyp;

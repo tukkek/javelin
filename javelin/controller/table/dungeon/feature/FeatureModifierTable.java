@@ -15,7 +15,6 @@ public class FeatureModifierTable extends Table{
 
 	/** Constructor. */
 	public FeatureModifierTable(DungeonFloor f){
-		super();
 		add(Modifier.VERYEASY,2);
 		add(Modifier.EASY,2);
 		add(Modifier.NORMAL,4);

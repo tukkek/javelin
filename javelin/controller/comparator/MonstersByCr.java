@@ -9,7 +9,7 @@ public class MonstersByCr implements Comparator<Monster>,Serializable{
 	public static final MonstersByCr SINGLETON=new MonstersByCr();
 
 	private MonstersByCr(){
-		super();
+		// prevent instantiation
 	}
 
 	@Override

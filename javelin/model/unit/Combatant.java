@@ -158,7 +158,6 @@ public class Combatant implements Serializable,Cloneable{
 	 *          the currently implemented spells TODO
 	 */
 	public Combatant(Monster sourcep,boolean generatespells){
-		super();
 		source=sourcep.clone();
 		newid();
 		ap=0;

@@ -26,13 +26,9 @@ public class Entry{
 
 	/** Constructor. */
 	public Entry(final Node state,final float value2,final List<ChanceNode> cns){
-		super();
 		node=state;
 		value=value2;
 		this.cns=cns;
-		// if (Javelin.DEBUG && cns.isEmpty()) {
-		// System.out.println("empty");
-		// }
 	}
 
 	@Override

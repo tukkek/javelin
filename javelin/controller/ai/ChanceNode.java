@@ -35,7 +35,6 @@ public class ChanceNode implements Cloneable{
 
 	public ChanceNode(final Node n,final float chance,final String action,
 			final Javelin.Delay delay){
-		super();
 		this.n=n;
 		this.chance=chance;
 		this.action=action;

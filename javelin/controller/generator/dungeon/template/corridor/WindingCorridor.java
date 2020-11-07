@@ -13,7 +13,6 @@ public class WindingCorridor extends StraightCorridor{
 	protected int nearbyfloorlimit=1;
 
 	public WindingCorridor(){
-		super();
 		fill=WALL;
 		steps=new ArrayList<>();
 		generatesteps();

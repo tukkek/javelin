@@ -21,7 +21,6 @@ public class FurnitureTable extends Table{
 		DungeonTier rarity;
 
 		Type(String name,int nimages,DungeonTier rarity){
-			super();
 			this.name=name;
 			this.rarity=rarity;
 			for(var i=1;i<=nimages;i++)
@@ -50,7 +49,6 @@ public class FurnitureTable extends Table{
 
 	/** Constructor. */
 	public FurnitureTable(DungeonFloor f){
-		super();
 		var tiered=new TieredList<Type>(f.dungeon.gettier());
 		for(var type:ALL)
 			tiered.addtiered(type,type.rarity);

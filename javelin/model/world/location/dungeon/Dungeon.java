@@ -26,6 +26,7 @@ import javelin.model.world.location.dungeon.feature.StairsUp;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
 import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.model.world.location.dungeon.feature.trap.Trap;
+import javelin.model.world.location.unique.DeepDungeon;
 import javelin.old.RPG;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.DungeonScreen;
@@ -81,10 +82,10 @@ public class Dungeon implements Serializable{
 	 */
 	public Dungeon(String name,int level,int nfloors){
 		this.level=level;
-		var tier=gettier();
-		if(name==null) name=baptize(tier.name);
+		var t=gettier();
+		if(name==null) name=baptize(t.name);
 		this.name=name;
-		images=new DungeonImages(tier);
+		images=new DungeonImages(t);
 		floors.add(createfloor(level));
 		for(var i=1;i<nfloors;i++)
 			floors.add(createfloor(level+i));
@@ -179,7 +180,12 @@ public class Dungeon implements Serializable{
 		f.enter();
 	}
 
-	/** @return Tier object. */
+	/**
+	 * Whenever possible, it's preferrable to use {@link DungeonFloor#gettier()}
+	 * instead, as it may be overriden.
+	 *
+	 * @see DeepDungeon
+	 */
 	public DungeonTier gettier(){
 		return DungeonTier.get(level);
 	}

@@ -182,7 +182,7 @@ public class DungeonFloor implements Serializable{
 
 	/** Define {@link #encounters}. */
 	protected void generateencounters(){
-		var target=3+RPG.r(1,4)+DungeonTier.TIERS.indexOf(dungeon.gettier());
+		var target=3+RPG.r(1,4)+DungeonTier.TIERS.indexOf(gettier());
 		var parent=getparent();
 		if(parent!=null){
 			encounters=new ArrayList<>(parent.encounters);
@@ -256,8 +256,7 @@ public class DungeonFloor implements Serializable{
 				var p=new Point(x,y);
 				if(!isoccupied(p)) unnocupied.add(p);
 			}
-		var target=RPG.randomize(dungeon.gettier().minrooms,minimum,
-				unnocupied.size());
+		var target=RPG.randomize(gettier().minrooms,minimum,unnocupied.size());
 		RPG.shuffle(unnocupied);
 		var furniture=new LinkedList<Furniture>();
 		for(var i=0;i<target;i++){
@@ -430,7 +429,7 @@ public class DungeonFloor implements Serializable{
 	/** @see Crate */
 	protected void generatecrates(DungeonZoner zoner){
 		var freebie=RewardCalculator.getgold(level);
-		var ncrates=RPG.randomize(dungeon.gettier().minrooms,0,Integer.MAX_VALUE);
+		var ncrates=RPG.randomize(gettier().minrooms,0,Integer.MAX_VALUE);
 		for(int i=0;i<ncrates;i++){
 			var gold=RPG.randomize(freebie/ncrates,1,Integer.MAX_VALUE);
 			generatechest(Crate.class,gold,zoner,null);

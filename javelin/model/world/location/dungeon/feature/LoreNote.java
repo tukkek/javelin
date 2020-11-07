@@ -44,7 +44,7 @@ public class LoreNote extends Feature{
 			return false;
 		}
 		remove();
-		var tier=Dungeon.active.dungeon.gettier().tier;
+		var tier=Dungeon.active.gettier().tier;
 		var entrances=DungeonEntrance.getdungeonsandtemples();
 		var candidates=entrances
 				.stream().map(e->e.dungeon).filter(d->tier.minlevel<=d.level

@@ -49,7 +49,7 @@ public class FurnitureTable extends Table{
 
 	/** Constructor. */
 	public FurnitureTable(DungeonFloor f){
-		var tiered=new TieredList<Type>(f.dungeon.gettier());
+		var tiered=new TieredList<Type>(f.gettier());
 		for(var type:ALL)
 			tiered.addtiered(type,type.rarity);
 		var types=new ArrayList<>(

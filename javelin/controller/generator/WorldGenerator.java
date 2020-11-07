@@ -15,6 +15,7 @@ import javelin.controller.CountingSet;
 import javelin.controller.Point;
 import javelin.controller.db.Preferences;
 import javelin.controller.exception.RestartWorldGeneration;
+import javelin.controller.generator.feature.LocationGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.unit.Squad;
@@ -186,12 +187,6 @@ public class WorldGenerator extends Thread{
 		}
 	}
 
-	/**
-	 * Spawns threads to generates {@link World} and then {@link Dungeon}s once
-	 * done. Also reports on both steps through an {@link InfoScreen}.
-	 *
-	 * Blocks until alls tasks are done (synchronous method).
-	 */
 	static void generateworld(InfoScreen s){
 		try{
 			for(var i=0;i<NTHREADS;i++)
@@ -246,7 +241,13 @@ public class WorldGenerator extends Thread{
 		WORLDTHREADS.add(thread);
 	}
 
-	/** Generates {@link World} and {@link Dungeon}s. */
+	/**
+	 * Multi-threaded steps to generate {@link World} and {@link Dungeon}s.
+	 * Reports on progress through an {@link InfoScreen}. Blocks synchronously.
+	 *
+	 * @see LocationGenerator
+	 * @see Dungeon#generate()
+	 */
 	public static void build(){
 		var header=String.format(PROGRESSHEADER,NTHREADS);
 		var s=new ProgressScreen(header);

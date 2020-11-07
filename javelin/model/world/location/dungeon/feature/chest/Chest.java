@@ -12,8 +12,8 @@ import javelin.model.item.ItemSelection;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
-import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Furniture;
@@ -52,24 +52,28 @@ public class Chest extends Feature{
 	 *
 	 * @see Furniture#hide(Feature)
 	 */
-	Integer searchdc=10+Dungeon.active.level
-			+DungeonFloor.gettable(FeatureModifierTable.class).roll();
+	Integer searchdc;
 
-	/** Constructor. */
-	public Chest(){
+	/**
+	 * Constructor.
+	 *
+	 * @param f
+	 */
+	Chest(DungeonFloor f){
 		super("chest");
+		searchdc=10+f.level+f.gettable(FeatureModifierTable.class).roll();
 	}
 
 	/** Construtor with {@link #gold} pool. */
-	public Chest(Integer gold){
-		this();
+	public Chest(Integer gold,DungeonFloor f){
+		this(f);
 		if(gold<1) gold=1;
 		this.gold=Javelin.round(gold);
 	}
 
 	/** Constructor with {@link #items}. */
-	public Chest(Item i){
-		this();
+	public Chest(Item i,DungeonFloor f){
+		this(f);
 		items.add(i);
 	}
 

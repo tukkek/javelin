@@ -6,9 +6,8 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.table.Table;
-import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.DungeonTier;
 import javelin.model.world.location.dungeon.DungeonFloor;
+import javelin.model.world.location.dungeon.DungeonTier;
 import javelin.model.world.location.dungeon.Wilderness;
 import javelin.model.world.location.dungeon.feature.DungeonMap;
 import javelin.model.world.location.dungeon.feature.Feature;
@@ -61,20 +60,21 @@ public class RareFeatureTable extends Table implements DungeonFeatureTable{
 	}
 
 	/** Constructor. */
-	public RareFeatureTable(){
+	public RareFeatureTable(DungeonFloor f){
+		super();
 		if(Javelin.DEBUG&&DEBUG!=null){
 			add(DEBUG,1);
 			return;
 		}
-		var tier=Dungeon.active.dungeon.gettier().tier.getordinal();
-		var features=define(tier);
+		var tier=f.gettier().tier.getordinal();
+		var features=define(tier,f);
 		var types=RPG.shuffle(new ArrayList<>(features.keySet()));
 		var ntypes=RPG.randomize(RPG.rolldice(tier+1,4),2,types.size());
-		for(var f:types.subList(0,ntypes))
-			add(f,features.get(f));
+		for(var t:types.subList(0,ntypes))
+			add(t,features.get(t));
 	}
 
-	HashMap<Class<? extends Feature>,Integer> define(int tier){
+	HashMap<Class<? extends Feature>,Integer> define(int tier,DungeonFloor floor){
 		var features=new HashMap<Class<? extends Feature>,Integer>();
 		for(var f:COMMON)
 			features.put(f,ROWS*2);
@@ -82,8 +82,7 @@ public class RareFeatureTable extends Table implements DungeonFeatureTable{
 			features.put(f,ROWS);
 		if(tier>=2) for(var f:RARE)
 			features.put(f,ROWS/2);
-		if(Dungeon.active.dungeon instanceof Wilderness)
-			for(var f:Wilderness.FORBIDDEN)
+		if(floor.dungeon instanceof Wilderness) for(var f:Wilderness.FORBIDDEN)
 			features.remove(f);
 		return features;
 	}

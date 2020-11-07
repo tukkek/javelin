@@ -9,7 +9,6 @@ import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.generator.dungeon.template.MapTemplate;
-import javelin.controller.table.Table;
 import javelin.controller.table.dungeon.door.HiddenDoor;
 import javelin.controller.table.dungeon.door.LockedDoor;
 import javelin.controller.table.dungeon.door.StuckDoor;
@@ -60,8 +59,7 @@ public class Door extends Feature{
 	}
 
 	/** DC of {@link DisableDevice} to unlock. */
-	public int unlockdc=RPG.r(20,30)
-			+DungeonFloor.gettable(FeatureModifierTable.class).roll();
+	public int unlockdc;
 
 	/** Used if {@link #hidden}. TODO */
 	public int searchdc=RPG.r(20,30);
@@ -70,25 +68,30 @@ public class Door extends Feature{
 	/** Type of key used to unlock. */
 	public Class<? extends Key> key;
 	/** Trap present or <code>null</code>. */
-	public DoorTrap trap=rolltable(TrappedDoor.class)?RPG.pick(TRAPS):null;
+	public DoorTrap trap;
 	/** <code>true</code> if stuck. */
-	public boolean stuck=rolltable(StuckDoor.class);
+	public boolean stuck;
 	/** <code>true</code> if locked. */
-	public boolean locked=rolltable(LockedDoor.class);
+	public boolean locked;
 	/** @see #searchdc */
 	/**
 	 * TODO use only #draw, remove
 	 */
-	boolean hidden=!Debug.bypassdoors&&rolltable(HiddenDoor.class);
+	boolean hidden;
 
 	Door(String avatar,int breakdcstuck,int breakdclocked,
-			Class<? extends Key> key){
+			Class<? extends Key> key,DungeonFloor f){
 		super("door",avatar);
+		this.key=key;
 		enter=false;
+		trap=f.gettable(TrappedDoor.class).rollboolean()?RPG.pick(TRAPS):null;
+		stuck=f.gettable(StuckDoor.class).rollboolean();
+		locked=f.gettable(LockedDoor.class).rollboolean();
+		hidden=f.gettable(HiddenDoor.class).rollboolean();
 		breakdc=locked?breakdclocked:breakdcstuck;
 		breakdc=Math.max(2,breakdc+RPG.randomize(5));
-		unlockdc=Math.max(2,unlockdc);
-		this.key=key;
+		unlockdc=RPG.r(20,30)+f.gettable(FeatureModifierTable.class).roll();
+		if(unlockdc<2) unlockdc=2;
 		if(trap!=null) trap.generate(this);
 		draw=!hidden;
 	}
@@ -193,17 +196,18 @@ public class Door extends Feature{
 	}
 
 	/**
-	 * @param dungeon Dungeon to place door in.
+	 * @param f Dungeon to place door in.
 	 * @param p Position of the door.
 	 * @return A randomly-chosen type of door.
 	 */
-	public static Door generate(DungeonFloor dungeon,Point p){
+	public static Door generate(DungeonFloor f,Point p){
 		try{
-			Door d=RPG.pick(TYPES).getDeclaredConstructor().newInstance();
+			var type=RPG.pick(TYPES);
+			var d=type.getDeclaredConstructor(DungeonFloor.class).newInstance(f);
 			if(!d.stuck&&!d.locked&&!(d.trap instanceof Alarm)) return null;
 			d.x=p.x;
 			d.y=p.y;
-			d.unlockdc+=dungeon.level;
+			d.unlockdc+=f.level;
 			return d;
 		}catch(ReflectiveOperationException e){
 			throw new RuntimeException(e);
@@ -225,10 +229,6 @@ public class Door extends Feature{
 		Javelin.redraw();
 		if(searching!=null) Javelin.message("You find a hidden door!",true);
 		return true;
-	}
-
-	static boolean rolltable(Class<? extends Table> table){
-		return Dungeon.active.tables.get(table).rollboolean();
 	}
 
 	@Override

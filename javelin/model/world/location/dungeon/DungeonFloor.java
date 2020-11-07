@@ -94,8 +94,6 @@ public class DungeonFloor implements Serializable{
 	public int stepsperencounter;
 	/** Dungeon encounter level. -1 if not initialized. */
 	public int level=-1;
-	/** @see Table */
-	public Tables tables;
 	/**
 	 * Table of encounters to roll from when generating
 	 * {@link RandomDungeonEncounter}s.
@@ -114,6 +112,7 @@ public class DungeonFloor implements Serializable{
 	public Terrain terrain=Terrain.UNDERGROUND;
 
 	int revealed=0;
+	Tables tables;
 
 	transient int nrooms;
 
@@ -147,7 +146,6 @@ public class DungeonFloor implements Serializable{
 	public void generate(){
 		if(map!=null) return;
 		var previous=Dungeon.active;
-		Dungeon.active=this;
 		var p=getparent();
 		tables=p==null?new Tables():p.tables.clone();
 		map=map();
@@ -263,7 +261,7 @@ public class DungeonFloor implements Serializable{
 		RPG.shuffle(unnocupied);
 		var furniture=new LinkedList<Furniture>();
 		for(var i=0;i<target;i++){
-			var f=new Furniture((String)table.roll());
+			var f=new Furniture((String)table.roll(),this);
 			furniture.add(f);
 			f.place(this,unnocupied.get(i));
 		}
@@ -304,7 +302,7 @@ public class DungeonFloor implements Serializable{
 					while(p==null||isoccupied(p))
 						p=RPG.pick(area);
 					var key=door.key.getConstructor(DungeonFloor.class).newInstance(this);
-					new Chest(key).place(this,p);
+					new Chest(key,this).place(this,p);
 				}
 			}
 		}catch(ReflectiveOperationException e){
@@ -325,7 +323,7 @@ public class DungeonFloor implements Serializable{
 		for(int x=squadlocation.x-1;x<=squadlocation.x+1;x++)
 			for(int y=squadlocation.y-1;y<=squadlocation.y+1;y++)
 				map[x][y]=MapTemplate.FLOOR;
-		if(!isdeepest()) new StairsDown().place(this,zoner.getpoint());
+		if(!isdeepest()) new StairsDown(this).place(this,zoner.getpoint());
 	}
 
 	/** @return <code>true</code> if final floor. */
@@ -369,7 +367,7 @@ public class DungeonFloor implements Serializable{
 		var traps=new ArrayList<Trap>(ntraps);
 		for(var i=0;i<ntraps;i++){
 			var cr=level+Difficulty.get()+modifier.roll();
-			var t=Trap.generate(cr,special.rollboolean());
+			var t=Trap.generate(cr,special.rollboolean(),this);
 			if(t!=null){
 				traps.add(t);
 				if(furniture==null)
@@ -393,9 +391,10 @@ public class DungeonFloor implements Serializable{
 		var percentmodifier=gettable(FeatureModifierTable.class).roll()*2;
 		gold=Math.round(gold*(100+percentmodifier)/100f);
 		try{
-			var c=type.getConstructor(Integer.class).newInstance(gold);
+			var c=type.getConstructor(Integer.class,DungeonFloor.class)
+					.newInstance(gold,this);
 			if(!c.generateitem()){
-				c=new Chest(gold);
+				c=new Chest(gold,this);
 				c.generateitem();
 				if(f!=null){
 					f.hide(c);
@@ -440,7 +439,7 @@ public class DungeonFloor implements Serializable{
 
 	/** @return Most special chest here. */
 	protected Feature generatespecialchest(){
-		return new RubyChest();
+		return new RubyChest(this);
 	}
 
 	public boolean isoccupied(Point p){
@@ -505,8 +504,8 @@ public class DungeonFloor implements Serializable{
 		f.discover(null,9000);
 	}
 
-	public static <K extends Table> K gettable(Class<K> table){
-		return Dungeon.active.tables.get(table);
+	public <K extends Table> K gettable(Class<K> table){
+		return tables.get(table,this);
 	}
 
 	public List<Combatant> rasterizenecounters(){

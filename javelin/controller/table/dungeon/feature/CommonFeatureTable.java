@@ -18,7 +18,8 @@ import javelin.model.world.location.dungeon.feature.Passage;
  */
 public class CommonFeatureTable extends Table implements DungeonFeatureTable{
 	/** Constructor. */
-	public CommonFeatureTable(){
+	public CommonFeatureTable(DungeonFloor f){
+		super();
 		add(Passage.class,1);
 		add(Brazier.class,1);
 		add(LoreNote.class,2);
@@ -37,22 +38,21 @@ public class CommonFeatureTable extends Table implements DungeonFeatureTable{
 
 	/**
 	 * @param t {@link CommonFeatureTable} or {@link RareFeatureTable}.
-	 * @param d {@link Dungeon#active} (probably geing generated).
+	 * @param df {@link Dungeon#active} (probably geing generated).
 	 * @return A valid, non-<code>null</code> feature.
-	 * @see Feature#validate()
+	 * @see Feature#validate(DungeonFloor)
 	 */
 	@SuppressWarnings("unchecked")
-	public static Feature generate(Table t,DungeonFloor d){
-		try{
-			Feature f=null;
-			while(f==null){
+	public static Feature generate(Table t,DungeonFloor df){
+		Feature f=null;
+		while(f==null)
+			try{
 				var type=(Class<? extends Feature>)t.roll();
-				f=type.getDeclaredConstructor().newInstance();
-				if(!f.validate()) f=null;
+				f=type.getDeclaredConstructor(DungeonFloor.class).newInstance(df);
+				if(!f.validate(df)) f=null;
+			}catch(ReflectiveOperationException e){
+				throw new RuntimeException(e);
 			}
-			return f;
-		}catch(ReflectiveOperationException e){
-			throw new RuntimeException(e);
-		}
+		return f;
 	}
 }

@@ -9,6 +9,7 @@ import javelin.model.item.focus.Rod;
 import javelin.model.item.focus.Staff;
 import javelin.model.item.focus.Wand;
 import javelin.model.unit.skill.Spellcraft;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.view.Images;
 
 /**
@@ -23,8 +24,8 @@ public class DeadMage extends Chest{
 			Rod.class);
 
 	/** Constructor. */
-	public DeadMage(Integer gold){
-		super(gold);
+	public DeadMage(Integer gold,DungeonFloor f){
+		super(gold,f);
 	}
 
 	@Override

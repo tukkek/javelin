@@ -15,7 +15,8 @@ import javelin.model.world.location.dungeon.feature.trap.Trap;
 import javelin.view.Images;
 
 /**
- * Mostly cosmetic {@link DungeonFloor} items. Can contain {@link #hidden} features.
+ * Mostly cosmetic {@link DungeonFloor} items. Can contain {@link #hidden}
+ * features.
  *
  * TODO in the future, could hide hidden {@link Trap}, {@link Chest}, stc. The
  * easiest way to achieve this would simply be to make any appropriate Search
@@ -46,7 +47,7 @@ public class Furniture extends Feature{
 	Feature hidden;
 
 	/** Constructor. */
-	public Furniture(String avatar){
+	public Furniture(String avatar,DungeonFloor f){
 		super(avatar);
 	}
 

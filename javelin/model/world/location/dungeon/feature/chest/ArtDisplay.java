@@ -5,6 +5,7 @@ import java.util.List;
 
 import javelin.model.item.Item;
 import javelin.model.item.precious.ArtPiece;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.view.Images;
 
 /**
@@ -13,8 +14,8 @@ import javelin.view.Images;
  */
 public class ArtDisplay extends Chest{
 	/** Constructor. */
-	public ArtDisplay(Integer pool){
-		super(pool);
+	public ArtDisplay(Integer pool,DungeonFloor f){
+		super(pool,f);
 	}
 
 	@Override

@@ -23,9 +23,10 @@ import javelin.model.world.location.dungeon.feature.chest.Chest;
  * partly because since the traps are permanent (so as to be strategic) it would
  * be easy to continually step on traps to plunder XP.
  *
- * Traps are now always hidden on {@link Furniture} in {@link DungeonFloor}s that
- * allow for it - letting players to somewhat strategically avoid them or pursue
- * them for high-rish, high-reward plays (as {@link Chest}s can also be hidden).
+ * Traps are now always hidden on {@link Furniture} in {@link DungeonFloor}s
+ * that allow for it - letting players to somewhat strategically avoid them or
+ * pursue them for high-rish, high-reward plays (as {@link Chest}s can also be
+ * hidden).
  *
  * @see DisableDevice
  * @author alex
@@ -44,10 +45,10 @@ public abstract class Trap extends Feature{
 	public int searchdc;
 
 	/** Constructor. */
-	public Trap(int cr,String avatarfilep){
+	public Trap(int cr,String avatarfilep,DungeonFloor f){
 		super("trap",avatarfilep);
 		this.cr=cr;
-		draw=!DungeonFloor.gettable(TrapVisibilityTable.class).rollboolean();
+		draw=!f.gettable(TrapVisibilityTable.class).rollboolean();
 		remove=false;
 		searchdc=10+cr;
 		disarmdc=searchdc;
@@ -92,9 +93,9 @@ public abstract class Trap extends Feature{
 
 	protected abstract void spring();
 
-	public static Trap generate(int cr,boolean special){
-		return special||cr<MechanicalTrap.MINIMUMCR?new TeleporterTrap(cr)
-				:new MechanicalTrap(cr);
+	public static Trap generate(int cr,boolean special,DungeonFloor f){
+		return special||cr<MechanicalTrap.MINIMUMCR?new TeleporterTrap(cr,f)
+				:new MechanicalTrap(cr,f);
 	}
 
 	@Override

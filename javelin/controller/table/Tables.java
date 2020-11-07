@@ -3,14 +3,16 @@ package javelin.controller.table;
 import java.io.Serializable;
 import java.util.HashMap;
 
+import javelin.model.world.location.dungeon.DungeonFloor;
+
 public class Tables implements Serializable,Cloneable{
 	HashMap<Class<? extends Table>,Table> tables=new HashMap<>();
 
-	public <K extends Table> K get(Class<K> table){
+	public <K extends Table> K get(Class<K> table,DungeonFloor f){
 		try{
-			Table t=tables.get(table);
+			var t=tables.get(table);
 			if(t==null){
-				t=table.getDeclaredConstructor().newInstance();
+				t=table.getDeclaredConstructor(DungeonFloor.class).newInstance(f);
 				t.modify();
 				tables.put(table,t);
 			}
@@ -20,15 +22,15 @@ public class Tables implements Serializable,Cloneable{
 		}
 	}
 
+	/** As {@link #clone()} but updates {@link #floor}. */
 	@Override
 	public Tables clone(){
 		try{
-			Tables clone;
-			clone=(Tables)super.clone();
-			clone.tables=new HashMap<>(tables);
-			for(Class<? extends Table> table:clone.tables.keySet())
-				clone.tables.put(table,tables.get(table).clone());
-			return clone;
+			var c=(Tables)super.clone();
+			c.tables=new HashMap<>(tables.size());
+			for(var t:tables.keySet())
+				c.tables.put(t,tables.get(t).clone());
+			return c;
 		}catch(CloneNotSupportedException e){
 			throw new RuntimeException(e);
 		}

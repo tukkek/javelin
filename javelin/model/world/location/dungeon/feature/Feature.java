@@ -12,8 +12,8 @@ import javelin.controller.table.dungeon.feature.RareFeatureTable;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Perception;
-import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.Features;
 import javelin.view.Images;
 import javelin.view.mappanel.dungeon.DungeonTile;
@@ -105,17 +105,21 @@ public abstract class Feature implements Serializable{
 		return new Point(x,y);
 	}
 
-	/** Called once per feature after all {@link DungeonFloor} floors are generated. */
+	/**
+	 * Called once per feature after all {@link DungeonFloor} floors are
+	 * generated.
+	 */
 	public void define(DungeonFloor current,List<DungeonFloor> floors){
 		// nothing by default
 	}
 
 	/**
+	 * @param f TODO
 	 * @return If <code>false</code>, generate a new random Feature instead.
 	 * @see CommonFeatureTable
 	 * @see RareFeatureTable
 	 */
-	public boolean validate(){
+	public boolean validate(DungeonFloor f){
 		return true;
 	}
 

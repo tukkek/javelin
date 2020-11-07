@@ -8,12 +8,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javelin.controller.Point;
+import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.dungeon.VirtualMap.Room;
 import javelin.controller.generator.dungeon.template.MapTemplate;
 import javelin.controller.generator.dungeon.template.StaticTemplate;
 import javelin.controller.generator.dungeon.template.corridor.StraightCorridor;
 import javelin.controller.generator.dungeon.template.mutator.Mutator;
-import javelin.controller.table.Tables;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.old.RPG;
 import javelin.view.screen.town.SelectScreen;
@@ -23,8 +23,10 @@ public class DungeonGenerator{
 	public static final MapTemplate DEBUGTEMPLATE=DEBUG?null:null;
 	public static final MapTemplate DEBUGCORRIDOR=DEBUG?null:null;
 	public static final Mutator DEBUGMUTATOR=DEBUG?null:null;
+
 	static final boolean DEBUGROOMS=true;
 	static final int DEBUGSIZE=1;
+	static final int MAXATTEMPTS=10000/3;
 
 	/**
 	 * TODO temporary: will need to be refactored when more than one level can be
@@ -37,10 +39,11 @@ public class DungeonGenerator{
 	static int ncorridors;
 	static int ntemplates;
 
-	public Tables tables;
 	public VirtualMap map=new VirtualMap();
 	public char[][] grid;
 	public String ascii;
+	/** Floor being mapped. */
+	public DungeonFloor floor;
 
 	LinkedList<Segment> segments=new LinkedList<>();
 	ArrayList<MapTemplate> pool=new ArrayList<>();
@@ -63,8 +66,11 @@ public class DungeonGenerator{
 	private DungeonGenerator(int minrooms,int maxrooms,DungeonFloor f){
 		this.minrooms=minrooms;
 		this.maxrooms=maxrooms;
-		tables=f.tables;
+		floor=f;
 		instance=this;
+	}
+
+	public void start() throws GaveUp{
 		generatepool();
 		draw();
 		/* TODO make this a Table 5±10 */
@@ -127,12 +133,15 @@ public class DungeonGenerator{
 			this.grid[i]=grid[i].toCharArray();
 	}
 
-	void draw(){
+	void draw() throws GaveUp{
 		MapTemplate start=generateroom();
 		segments.add(new Segment(start,new Point(0,0)));
 		map.draw(start,0,0);
 		nrooms=RPG.r(minrooms,maxrooms);
+		var attempts=0;
 		while(nrooms>0&&!segments.isEmpty()){
+			attempts+=1;
+			if(attempts>=MAXATTEMPTS) throw new GaveUp();
 			Segment s=RPG.pick(segments);
 			segments.remove(s);
 			LinkedList<Point> doors=new LinkedList<>(s.room.getdoors());
@@ -251,11 +260,15 @@ public class DungeonGenerator{
 			DungeonFloor f){
 		StaticTemplate.load();
 		DungeonGenerator dungeon=null;
-		while(dungeon==null){
-			dungeon=new DungeonGenerator(minrooms,maxrooms,f);
-			int size=dungeon.map.rooms.size();
-			if(!(minrooms<=size&&size<=maxrooms)) dungeon=null;
-		}
+		while(dungeon==null)
+			try{
+				dungeon=new DungeonGenerator(minrooms,maxrooms,f);
+				dungeon.start();
+				int size=dungeon.map.rooms.size();
+				if(!(minrooms<=size&&size<=maxrooms)) dungeon=null;
+			}catch(GaveUp e){
+				continue;
+			}
 		return dungeon;
 	}
 

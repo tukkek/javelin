@@ -12,8 +12,8 @@ import javelin.old.RPG;
 import javelin.view.screen.BattleScreen;
 
 /**
- * Shows an area of the {@link DungeonFloor} map, with a cumulative 50% chance of
- * doubling that area (50% chance of 2*area, 25% chance of 3*area, etc).
+ * Shows an area of the {@link DungeonFloor} map, with a cumulative 50% chance
+ * of doubling that area (50% chance of 2*area, 25% chance of 3*area, etc).
  *
  * TODO allow other Dungeon floors to be shown.
  *
@@ -23,7 +23,7 @@ public class DungeonMap extends Feature{
 	final double AREA=RPG.r(10,25)/100.0;
 
 	/** Constructor. */
-	public DungeonMap(){
+	public DungeonMap(DungeonFloor f){
 		super("map");
 	}
 

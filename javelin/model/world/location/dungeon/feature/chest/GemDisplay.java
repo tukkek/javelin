@@ -6,6 +6,7 @@ import java.util.List;
 import javelin.model.item.Item;
 import javelin.model.item.consumable.Eidolon;
 import javelin.model.item.precious.Gem;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.view.Images;
 
 /**
@@ -15,9 +16,8 @@ import javelin.view.Images;
  */
 public class GemDisplay extends Chest{
 	/** Constructor. */
-	public GemDisplay(Integer pool){
-		super(pool);
-		// TODO Auto-generated constructor stub
+	public GemDisplay(Integer pool,DungeonFloor f){
+		super(pool,f);
 	}
 
 	@Override

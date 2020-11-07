@@ -36,23 +36,8 @@ import javelin.view.screen.DungeonScreen;
  * @author alex
  */
 public class Dungeon implements Serializable{
-	/**
-	 * Current dungeon or <code>null</code> if not in one. Also set during
-	 * {@link #generate()}, pointing to the relevant instance.
-	 */
+	/** Current dungeon or <code>null</code> if not in one. */
 	public static DungeonFloor active=null;
-
-	/**
-	 * Simple callback to report generation progress.
-	 *
-	 * @author alex
-	 */
-	public interface GenerationReport{
-		/**
-		 * @param d Floor that just finished generation.
-		 */
-		void report(double d);
-	}
 
 	/**
 	 * All floors that make part of this dungeon. Each floor deeper is a
@@ -85,7 +70,7 @@ public class Dungeon implements Serializable{
 	/** A message to be shown when entering the dungeon or <code>null</code>. */
 	public String fluff=null;
 	/** Usually {@link Terrain#UNDERGROUND}. */
-	public List<Terrain> terrains=List.of(Terrain.UNDERGROUND);
+	public List<Terrain> terrains=new ArrayList<>(List.of(Terrain.UNDERGROUND));
 
 	String name;
 
@@ -114,7 +99,7 @@ public class Dungeon implements Serializable{
 	 * @return Chooses and removes a name from {@link World#dungeonnames}.
 	 * @throws RuntimeException When out of names.
 	 */
-	protected String baptize(String suffix){
+	synchronized String baptize(String suffix){
 		var names=World.getseed().dungeonnames;
 		suffix=" "+suffix.toLowerCase();
 		if(names.isEmpty()){
@@ -144,20 +129,12 @@ public class Dungeon implements Serializable{
 	 * each floor's {@link #features}; then generates {@link Lore}. Should be
 	 * called only once, from top-level.
 	 */
-	public void generate(GenerationReport callback){
-		var nfloors=floors.size();
-		for(int i=0;i<nfloors;i++){
-			Dungeon.active=floors.get(i);
-			Dungeon.active.generate();
-			if(callback!=null) callback.report(i/(nfloors*2));
-		}
-		for(int i=0;i<nfloors;i++){
-			var floor=floors.get(i);
-			Dungeon.active=floor;
-			for(var feature:floor.features.getall())
-				feature.define(floor,floors);
-			if(callback!=null) callback.report(.5+i/nfloors);
-		}
+	public void generate(){
+		for(var f:floors)
+			f.generate();
+		for(var f:floors)
+			for(var feature:f.features.getall())
+				feature.define(f,floors);
 		generatelore();
 	}
 
@@ -192,14 +169,10 @@ public class Dungeon implements Serializable{
 	public void enter(){
 		if(floors.get(0).features.isEmpty()){
 			if(Javelin.DEBUG) throw new RuntimeException("Dungeon not generated!");
-			generate((i)->{
-				// should be handled by WorldGenerator but just in case...
-				var report="Generating dungeon (%s%%)...";
-				BattleScreen.active.messagepanel.clear();
-				var progress=100*i/floors.size();
-				Javelin.message(String.format(report,progress),Delay.NONE);
-				BattleScreen.active.messagepanel.repaint();
-			});
+			BattleScreen.active.messagepanel.clear();
+			Javelin.message("Generating dungeon, please wait...",Delay.NONE);
+			BattleScreen.active.messagepanel.repaint();
+			generate();
 		}
 		var f=chooseentrance();
 		if(f==null) throw new RepeatTurn();

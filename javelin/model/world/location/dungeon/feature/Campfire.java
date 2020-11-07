@@ -20,7 +20,7 @@ public class Campfire extends Feature{
 			+"Press ENTER to camp, any other key to cancel...";
 
 	/** Constructor. */
-	public Campfire(){
+	public Campfire(DungeonFloor f){
 		super("campfire");
 		remove=false;
 	}

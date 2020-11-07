@@ -13,7 +13,7 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.unique.AdventurersGuild;
 import javelin.old.RPG;
 
@@ -46,15 +46,16 @@ public class LearningStone extends Feature{
 	}
 
 	/** {@link Difficulty#MODERATE} value in gold. */
-	int gold=RewardCalculator.getgold(Math.max(1,Dungeon.active.level-4));
+	int gold;
 	List<Upgrade> upgrades=new ArrayList<>();
 	boolean revealed=false;
 	final String type;
 
 	/** Constructor. */
-	public LearningStone(){
+	public LearningStone(DungeonFloor f){
 		super("learning stone");
 		remove=false;
+		gold=RewardCalculator.getgold(Math.max(1,f.level-4));
 		var kit=RPG.pick(Kit.KITS);
 		upgrades.addAll(kit.getupgrades());
 		type=kit.name.toLowerCase();

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.kit.Kit;
 import javelin.controller.table.dungeon.feature.CommonFeatureTable;
@@ -43,10 +44,10 @@ public class TempleFloor extends DungeonFloor{
 	@Override
 	protected void generatefeatures(int nfeatures,DungeonZoner zoner){
 		if(this==temple.floors.get(0)){
-			CommonFeatureTable table=tables.get(CommonFeatureTable.class);
-			int size=table.getchances();
-			table.add(Fountain.class,size);
-			if(temple.feature!=null) table.add(temple.feature,size);
+			var t=gettable(CommonFeatureTable.class);
+			var c=t.getchances();
+			t.add(Fountain.class,c);
+			if(temple.feature!=null) t.add(temple.feature,c);
 		}
 		super.generatefeatures(nfeatures,zoner);
 	}
@@ -58,9 +59,12 @@ public class TempleFloor extends DungeonFloor{
 
 	@Override
 	protected Combatants generateencounter(int level,List<Terrain> terrains){
-		Combatants encounter=null;
-		while(encounter==null)
-			encounter=super.generateencounter(level-RPG.r(1,4),terrains);
+		Combatants encounter=super.generateencounter(level-RPG.r(1,4),terrains);
+		if(encounter==null){
+			if(!Javelin.DEBUG) return null;
+			var error="Cannot create encounter for level %s %s.";
+			throw new RuntimeException(String.format(error,level,this));
+		}
 		if(!temple.validate(encounter.getmonsters())) return null;
 		var kits=new HashMap<Combatant,List<Kit>>(encounter.size());
 		for(var c:encounter)

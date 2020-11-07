@@ -6,6 +6,7 @@ import java.util.List;
 import javelin.model.item.Item;
 import javelin.model.item.consumable.Scroll;
 import javelin.model.item.gear.rune.Rune;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.view.Images;
 
 /**
@@ -14,8 +15,8 @@ import javelin.view.Images;
  * @author alex
  */
 public class Bookcase extends Chest{
-	public Bookcase(Integer gold){
-		super(gold);
+	public Bookcase(Integer gold,DungeonFloor f){
+		super(gold,f);
 	}
 
 	@Override

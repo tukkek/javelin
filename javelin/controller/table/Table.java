@@ -17,8 +17,8 @@ import javelin.old.RPG;
  * tables are self-mutation for two purposed: 1. so that each instances of the
  * table are never pre-defined but instead only descrived as general guidelines
  * to what their contents should be and 2. so that they can be copied and
- * mutated (for example, between levels of the same {@link DungeonFloor}) - which
- * will in turn keep a cohesive theme while still having mutation between
+ * mutated (for example, between levels of the same {@link DungeonFloor}) -
+ * which will in turn keep a cohesive theme while still having mutation between
  * levels.
  *
  * For example: a table describiing how many {@link Trap}s (or serets
@@ -103,13 +103,13 @@ public class Table implements Serializable,Cloneable{
 	@Override
 	public Table clone(){
 		try{
-			Table clone=(Table)super.clone();
-			clone.data=new HashMap<>(data);
-			clone.rows=new HashMap<>(rows);
-			for(Object key:data.keySet())
-				clone.data.put(key,data.get(key).clone());
-			clone.modify();
-			return clone;
+			var c=(Table)super.clone();
+			c.data=new HashMap<>(data);
+			c.rows=new HashMap<>(rows);
+			for(var k:data.keySet())
+				c.data.put(k,data.get(k).clone());
+			c.modify();
+			return c;
 		}catch(CloneNotSupportedException e){
 			throw new RuntimeException(e);
 		}

@@ -7,6 +7,7 @@ import java.util.Set;
 import javelin.model.item.Item;
 import javelin.model.item.potion.Flask;
 import javelin.model.item.potion.Potion;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.view.Images;
 
 /**
@@ -19,8 +20,8 @@ public class DeadAdventurer extends Chest{
 			Flask.class);
 
 	/** Constructor. */
-	public DeadAdventurer(Integer gold){
-		super(gold);
+	public DeadAdventurer(Integer gold,DungeonFloor f){
+		super(gold,f);
 	}
 
 	@Override

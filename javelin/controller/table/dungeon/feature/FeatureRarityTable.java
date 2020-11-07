@@ -11,9 +11,10 @@ import javelin.model.world.location.dungeon.DungeonFloor;
  */
 public class FeatureRarityTable extends Table{
 	/** Constructor. */
-	public FeatureRarityTable(){
-		add(DungeonFloor.gettable(CommonFeatureTable.class),2);
-		add(DungeonFloor.gettable(RareFeatureTable.class),1,4);
+	public FeatureRarityTable(DungeonFloor f){
+		super();
+		add(f.gettable(CommonFeatureTable.class),2);
+		add(f.gettable(RareFeatureTable.class),1,4);
 	}
 
 	@Override

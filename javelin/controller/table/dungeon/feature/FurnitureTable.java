@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import javelin.controller.TieredList;
 import javelin.controller.table.Table;
-import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.DungeonTier;
 import javelin.model.world.location.dungeon.feature.Furniture;
 import javelin.old.RPG;
@@ -21,6 +21,7 @@ public class FurnitureTable extends Table{
 		DungeonTier rarity;
 
 		Type(String name,int nimages,DungeonTier rarity){
+			super();
 			this.name=name;
 			this.rarity=rarity;
 			for(var i=1;i<=nimages;i++)
@@ -48,8 +49,9 @@ public class FurnitureTable extends Table{
 	static final List<Type> ALL=List.of(STATUE,FURNITURE,MISC);
 
 	/** Constructor. */
-	public FurnitureTable(){
-		var tiered=new TieredList<Type>(Dungeon.active.dungeon.gettier());
+	public FurnitureTable(DungeonFloor f){
+		super();
+		var tiered=new TieredList<Type>(f.dungeon.gettier());
 		for(var type:ALL)
 			tiered.addtiered(type,type.rarity);
 		var types=new ArrayList<>(

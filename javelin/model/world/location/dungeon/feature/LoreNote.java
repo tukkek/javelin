@@ -16,9 +16,9 @@ import javelin.model.world.location.dungeon.Lore;
 import javelin.old.RPG;
 
 /**
- * Discovers {@link Lore} about another {@link DungeonFloor}. Generated on-demand and
- * not while generating {@link DungeonFloor} so we can have access to all
- * {@link DungeonFloor#lore} .
+ * Discovers {@link Lore} about another {@link DungeonFloor}. Generated
+ * on-demand and not while generating {@link DungeonFloor} so we can have access
+ * to all {@link DungeonFloor#lore} .
  *
  * @author alex
  */
@@ -28,12 +28,12 @@ public class LoreNote extends Feature{
 			+"(You can view all your lore notes at any time through the Known Lore creen).";
 	static final String FAILURE="%s could not extract any useful information from this text...";
 
-	int dc=10+Dungeon.active.level
-			+Dungeon.active.tables.get(FeatureModifierTable.class).roll();
+	int dc;
 
 	/** Constructor. */
-	public LoreNote(){
+	public LoreNote(DungeonFloor f){
 		super("lore note");
+		dc=10+f.level+f.gettable(FeatureModifierTable.class).roll();
 	}
 
 	@Override

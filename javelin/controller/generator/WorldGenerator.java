@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import javelin.Debug;
@@ -43,32 +45,58 @@ public class WorldGenerator extends Thread{
 	/** @see Debug */
 	public static final CountingSet RESETS=Javelin.DEBUG?new CountingSet():null;
 
-	static final int MAXRETRIES=100000;
+	static final int MAXRETRIES=1000*2;
 	static final int NOISEAMOUNT=World.scenario.size*World.scenario.size/10;
 	static final Terrain[] NOISE=new Terrain[]{Terrain.PLAIN,Terrain.HILL,
 			Terrain.FOREST,Terrain.MOUNTAINS};
+	static final int REFRESH=100;
+	static final String PROGRESSHEADER="Building world, using %S thread(s)...";
+	static final String GENERATINGDUNGEONS="Generating dungeons: %s%%.";
+	static final int NTHREADS=Math.max(1,Preferences.maxthreads);
+	static final List<WorldGenerator> WORLDTHREADS=new ArrayList<>(NTHREADS);
 
 	static int discarded=0;
+	static int dungeonsgenerated=0;
+
+	static class ProgressScreen extends InfoScreen{
+		LinkedList<String> reports=new LinkedList<>();
+
+		public ProgressScreen(String header){
+			super(header);
+			reports.add(header);
+			reports.add("");
+			reports.add(null);
+		}
+
+		@Override
+		public void print(String line){
+			reports.removeLast();
+			reports.add(line);
+			super.print(String.join("\n",reports));
+		}
+
+		void fix(){
+			reports.add(null);
+		}
+	}
 
 	public int retries=0;
 	public World world;
 
 	@Override
 	public final void run(){
-		try{
-			generate();
-		}catch(RestartWorldGeneration e){
-			if(World.seed==null) try{
-				startthread();
-			}catch(ReflectiveOperationException e2){
-				throw new RuntimeException(e2);
+		while(World.seed==null)
+			try{
+				generate();
+			}catch(RestartWorldGeneration e){
+				continue;
 			}
-		}
 	}
 
 	/** Creates {@link World} geography and {@link Location}s. */
 	protected void generate(){
 		try{
+			retries=0;
 			world=new World();
 			var realms=RPG.shuffle(new LinkedList<>(Arrays.asList(Realm.values())));
 			var regions=new ArrayList<HashSet<Point>>(realms.size());
@@ -98,6 +126,7 @@ public class WorldGenerator extends Thread{
 	 * @throws RestartWorldGeneration
 	 */
 	public synchronized final void bumpretry(){
+		if(World.seed!=null) throw new RestartWorldGeneration();
 		retries+=1;
 		if(retries<=MAXRETRIES) return;
 		retries=0;
@@ -163,49 +192,66 @@ public class WorldGenerator extends Thread{
 	 *
 	 * Blocks until alls tasks are done (synchronous method).
 	 */
-	public static void build(){
-		var threads=Math.max(1,Preferences.maxthreads);
-		var header="Building world, using "+threads+" thread(s)...\n\n";
-		var info=header;
-		var screen=new InfoScreen("");
+	static void generateworld(InfoScreen s){
 		try{
-			for(var i=0;i<threads;i++)
+			for(var i=0;i<NTHREADS;i++)
 				startthread();
 			var lastdiscarded=-1;
 			while(World.seed==null){
 				if(lastdiscarded!=discarded){
-					info=header+"Worlds discarded: "+discarded+'.';
-					screen.print(info);
+					s.print("Worlds discarded: "+discarded+'.');
 					lastdiscarded=discarded;
 				}
-				Thread.sleep(500);
+				Thread.sleep(REFRESH);
 			}
+			for(var t:WORLDTHREADS)
+				t.retries=MAXRETRIES;
 		}catch(ReflectiveOperationException e){
 			throw new RuntimeException(e);
 		}catch(InterruptedException e){
 			throw new RuntimeException(e);
 		}
-		generatedungeons(screen,info);
 	}
 
-	static void generatedungeons(InfoScreen s,String text){
+	static void generatedungeons(InfoScreen s){
+		s.print(String.format(GENERATINGDUNGEONS,0));
 		var dungeons=World.getactors().stream()
-				.filter(a->a instanceof DungeonEntrance).map(a->(DungeonEntrance)a)
+				.filter(a->a instanceof DungeonEntrance)
+				.map(a->((DungeonEntrance)a).dungeon)
+				.sorted((a,b)->-Integer.compare(a.floors.size(),b.floors.size()))
 				.collect(Collectors.toList());
-		int ndungeons=dungeons.size();
-		for(var i=0;i<ndungeons;i++){
-			var d=dungeons.get(i);
-			//			var nfloors=d.dungeon.floors.size();
-			d.dungeon.generate(percent->{
-				var progress=100.0*(dungeons.indexOf(d)+percent)/ndungeons;
-				s.print(text+"\nGenerating dungeons: "+Math.round(progress)+"%.");
+		var pool=Executors.newFixedThreadPool(NTHREADS);
+		for(var d:dungeons)
+			pool.execute(()->{
+				d.generate();
+				dungeonsgenerated+=1;
 			});
+		pool.shutdown();
+		var ndungeons=dungeons.size();
+		while(!pool.isTerminated()){
+			var progress=100.0*dungeonsgenerated/ndungeons;
+			s.print(String.format(GENERATINGDUNGEONS,Math.round(progress)));
+			try{
+				Thread.sleep(100);
+			}catch(InterruptedException e){
+				throw new RuntimeException(e);
+			}
 		}
-		Dungeon.active=null;
 	}
 
 	static void startthread() throws ReflectiveOperationException{
-		Class<? extends WorldGenerator> generator=World.scenario.worldgenerator;
-		generator.getDeclaredConstructor().newInstance().start();
+		var generator=World.scenario.worldgenerator;
+		var thread=generator.getDeclaredConstructor().newInstance();
+		thread.start();
+		WORLDTHREADS.add(thread);
+	}
+
+	/** Generates {@link World} and {@link Dungeon}s. */
+	public static void build(){
+		var header=String.format(PROGRESSHEADER,NTHREADS);
+		var s=new ProgressScreen(header);
+		generateworld(s);
+		s.fix();
+		generatedungeons(s);
 	}
 }

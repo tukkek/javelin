@@ -33,13 +33,13 @@ public class Passage extends Feature{
 
 	transient boolean generated=false;
 
-	public Passage(){
+	public Passage(DungeonFloor f){
 		super("passage");
 		remove=false;
 	}
 
 	public Passage(Passage entrance,DungeonFloor floor){
-		this();
+		this(floor);
 		destination=entrance;
 		this.floor=floor;
 		description=entrance.description;

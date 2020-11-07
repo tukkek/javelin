@@ -81,8 +81,8 @@ public abstract class MapTemplate implements Cloneable,DungeonArea{
 	}
 
 	protected void initrandom(){
-		RoomSizeTable table=DungeonGenerator.instance.tables
-				.get(RoomSizeTable.class);
+		RoomSizeTable table=DungeonGenerator.instance.floor
+				.gettable(RoomSizeTable.class);
 		init(table.rollnumber(),table.rollnumber());
 	}
 

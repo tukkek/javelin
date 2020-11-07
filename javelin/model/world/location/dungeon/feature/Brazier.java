@@ -11,6 +11,8 @@ import javelin.controller.generator.dungeon.template.MapTemplate;
 import javelin.controller.walker.Walker;
 import javelin.controller.walker.pathing.DirectPath;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
+import javelin.model.world.location.dungeon.temple.FireTemple;
 import javelin.view.mappanel.dungeon.DungeonTile;
 
 /**
@@ -39,7 +41,7 @@ public class Brazier extends Feature{
 	}
 
 	/** Constructor. */
-	public Brazier(){
+	public Brazier(DungeonFloor f){
 		super("brazier");
 	}
 
@@ -52,8 +54,7 @@ public class Brazier extends Feature{
 				for(var y=-range;y<=+range;y++)
 					if(x==range||x==-+range||y==-range||y==+range){
 						var p=new Point(this.x+x,this.y+y);
-						if(!p.validate(0,0,Dungeon.active.size,
-								Dungeon.active.size))
+						if(!p.validate(0,0,Dungeon.active.size,Dungeon.active.size))
 							continue;
 						var path=new VisionWalker(getlocation(),p).walk();
 						if(path!=null){

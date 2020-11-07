@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.generator.NpcGenerator;
+import javelin.controller.generator.WorldGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.wish.Win;
@@ -44,6 +45,7 @@ public abstract class Temple extends Dungeon{
 		@Override
 		protected void generate(){
 			var t=(Temple)dungeon;
+			WorldGenerator.retry();
 			while(x==-1||!t.terrains.contains(Terrain.get(x,y)))
 				super.generate();
 		}
@@ -81,7 +83,7 @@ public abstract class Temple extends Dungeon{
 	/** Constructor. */
 	public Temple(Realm r,List<Terrain> t,int level,Artifact a,String fluffp){
 		super("The Temple of "+r.getname(),level,
-				RPG.randomize(4,1,Integer.MAX_VALUE));
+				RPG.randomize(2,1,Integer.MAX_VALUE));
 		artifact=a;
 		fluff=fluffp;
 		realm=r;

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.world.location.dungeon.DungeonFloor;
+import javelin.model.world.location.dungeon.temple.EarthTemple;
 
 /**
  * @see EarthTemple
@@ -15,7 +17,7 @@ public class FruitTree extends Feature{
 			+"Press ENTER to pick or any other key to cancel...";
 
 	/** Constructor. */
-	public FruitTree(){
+	public FruitTree(DungeonFloor f){
 		super("fruit tree");
 	}
 

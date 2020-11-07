@@ -10,8 +10,8 @@ import javelin.model.item.consumable.Eidolon;
 import javelin.model.item.consumable.Scroll;
 import javelin.model.item.potion.Potion;
 import javelin.model.unit.Combatant;
-import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.DungeonTier;
 import javelin.old.RPG;
@@ -58,8 +58,8 @@ public class Crate extends Chest{
 			Eidolon.class,Scroll.class);
 
 	/** Constructor. */
-	public Crate(Integer pool){
-		super(pool);
+	public Crate(Integer pool,DungeonFloor f){
+		super(pool,f);
 		draw=false;
 		searchdc=-5;
 		if(searchdc<2) searchdc=2;

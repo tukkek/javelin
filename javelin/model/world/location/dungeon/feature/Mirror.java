@@ -11,6 +11,7 @@ import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.unit.condition.TemporarySpell;
+import javelin.model.world.location.dungeon.DungeonFloor;
 
 /**
  * A magic mirror that grants a one-time use of summoning a copy of yourself
@@ -51,7 +52,7 @@ public class Mirror extends Feature{
 	}
 
 	/** Java Reflection-friendly constructor. */
-	public Mirror(){
+	public Mirror(DungeonFloor f){
 		super("mirror");
 		enter=true;
 		remove=true;

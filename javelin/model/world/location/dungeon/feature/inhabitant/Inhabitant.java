@@ -54,16 +54,16 @@ public abstract class Inhabitant extends Feature{
 	 */
 	protected int diplomacydc;
 
-	public Inhabitant(float crmin,float crmax,String description){
+	public Inhabitant(float crmin,float crmax,String description,DungeonFloor f){
 		super(description);
 		this.crmin=crmin;
 		this.crmax=crmax;
 		remove=false;
-		inhabitant=select();
+		inhabitant=select(f);
 		avatarfile=inhabitant.source.avatarfile;
 		Skill.DIPLOMACY.getupgrade().upgrade(inhabitant);
 		diplomacydc=inhabitant.taketen(Skill.DIPLOMACY)
-				+DungeonFloor.gettable(FeatureModifierTable.class).roll();
+				+f.gettable(FeatureModifierTable.class).roll();
 		int d100=RPG.r(0,100);
 		gold=RewardCalculator.getgold(inhabitant.source.cr)*d100/100;
 	}
@@ -76,37 +76,34 @@ public abstract class Inhabitant extends Feature{
 	 *         {@link #dungeon} is a {@link TempleFloor}. If it can't find one in
 	 *         {@link DungeonFloor#encounters}, generates one instead.
 	 */
-	public Combatant select(){
+	public Combatant select(DungeonFloor f){
 		HashSet<String> invalid=new HashSet<>();
-		for(Combatant c:Dungeon.active.rasterizenecounters()){
+		for(Combatant c:f.rasterizenecounters()){
 			Monster m=c.source;
 			String name=m.name;
-			if(invalid.contains(name)||!validate(m)){
+			if(invalid.contains(name)||!validate(m,f)){
 				invalid.add(name);
 				continue;
 			}
 			Combatant npc=NpcGenerator.generatenpc(m,crmin);
 			if(npc!=null) return npc;
 		}
-		return new Combatant(generate(crmin,crmax),true);
+		return new Combatant(generate(crmin,crmax,f),true);
 	}
 
-	Monster generate(float crmin,float crmax){
+	Monster generate(float crmin,float crmax,DungeonFloor f){
 		ArrayList<Monster> candidates=new ArrayList<>();
 		for(Float cr:Monster.BYCR.keySet())
 			if(crmin<=cr&&cr<=crmax) candidates.addAll(Monster.BYCR.get(cr));
 		Collections.shuffle(candidates);
 		for(Monster m:candidates)
-			if(validate(m)) return m;
-		return generate(crmin-1,crmax+1);
+			if(validate(m,f)) return m;
+		return generate(crmin-1,crmax+1,f);
 	}
 
-	/**
-	 * @return <code>true</code> if the given Monster fits the {@link #dungeon}
-	 *         context.
-	 */
-	protected boolean validate(Monster m){
-		return m.think(-1)&&Dungeon.active.dungeon.validate(List.of(m));
+	/** @see Dungeon#validate(List) */
+	protected boolean validate(Monster m,DungeonFloor f){
+		return m.think(-1)&&f.dungeon.validate(List.of(m));
 	}
 
 	@Override

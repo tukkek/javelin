@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.table.Table;
-import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.chest.ArmorDisplay;
 import javelin.model.world.location.dungeon.feature.chest.ArtDisplay;
 import javelin.model.world.location.dungeon.feature.chest.Bookcase;
@@ -26,8 +26,9 @@ public class ChestTable extends Table{
 					Bookcase.class,DeadMage.class,GemDisplay.class,VestDisplay.class));
 
 	/** Constructor. */
-	public ChestTable(){
-		var tier=Dungeon.active.dungeon.gettier().tier.getordinal();
+	public ChestTable(DungeonFloor f){
+		super();
+		var tier=f.dungeon.gettier().tier.getordinal();
 		var nhighlights=RPG.randomize(tier+1,1,TYPES.size()-1);
 		var highlights=TYPES.subList(0,nhighlights);
 		for(var t:TYPES)

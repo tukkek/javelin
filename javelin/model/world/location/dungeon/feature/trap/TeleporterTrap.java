@@ -10,6 +10,7 @@ import javelin.controller.generator.dungeon.template.MapTemplate;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.old.RPG;
 
@@ -39,8 +40,8 @@ public class TeleporterTrap extends Trap{
 		}
 	}
 
-	public TeleporterTrap(int cr){
-		super(cr,"trap");
+	public TeleporterTrap(int cr,DungeonFloor f){
+		super(cr,"trap",f);
 	}
 
 	@Override

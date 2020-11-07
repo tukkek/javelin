@@ -8,12 +8,12 @@ import javelin.model.item.key.door.MasterKey;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.old.RPG;
 
 public class Prisoner extends Inhabitant{
-	public Prisoner(){
-		super(Dungeon.active.level+Difficulty.VERYEASY+1,
-				Dungeon.active.level+Difficulty.EASY,"prisoner");
+	public Prisoner(DungeonFloor f){
+		super(f.level+Difficulty.VERYEASY+1,f.level+Difficulty.EASY,"prisoner",f);
 	}
 
 	@Override

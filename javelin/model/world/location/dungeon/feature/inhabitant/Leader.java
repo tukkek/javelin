@@ -17,6 +17,7 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.DungeonTier;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.Option;
@@ -194,12 +195,11 @@ public class Leader extends Inhabitant{
 	Monster base;
 
 	/** Constructor. */
-	public Leader(){
-		super(Dungeon.active.level+Difficulty.MODERATE,
-				Dungeon.active.level+Difficulty.DEADLY,"leader");
+	public Leader(DungeonFloor f){
+		super(f.level+Difficulty.MODERATE,f.level+Difficulty.DEADLY,"leader",f);
 		base=Monster.get(inhabitant.source.name);
 		guards.add(inhabitant);
-		while(ChallengeCalculator.calculateel(guards)<Dungeon.active.level)
+		while(ChallengeCalculator.calculateel(guards)<f.level)
 			guards.add(new Combatant(base,true));
 	}
 

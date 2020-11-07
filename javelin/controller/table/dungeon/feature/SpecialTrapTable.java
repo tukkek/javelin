@@ -1,6 +1,7 @@
 package javelin.controller.table.dungeon.feature;
 
 import javelin.controller.table.Table;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.trap.Trap;
 
 /**
@@ -11,7 +12,8 @@ import javelin.model.world.location.dungeon.feature.trap.Trap;
  */
 public class SpecialTrapTable extends Table{
 	/** Constructor. */
-	public SpecialTrapTable(){
+	public SpecialTrapTable(DungeonFloor f){
+		super();
 		add(true,1);
 		add(false,4-1,10-1);
 	}

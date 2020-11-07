@@ -162,24 +162,23 @@ public class Broker extends Inhabitant{
 	int hints=RPG.r(1,10);
 
 	/** Constructor. */
-	public Broker(){
-		super(Dungeon.active.level+Difficulty.DIFFICULT,
-				Dungeon.active.level+Difficulty.DEADLY,"broker");
+	public Broker(DungeonFloor f){
+		super(f.level+Difficulty.DIFFICULT,f.level+Difficulty.DEADLY,"broker",f);
 		int nkeys=RPG.r(1,4);
 		for(int i=0;i<nkeys;i++){
-			var key=generatekey();
+			var key=generatekey(f);
 			if(key==null) break;
 			keys.add(key);
 		}
 	}
 
-	Key generatekey(){
-		var doors=Dungeon.active.features.getall(Door.class);
+	Key generatekey(DungeonFloor f){
+		var doors=f.features.getall(Door.class);
 		if(doors.isEmpty()) return null;
 		if(RPG.chancein(doors.size()+1)) return new MasterKey();
 		try{
 			return RPG.pick(doors).key.getDeclaredConstructor(DungeonFloor.class)
-					.newInstance(Dungeon.active);
+					.newInstance(f);
 		}catch(ReflectiveOperationException e){
 			throw new RuntimeException(e);
 		}

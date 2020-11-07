@@ -8,6 +8,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.town.labor.religious.Shrine;
 import javelin.view.Images;
@@ -25,7 +26,7 @@ public class Fountain extends Feature{
 			+"Press ENTER to drink or any other key to cancel...";
 
 	/** Constructor. */
-	public Fountain(){
+	public Fountain(DungeonFloor f){
 		super("fountain");
 	}
 

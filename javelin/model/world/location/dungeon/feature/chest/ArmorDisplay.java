@@ -7,6 +7,7 @@ import java.util.Set;
 import javelin.model.item.Item;
 import javelin.model.item.gear.rune.RuneGear;
 import javelin.model.unit.Slot;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.view.Images;
 
 /**
@@ -19,8 +20,8 @@ public class ArmorDisplay extends Chest{
 			Slot.TORSO,Slot.HEAD);
 
 	/** Constructor. */
-	public ArmorDisplay(Integer pool){
-		super(pool);
+	public ArmorDisplay(Integer pool,DungeonFloor f){
+		super(pool,f);
 	}
 
 	@Override

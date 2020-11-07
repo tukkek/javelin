@@ -10,7 +10,6 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.condition.TemporarySpell;
 import javelin.model.world.Period;
-import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.old.RPG;
 import javelin.view.screen.WorldScreen;
@@ -32,26 +31,21 @@ public class Throne extends Feature{
 	boolean revealed=false;
 
 	/** @param dungeonlevel Caster level to base {@link #spell} selection on. */
-	public Throne(int dungeonlevel){
+	public Throne(DungeonFloor f){
 		super("throne");
 		enter=true;
 		remove=false;
-		for(var level=dungeonlevel;spell==null;level--){
+		for(var level=f.level;spell==null;level--){
 			var eligible=filterspells(level);
 			if(!eligible.isEmpty()) spell=RPG.pick(eligible);
 		}
 	}
 
-	/** Java Reflection-friendly constructor. */
-	public Throne(){
-		this(Dungeon.active.level);
-	}
-
 	/**
-	 * @return Given a {@link Combatant} level or {@link DungeonFloor} level, return a
-	 *         list of combat spells that are relevant. May be empty if cannot
-	 *         find any, so decrementing the level until a valid result is given
-	 *         is advised.
+	 * @return Given a {@link Combatant} level or {@link DungeonFloor} level,
+	 *         return a list of combat spells that are relevant. May be empty if
+	 *         cannot find any, so decrementing the level until a valid result is
+	 *         given is advised.
 	 *
 	 * @see Monster#cr
 	 * @see Spell#castinbattle

@@ -10,7 +10,6 @@ import javelin.model.item.Tier;
 import javelin.model.item.gear.rune.RuneGear;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.town.labor.basic.Shop;
 import javelin.old.RPG;
@@ -68,7 +67,7 @@ public class Recipe extends Feature{
 	Item item=null;
 
 	/** Constructor. */
-	public Recipe(int dungeonlevel){
+	public Recipe(int dungeonlevel,DungeonFloor f){
 		super("recipe");
 		var from=RewardCalculator.getgold(dungeonlevel-1);
 		var to=RewardCalculator.getgold(dungeonlevel+1);
@@ -79,13 +78,13 @@ public class Recipe extends Feature{
 	}
 
 	/** Constructor. */
-	public Recipe(){
-		this(Dungeon.active.level);
+	public Recipe(DungeonFloor f){
+		this(f.level,f);
 	}
 
 	@Override
-	public boolean validate(){
-		return super.validate()&&item!=null;
+	public boolean validate(DungeonFloor f){
+		return super.validate(f)&&item!=null;
 	}
 
 	@Override
@@ -102,7 +101,7 @@ public class Recipe extends Feature{
 	 */
 	public static void test(){
 		for(var level=Tier.LOW.minlevel;level<=Tier.EPIC.maxlevel;level++){
-			var valid=new Recipe(level).validate()?"valid":"invalid";
+			var valid=new Recipe(level,null).validate(null)?"valid":"invalid";
 			System.out.println(String.format("Recippe level %s: %s.",level,valid));
 		}
 	}

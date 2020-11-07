@@ -1,6 +1,7 @@
 package javelin.controller.table.dungeon.feature;
 
 import javelin.controller.table.Table;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.old.RPG;
 
 /**
@@ -13,7 +14,8 @@ public class FeatureModifierTable extends Table{
 	}
 
 	/** Constructor. */
-	public FeatureModifierTable(){
+	public FeatureModifierTable(DungeonFloor f){
+		super();
 		add(Modifier.VERYEASY,2);
 		add(Modifier.EASY,2);
 		add(Modifier.NORMAL,4);

@@ -13,15 +13,15 @@ import javelin.controller.comparator.ItemsByPrice;
 import javelin.model.item.Item;
 import javelin.model.item.precious.PreciousObject;
 import javelin.model.unit.Squad;
-import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.town.labor.basic.Shop;
 import javelin.old.RPG;
 import javelin.view.screen.BattleScreen;
 
 /**
- * Works like a basic {@link Shop} but for {@link DungeonFloor}s. Has a very small
- * selection of items to sell but adds any items you sell him to his inventory.
+ * Works like a basic {@link Shop} but for {@link DungeonFloor}s. Has a very
+ * small selection of items to sell but adds any items you sell him to his
+ * inventory.
  *
  * TODO allow players to attack the trader and get his stuff as reward
  *
@@ -35,9 +35,8 @@ public class Trader extends Inhabitant{
 	int sell=0;
 
 	/** Reflection-friendly constructor. */
-	public Trader(){
-		super(Dungeon.active.level+Difficulty.DIFFICULT,
-				Dungeon.active.level+Difficulty.DEADLY,"trader");
+	public Trader(DungeonFloor f){
+		super(f.level+Difficulty.DIFFICULT,f.level+Difficulty.DEADLY,"trader",f);
 		var cr=Math.max(1,Math.round(inhabitant.source.cr));
 		sell=Javelin.round(RewardCalculator.getgold(cr));
 		var min=cr;

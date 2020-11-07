@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.util.List;
 
 import javelin.model.item.consumable.Ruby;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.view.Images;
 
 /**
@@ -12,8 +13,8 @@ import javelin.view.Images;
  */
 public class RubyChest extends Chest{
 	/** Constructor. */
-	public RubyChest(){
-		super(new Ruby());
+	public RubyChest(DungeonFloor f){
+		super(new Ruby(),f);
 	}
 
 	@Override

@@ -33,8 +33,8 @@ import javelin.old.RPG;
 public class Herb extends Feature{
 	/**
 	 * Unfortunately {@link Potion}s are on the lower end of magic {@link Item}s,
-	 * so it's hard to scale this {@link DungeonFloor} feature indefinitely. Instead,
-	 * set this max allowed level as per {@link DungeonFloor#level}.
+	 * so it's hard to scale this {@link DungeonFloor} feature indefinitely.
+	 * Instead, set this max allowed level as per {@link DungeonFloor#level}.
 	 *
 	 * Note that this feature will generate one or multiple instances of the same
 	 * potion type.
@@ -57,14 +57,15 @@ public class Herb extends Feature{
 		MAXLEVEL=level;
 	}
 
-	int dc=10+Dungeon.active.level
-			+DungeonFloor.gettable(FeatureModifierTable.class).roll();
-	List<Potion> loot=generate(Dungeon.active.level);
+	int dc;
+	List<Potion> loot;
 
 	/** Constructor. */
-	public Herb(){
+	public Herb(DungeonFloor f){
 		super("herb");
 		remove=false;
+		dc=10+f.level+f.gettable(FeatureModifierTable.class).roll();
+		loot=generate(f);
 	}
 
 	@Override
@@ -104,11 +105,11 @@ public class Herb extends Feature{
 	 * @see RewardCalculator
 	 * @see #MAXLEVEL
 	 */
-	List<Potion> generate(int level){
-		if(!validate()) return Collections.EMPTY_LIST;
+	List<Potion> generate(DungeonFloor f){
+		if(!validate(f)) return Collections.EMPTY_LIST;
 		RPG.shuffle(POTIONS).sort(ItemsByPrice.SINGLETON);
 		var potions=new ArrayList<Potion>(MAXCOPIES);
-		int reward=RewardCalculator.getgold(level);
+		int reward=RewardCalculator.getgold(f.level);
 		for(var p:POTIONS){
 			potions.clear();
 			int pool=reward;
@@ -132,8 +133,8 @@ public class Herb extends Feature{
 	}
 
 	@Override
-	public boolean validate(){
-		return super.validate()&&Dungeon.active.level<=MAXLEVEL;
+	public boolean validate(DungeonFloor f){
+		return super.validate(f)&&f.level<=MAXLEVEL;
 	}
 
 	@Override

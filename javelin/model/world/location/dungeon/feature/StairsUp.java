@@ -17,11 +17,11 @@ public class StairsUp extends Feature{
 	DungeonFloor floor;
 
 	/** Cosntructor. */
-	public StairsUp(Point p,DungeonFloor floor){
+	public StairsUp(Point p,DungeonFloor f){
 		super("stairs up");
 		remove=false;
 		enter=true;
-		this.floor=floor;
+		floor=f;
 	}
 
 	@Override

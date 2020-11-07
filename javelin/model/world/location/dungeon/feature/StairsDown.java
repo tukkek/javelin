@@ -3,6 +3,7 @@ package javelin.model.world.location.dungeon.feature;
 import javelin.Javelin;
 import javelin.controller.action.world.WorldMove;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 
 /**
  * Descends deeper into the dungeon.
@@ -13,7 +14,7 @@ public class StairsDown extends Feature{
 	static final String CONFIRM="Go down the stairs?\nPress ENTER to confirm, any other key to cancel...";
 
 	/** Constructor. */
-	public StairsDown(){
+	public StairsDown(DungeonFloor f){
 		super("stairs down");
 		remove=false;
 		enter=true;

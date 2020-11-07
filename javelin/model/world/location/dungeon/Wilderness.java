@@ -140,10 +140,11 @@ public class Wilderness extends Dungeon{
 			var nfeatures=RPG.randomize(5,0,Integer.MAX_VALUE);
 			for(var i=0;i<nfeatures;i++)
 				generatefeature().place(this,getunnocupied());
-			var gold=RewardCalculator.getgold(level);
+			var pool=RewardCalculator.getgold(level);
 			var ncrates=RPG.randomize(3,0,Integer.MAX_VALUE);
 			for(var i=0;i<ncrates;i++){
-				var c=new Crate(RPG.randomize(gold/ncrates,1,Integer.MAX_VALUE));
+				int gold=RPG.randomize(pool/ncrates,1,Integer.MAX_VALUE);
+				var c=new Crate(gold,this);
 				c.place(this,getunnocupied());
 			}
 		}

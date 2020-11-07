@@ -12,6 +12,7 @@ import javelin.model.item.ItemSelection;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.feature.Feature;
@@ -52,7 +53,7 @@ public class Chest extends Feature{
 	 * @see Furniture#hide(Feature)
 	 */
 	Integer searchdc=10+Dungeon.active.level
-			+Dungeon.gettable(FeatureModifierTable.class).roll();
+			+DungeonFloor.gettable(FeatureModifierTable.class).roll();
 
 	/** Constructor. */
 	public Chest(){
@@ -115,7 +116,7 @@ public class Chest extends Feature{
 
 	@Override
 	public Image getimage(){
-		var i=Dungeon.active.images.get(DungeonImages.CHEST);
+		var i=Dungeon.active.dungeon.images.get(DungeonImages.CHEST);
 		return Images.get(List.of("dungeon","chest",i));
 	}
 

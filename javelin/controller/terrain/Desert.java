@@ -27,7 +27,7 @@ public class Desert extends Terrain{
 	/**
 	 * Used instead of normal storms on the desert, makes it easier to get lost.
 	 *
-	 * @see #getweather()
+	 * @see #describeweather()
 	 */
 	public static final String SANDSTORM="sandstorm";
 
@@ -83,13 +83,13 @@ public class Desert extends Terrain{
 		hazards.add(new Dehydration());
 		hazards.add(new Heat());
 		hazards.add(new Cold());
-		hazards.add(new GettingLost(getweather()==SANDSTORM?24:14));
+		hazards.add(new GettingLost(describeweather()==SANDSTORM?24:14));
 		if(special) hazards.add(new Break());
 		return hazards;
 	}
 
 	@Override
-	public String getweather(){
+	public String describeweather(){
 		return Weather.current==Weather.STORM?SANDSTORM:"";
 	}
 }

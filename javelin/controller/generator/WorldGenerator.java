@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.stream.Collectors;
 
 import javelin.Debug;
 import javelin.Javelin;
@@ -17,10 +18,20 @@ import javelin.model.Realm;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonEntrance;
 import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
 import javelin.view.screen.InfoScreen;
 
+/**
+ * Mulit-threaded {@link World} generation. Also does
+ * {@link Dungeon#generate(javelin.model.world.location.dungeon.Dungeon.GenerationReport)}
+ * once a valid world is generated.
+ *
+ * @see World#seed
+ * @author alex
+ */
 public class WorldGenerator extends Thread{
 	public static final Terrain[] GENERATIONORDER=new Terrain[]{Terrain.MOUNTAINS,
 			Terrain.MOUNTAINS,Terrain.DESERT,Terrain.PLAIN,Terrain.HILL,Terrain.WATER,
@@ -146,27 +157,51 @@ public class WorldGenerator extends Thread{
 		}
 	}
 
+	/**
+	 * Spawns threads to generates {@link World} and then {@link Dungeon}s once
+	 * done. Also reports on both steps through an {@link InfoScreen}.
+	 *
+	 * Blocks until alls tasks are done (synchronous method).
+	 */
 	public static void build(){
-		int threads=Math.max(1,Preferences.maxthreads);
-		final String info="Building world, using "+threads
-				+" thread(s)...\n\nWorlds discarded: ";
+		var threads=Math.max(1,Preferences.maxthreads);
+		var header="Building world, using "+threads+" thread(s)...\n\n";
+		var info=header;
+		var screen=new InfoScreen("");
 		try{
-			for(int i=0;i<threads;i++)
+			for(var i=0;i<threads;i++)
 				startthread();
-			int lastdiscarded=-1;
-			InfoScreen screen=new InfoScreen("");
+			var lastdiscarded=-1;
 			while(World.seed==null){
 				if(lastdiscarded!=discarded){
-					screen.print(info+discarded+'.');
+					info=header+"Worlds discarded: "+discarded+'.';
+					screen.print(info);
 					lastdiscarded=discarded;
 				}
-				Thread.sleep(1000);
+				Thread.sleep(500);
 			}
 		}catch(ReflectiveOperationException e){
 			throw new RuntimeException(e);
 		}catch(InterruptedException e){
 			throw new RuntimeException(e);
 		}
+		generatedungeons(screen,info);
+	}
+
+	static void generatedungeons(InfoScreen s,String text){
+		var dungeons=World.getactors().stream()
+				.filter(a->a instanceof DungeonEntrance).map(a->(DungeonEntrance)a)
+				.collect(Collectors.toList());
+		int ndungeons=dungeons.size();
+		for(var i=0;i<ndungeons;i++){
+			var d=dungeons.get(i);
+			//			var nfloors=d.dungeon.floors.size();
+			d.dungeon.generate(percent->{
+				var progress=100.0*(dungeons.indexOf(d)+percent)/ndungeons;
+				s.print(text+"\nGenerating dungeons: "+Math.round(progress)+"%.");
+			});
+		}
+		Dungeon.active=null;
 	}
 
 	static void startthread() throws ReflectiveOperationException{

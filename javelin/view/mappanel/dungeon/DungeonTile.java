@@ -21,21 +21,23 @@ public class DungeonTile extends Tile{
 
 	@Override
 	public void paint(Graphics g){
-		var d=Dungeon.active;
-		if(!discovered||d==null){
+		var floor=Dungeon.active;
+		if(!discovered||floor==null){
 			drawcover(g);
 			return;
 		}
+		var d=floor.dungeon;
 		var folder=d instanceof Wilderness?"":"dungeon";
-		draw(g,Images.get(List.of(folder,d.images.get(DungeonImages.FLOOR))));
+		var images=d.images;
+		draw(g,Images.get(List.of(folder,images.get(DungeonImages.FLOOR))));
 		draw(g,JavelinApp.context.gettile(x,y));
-		final Feature f=d.features.get(x,y);
+		final Feature f=floor.features.get(x,y);
 		if(f!=null&&f.draw){
 			if(f instanceof Door&&d.doorbackground)
-				draw(g,Images.get(List.of(folder,d.images.get(DungeonImages.WALL))));
+				draw(g,Images.get(List.of(folder,images.get(DungeonImages.WALL))));
 			draw(g,f.getimage());
 		}
-		if(d.squadlocation.x==x&&d.squadlocation.y==y){
+		if(floor.squadlocation.x==x&&floor.squadlocation.y==y){
 			Squad.active.updateavatar();
 			draw(g,Squad.active.getimage());
 		}

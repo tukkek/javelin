@@ -10,6 +10,7 @@ import javelin.model.item.consumable.Eidolon;
 import javelin.model.item.consumable.Scroll;
 import javelin.model.item.potion.Potion;
 import javelin.model.unit.Combatant;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.DungeonTier;
@@ -18,9 +19,9 @@ import javelin.view.Images;
 
 /**
  * Same as {@link Chest} but meant to only give 10% of an average
- * {@link Dungeon#level} reward. This is meant to keep a more steady flow of
- * useful items to players in {@link Dungeon}s, without compromising game
- * balance or just providing fodder.
+ * {@link DungeonFloor#level} reward. This is meant to keep a more steady flow
+ * of useful items to players in {@link DungeonFloor}s, without compromising
+ * game balance or just providing fodder.
  *
  * TODO add more avatars - just because it's called crate doesn't mean it can be
  * shown as bags, trapdoors, cabinets, etc.
@@ -33,8 +34,8 @@ import javelin.view.Images;
  */
 public class Crate extends Chest{
 	/**
-	 * Helper to determine a tier-appropirate, {@link Dungeon}-specific image for
-	 * {@link Crate}s.
+	 * Helper to determine a tier-appropirate, {@link DungeonFloor}-specific image
+	 * for {@link Crate}s.
 	 *
 	 * @see DungeonImages
 	 * @author alex
@@ -66,7 +67,7 @@ public class Crate extends Chest{
 
 	@Override
 	public Image getimage(){
-		var c=Dungeon.active.images.get(DungeonImages.CRATE);
+		var c=Dungeon.active.dungeon.images.get(DungeonImages.CRATE);
 		return Images.get(List.of("dungeon","chest","crate",c));
 	}
 

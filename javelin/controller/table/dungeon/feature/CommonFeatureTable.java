@@ -2,6 +2,7 @@ package javelin.controller.table.dungeon.feature;
 
 import javelin.controller.table.Table;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.Brazier;
 import javelin.model.world.location.dungeon.feature.Campfire;
 import javelin.model.world.location.dungeon.feature.Feature;
@@ -9,7 +10,7 @@ import javelin.model.world.location.dungeon.feature.LoreNote;
 import javelin.model.world.location.dungeon.feature.Passage;
 
 /**
- * Generates a common {@link Dungeon} {@link Feature}. Unlike with the
+ * Generates a common {@link DungeonFloor} {@link Feature}. Unlike with the
  * {@link RareFeatureTable}, any of these features may appear in any Dungeon.
  *
  * @author alex
@@ -30,7 +31,7 @@ public class CommonFeatureTable extends Table implements DungeonFeatureTable{
 	 *         a Feature that hasn't been positioned or placed yet.
 	 */
 	@Override
-	public Feature rollfeature(Dungeon d){
+	public Feature rollfeature(DungeonFloor d){
 		return generate(this,d);
 	}
 
@@ -41,7 +42,7 @@ public class CommonFeatureTable extends Table implements DungeonFeatureTable{
 	 * @see Feature#validate()
 	 */
 	@SuppressWarnings("unchecked")
-	public static Feature generate(Table t,Dungeon d){
+	public static Feature generate(Table t,DungeonFloor d){
 		try{
 			Feature f=null;
 			while(f==null){

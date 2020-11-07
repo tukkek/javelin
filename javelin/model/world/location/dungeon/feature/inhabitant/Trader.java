@@ -14,12 +14,13 @@ import javelin.model.item.Item;
 import javelin.model.item.precious.PreciousObject;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.town.labor.basic.Shop;
 import javelin.old.RPG;
 import javelin.view.screen.BattleScreen;
 
 /**
- * Works like a basic {@link Shop} but for {@link Dungeon}s. Has a very small
+ * Works like a basic {@link Shop} but for {@link DungeonFloor}s. Has a very small
  * selection of items to sell but adds any items you sell him to his inventory.
  *
  * TODO allow players to attack the trader and get his stuff as reward

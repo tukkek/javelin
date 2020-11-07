@@ -1,12 +1,11 @@
 package javelin.model.world.location.dungeon.temple;
 
-import java.util.List;
-
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.terrain.Hill;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.artifact.Amulet;
+import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.feature.Throne;
 
 /**
@@ -29,15 +28,9 @@ public class MagicTemple extends Temple{
 	 * @see ChallengeCalculator#leveltoel(int)
 	 */
 	public MagicTemple(Integer level){
-		super(Realm.MAGIC,level,new Amulet(level),FLUFF);
-		terrain=Terrain.HILL;
-		floor="floortemplemagic";
-		wall="walltemplemagic";
+		super(Realm.MAGIC,Terrain.HILL,level,new Amulet(level),FLUFF);
+		images.put(DungeonImages.FLOOR,"floortemplemagic");
+		images.put(DungeonImages.WALL,"walltemplemagic");
 		feature=Throne.class;
-	}
-
-	@Override
-	public List<Terrain> getterrains(){
-		return Terrain.NONWATER;
 	}
 }

@@ -14,7 +14,7 @@ import javelin.model.unit.abilities.spell.Spell;
  * http://www.d20srd.org/srd/spells/controlWeather.htm
  *
  * TODO terrains like desert don't allow rain, would be nicer to turn
- * {@link Terrain#getweather()} into something smarter to handle all cases
+ * {@link Terrain#describeweather()} into something smarter to handle all cases
  *
  * @author alex
  */

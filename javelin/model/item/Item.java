@@ -35,7 +35,7 @@ import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureLightWo
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Academy;
-import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.TrainingOrder;
@@ -53,7 +53,7 @@ import javelin.view.screen.WorldScreen;
  * Any {@link Item}s that allow for unlimited casting of {@link Spell}s needs to
  * be {@link Recharger}-based, otherwise access to a single
  * {@link CureLightWounds} will trivialize things like travel or
- * {@link Dungeon}s.
+ * {@link DungeonFloor}s.
  *
  * @author alex
  */

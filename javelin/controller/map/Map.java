@@ -12,7 +12,7 @@ import javelin.controller.map.terrain.water.DeepWaters;
 import javelin.controller.terrain.Terrain;
 import javelin.model.state.Square;
 import javelin.model.unit.Monster;
-import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.old.RPG;
 import javelin.view.Images;
 
@@ -61,7 +61,7 @@ public abstract class Map{
 	 *
 	 * This is done for consistency but mostly because it allows for the
 	 * {@link BattleAi} to just stay out of reach with flying creatures instead of
-	 * losing a fight. {@link Dungeon} maps for example can have wall placement
+	 * losing a fight. {@link DungeonFloor} maps for example can have wall placement
 	 * that makes it very hard to kill a flying unit unless you have one yourself.
 	 *
 	 * @see Monster#fly

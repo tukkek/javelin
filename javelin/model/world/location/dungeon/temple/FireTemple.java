@@ -4,6 +4,7 @@ import javelin.controller.terrain.Desert;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.artifact.Candle;
+import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.feature.Brazier;
 
 /**
@@ -20,11 +21,10 @@ public class FireTemple extends Temple{
 			+"As you creep in you can't help but wonder who have built these halls, why'd they leave it and where could they be now.";
 
 	/** Constructor. */
-	public FireTemple(int level){
-		super(Realm.FIRE,level,new Candle(level),FLUFF);
-		terrain=Terrain.DESERT;
-		floor="floortemplefire";
-		wall="walltemplefire";
+	public FireTemple(Integer level){
+		super(Realm.FIRE,Terrain.DESERT,level,new Candle(level),FLUFF);
+		images.put(DungeonImages.FLOOR,"floortemplefire");
+		images.put(DungeonImages.WALL,"walltemplefire");
 		doorbackground=false;
 		feature=Brazier.class;
 	}

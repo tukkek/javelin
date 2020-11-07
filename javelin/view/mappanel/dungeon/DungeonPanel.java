@@ -5,15 +5,16 @@ import java.util.HashSet;
 import javelin.controller.db.Preferences;
 import javelin.controller.generator.dungeon.template.MapTemplate;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.Tile;
 
 public class DungeonPanel extends MapPanel{
-	Dungeon dungeon;
+	DungeonFloor dungeon;
 	HashSet<Tile> skip=new HashSet<>();
 
-	public DungeonPanel(Dungeon d){
+	public DungeonPanel(DungeonFloor d){
 		super(d.size,d.size,Preferences.KEYTILEDUNGEON);
 		dungeon=d;
 	}

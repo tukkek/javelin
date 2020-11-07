@@ -9,11 +9,12 @@ import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.generator.dungeon.VirtualMap.Room;
-import javelin.controller.generator.dungeon.template.StaticTemplate;
 import javelin.controller.generator.dungeon.template.MapTemplate;
+import javelin.controller.generator.dungeon.template.StaticTemplate;
 import javelin.controller.generator.dungeon.template.corridor.StraightCorridor;
 import javelin.controller.generator.dungeon.template.mutator.Mutator;
 import javelin.controller.table.Tables;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.old.RPG;
 import javelin.view.screen.town.SelectScreen;
 
@@ -59,10 +60,10 @@ public class DungeonGenerator{
 	 * @param sizehint TOOD would be cool to have this handled built-in, not on
 	 *          {@link #generate(int, int)}.
 	 */
-	private DungeonGenerator(int minrooms,int maxrooms,Tables tables){
+	private DungeonGenerator(int minrooms,int maxrooms,DungeonFloor f){
 		this.minrooms=minrooms;
 		this.maxrooms=maxrooms;
-		this.tables=tables==null?new Tables():tables.clone();
+		tables=f.tables;
 		instance=this;
 		generatepool();
 		draw();
@@ -118,7 +119,8 @@ public class DungeonGenerator{
 	}
 
 	public void finish(){
-		ascii=map.rasterize(true).replaceAll(" ",Character.toString(MapTemplate.WALL));
+		ascii=map.rasterize(true).replaceAll(" ",
+				Character.toString(MapTemplate.WALL));
 		String[] grid=ascii.split("\n");
 		this.grid=new char[grid.length][];
 		for(int i=0;i<grid.length;i++)
@@ -246,11 +248,11 @@ public class DungeonGenerator{
 	 * @see #setupparameters()
 	 */
 	public static DungeonGenerator generate(int minrooms,int maxrooms,
-			Tables tables){
+			DungeonFloor f){
 		StaticTemplate.load();
 		DungeonGenerator dungeon=null;
 		while(dungeon==null){
-			dungeon=new DungeonGenerator(minrooms,maxrooms,tables);
+			dungeon=new DungeonGenerator(minrooms,maxrooms,f);
 			int size=dungeon.map.rooms.size();
 			if(!(minrooms<=size&&size<=maxrooms)) dungeon=null;
 		}

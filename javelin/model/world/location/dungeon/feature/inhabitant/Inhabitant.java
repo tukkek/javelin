@@ -2,7 +2,6 @@ package javelin.model.world.location.dungeon.feature.inhabitant;
 
 import java.awt.Image;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -14,15 +13,16 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.Feature;
-import javelin.model.world.location.dungeon.temple.TempleDungeon;
+import javelin.model.world.location.dungeon.temple.TempleFloor;
 import javelin.old.RPG;
 import javelin.view.Images;
 
 /**
  * A friendly (or at least neutral) {@link Monster} living inside a
- * {@link Dungeon}. Tries to utilize one of the creatures in
- * {@link Dungeon#encounters} but will generate a new one if necessary.
+ * {@link DungeonFloor}. Tries to utilize one of the creatures in
+ * {@link DungeonFloor#encounters} but will generate a new one if necessary.
  *
  * @author alex
  */
@@ -49,8 +49,8 @@ public abstract class Inhabitant extends Feature{
 	 */
 	protected int gold;
 	/**
-	 * DC 10 + {@link Dungeon#level} + {@link DungeonFeatureModifier}. Subclasses
-	 * may alter them as needed.
+	 * DC 10 + {@link DungeonFloor#level} + {@link DungeonFeatureModifier}.
+	 * Subclasses may alter them as needed.
 	 */
 	protected int diplomacydc;
 
@@ -63,7 +63,7 @@ public abstract class Inhabitant extends Feature{
 		avatarfile=inhabitant.source.avatarfile;
 		Skill.DIPLOMACY.getupgrade().upgrade(inhabitant);
 		diplomacydc=inhabitant.taketen(Skill.DIPLOMACY)
-				+Dungeon.gettable(FeatureModifierTable.class).roll();
+				+DungeonFloor.gettable(FeatureModifierTable.class).roll();
 		int d100=RPG.r(0,100);
 		gold=RewardCalculator.getgold(inhabitant.source.cr)*d100/100;
 	}
@@ -73,8 +73,8 @@ public abstract class Inhabitant extends Feature{
 	 * candidate.
 	 *
 	 * @return An intelligent {@link Monster}, which is valid even if
-	 *         {@link #dungeon} is a {@link TempleDungeon}. If it can't find one
-	 *         in {@link Dungeon#encounters}, generates one instead.
+	 *         {@link #dungeon} is a {@link TempleFloor}. If it can't find one in
+	 *         {@link DungeonFloor#encounters}, generates one instead.
 	 */
 	public Combatant select(){
 		HashSet<String> invalid=new HashSet<>();
@@ -106,12 +106,7 @@ public abstract class Inhabitant extends Feature{
 	 *         context.
 	 */
 	protected boolean validate(Monster m){
-		if(!m.think(-1)) return false;
-		TempleDungeon td=null;
-		if(Dungeon.active instanceof TempleDungeon)
-			td=(TempleDungeon)Dungeon.active;
-		List<Monster> aslist=Arrays.asList(new Monster[]{m});
-		return td==null||td.temple.validate(aslist);
+		return m.think(-1)&&Dungeon.active.dungeon.validate(List.of(m));
 	}
 
 	@Override

@@ -9,12 +9,13 @@ import javelin.controller.action.world.WorldMove;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
 import javelin.model.world.location.dungeon.feature.trap.Trap;
 import javelin.view.Images;
 
 /**
- * Mostly cosmetic {@link Dungeon} items. Can contain {@link #hidden} features.
+ * Mostly cosmetic {@link DungeonFloor} items. Can contain {@link #hidden} features.
  *
  * TODO in the future, could hide hidden {@link Trap}, {@link Chest}, stc. The
  * easiest way to achieve this would simply be to make any appropriate Search

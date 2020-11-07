@@ -3,12 +3,12 @@ package javelin.controller;
 import java.util.HashSet;
 
 import javelin.controller.generator.dungeon.template.MapTemplate;
-import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.door.Door;
 
 /**
- * Uses a flooding alghoritm to traverse a portion of a {@link Dungeon}.
+ * Uses a flooding alghoritm to traverse a portion of a {@link DungeonFloor}.
  *
  * @author alex
  */
@@ -17,14 +17,14 @@ public class DungeonMapCrawler{
 	Point origin;
 	int depth;
 
-	protected Dungeon dungeon;
+	protected DungeonFloor dungeon;
 
 	/**
 	 * @param origin Starting point (included in result set).
 	 * @param depth How many steps at most to take.
 	 * @param d Dungeon instance being traversed.
 	 */
-	public DungeonMapCrawler(Point origin,int depth,Dungeon d){
+	public DungeonMapCrawler(Point origin,int depth,DungeonFloor d){
 		this.origin=origin;
 		this.depth=depth;
 		dungeon=d;

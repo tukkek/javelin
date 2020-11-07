@@ -1,6 +1,6 @@
 package javelin.controller.table.dungeon.feature;
 
-import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.Feature;
 
 /**
@@ -13,7 +13,7 @@ public interface DungeonFeatureTable{
 	int ROWS=10;
 
 	/**
-	 * Semantically identical to {@link CommonFeatureTable#rollfeature(Dungeon)}.
+	 * Semantically identical to {@link CommonFeatureTable#rollfeature(DungeonFloor)}.
 	 */
-	Feature rollfeature(Dungeon d);
+	Feature rollfeature(DungeonFloor d);
 }

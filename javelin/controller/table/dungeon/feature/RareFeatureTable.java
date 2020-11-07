@@ -8,6 +8,7 @@ import javelin.Javelin;
 import javelin.controller.table.Table;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonTier;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.Wilderness;
 import javelin.model.world.location.dungeon.feature.DungeonMap;
 import javelin.model.world.location.dungeon.feature.Feature;
@@ -27,7 +28,7 @@ import javelin.model.world.location.dungeon.feature.inhabitant.Trader;
 import javelin.old.RPG;
 
 /**
- * Generates a rare {@link Dungeon} {@link Feature}, including
+ * Generates a rare {@link DungeonFloor} {@link Feature}, including
  * {@link Inhabitant}s.
  *
  * Capping the amount of feature types to 1d4 per {@link DungeonTier}, to make
@@ -65,7 +66,7 @@ public class RareFeatureTable extends Table implements DungeonFeatureTable{
 			add(DEBUG,1);
 			return;
 		}
-		var tier=Dungeon.active.gettier().tier.getordinal();
+		var tier=Dungeon.active.dungeon.gettier().tier.getordinal();
 		var features=define(tier);
 		var types=RPG.shuffle(new ArrayList<>(features.keySet()));
 		var ntypes=RPG.randomize(RPG.rolldice(tier+1,4),2,types.size());
@@ -81,13 +82,14 @@ public class RareFeatureTable extends Table implements DungeonFeatureTable{
 			features.put(f,ROWS);
 		if(tier>=2) for(var f:RARE)
 			features.put(f,ROWS/2);
-		if(Dungeon.active instanceof Wilderness) for(var f:Wilderness.FORBIDDEN)
+		if(Dungeon.active.dungeon instanceof Wilderness)
+			for(var f:Wilderness.FORBIDDEN)
 			features.remove(f);
 		return features;
 	}
 
 	@Override
-	public Feature rollfeature(Dungeon d){
+	public Feature rollfeature(DungeonFloor d){
 		return CommonFeatureTable.generate(this,d);
 	}
 }

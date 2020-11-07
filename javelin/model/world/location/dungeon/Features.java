@@ -15,9 +15,9 @@ import javelin.old.RPG;
 
 public class Features implements Iterable<Feature>,Serializable{
 	List<Feature> list=new ArrayList<>();
-	Dungeon dungeon;
+	DungeonFloor dungeon;
 
-	public Features(Dungeon d){
+	public Features(DungeonFloor d){
 		super();
 		dungeon=d;
 	}

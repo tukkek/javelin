@@ -15,6 +15,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.old.RPG;
@@ -177,7 +178,7 @@ public class Broker extends Inhabitant{
 		if(doors.isEmpty()) return null;
 		if(RPG.chancein(doors.size()+1)) return new MasterKey();
 		try{
-			return RPG.pick(doors).key.getDeclaredConstructor(Dungeon.class)
+			return RPG.pick(doors).key.getDeclaredConstructor(DungeonFloor.class)
 					.newInstance(Dungeon.active);
 		}catch(ReflectiveOperationException e){
 			throw new RuntimeException(e);

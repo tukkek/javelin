@@ -4,6 +4,7 @@ import javelin.controller.terrain.Forest;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.artifact.Map;
+import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.feature.FruitTree;
 
 /**
@@ -20,11 +21,10 @@ public class EarthTemple extends Temple{
 
 	/** Constructor. */
 	public EarthTemple(Integer level){
-		super(Realm.EARTH,level,new Map(level),FLUFF);
-		terrain=Terrain.FOREST;
-		floor="floordirt";
-		wall="walltempleearth";
+		super(Realm.EARTH,Terrain.FOREST,level,new Map(level),FLUFF);
 		doorbackground=false;
+		images.put(DungeonImages.FLOOR,"floordirt");
+		images.put(DungeonImages.WALL,"walltempleearth");
 		feature=FruitTree.class;
 	}
 }

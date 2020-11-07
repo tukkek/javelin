@@ -8,13 +8,13 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.condition.Condition;
-import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 
 /**
  * http://www.d20srd.org/srd/spells/longstrider.htm
  *
  * Only castable in battle but will live up to 1 hour if inside a
- * {@link Dungeon}. Can't cast outside because it will seem useless for now.
+ * {@link DungeonFloor}. Can't cast outside because it will seem useless for now.
  * TODO allow leveling up spells
  *
  * @author alex

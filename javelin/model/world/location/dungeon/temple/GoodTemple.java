@@ -8,6 +8,7 @@ import javelin.model.Realm;
 import javelin.model.item.artifact.Ankh;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Monster.MonsterType;
+import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Spirit;
 
@@ -27,10 +28,9 @@ public class GoodTemple extends Temple{
 
 	/** Constructor. */
 	public GoodTemple(Integer level){
-		super(Realm.GOOD,level,new Ankh(level),FLUFF);
-		terrain=Terrain.PLAIN;
-		floor="floortemplegood";
-		wall="walldungeon";
+		super(Realm.GOOD,Terrain.PLAIN,level,new Ankh(level),FLUFF);
+		images.put(DungeonImages.FLOOR,"floortemplegood");
+		images.put(DungeonImages.WALL,"walldungeon");
 		feature=Spirit.class;
 	}
 

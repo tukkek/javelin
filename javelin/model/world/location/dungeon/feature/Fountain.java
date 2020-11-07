@@ -48,7 +48,7 @@ public class Fountain extends Feature{
 
 	@Override
 	public Image getimage(){
-		var i=Dungeon.active.images.get(DungeonImages.FOUNTAIN);
+		var i=Dungeon.active.dungeon.images.get(DungeonImages.FOUNTAIN);
 		return Images.get(List.of("dungeon","fountain",i));
 	}
 }

@@ -1,221 +1,131 @@
 package javelin.model.world.location.dungeon.temple;
 
-import java.awt.Image;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-import javelin.Javelin;
-import javelin.controller.Point;
-import javelin.controller.challenge.Difficulty;
-import javelin.controller.fight.Fight;
-import javelin.controller.fight.TempleEncounter;
-import javelin.controller.scenario.Campaign;
+import javelin.controller.generator.NpcGenerator;
 import javelin.controller.terrain.Terrain;
+import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.wish.Win;
 import javelin.model.Realm;
 import javelin.model.item.Tier;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.Squad;
-import javelin.model.unit.skill.DisableDevice;
-import javelin.model.world.Actor;
 import javelin.model.world.World;
+import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonEntrance;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.chest.ArtifactChest;
-import javelin.model.world.location.dungeon.feature.chest.Chest;
-import javelin.model.world.location.unique.UniqueLocation;
+import javelin.model.world.location.dungeon.temple.WaterTemple.WaterTempleEntrance;
 import javelin.old.RPG;
-import javelin.view.Images;
 
 /**
- * Temples are the key to winning Javelin's {@link Campaign} mode. Each temple
- * is locked and needs to be unlocked by a {@link TempleKey}, brute
- * {@link Monster#strength} or {@link DisableDevice}. Inside the Temple there
- * will be a {@link Artifact}, and once all of those are collected the player
- * can make the {@link Win} wish to finish the game.
+ * Temples are Javelin's {@link Tier#EPIC} {@link Dungeon}s, with features that
+ * distinguish them from ordinary {@link Dungeon}s like {@link Hazard}s and
+ * {@link NpcGenerator}-based {@link Combatant}s from
+ * non-{@link Terrain#UNDERGROUND} pools.
  *
- * Each temple is a multi-level {@link TempleDungeon}, where on each floor can
- * be found a special {@link Chest}. The Relic sits on the deepest floor.
+ * Inside the Temple there will be a {@link Artifact}, and once all of those are
+ * collected the player can make the {@link Win} wish to finish the game.
  *
- * @see Win
- * @see TempleEncounter
- * @see TempleDungeon#createspecialchest(Point)
  * @author alex
  */
-public abstract class Temple extends UniqueLocation{
-	//	/**
-	//	 * TODO there's gotta be a better way to do this
-	//	 */
-	//	public static boolean climbing=false;
-	/** TODO same as {@link #climbing} */
-	public static boolean leavingfight=false;
+public abstract class Temple extends Dungeon{
+	/** @see Location */
+	public static class TempleEntrance extends DungeonEntrance{
+		/** Constructor. */
+		public TempleEntrance(Temple t){
+			super(t);
+		}
+
+		@Override
+		protected void generate(){
+			var t=(Temple)dungeon;
+			while(x==-1||!t.terrains.contains(Terrain.get(x,y)))
+				super.generate();
+		}
+	}
 
 	/**
 	 * Create the temples during world generation.
 	 */
 	public static void generatetemples(){
-		var els=new LinkedList<Integer>();
-		for(var i=0;i<7;i++)
-			els.add(Tier.EPIC.getrandomel(false));
-		new AirTemple(els.pop()).place();
-		new EarthTemple(els.pop()).place();
-		new FireTemple(els.pop()).place();
-		new WaterTemple(els.pop()).place();
-		new EvilTemple(els.pop()).place();
-		new GoodTemple(els.pop()).place();
-		new MagicTemple(els.pop()).place();
-		if(Javelin.DEBUG&&!els.isEmpty())
-			throw new RuntimeException("Didn't generate all temples.");
+		new WaterTempleEntrance(new WaterTemple(Tier.EPIC.getrandomel(false)))
+				.place();
+		for(var type:List.of(AirTemple.class,EarthTemple.class,FireTemple.class,
+				EvilTemple.class,GoodTemple.class,MagicTemple.class))
+			try{
+				var el=Tier.EPIC.getrandomel(false);
+				var t=type.getConstructor(Integer.class).newInstance(el);
+				new TempleEntrance(t).place();
+			}catch(ReflectiveOperationException e){
+				throw new RuntimeException(e);
+			}
 	}
 
 	/**
 	 * Reward found on the deepest of the {@link #floors}.
 	 *
 	 * @see ArtifactChest
-	 * @see TempleDungeon#deepest
+	 * @see TempleFloor#deepest
 	 */
-	public Artifact relic;
-	/**
-	 * Each floor has a {@link Chest} with a ruby in it and there is also an
-	 * {@link ArtifactChest} on the deepest level.
-	 */
-	public List<Dungeon> floors=new ArrayList<>();
-	/** Encounter level equivalent for {@link #level}. */
-	public int el;
-	String fluff;
-	/** If not <code>null</code> will override {@link Dungeon#tilefloor}. */
-	public String floor=null;
-	/** If not <code>null</code> will override {@link Dungeon#tilewall}. */
-	public String wall=null;
-	/** If <code>false</code>, draw doors without a wall behind them. */
-	public boolean doorbackground=true;
-	/** Module level. */
-	public int level;
-	/** {@link Dungeon} {@link Feature} most likely to be found here. */
+	public Artifact artifact;
+	/** {@link DungeonFloor} {@link Feature} most likely to be found here. */
 	public Class<? extends Feature> feature=null;
 
-	/**
-	 * @param r Temple's defining characteristic.
-	 * @param fluffp Text description of temple and surrounding area.
-	 */
-	public Temple(Realm r,int level,Artifact relicp,String fluffp){
-		super("The temple of "+r.getname(),"Temple of "+r.getname(),level,level);
-		allowedinscenario=false;
-		realm=r;
-		this.level=level;
-		el=level;
-		relic=relicp;
+	Realm realm;
+
+	/** Constructor. */
+	public Temple(Realm r,List<Terrain> t,int level,Artifact a,String fluffp){
+		super("The Temple of "+r.getname(),level,
+				RPG.randomize(4,1,Integer.MAX_VALUE));
+		artifact=a;
 		fluff=fluffp;
-		link=true;
-		generatefloors(level);
-	}
-
-	void generatefloors(int level){
-		TempleDungeon parent=null;
-		for(int i=0;i<RPG.randomize(4,1,Integer.MAX_VALUE);i++){
-			parent=new TempleDungeon(el+i,parent,this);
-			floors.add(parent);
-		}
-	}
-
-	@Override
-	protected void generategarrison(int minlevel,int maxlevel){
-		// no outside garrison
-	}
-
-	@Override
-	public void place(){
-		Realm r=realm;
-		super.place();
 		realm=r;
-	}
-
-	@Override
-	public Image getimage(){
-		final String name="temple"+realm.getname().toLowerCase();
-		return Images.get(List.of("world",name));
-	}
-
-	@Override
-	public boolean interact(){
-		Javelin.message(fluff,true);
-		floors.get(0).activate(false);
-		return true;
-	}
-
-	Combatant force(){
-		Combatant best=null;
-		for(Combatant c:Squad.active.members){
-			int roll=Monster.getbonus(c.source.strength);
-			if(roll<level) continue;
-			if(best==null||roll>Monster.getbonus(best.source.strength)) best=c;
+		terrains.addAll(t);
+		for(var f:floors){
+			var d=(TempleFloor)f;
+			d.temple=this;
 		}
-		return best;
+	}
+
+	/** Constructor with a single {@link Terrain}. */
+	public Temple(Realm r,Terrain t,int level,Artifact a,String fluff){
+		this(r,List.of(t),level,a,fluff);
 	}
 
 	@Override
-	public Realm getrealmoverlay(){
-		return null;
+	protected DungeonFloor createfloor(int level){
+		return new TempleFloor(level,this);
 	}
 
-	/**
-	 * @return Starts a {@link TempleEncounter}.
-	 */
-	public Fight encounter(Dungeon d){
-		return new TempleEncounter(this,d);
+	@Override
+	public String getimagename(){
+		return "temple"+realm.getname().toLowerCase();
 	}
 
-	/** See {@link Fight#validate(ArrayList)}. */
+	@Override
 	public boolean validate(List<Monster> foes){
 		return true;
 	}
 
-	/** See {@link Fight#getterrains(Terrain)}; */
-	public List<Terrain> getterrains(){
-		/**
-		 * TODO Terrain.UNDERGROUND left out for now so that each temple will be
-		 * more unique instead, may need to reintroduce or find an alternative if
-		 * there aren't enough encounters for every possible challenge level.
-		 */
-		return List.of(terrain);
-	}
-
-	@Override
-	protected void generate(){
-		if(terrain==null||terrain.equals(Terrain.WATER))
-			super.generate();
-		else
-			while(x==-1||!Terrain.get(x,y).equals(terrain))
-				super.generate();
-	}
-
 	/**
-	 * See {@link Dungeon#hazard()}.
+	 * See {@link DungeonFloor#hazard()}.
 	 *
 	 * @return <code>true</code> if a hazard happens.
 	 */
-	public boolean hazard(Dungeon templeDungeon){
+	public boolean hazard(DungeonFloor f){
 		return false;
 	}
 
-	@Override
-	public List<Combatant> getcombatants(){
-		return null;
-	}
-
-	public static ArrayList<Temple> gettemples(){
-		ArrayList<Temple> temples=new ArrayList<>(7);
-		for(Actor a:World.getactors())
-			if(a instanceof Temple) temples.add((Temple)a);
+	/** @return All temple {@link Location}s. */
+	public static List<TempleEntrance> gettemples(){
+		var temples=new ArrayList<TempleEntrance>(7);
+		for(var a:World.getactors())
+			if(a instanceof TempleEntrance) temples.add((TempleEntrance)a);
 		return temples;
-	}
-
-	@Override
-	public String describe(){
-		String difficulty=Difficulty.describe(level-Squad.active.getel());
-		return descriptionknown+" ("+difficulty+").";
 	}
 }

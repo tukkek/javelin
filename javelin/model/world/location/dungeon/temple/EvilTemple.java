@@ -3,13 +3,16 @@ package javelin.model.world.location.dungeon.temple;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.fight.Fight;
 import javelin.controller.terrain.Marsh;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.artifact.Skull;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
-import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.Period;
+import javelin.model.world.location.dungeon.DungeonFloor;
+import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.StairsDown;
 import javelin.model.world.location.dungeon.feature.StairsUp;
@@ -33,11 +36,11 @@ public class EvilTemple extends Temple{
 
 	/** Constructor. */
 	public EvilTemple(Integer level){
-		super(Realm.EVIL,level,new Skull(level),FLUFF);
-		terrain=Terrain.MARSH;
-		floor="floortempleevil";
-		wall="walltempleevil";
+		super(Realm.EVIL,Terrain.MARSH,level,new Skull(level),FLUFF);
+		images.put(DungeonImages.FLOOR,"floortempleevil");
+		images.put(DungeonImages.WALL,"walltempleevil");
 		doorbackground=false;
+		vision/=2;
 	}
 
 	@Override
@@ -48,7 +51,7 @@ public class EvilTemple extends Temple{
 	}
 
 	@Override
-	public boolean hazard(Dungeon d){
+	public boolean hazard(DungeonFloor d){
 		if(!RPG.chancein(d.stepsperencounter*10)) return false;
 		Class<? extends Feature> targettype;
 		if(Squad.active.equipment.get(Skull.class)==null)
@@ -63,5 +66,12 @@ public class EvilTemple extends Temple{
 		d.squadlocation=target.getlocation();
 		Javelin.message("A macabre force draws upon you...",true);
 		return true;
+	}
+
+	@Override
+	public Fight fight(){
+		var f=super.fight();
+		f.period=Period.NIGHT;
+		return f;
 	}
 }

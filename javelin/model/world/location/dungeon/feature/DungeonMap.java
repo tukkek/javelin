@@ -7,11 +7,12 @@ import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.generator.dungeon.template.MapTemplate;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.old.RPG;
 import javelin.view.screen.BattleScreen;
 
 /**
- * Shows an area of the {@link Dungeon} map, with a cumulative 50% chance of
+ * Shows an area of the {@link DungeonFloor} map, with a cumulative 50% chance of
  * doubling that area (50% chance of 2*area, 25% chance of 3*area, etc).
  *
  * TODO allow other Dungeon floors to be shown.

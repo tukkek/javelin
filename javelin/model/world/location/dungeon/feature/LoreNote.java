@@ -10,13 +10,15 @@ import javelin.controller.table.dungeon.feature.FeatureModifierTable;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonEntrance;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.Lore;
 import javelin.old.RPG;
 
 /**
- * Discovers {@link Lore} about another {@link Dungeon}. Generated on-demand and
- * not while generating {@link Dungeon} so we can have access to all
- * {@link Dungeon#lore} .
+ * Discovers {@link Lore} about another {@link DungeonFloor}. Generated on-demand and
+ * not while generating {@link DungeonFloor} so we can have access to all
+ * {@link DungeonFloor#lore} .
  *
  * @author alex
  */
@@ -42,9 +44,11 @@ public class LoreNote extends Feature{
 			return false;
 		}
 		remove();
-		var tier=Dungeon.active.gettier().tier;
-		var candidates=Dungeon.getdungeonsandtemples().stream().filter(
-				d->tier.minlevel<=d.level&&d.level<=tier.maxlevel+5&&d!=Dungeon.active)
+		var tier=Dungeon.active.dungeon.gettier().tier;
+		var entrances=DungeonEntrance.getdungeonsandtemples();
+		var candidates=entrances
+				.stream().map(e->e.dungeon).filter(d->tier.minlevel<=d.level
+						&&d.level<=tier.maxlevel+5&&d!=Dungeon.active.dungeon)
 				.collect(Collectors.toList());
 		var d=RPG.pick(candidates);
 		var lore=RPG.pick(d.lore);

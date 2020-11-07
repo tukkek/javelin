@@ -31,6 +31,7 @@ import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
 import javelin.old.messagepanel.MessagePanel;
@@ -345,7 +346,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 	 * The squad tries to parley with the enemy {@link Combatant}s, possibly
 	 * bribing or hirimg them to avoid the fight.
 	 *
-	 * Hiring mercenaries this way in a {@link Dungeon} costs 10 times more,
+	 * Hiring mercenaries this way in a {@link DungeonFloor} costs 10 times more,
 	 * because since a dungeon crawl occurs in a much faster time frame, Javelin
 	 * doesn't bother applying daily fees while in there and that is very
 	 * exploitable. The in-game reasoning is that since dungeon encounters occur
@@ -401,7 +402,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 	 *         is less since it has to account for sleep, resting, etc.
 	 */
 	public int speed(Terrain t,int x,int y){
-		int snow=t.getweather()==Terrain.SNOWING?2:1;
+		int snow=t.describeweather()==Terrain.SNOWING?2:1;
 		if(transport!=null){
 			int transportspeed=transport.getspeed(members)/snow;
 			return transport.flies?transportspeed:t.speed(transportspeed,x,y);

@@ -14,7 +14,7 @@ import javelin.controller.walker.Walker;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
-import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.Wilderness;
 import javelin.model.world.location.dungeon.feature.Feature;
@@ -24,16 +24,16 @@ import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.dungeon.DungeonPanel;
 
 /**
- * Shows the inside of a {@link Dungeon}.
+ * Shows the inside of a {@link DungeonFloor}.
  *
  * @author alex
  */
 public class DungeonScreen extends WorldScreen{
-	Dungeon dungeon;
+	DungeonFloor floor;
 
-	public DungeonScreen(Dungeon dungeon){
+	public DungeonScreen(DungeonFloor dungeon){
 		super(false);
-		this.dungeon=dungeon;
+		floor=dungeon;
 		open();
 	}
 
@@ -45,23 +45,23 @@ public class DungeonScreen extends WorldScreen{
 	@Override
 	public boolean explore(int x,int y){
 		try{
-			RandomEncounter.encounter(1f/dungeon.stepsperencounter);
+			RandomEncounter.encounter(1f/floor.stepsperencounter);
 		}catch(StartBattle e){
 			throw e;
 		}
-		return !dungeon.hazard();
+		return !floor.hazard();
 	}
 
 	@Override
 	public boolean react(int x,int y){
 		Combatant searching=Squad.active.getbest(Skill.PERCEPTION);
-		for(Feature f:dungeon.features.copy())
+		for(Feature f:floor.features.copy())
 			if(Walker.distanceinsteps(x,y,f.x,f.y)==1)
 				f.discover(searching,searching.roll(Skill.PERCEPTION));
-		Feature f=dungeon.features.get(x,y);
+		Feature f=floor.features.get(x,y);
 		if(f==null) return false;
 		boolean activated=f.activate();
-		if(activated&&f.remove) dungeon.features.remove(f);
+		if(activated&&f.remove) floor.features.remove(f);
 		if(!f.enter) WorldMove.abort=true;
 		if(!activated) return false;
 		if(!WorldMove.abort) WorldMove.place(x,y);
@@ -70,26 +70,26 @@ public class DungeonScreen extends WorldScreen{
 
 	@Override
 	public boolean allowmove(int x,int y){
-		return dungeon.map[x][y]!=MapTemplate.WALL;
+		return floor.map[x][y]!=MapTemplate.WALL;
 	}
 
 	@Override
 	public void updatelocation(int x,int y){
-		dungeon.squadlocation.x=x;
-		dungeon.squadlocation.y=y;
+		floor.squadlocation.x=x;
+		floor.squadlocation.y=y;
 	}
 
 	@Override
 	public void view(int xp,int yp){
-		var vision=dungeon.squadvision;
+		var vision=floor.dungeon.vision;
 		for(int x=-vision;x<=+vision;x++)
 			for(int y=-vision;y<=+vision;y++)
 				try{
-					Point hero=dungeon.squadlocation;
+					Point hero=floor.squadlocation;
 					Point target=new Point(hero);
 					target.x+=x;
 					target.y+=y;
-					if(checkclear(hero,target)) dungeon.setvisible(hero.x+x,hero.y+y);
+					if(checkclear(hero,target)) floor.setvisible(hero.x+x,hero.y+y);
 				}catch(ArrayIndexOutOfBoundsException e){
 					continue;
 				}
@@ -100,8 +100,8 @@ public class DungeonScreen extends WorldScreen{
 		while(step.x!=target.x||step.y!=target.y){
 			if(step.x!=target.x) step.x+=step.x>target.x?-1:+1;
 			if(step.y!=target.y) step.y+=step.y>target.y?-1:+1;
-			if(!step.equals(target)&&(dungeon.map[step.x][step.y]==MapTemplate.WALL
-					||dungeon.features.get(step.x,step.y) instanceof Door))
+			if(!step.equals(target)&&(floor.map[step.x][step.y]==MapTemplate.WALL
+					||floor.features.get(step.x,step.y) instanceof Door))
 				return false;
 		}
 		return true;
@@ -109,35 +109,35 @@ public class DungeonScreen extends WorldScreen{
 
 	@Override
 	public Image gettile(int x,int y){
-		var i=dungeon.images;
-		var file=dungeon.map[x][y]==MapTemplate.WALL?i.get(DungeonImages.WALL)
+		var i=floor.dungeon.images;
+		var file=floor.map[x][y]==MapTemplate.WALL?i.get(DungeonImages.WALL)
 				:i.get(DungeonImages.FLOOR);
-		var folder=dungeon instanceof Wilderness?"":"dungeon";
+		var folder=floor.dungeon instanceof Wilderness?"":"dungeon";
 		return Images.get(List.of(folder,file));
 	}
 
 	@Override
 	public Fight encounter(){
-		return dungeon.fight();
+		return floor.dungeon.fight();
 	}
 
 	@Override
 	protected MapPanel getmappanel(){
-		return new DungeonPanel(dungeon);
+		return new DungeonPanel(floor);
 	}
 
 	@Override
 	public boolean validatepoint(int x,int y){
-		return 0<=x&&x<dungeon.size&&0<=y&&y<dungeon.size;
+		return 0<=x&&x<floor.size&&0<=y&&y<floor.size;
 	}
 
 	@Override
 	public Point getsquadlocation(){
-		return dungeon.squadlocation;
+		return floor.squadlocation;
 	}
 
 	@Override
 	protected HashSet<Point> getdiscovered(){
-		return dungeon.discovered;
+		return floor.discovered;
 	}
 }

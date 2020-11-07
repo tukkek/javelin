@@ -66,6 +66,7 @@ public class Images{
 	public static final Image ELITE=Images.get(List.of("overlay","elite"));
 	public static final Image TEXTUREMAP=Images.get("texturemap");
 
+	/** @return The string version of a list path. */
 	static String topath(List<String> path){
 		return String.join(File.separator,path);
 	}

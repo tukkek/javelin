@@ -10,11 +10,12 @@ import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.door.Door;
 
 /**
- * Reveals {@link Dungeon} map or nearby area on the WorldScreen.
+ * Reveals {@link DungeonFloor} map or nearby area on the WorldScreen.
  *
  * @author alex
  */

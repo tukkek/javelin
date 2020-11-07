@@ -24,6 +24,7 @@ import javelin.model.world.Actor;
 import javelin.model.world.Season;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.productive.Mine;
 import javelin.old.RPG;
@@ -44,7 +45,7 @@ import javelin.old.RPG;
  */
 public abstract class Terrain implements Serializable{
 	/**
-	 * Description return by {@link #getweather()} in case of
+	 * Description return by {@link #describeweather()} in case of
 	 * {@link Season#WINTER} snow.
 	 */
 	public static final String SNOWING="snowing";
@@ -69,7 +70,7 @@ public abstract class Terrain implements Serializable{
 	public static final Terrain DESERT=new Desert();
 	/** 1/16 Very difficult (el+1) - swamp */
 	public static final Terrain MARSH=new Marsh();
-	/** Represent {@link Dungeon}s and {@link Mine}s. */
+	/** Represent {@link DungeonFloor}s and {@link Mine}s. */
 	public static final Terrain UNDERGROUND=new Underground();
 
 	/** All terrain types. */
@@ -381,7 +382,7 @@ public abstract class Terrain implements Serializable{
 	 * @return a string representation of the {@link Weather}.
 	 * @see Weather#current
 	 */
-	public String getweather(){
+	public String describeweather(){
 		if(Weather.current==Weather.RAIN) return "raining";
 		if(Weather.current==Weather.STORM)
 			return Season.current==Season.WINTER?SNOWING:"storm";
@@ -404,5 +405,10 @@ public abstract class Terrain implements Serializable{
 		for(Monster m:Monster.ALL)
 			if(m.getterrains().contains(name)) recruits.add(m);
 		return recruits;
+	}
+
+	/** @return {@link Weather#current} by default. */
+	public Integer getweather(){
+		return Weather.current;
 	}
 }

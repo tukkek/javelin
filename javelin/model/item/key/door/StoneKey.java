@@ -1,11 +1,11 @@
 package javelin.model.item.key.door;
 
-import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 
 /** @see Key */
 public class StoneKey extends Key{
 	/** Constructor. */
-	public StoneKey(Dungeon d){
+	public StoneKey(DungeonFloor d){
 		super("Stone key",d);
 	}
 }

@@ -12,6 +12,7 @@ import javelin.controller.table.dungeon.feature.RareFeatureTable;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Perception;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Features;
 import javelin.view.Images;
@@ -89,7 +90,7 @@ public abstract class Feature implements Serializable{
 		return true;
 	}
 
-	public void place(Dungeon d,Point p){
+	public void place(DungeonFloor d,Point p){
 		x=p.x;
 		y=p.y;
 		d.features.add(this);
@@ -104,8 +105,8 @@ public abstract class Feature implements Serializable{
 		return new Point(x,y);
 	}
 
-	/** Called once per feature after all {@link Dungeon} floors are generated. */
-	public void define(Dungeon current,List<Dungeon> floors){
+	/** Called once per feature after all {@link DungeonFloor} floors are generated. */
+	public void define(DungeonFloor current,List<DungeonFloor> floors){
 		// nothing by default
 	}
 

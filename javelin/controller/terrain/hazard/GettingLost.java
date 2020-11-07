@@ -29,7 +29,7 @@ public class GettingLost extends Hazard{
 		if(Squad.active.fly()) return false;
 		if(!Squad.active.lastterrain.equals(Terrain.current())) return false;
 		if(World.seed.roads[Squad.active.x][Squad.active.y]
-				&&Terrain.current().getweather()!=Desert.SANDSTORM)
+				&&Terrain.current().describeweather()!=Desert.SANDSTORM)
 			return false;
 		return Squad.active.getbest(Skill.SURVIVAL).roll(Skill.SURVIVAL)<dc;
 	}

@@ -22,10 +22,8 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.old.QuestApp;
 import javelin.old.RPG;
-import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -93,7 +91,7 @@ public class JavelinApp extends QuestApp{
 			if(Dungeon.active==null)
 				context=new WorldScreen(true);
 			else
-				Dungeon.active.activate(true);
+				Dungeon.active.enter();
 			while(true){
 				Javelin.app.switchScreen(context);
 				Javelin.redraw();
@@ -173,27 +171,12 @@ public class JavelinApp extends QuestApp{
 	void startcampaign(){
 		World.scenario.setup();
 		WorldGenerator.build();
-		generatedungeons();
 		World.scenario.ready();
 		if(Javelin.DEBUG){
 			new ContentSummary().produce();
 			Debug.oncampaignstart();
 			StateManager.save(true);
 		}
-	}
-
-	void generatedungeons(){
-		var s=new InfoScreen("");
-		var dungeons=Dungeon.getdungeons();
-		for(var t:Temple.gettemples())
-			dungeons.add(t.floors.get(0));
-		int ndungeons=dungeons.size();
-		for(var i=0;i<ndungeons;i++){
-			var progress=Math.round(100*i/Float.valueOf(ndungeons));
-			s.print("Generating dungeons: "+progress+"%.");
-			dungeons.get(i).generatefloors();
-		}
-		Dungeon.active=null;
 	}
 
 	void preparedebug(){

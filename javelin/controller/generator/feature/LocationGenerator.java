@@ -25,6 +25,8 @@ import javelin.model.world.location.Outpost;
 import javelin.model.world.location.PointOfInterest;
 import javelin.model.world.location.ResourceSite;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonEntrance;
+import javelin.model.world.location.dungeon.DungeonTier;
 import javelin.model.world.location.dungeon.Wilderness;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.haunt.AbandonedManor;
@@ -164,10 +166,15 @@ public class LocationGenerator implements Serializable{
 		var locations=new ArrayList<Location>();
 		locations.add(new PillarOfSkulls());
 		locations.addAll(makehaunts());
-		for(var level=Tier.LOW.minlevel;level<=Tier.HIGH.maxlevel;level++)
-			locations.add(Dungeon.generate(level));
+		for(var level=Tier.LOW.minlevel;level<=Tier.HIGH.maxlevel;level++){
+			var nfloors=1;
+			var maxdepth=DungeonTier.TIERS.indexOf(DungeonTier.get(level))+1;
+			while(nfloors<maxdepth&&RPG.chancein(2))
+				nfloors+=1;
+			locations.add(new DungeonEntrance(new Dungeon(null,level,nfloors)));
+		}
 		for(var i=0;i<Tier.HIGH.maxlevel;i++)
-			locations.add(new Wilderness());
+			locations.add(new DungeonEntrance(new Wilderness()));
 		for(Location l:RPG.shuffle(locations))
 			l.place();
 	}
@@ -205,13 +212,11 @@ public class LocationGenerator implements Serializable{
 	 * mostly on that.
 	 */
 	static void placedeepdungeon(World w,Town t){
-		var deep=new DeepDungeon();
+		var d=new DungeonEntrance(new DeepDungeon());
 		var allowed=Set.of(Terrain.FOREST,Terrain.HILL,Terrain.PLAIN);
-		while(deep.x<0||!allowed.contains(Terrain.get(deep.x,deep.y))){
-			deep.remove();
-			spawnnear(t,deep,w,4,4,false);
-		}
-		deep.reveal();
+		while(d.x<0||!allowed.contains(Terrain.get(d.x,d.y)))
+			spawnnear(t,d,w,4,4,false);
+		d.reveal();
 	}
 
 	/**

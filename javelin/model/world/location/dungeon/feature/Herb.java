@@ -19,6 +19,7 @@ import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.unit.skill.Survival;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
 import javelin.old.RPG;
 
@@ -32,8 +33,8 @@ import javelin.old.RPG;
 public class Herb extends Feature{
 	/**
 	 * Unfortunately {@link Potion}s are on the lower end of magic {@link Item}s,
-	 * so it's hard to scale this {@link Dungeon} feature indefinitely. Instead,
-	 * set this max allowed level as per {@link Dungeon#level}.
+	 * so it's hard to scale this {@link DungeonFloor} feature indefinitely. Instead,
+	 * set this max allowed level as per {@link DungeonFloor#level}.
 	 *
 	 * Note that this feature will generate one or multiple instances of the same
 	 * potion type.
@@ -57,7 +58,7 @@ public class Herb extends Feature{
 	}
 
 	int dc=10+Dungeon.active.level
-			+Dungeon.gettable(FeatureModifierTable.class).roll();
+			+DungeonFloor.gettable(FeatureModifierTable.class).roll();
 	List<Potion> loot=generate(Dungeon.active.level);
 
 	/** Constructor. */

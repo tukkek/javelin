@@ -36,9 +36,8 @@ import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.Fortification;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
-import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
@@ -286,7 +285,7 @@ public class Scenario implements Serializable{
 	}
 
 	/**
-	 * A special {@link Chest} is found in each {@link Dungeon}.
+	 * A special {@link Chest} is found in each {@link DungeonFloor}.
 	 *
 	 * @return Item inside the Chest.
 	 * @see #openaltar(Temple)
@@ -340,7 +339,7 @@ public class Scenario implements Serializable{
 		//nothing by default
 	}
 
-	/** Called at the end of @link World} or {@link Dungeon} actions. */
+	/** Called at the end of @link World} or {@link DungeonFloor} actions. */
 	public void endturn(){
 		// nothing by default
 	}

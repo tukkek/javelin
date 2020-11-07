@@ -4,12 +4,14 @@ import javelin.Javelin;
 import javelin.controller.action.world.WorldMove;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.town.labor.basic.Lodge;
 import javelin.old.RPG;
 
 /**
- * Representes a semi-permanent safe place to rest inside a {@link Dungeon}. May
- * not last forever and total safety isn't 100% guaranteed!
+ * Representes a semi-permanent safe place to rest inside a
+ * {@link DungeonFloor}. May not last forever and total safety isn't 100%
+ * guaranteed!
  *
  * @author alex
  */
@@ -30,7 +32,7 @@ public class Campfire extends Feature{
 		if(RPG.chancein(20)){
 			remove();
 			Javelin.message("This safe resting spot has been compromised!",true);
-			throw new StartBattle(Dungeon.active.fight());
+			throw new StartBattle(Dungeon.active.dungeon.fight());
 		}
 		Lodge.rest(1,Lodge.RESTPERIOD,true,Lodge.LODGE);
 		return true;

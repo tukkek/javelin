@@ -10,6 +10,7 @@ import javelin.model.unit.skill.DisableDevice;
 import javelin.model.unit.skill.Perception;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Furniture;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
@@ -22,7 +23,7 @@ import javelin.model.world.location.dungeon.feature.chest.Chest;
  * partly because since the traps are permanent (so as to be strategic) it would
  * be easy to continually step on traps to plunder XP.
  *
- * Traps are now always hidden on {@link Furniture} in {@link Dungeon}s that
+ * Traps are now always hidden on {@link Furniture} in {@link DungeonFloor}s that
  * allow for it - letting players to somewhat strategically avoid them or pursue
  * them for high-rish, high-reward plays (as {@link Chest}s can also be hidden).
  *
@@ -46,7 +47,7 @@ public abstract class Trap extends Feature{
 	public Trap(int cr,String avatarfilep){
 		super("trap",avatarfilep);
 		this.cr=cr;
-		draw=!Dungeon.gettable(TrapVisibilityTable.class).rollboolean();
+		draw=!DungeonFloor.gettable(TrapVisibilityTable.class).rollboolean();
 		remove=false;
 		searchdc=10+cr;
 		disarmdc=searchdc;

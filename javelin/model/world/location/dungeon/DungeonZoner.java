@@ -12,7 +12,7 @@ import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.old.RPG;
 
 /**
- * Helps place {@link Features} in {@link Dungeon}s more smartly than a random
+ * Helps place {@link Features} in {@link DungeonFloor}s more smartly than a random
  * naive approach. Mostly takes into consideraton {@link Door}s to divide the
  * map into {@link Zone}s - assuming that the dungeon population would choose to
  * secure their goods, naturally-ocurring features, access to lower levels, etc.
@@ -21,7 +21,7 @@ import javelin.old.RPG;
  */
 public class DungeonZoner{
 	/**
-	 * A {@link Dungeon} might be comprised of one or more zones, with frontiers
+	 * A {@link DungeonFloor} might be comprised of one or more zones, with frontiers
 	 * represented by doors.
 	 *
 	 * @author alex
@@ -81,19 +81,19 @@ public class DungeonZoner{
 	}
 
 	/**
-	 * All the zones scanned in the given {@link Dungeon}. The first item is where
+	 * All the zones scanned in the given {@link DungeonFloor}. The first item is where
 	 * the Dungeon entrance is located. Subsequent zones are added breadth-first,
 	 * which means deeper zones will be generally found at the end of the list.
 	 */
 	public List<Zone> zones=new ArrayList<>();
 	ArrayList<Point> result=new ArrayList<>();
-	Dungeon dungeon;
+	DungeonFloor dungeon;
 
 	/**
 	 * @param d Expects a mostly-setup Dungeon (with {@link Door}s, stairs, walls,
 	 *          etc), ready to be scanned.
 	 */
-	public DungeonZoner(Dungeon d,Point entrance){
+	public DungeonZoner(DungeonFloor d,Point entrance){
 		dungeon=d;
 		new Zone(entrance,0).expand();
 		for(var zone:zones)

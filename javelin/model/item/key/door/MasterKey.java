@@ -1,6 +1,6 @@
 package javelin.model.item.key.door;
 
-import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.model.world.location.dungeon.feature.inhabitant.Prisoner;
 
@@ -12,7 +12,7 @@ import javelin.model.world.location.dungeon.feature.inhabitant.Prisoner;
  */
 public class MasterKey extends Key{
 	/** Constructor. */
-	public MasterKey(Dungeon d){
+	public MasterKey(DungeonFloor d){
 		this();
 	}
 

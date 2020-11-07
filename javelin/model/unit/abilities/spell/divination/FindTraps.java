@@ -6,14 +6,14 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.condition.Condition;
-import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.trap.Trap;
 
 /**
  * http://www.d20srd.org/srd/spells/findTraps.htm
  *
  * Theoretically level 3 but we want this to work for 1 hour so it can be used
- * during a {@link Dungeon} exploration.
+ * during a {@link DungeonFloor} exploration.
  *
  * @author alex
  */

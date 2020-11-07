@@ -31,6 +31,7 @@ import javelin.model.world.Incursion;
 import javelin.model.world.Season;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 
@@ -138,7 +139,7 @@ public class StateManager{
 			for(ArrayList<Actor> instances:World.getseed().actors.values())
 				for(Actor p:instances)
 					p.place();
-			Dungeon.active=(Dungeon)stream.readObject();
+			Dungeon.active=(DungeonFloor)stream.readObject();
 			Incursion.currentel=(Integer)stream.readObject();
 			Weather.read((Integer)stream.readObject());
 			Ressurect.dead=(Combatant)stream.readObject();

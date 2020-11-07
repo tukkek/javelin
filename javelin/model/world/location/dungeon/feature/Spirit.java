@@ -4,14 +4,14 @@ import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.temple.GoodTemple;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.old.RPG;
 import javelin.view.mappanel.dungeon.DungeonTile;
 import javelin.view.screen.BattleScreen;
 
 /**
  * Shows and reveals the (best guessed) closest {@link Feature} in this
- * {@link Dungeon} level, if any.
+ * {@link DungeonFloor} level, if any.
  *
  * @see GoodTemple
  * @see Feature#discover(javelin.model.unit.Combatant, int)

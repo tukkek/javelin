@@ -9,9 +9,9 @@ import javelin.model.world.location.dungeon.feature.chest.Crate.TieredCrates;
 import javelin.old.RPG;
 
 /**
- * Instance-specific {@link Dungeon} images.
+ * Instance-specific {@link DungeonFloor} images.
  *
- * @see Dungeon#images
+ * @see DungeonFloor#images
  */
 public class DungeonImages extends HashMap<String,String>{
 	/** Floor tile. */

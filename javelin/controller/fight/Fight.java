@@ -36,6 +36,7 @@ import javelin.model.unit.abilities.spell.enchantment.compulsion.DominateMonster
 import javelin.model.unit.skill.Diplomacy;
 import javelin.model.world.Period;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.BattleScreen;
 
@@ -198,7 +199,6 @@ public abstract class Fight{
 	 */
 	public boolean onend(){
 		state.blueTeam.addAll(state.getfleeing(Fight.originalblueteam));
-		//TODO clear fleeing as well, like the dead, below?
 		if(Javelin.app.fight.friendly){
 			var survivors=state.dead.stream().filter(d->d.hp>Combatant.DEADATHP)
 					.collect(Collectors.toList());
@@ -308,7 +308,7 @@ public abstract class Fight{
 	 *
 	 * @param t Will return this (alongside {@link Water} if enough flood
 	 *          level)...
-	 * @return or {@link Underground} if there is inside a {@link Dungeon}.
+	 * @return or {@link Underground} if there is inside a {@link DungeonFloor}.
 	 *
 	 * @see Weather#flood(BattleMap, int)
 	 * @see Map#maxflooding

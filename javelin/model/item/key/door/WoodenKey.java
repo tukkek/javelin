@@ -1,11 +1,11 @@
 package javelin.model.item.key.door;
 
-import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 
 /** @see Key */
 public class WoodenKey extends Key{
 	/** Constructor. */
-	public WoodenKey(Dungeon d){
+	public WoodenKey(DungeonFloor d){
 		super("Wooden key",d);
 	}
 }

@@ -11,6 +11,7 @@ import javelin.model.item.gear.rune.RuneGear;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.town.labor.basic.Shop;
 import javelin.old.RPG;
 import javelin.view.screen.WorldScreen;
@@ -20,7 +21,7 @@ import javelin.view.screen.WorldScreen;
  * {@link Shop}.
  *
  * TODO update image to a pedestal or something that makes sense in the context
- * of a {@link Dungeon}
+ * of a {@link DungeonFloor}
  *
  * @author alex
  */
@@ -94,7 +95,7 @@ public class Recipe extends Feature{
 	}
 
 	/**
-	 * Helper method to determine which {@link Dungeon} levels can generate
+	 * Helper method to determine which {@link DungeonFloor} levels can generate
 	 * recipes.
 	 *
 	 * @see Debug

@@ -145,7 +145,8 @@ public class Leader extends Inhabitant{
 					*Javelin.round(RewardCalculator.getgold(inhabitant.source.cr));
 			new Treaty(treatyprice,base.name,null,null).register(encounters,options);
 			if(diplomacy<diplomacydc+5) return options;
-			treatyprice*=5+DungeonTier.TIERS.indexOf(Dungeon.active.gettier());
+			var d=Dungeon.active.dungeon;
+			treatyprice*=5+DungeonTier.TIERS.indexOf(d.gettier());
 			new Treaty(treatyprice,null,base.alignment.ethics,null)
 					.register(encounters,options);
 			new Treaty(treatyprice,null,null,base.alignment.morals)

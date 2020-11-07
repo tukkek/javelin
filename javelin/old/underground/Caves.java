@@ -30,8 +30,9 @@ public class Caves extends Map{
 		maxflooding=Weather.CLEAR;
 		var d=Dungeon.active;
 		if(d!=null){
-			floor=Images.get(List.of("dungeon",d.images.get(DungeonImages.FLOOR)));
-			wall=Images.get(List.of("dungeon",d.images.get(DungeonImages.WALL)));
+			var i=d.dungeon.images;
+			floor=Images.get(List.of("dungeon",i.get(DungeonImages.FLOOR)));
+			wall=Images.get(List.of("dungeon",i.get(DungeonImages.WALL)));
 		}else{
 			floor=Images.get(List.of("terrain","dungeonfloor"));
 			wall=Images.get(List.of("terrain","dungeonwall"));

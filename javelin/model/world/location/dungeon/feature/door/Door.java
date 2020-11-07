@@ -23,6 +23,7 @@ import javelin.model.unit.Squad;
 import javelin.model.unit.skill.DisableDevice;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.door.trap.Alarm;
 import javelin.model.world.location.dungeon.feature.door.trap.ArcaneLock;
@@ -31,8 +32,8 @@ import javelin.model.world.location.dungeon.feature.door.trap.HoldPortal;
 import javelin.old.RPG;
 
 /**
- * A {@link Dungeon} door, which may be {@link #locked}, {@link #stuck}, contain
- * a {@link #trap} or not. If none of these are true, it may as well be
+ * A {@link DungeonFloor} door, which may be {@link #locked}, {@link #stuck},
+ * contain a {@link #trap} or not. If none of these are true, it may as well be
  * discarded.
  *
  * @see Key
@@ -60,7 +61,7 @@ public class Door extends Feature{
 
 	/** DC of {@link DisableDevice} to unlock. */
 	public int unlockdc=RPG.r(20,30)
-			+Dungeon.gettable(FeatureModifierTable.class).roll();
+			+DungeonFloor.gettable(FeatureModifierTable.class).roll();
 
 	/** Used if {@link #hidden}. TODO */
 	public int searchdc=RPG.r(20,30);
@@ -139,7 +140,7 @@ public class Door extends Feature{
 					+" attempt(s)...";
 		if(alerted) result+="\nThe noise draws someone's attention!";
 		Javelin.message(result,false);
-		if(alerted) throw new StartBattle(Dungeon.active.fight());
+		if(alerted) throw new StartBattle(Dungeon.active.dungeon.fight());
 		return !stuck;
 	}
 
@@ -196,7 +197,7 @@ public class Door extends Feature{
 	 * @param p Position of the door.
 	 * @return A randomly-chosen type of door.
 	 */
-	public static Door generate(Dungeon dungeon,Point p){
+	public static Door generate(DungeonFloor dungeon,Point p){
 		try{
 			Door d=RPG.pick(TYPES).getDeclaredConstructor().newInstance();
 			if(!d.stuck&&!d.locked&&!(d.trap instanceof Alarm)) return null;
@@ -210,7 +211,7 @@ public class Door extends Feature{
 	}
 
 	@Override
-	public void place(Dungeon d,Point p){
+	public void place(DungeonFloor d,Point p){
 		super.place(d,p);
 		if(hidden) d.map[x][y]=MapTemplate.WALL;
 	}

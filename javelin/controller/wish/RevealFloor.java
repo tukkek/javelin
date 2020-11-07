@@ -2,6 +2,7 @@ package javelin.controller.wish;
 
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.Feature;
 
 public class RevealFloor extends Wish{
@@ -22,9 +23,9 @@ public class RevealFloor extends Wish{
 	}
 
 	/**
-	 * TODO move to {@link Dungeon}
+	 * TODO move to {@link DungeonFloor}
 	 */
-	public static void reveal(Dungeon d){
+	public static void reveal(DungeonFloor d){
 		for(int x=0;x<d.visible.length;x++)
 			for(int y=0;y<d.visible[x].length;y++)
 				d.setvisible(x,y);

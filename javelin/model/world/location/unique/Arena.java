@@ -24,7 +24,7 @@ import javelin.model.unit.Squad;
 import javelin.model.world.Incursion;
 import javelin.model.world.Period;
 import javelin.model.world.World;
-import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
@@ -42,7 +42,7 @@ import javelin.view.Images;
  * One issue with the Arean is that it's easy to fall into a rhythm of endless
  * grinding, sending your hurt {@link Combatant}s to rest or train and continue
  * fighting for experience. While that approach is sub-optimal for several other
- * reaons (better rewards in {@link Dungeon}s, letting {@link Incursion}s run
+ * reaons (better rewards in {@link DungeonFloor}s, letting {@link Incursion}s run
  * rampant will make your life harder in the long run, less difficult encounters
  * in level-appropriate areas meaning better chances of not losing a
  * {@link Squad} member and not losing and getting away with nothing)... but

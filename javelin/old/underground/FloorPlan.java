@@ -6,11 +6,11 @@ import javelin.old.RPG;
 /**
  * @author alex
  */
-public class Floor extends Caves{
+public class FloorPlan extends Caves{
 	float density=0.05f;
 
 	/** Constructor. */
-	public Floor(){
+	public FloorPlan(){
 		super("Dungeon floor");
 		coresize=0;
 	}
@@ -122,10 +122,10 @@ public class Floor extends Caves{
 
 	boolean makeRoom(int x,int y,int dx,int dy){
 		// random dimesions and offset
-		int x1=x-RPG.rolldice(Floor.abs(dx-1),5);
-		int y1=y-RPG.rolldice(Floor.abs(dy-1),5);
-		int x2=x+RPG.rolldice(Floor.abs(dx+1),5);
-		int y2=y+RPG.rolldice(Floor.abs(dy+1),5);
+		int x1=x-RPG.rolldice(FloorPlan.abs(dx-1),5);
+		int y1=y-RPG.rolldice(FloorPlan.abs(dy-1),5);
+		int x2=x+RPG.rolldice(FloorPlan.abs(dx+1),5);
+		int y2=y+RPG.rolldice(FloorPlan.abs(dy+1),5);
 		if(x2-x1<3||y2-y1<3||!isBlank(x1,y1,x2,y2)) return false;
 		// draw the floor
 		for(int floorx=x1+1;floorx<=x2-1;floorx++)

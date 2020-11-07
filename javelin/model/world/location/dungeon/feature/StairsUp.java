@@ -4,6 +4,7 @@ import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.action.world.WorldMove;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 
 /**
  * Leaves dungeon or goes to upper floor.
@@ -13,10 +14,10 @@ import javelin.model.world.location.dungeon.Dungeon;
 public class StairsUp extends Feature{
 	static final String PROMPT="Go up the stairs?";
 
-	Dungeon floor;
+	DungeonFloor floor;
 
 	/** Cosntructor. */
-	public StairsUp(Point p,Dungeon floor){
+	public StairsUp(Point p,DungeonFloor floor){
 		super("stairs up");
 		remove=false;
 		enter=true;

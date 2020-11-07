@@ -11,6 +11,7 @@ import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.condition.TemporarySpell;
 import javelin.model.world.Period;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.old.RPG;
 import javelin.view.screen.WorldScreen;
 
@@ -47,7 +48,7 @@ public class Throne extends Feature{
 	}
 
 	/**
-	 * @return Given a {@link Combatant} level or {@link Dungeon} level, return a
+	 * @return Given a {@link Combatant} level or {@link DungeonFloor} level, return a
 	 *         list of combat spells that are relevant. May be empty if cannot
 	 *         find any, so decrementing the level until a valid result is given
 	 *         is advised.

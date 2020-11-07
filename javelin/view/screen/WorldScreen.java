@@ -274,12 +274,11 @@ public class WorldScreen extends BattleScreen{
 		if(Dungeon.active==null){
 			infos.add(date+", "+Period.now().toString().toLowerCase());
 			String season=Season.current.toString();
-			String weather=Terrain.current().getweather();
+			String weather=Terrain.current().describeweather();
 			if(!weather.isEmpty()) season+=", "+weather+"";
 			infos.add(season);
 		}else
-			infos
-					.add(Dungeon.active.description+", floor "+Dungeon.active.getfloor());
+			infos.add(Dungeon.active.toString());
 		infos.add("");
 		if(Dungeon.active==null){
 			final int mph=s.speed(Terrain.current(),Squad.active.x,Squad.active.y);

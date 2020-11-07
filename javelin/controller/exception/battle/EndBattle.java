@@ -44,7 +44,7 @@ public class EndBattle extends BattleEvent{
 					s.place();
 				}
 				end(Fight.originalblueteam);
-				if(Dungeon.active!=null) Dungeon.active.activate(false);
+				if(Dungeon.active!=null) Dungeon.active.enter();
 			}
 		}
 		AiCache.reset();

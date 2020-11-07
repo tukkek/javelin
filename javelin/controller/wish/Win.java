@@ -10,7 +10,6 @@ import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
-import javelin.model.world.World;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.WorldScreen;
@@ -62,8 +61,8 @@ public class Win extends Wish{
 			for(Item i:new ArrayList<>(bag))
 				if(i instanceof Artifact) bag.remove(i);
 		}
-		for(Actor a:World.getactors())
-			if(a instanceof Temple) a.remove();
+		for(Actor a:Temple.gettemples())
+			a.remove();
 		for(Squad squad:Squad.getsquads()){
 			WorldScreen.lastday*=10;
 			squad.settime(Math.round(WorldScreen.lastday*24));

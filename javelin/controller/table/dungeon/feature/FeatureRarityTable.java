@@ -1,7 +1,7 @@
 package javelin.controller.table.dungeon.feature;
 
 import javelin.controller.table.Table;
-import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 
 /**
  * A table that contains either the Dungeon's {@link RareFeatureTable} or
@@ -12,8 +12,8 @@ import javelin.model.world.location.dungeon.Dungeon;
 public class FeatureRarityTable extends Table{
 	/** Constructor. */
 	public FeatureRarityTable(){
-		add(Dungeon.gettable(CommonFeatureTable.class),2);
-		add(Dungeon.gettable(RareFeatureTable.class),1,4);
+		add(DungeonFloor.gettable(CommonFeatureTable.class),2);
+		add(DungeonFloor.gettable(RareFeatureTable.class),1,4);
 	}
 
 	@Override

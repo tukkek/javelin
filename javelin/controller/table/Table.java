@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import javelin.Javelin;
-import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.model.world.location.dungeon.feature.trap.Trap;
 import javelin.old.RPG;
@@ -17,7 +17,7 @@ import javelin.old.RPG;
  * tables are self-mutation for two purposed: 1. so that each instances of the
  * table are never pre-defined but instead only descrived as general guidelines
  * to what their contents should be and 2. so that they can be copied and
- * mutated (for example, between levels of the same {@link Dungeon}) - which
+ * mutated (for example, between levels of the same {@link DungeonFloor}) - which
  * will in turn keep a cohesive theme while still having mutation between
  * levels.
  *

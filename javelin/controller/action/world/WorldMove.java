@@ -15,11 +15,12 @@ import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 
 /**
- * Makes a movement on the overworld or {@link Dungeon}.
+ * Makes a movement on the overworld or {@link DungeonFloor}.
  *
  * TODO {@link WorldScreen} hierarchy should be refactored into proper Battle /
  * Dungeon / World screens.

@@ -7,7 +7,6 @@ import javelin.Javelin;
 import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.world.location.dungeon.feature.Feature;
-import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.view.Images;
 
 /**
@@ -18,32 +17,31 @@ import javelin.view.Images;
  * @author alex
  */
 public class ArtifactChest extends Feature{
-	Temple temple;
+	Artifact artifact;
 
 	/** Constructor. */
-	public ArtifactChest(Temple temple){
+	public ArtifactChest(Artifact a){
 		super("artifact chest");
-		this.temple=temple;
+		artifact=a;
 		remove=false;
 	}
 
 	@Override
 	public boolean activate(){
-		var r=temple.relic;
-		if(Item.getplayeritems().contains(r))
-			Javelin.message("The "+r+" is not here anymore...",true);
+		if(Item.getplayeritems().contains(artifact))
+			Javelin.message("The "+artifact+" is not here anymore...",true);
 		else{
-			String text="This chest contains the "+r+"!";
+			String text="This chest contains the "+artifact+"!";
 			text+="\nIf it is lost for any reason it shall be teleported back to safety here.";
 			Javelin.message(text,true);
-			r.clone().grab();
+			artifact.clone().grab();
 		}
 		return true;
 	}
 
 	@Override
 	public String toString(){
-		return temple.relic.name;
+		return artifact.toString();
 	}
 
 	@Override

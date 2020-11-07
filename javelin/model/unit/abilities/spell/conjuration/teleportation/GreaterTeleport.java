@@ -6,6 +6,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.comparator.ActorsByName;
+import javelin.controller.exception.RepeatTurn;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -13,7 +14,7 @@ import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.dungeon.temple.Temple;
+import javelin.model.world.location.dungeon.temple.Temple.TempleEntrance;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.unique.UniqueLocation;
 
@@ -45,14 +46,17 @@ public class GreaterTeleport extends Spell{
 	@Override
 	public String castpeacefully(Combatant caster,Combatant target,
 			List<Combatant> squad){
-		ArrayList<Actor> places=new ArrayList<>();
-		for(Actor a:World.getactors()){
+		var places=new ArrayList<Actor>();
+		for(var a:World.getactors()){
 			if(!World.seed.discovered.contains(a.getlocation())) continue;
-			if(a instanceof Town||a instanceof UniqueLocation||a instanceof Temple)
+			if(a instanceof Town||a instanceof UniqueLocation
+					||a instanceof TempleEntrance)
 				places.add(a);
 		}
 		places.sort(ActorsByName.INSTANCE);
-		Actor to=places.get(Javelin.choose("Where to?",places,true,true));
+		var choice=Javelin.choose("Where to?",places,true,false);
+		if(choice<0) throw new RepeatTurn();
+		var to=places.get(choice);
 		WordOfRecall.teleport(to.x,to.y);
 		return null;
 	}

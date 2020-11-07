@@ -7,6 +7,7 @@ import javelin.controller.InfiniteList;
 import javelin.controller.action.world.WorldMove;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.old.RPG;
 
 /**
@@ -26,7 +27,7 @@ public class Passage extends Feature{
 
 	/** Target. <code>null</code> means outside. */
 	public Passage destination=null;
-	public Dungeon floor=Dungeon.active;
+	public DungeonFloor floor=Dungeon.active;
 	public boolean found=false;
 	public String description=DESCRIPTIONS.pop();
 
@@ -37,7 +38,7 @@ public class Passage extends Feature{
 		remove=false;
 	}
 
-	public Passage(Passage entrance,Dungeon floor){
+	public Passage(Passage entrance,DungeonFloor floor){
 		this();
 		destination=entrance;
 		this.floor=floor;
@@ -52,7 +53,7 @@ public class Passage extends Feature{
 	public void enter(){
 		destination.found=true;
 		destination.floor.squadlocation=destination.getlocation();
-		if(destination.floor!=Dungeon.active) destination.floor.activate(false);
+		if(destination.floor!=Dungeon.active) destination.floor.enter();
 	}
 
 	@Override
@@ -81,7 +82,7 @@ public class Passage extends Feature{
 	}
 
 	@Override
-	public void define(Dungeon current,List<Dungeon> floors){
+	public void define(DungeonFloor current,List<DungeonFloor> floors){
 		if(generated) return;
 		super.define(current,floors);
 		if(RPG.chancein(3)) return;

@@ -10,7 +10,8 @@ import javelin.controller.terrain.Mountains;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.artifact.Flute;
-import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
+import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.old.RPG;
 
@@ -29,14 +30,13 @@ public class AirTemple extends Temple{
 
 	/** Constructor. */
 	public AirTemple(Integer level){
-		super(Realm.AIR,level,new Flute(level),FLUFF);
-		terrain=Terrain.MOUNTAINS;
-		wall="walldungeon";
-		floor="floordungeon";
+		super(Realm.AIR,Terrain.MOUNTAINS,level,new Flute(level),FLUFF);
+		images.put(DungeonImages.FLOOR,"floordungeon");
+		images.put(DungeonImages.WALL,"walldungeon");
 	}
 
 	@Override
-	public boolean hazard(Dungeon d){
+	public boolean hazard(DungeonFloor d){
 		if(!RPG.chancein(d.stepsperencounter)) return false;
 		ArrayList<Point> steps=new ArrayList<>();
 		steps.add(JavelinApp.context.getsquadlocation());
@@ -52,7 +52,7 @@ public class AirTemple extends Temple{
 		return true;
 	}
 
-	private Point push(ArrayList<Point> steps,Dungeon d){
+	private Point push(ArrayList<Point> steps,DungeonFloor d){
 		Point current=steps.get(steps.size()-1);
 		ArrayList<Point> possibilities=new ArrayList<>();
 		for(int x=current.x-1;x<=current.x+1;x++)

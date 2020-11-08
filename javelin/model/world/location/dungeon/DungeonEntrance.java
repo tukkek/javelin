@@ -13,7 +13,6 @@ import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.feature.inhabitant.Inhabitant;
 import javelin.model.world.location.dungeon.temple.Temple;
-import javelin.model.world.location.dungeon.temple.TempleFloor;
 
 /**
  * {@link World} gate to a {@link Dungeon}.
@@ -55,8 +54,9 @@ public class DungeonEntrance extends Location{
 
 	/**
 	 * TODO this should not even be a thing and if it has to, should it include
-	 * {@link Inhabitant}s and {@link DungeonFloor#encounters}? Probably not as those are
-	 * cloned into battle and thus won't have {@link Combatant#id} clashes?
+	 * {@link Inhabitant}s and {@link DungeonFloor#encounters}? Probably not as
+	 * those are cloned into battle and thus won't have {@link Combatant#id}
+	 * clashes?
 	 */
 	@Override
 	public List<Combatant> getcombatants(){
@@ -65,8 +65,8 @@ public class DungeonEntrance extends Location{
 
 	@Override
 	public String describe(){
-		int squadel=ChallengeCalculator.calculateel(Squad.active.members);
-		String difficulty=Difficulty.describe(dungeon.floors.get(0).level-squadel);
+		var squadel=ChallengeCalculator.calculateel(Squad.active.members);
+		var difficulty=Difficulty.describe(dungeon.level-squadel);
 		return description+" ("+difficulty+").";
 	}
 
@@ -75,9 +75,10 @@ public class DungeonEntrance extends Location{
 		return dungeon.getimagename();
 	}
 
+	/** @return All {@link Dungeon} entrances (no subclasses). */
 	static public List<DungeonEntrance> getdungeons(){
 		var actors=World.getall(DungeonEntrance.class);
-		var dungeons=new ArrayList<DungeonEntrance>(actors.size());
+		var dungeons=new ArrayList<DungeonEntrance>(20);
 		for(Actor a:actors){
 			var e=(DungeonEntrance)a;
 			if(e.dungeon.getClass()==Dungeon.class) dungeons.add(e);
@@ -85,10 +86,7 @@ public class DungeonEntrance extends Location{
 		return dungeons;
 	}
 
-	/**
-	 * @return All {@link DungeonFloor}s and {@link TempleFloor}s (first
-	 *         {@link #floors} only).
-	 */
+	/** @return {@link Dungeon} and {@link Temple} entrances.. */
 	static public List<DungeonEntrance> getdungeonsandtemples(){
 		var dungeons=getdungeons();
 		for(var t:Temple.gettemples())

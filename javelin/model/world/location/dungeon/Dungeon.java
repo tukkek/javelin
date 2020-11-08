@@ -3,7 +3,9 @@ package javelin.model.world.location.dungeon;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,7 +31,6 @@ import javelin.model.world.location.dungeon.feature.trap.Trap;
 import javelin.model.world.location.unique.DeepDungeon;
 import javelin.old.RPG;
 import javelin.view.screen.BattleScreen;
-import javelin.view.screen.DungeonScreen;
 
 /**
  * A set of {@link DungeonFloor}s.
@@ -44,7 +45,7 @@ public class Dungeon implements Serializable{
 	 * All floors that make part of this dungeon. Each floor deeper is a
 	 * {@link #level} higher.
 	 */
-	public List<DungeonFloor> floors=new ArrayList<>();
+	public LinkedList<DungeonFloor> floors=new LinkedList<>();
 	/**
 	 * Images that should be cohesive between {@link #floors}. {@link Chest}s,
 	 * {@link Furniture}...
@@ -83,11 +84,9 @@ public class Dungeon implements Serializable{
 	public Dungeon(String name,int level,int nfloors){
 		this.level=level;
 		var t=gettier();
-		if(name==null) name=baptize(t.name);
-		this.name=name;
+		this.name=name==null?baptize(t.name):name;
 		images=new DungeonImages(t);
-		floors.add(createfloor(level));
-		for(var i=1;i<nfloors;i++)
+		for(var i=0;i<nfloors;i++)
 			floors.add(createfloor(level+i));
 	}
 
@@ -98,13 +97,14 @@ public class Dungeon implements Serializable{
 
 	/**
 	 * @return Chooses and removes a name from {@link World#dungeonnames}.
-	 * @throws RuntimeException When out of names.
+	 * @throws NoSuchElementException If out of names.
 	 */
 	synchronized String baptize(String suffix){
 		var names=World.getseed().dungeonnames;
 		suffix=" "+suffix.toLowerCase();
 		if(names.isEmpty()){
-			if(Javelin.DEBUG) throw new RuntimeException("Out of dungeon names!");
+			if(Javelin.DEBUG)
+				throw new NoSuchElementException("Out of dungeon names!");
 			return "Nameless "+suffix;
 		}
 		var name=names.pop();
@@ -116,10 +116,10 @@ public class Dungeon implements Serializable{
 	/** @see Lore */
 	void generatelore(){
 		for(var f:floors)
-			lore.addAll(Lore.generate(this,f));
+			lore.addAll(Lore.generate(f));
 		if(!Lore.DEBUG){
 			var byvalue=RPG.shuffle(new ArrayList<>(lore));
-			byvalue.sort((a,b)->Integer.compare(b.value,a.value));
+			byvalue.sort((a,b)->-Integer.compare(a.value,b.value));
 			var keep=RPG.randomize(3,1,byvalue.size());
 			lore.retainAll(byvalue.subList(0,keep));
 		}
@@ -127,8 +127,7 @@ public class Dungeon implements Serializable{
 
 	/**
 	 * Calls {@link #generate()} on all floors; then {@link Feature#define()} on
-	 * each floor's {@link #features}; then generates {@link Lore}. Should be
-	 * called only once, from top-level.
+	 * each floor's {@link #features}; then generates {@link Lore}.
 	 */
 	public void generate(){
 		for(var f:floors)
@@ -141,10 +140,11 @@ public class Dungeon implements Serializable{
 
 	/**
 	 * If there are already explored {@link Passage}s in this dungeon which lead
-	 * outside, allow the player to use them as entrances.
+	 * outside, allows the player to use them as entrances.
 	 *
-	 * @return Dungeon to open a {@link DungeonScreen} on or <code>null</code> to
-	 *         cancel.
+	 * @return Floor with location set.
+	 * @throws RepeatTurn If cancelled.
+	 * @see DungeonFloor#squadlocation
 	 */
 	protected DungeonFloor chooseentrance(){
 		if(Dungeon.active!=null) return Dungeon.active;
@@ -156,7 +156,7 @@ public class Dungeon implements Serializable{
 		var stairs=top.features.get(StairsUp.class);
 		entrances.add(0,stairs);
 		var choice=Javelin.choose("Use which entrance?",entrances,true,false);
-		if(choice<0) return null;
+		if(choice<0) throw new RepeatTurn();
 		if(choice==0){
 			top.squadlocation=stairs.getlocation();
 			return top;
@@ -169,15 +169,13 @@ public class Dungeon implements Serializable{
 	/** Create or recreate dungeon on {@link StateManager#load()}. */
 	public void enter(){
 		if(floors.get(0).features.isEmpty()){
-			if(Javelin.DEBUG) throw new RuntimeException("Dungeon not generated!");
+			if(Javelin.DEBUG) throw new RuntimeException(this+" not generated!");
 			BattleScreen.active.messagepanel.clear();
 			Javelin.message("Generating dungeon, please wait...",Delay.NONE);
 			BattleScreen.active.messagepanel.repaint();
 			generate();
 		}
-		var f=chooseentrance();
-		if(f==null) throw new RepeatTurn();
-		f.enter();
+		chooseentrance().enter();
 	}
 
 	/**
@@ -201,14 +199,14 @@ public class Dungeon implements Serializable{
 	}
 
 	/**
-	 * @return <code>false</code> if any units aren't theme or
+	 * @return <code>false</code> if any units aren't theme- or
 	 *         gameplay-appropriate. <code>true</code> by default.
 	 */
 	public boolean validate(List<Monster> monsters){
 		return true;
 	}
 
-	/** @return A RandomDungeonEncounter. */
+	/** @see RandomDungeonEncounter */
 	public Fight fight(){
 		return new RandomDungeonEncounter(active);
 	}

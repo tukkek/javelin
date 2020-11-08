@@ -1,24 +1,35 @@
 package javelin.model.world.location.dungeon.temple;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
+import javelin.Javelin;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.generator.NpcGenerator;
-import javelin.controller.generator.WorldGenerator;
+import javelin.controller.generator.feature.LocationGenerator;
+import javelin.controller.kit.Kit;
+import javelin.controller.table.dungeon.feature.CommonFeatureTable;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.wish.Win;
+import javelin.controller.wish.Wish;
 import javelin.model.Realm;
 import javelin.model.item.Tier;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonEntrance;
 import javelin.model.world.location.dungeon.DungeonFloor;
+import javelin.model.world.location.dungeon.DungeonZoner;
 import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.Fountain;
+import javelin.model.world.location.dungeon.feature.Furniture;
 import javelin.model.world.location.dungeon.feature.chest.ArtifactChest;
 import javelin.model.world.location.dungeon.temple.WaterTemple.WaterTempleEntrance;
 import javelin.old.RPG;
@@ -29,8 +40,8 @@ import javelin.old.RPG;
  * {@link NpcGenerator}-based {@link Combatant}s from
  * non-{@link Terrain#UNDERGROUND} pools.
  *
- * Inside the Temple there will be a {@link Artifact}, and once all of those are
- * collected the player can make the {@link Win} wish to finish the game.
+ * Deep in the Temple there will be an {@link Artifact} and once all of those
+ * are collected the player can make the {@link Win} {@link Wish}.
  *
  * @author alex
  */
@@ -45,18 +56,68 @@ public abstract class Temple extends Dungeon{
 		@Override
 		protected void generate(){
 			var t=(Temple)dungeon;
-			WorldGenerator.retry();
 			while(x==-1||!t.terrains.contains(Terrain.get(x,y)))
 				super.generate();
 		}
 	}
 
-	/**
-	 * Create the temples during world generation.
-	 */
+	class TempleFloor extends DungeonFloor{
+		TempleFloor(Integer level,Dungeon d){
+			super(level,d);
+		}
+
+		@Override
+		protected Feature generatespecialchest(){
+			return this==dungeon.floors.getLast()?new ArtifactChest(artifact)
+					:super.generatespecialchest();
+		}
+
+		@Override
+		protected void generatefeatures(int nfeatures,DungeonZoner zoner){
+			//TODO is this really needed? is Campfire better?
+			if(this==floors.getFirst()){
+				var t=gettable(CommonFeatureTable.class);
+				var c=t.getchances();
+				t.add(Fountain.class,c);
+				if(feature!=null) t.add(feature,c);
+			}
+			super.generatefeatures(nfeatures,zoner);
+		}
+
+		@Override
+		public boolean hazard(){
+			return Temple.this.hazard(this);
+		}
+
+		@Override
+		protected Combatants generateencounter(int level,List<Terrain> terrains){
+			var combatants=super.generateencounter(level-RPG.r(1,4),terrains);
+			if(combatants==null){
+				if(!Javelin.DEBUG) return null;
+				var error="Cannot create encounter for level %s %s.";
+				throw new RuntimeException(String.format(error,level,this));
+			}
+			if(!validate(combatants.getmonsters())) return null;
+			var kits=new HashMap<Combatant,List<Kit>>(combatants.size());
+			for(var c:combatants)
+				kits.put(c,Kit.getpreferred(c.source,true));
+			while(ChallengeCalculator.calculateel(combatants)<level){
+				var weakest=combatants.getweakest();
+				RPG.pick(kits.get(weakest)).upgrade(weakest);
+			}
+			return combatants;
+		}
+
+		@Override
+		protected LinkedList<Furniture> generatefurniture(int minimum){
+			return null;
+		}
+	}
+
+	/** @see LocationGenerator */
 	public static void generatetemples(){
-		new WaterTempleEntrance(new WaterTemple(Tier.EPIC.getrandomel(false)))
-				.place();
+		var w=new WaterTemple(Tier.EPIC.getrandomel(false));
+		new WaterTempleEntrance(w).place();
 		for(var type:List.of(AirTemple.class,EarthTemple.class,FireTemple.class,
 				EvilTemple.class,GoodTemple.class,MagicTemple.class))
 			try{
@@ -72,7 +133,6 @@ public abstract class Temple extends Dungeon{
 	 * Reward found on the deepest of the {@link #floors}.
 	 *
 	 * @see ArtifactChest
-	 * @see TempleFloor#deepest
 	 */
 	public Artifact artifact;
 	/** {@link DungeonFloor} {@link Feature} most likely to be found here. */
@@ -88,10 +148,6 @@ public abstract class Temple extends Dungeon{
 		fluff=fluffp;
 		realm=r;
 		terrains.addAll(t);
-		for(var f:floors){
-			var d=(TempleFloor)f;
-			d.temple=this;
-		}
 	}
 
 	/** Constructor with a single {@link Terrain}. */
@@ -115,9 +171,8 @@ public abstract class Temple extends Dungeon{
 	}
 
 	/**
-	 * See {@link DungeonFloor#hazard()}.
-	 *
 	 * @return <code>true</code> if a hazard happens.
+	 * @see DungeonFloor#hazard()
 	 */
 	public boolean hazard(DungeonFloor f){
 		return false;

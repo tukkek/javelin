@@ -80,8 +80,8 @@ public class Features implements Iterable<Feature>,Serializable{
 		int knowledge=Squad.active.getbest(Skill.KNOWLEDGE)
 				.taketen(Skill.KNOWLEDGE);
 		int reveal=knowledge-(10+dungeon.level);
-		while(dungeon.revealed<reveal){
-			dungeon.revealed+=1;
+		while(dungeon.knownfeatures<reveal){
+			dungeon.knownfeatures+=1;
 			Feature f=getundiscovered();
 			if(f!=null) dungeon.discover(f);
 		}

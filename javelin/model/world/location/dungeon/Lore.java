@@ -15,7 +15,8 @@ import javelin.model.world.location.dungeon.feature.chest.Chest;
 
 /**
  * A note of interest about a {@link DungeonFloor} that can later be accessed
- * through a {@link LoreNote}.
+ * through a {@link LoreNote}. A large amount of information is generated but
+ * later pruned so that only most relevant notes are shown by {@link LoreNote}s.
  *
  * @author alex
  */
@@ -49,8 +50,12 @@ public class Lore implements Serializable{
 		this.value=value;
 	}
 
-	/** Constructor with default {@link #value}. */
-	public Lore(String text,DungeonFloor d){
+	/**
+	 * Constructor with default {@link #value}. {@link Dungeon#level} is used
+	 * rather than {@link DungeonFloor#level} so that all notes of default value
+	 * have the same chance of being retained after pruning.
+	 */
+	public Lore(String text,Dungeon d){
 		this(text,RewardCalculator.getgold(d.level));
 	}
 
@@ -72,9 +77,8 @@ public class Lore implements Serializable{
 	}
 
 	/** @return Generates {@link DungeonFloor#lore} for the given floor. */
-	public static HashSet<Lore> generate(Dungeon d,DungeonFloor floor){
-		var top=d;
-		var prefix="On floor "+(top.floors.indexOf(floor)+1)+": ";
+	public static HashSet<Lore> generate(DungeonFloor floor){
+		var prefix="On floor "+floor.getfloor()+": ";
 		var lore=new HashSet<Lore>();
 		var monsters=floor.encounters.stream().flatMap(e->e.stream())
 				.map(c->c.source).filter(m->!m.elite).collect(Collectors.toList());
@@ -84,7 +88,7 @@ public class Lore implements Serializable{
 				.filter(f->RareFeatureTable.ALL.contains(f.getClass()))
 				.collect(Collectors.toList());
 		for(var f:features)
-			lore.add(new Lore(prefix+f,floor));
+			lore.add(new Lore(prefix+f,floor.dungeon));
 		var items=floor.features.stream().filter(f->f instanceof Chest)
 				.flatMap(c->((Chest)c).items.stream()).filter(i->!(i instanceof Key))
 				.collect(Collectors.toList());

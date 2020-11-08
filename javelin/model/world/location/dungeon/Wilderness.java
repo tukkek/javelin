@@ -30,21 +30,20 @@ import javelin.view.mappanel.Tile;
 
 /**
  * A type of {@link Location} that plays like a {@link Dungeon} but is instead
- * meant to be more relaxed and exploration-focused than anything. Maps are
- * bigger and based on non-Underground {@link Fight} maps instead. Encounters
- * are always {@link Difficulty#EASY}.
+ * meant to be more relaxed and exploration-focused. Maps are bigger and based
+ * on non-Underground {@link Fight} maps instead.
  *
- * As far as {@link #fight()}s go, we assume that each encounter wll take 10% of
- * a {@link Squad}'s resources. Also that it will take around 1d4 attemps to
- * fully explore the area.
+ * Fights are {@link Difficulty#EASY} and we assume that each encounter wll take
+ * 10% of a {@link Squad}'s resources - also that it will take around 1d4
+ * attemps to fully explore the entire map area.
  *
  * Chests here will be largely for show only, since the area itself has little
- * challenge that isn't rewarded per-se. Other features however, while limited
- * by types that would make sense outdoors, are fully operational which can
- * either give decent boons (like a {@link LearningStone}) or an even unfairer
+ * challenge that isn't rewarded per-se. Other {@link Feature}s however, while
+ * limited by types that would make sense outdoors, are fully operational which
+ * can either give decent boons (like a {@link LearningStone}) or an even bigger
  * advantage in exploring the area.
  *
- * This {@link Location}'s {@link Tier} is {@link Tier#LOW}, with a 50%
+ * This {@link Location}'s {@link Tier} is first {@link Tier#LOW}, with a 50%
  * recursive chance of increasing a tier. This makes Wildernesses good leveling
  * areas with little risk (but also less reward) than typical {@link Dungeon}s.
  *
@@ -61,15 +60,11 @@ import javelin.view.mappanel.Tile;
  * @author alex
  */
 public class Wilderness extends Dungeon{
-	/**
-	 * {@link DungeonFloor} {@link Feature}s that are not relevant to Wilderness
-	 * {@link Location}s.
-	 */
+	/** {@link DungeonFloor#features} that are not relevant to Wildernesses. */
 	public static final Set<Class<? extends Feature>> FORBIDDEN=Set.of(
 			Brazier.class,Mirror.class,Throne.class,Fountain.class,Prisoner.class,
 			Crate.class,LoreNote.class);
 
-	/** Placeholder to prevent an uneeded call {@link #baptize(String)}.p */
 	static final String DESCRIPTION="Wilderness";
 
 	class WildernessFloor extends DungeonFloor{
@@ -78,12 +73,12 @@ public class Wilderness extends Dungeon{
 			terrain=type;
 		}
 
-		/** Places {@link Entrance} and {@link Squad} on a border {@link Tile}. */
+		/** Places {@link Exit} and {@link Squad} on a border {@link Tile}. */
 		void generateentrance(char[][] map){
-			var top=floors.get(0);
-			top.squadlocation=null;
+			var top=floors.getFirst();
 			var width=map.length;
 			var height=map[0].length;
+			top.squadlocation=null;
 			while(top.squadlocation==null){
 				top.squadlocation=new Point(RPG.r(0,width-1),RPG.r(0,height-1));
 				if(RPG.chancein(2))
@@ -95,7 +90,7 @@ public class Wilderness extends Dungeon{
 				if(empty.count()<3) top.squadlocation=null;
 			}
 			map[top.squadlocation.x][top.squadlocation.y]=MapTemplate.FLOOR;
-			new Entrance(top.squadlocation).place(this,top.squadlocation);
+			new Exit(top.squadlocation).place(this,top.squadlocation);
 		}
 
 		@Override
@@ -121,7 +116,7 @@ public class Wilderness extends Dungeon{
 		@Override
 		protected int calculateencounterrate(){
 			var totalsteps=countfloor()/(DISCOVEREDPERSTEP*dungeon.vision);
-			var attemptstoclear=RPG.r(1,4);
+			var attemptstoclear=RPG.randomize(3,1,Integer.MAX_VALUE);
 			return 2*totalsteps/attemptstoclear;
 		}
 
@@ -150,9 +145,9 @@ public class Wilderness extends Dungeon{
 		}
 	}
 
-	class Entrance extends StairsUp{
-		Entrance(Point p){
-			super(p,Wilderness.this.floors.get(0));
+	class Exit extends StairsUp{
+		Exit(Point p){
+			super(p,Wilderness.this.floors.getFirst());
 		}
 
 		@Override
@@ -161,8 +156,7 @@ public class Wilderness extends Dungeon{
 		}
 	}
 
-	/** Terrain type (not {@link Terrain#WATER} or {@link Terrain#UNDERGROUND}. */
-	public Terrain type;
+	Terrain type;
 
 	/** Constructor. */
 	public Wilderness(){

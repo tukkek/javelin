@@ -90,6 +90,7 @@ public abstract class Feature implements Serializable{
 		return true;
 	}
 
+	/** TODO should probably be in {@link DungeonFloor} */
 	public void place(DungeonFloor d,Point p){
 		x=p.x;
 		y=p.y;

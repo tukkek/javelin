@@ -55,6 +55,7 @@ public class WorldGenerator extends Thread{
 	static final String GENERATINGDUNGEONS="Generating dungeons: %s%%.";
 	static final int NTHREADS=Math.max(1,Preferences.maxthreads);
 	static final List<WorldGenerator> WORLDTHREADS=new ArrayList<>(NTHREADS);
+	static final boolean DEBUG=false;
 
 	static int discarded=0;
 	static int dungeonsgenerated=0;
@@ -129,15 +130,16 @@ public class WorldGenerator extends Thread{
 	public synchronized final void bumpretry(){
 		if(World.seed!=null) throw new RestartWorldGeneration();
 		retries+=1;
-		if(retries<=MAXRETRIES) return;
-		retries=0;
-		discarded+=1;
-		if(Javelin.DEBUG){
-			RuntimeException e=new RuntimeException("Reset");
-			e.fillInStackTrace();
-			RESETS.add(JavelinApp.printstacktrace(e));
+		if(retries>=MAXRETRIES||Thread.interrupted()){
+			retries=0;
+			discarded+=1;
+			if(DEBUG){
+				var e=new RuntimeException("Reset");
+				e.fillInStackTrace();
+				RESETS.add(JavelinApp.printstacktrace(e));
+			}
+			throw new RestartWorldGeneration();
 		}
-		throw new RestartWorldGeneration();
 	}
 
 	public static void retry(){
@@ -199,8 +201,10 @@ public class WorldGenerator extends Thread{
 				}
 				Thread.sleep(REFRESH);
 			}
-			for(var t:WORLDTHREADS)
-				t.retries=MAXRETRIES;
+			for(var t:WORLDTHREADS){
+				t.interrupt();
+				t.join();
+			}
 		}catch(ReflectiveOperationException e){
 			throw new RuntimeException(e);
 		}catch(InterruptedException e){

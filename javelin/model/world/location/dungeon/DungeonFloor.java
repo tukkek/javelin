@@ -2,10 +2,10 @@ package javelin.model.world.location.dungeon;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.JavelinApp;
@@ -18,6 +18,7 @@ import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomDungeonEncounter;
 import javelin.controller.generator.dungeon.DungeonGenerator;
 import javelin.controller.generator.dungeon.template.MapTemplate;
+import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.table.Table;
 import javelin.controller.table.Tables;
@@ -35,7 +36,9 @@ import javelin.model.item.key.door.Key;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
+import javelin.model.world.location.dungeon.feature.Campfire;
 import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.Fountain;
 import javelin.model.world.location.dungeon.feature.Furniture;
 import javelin.model.world.location.dungeon.feature.StairsDown;
 import javelin.model.world.location.dungeon.feature.StairsUp;
@@ -45,6 +48,7 @@ import javelin.model.world.location.dungeon.feature.chest.RubyChest;
 import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.model.world.location.dungeon.feature.inhabitant.Leader;
 import javelin.model.world.location.dungeon.feature.trap.Trap;
+import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
 import javelin.view.mappanel.dungeon.DungeonTile;
 import javelin.view.screen.BattleScreen;
@@ -62,7 +66,7 @@ public class DungeonFloor implements Serializable{
 
 	/**
 	 * A loose approximation of how many {@link DungeonTile}s are revealed with
-	 * each step. Multiply by {@link #vision}.
+	 * each step. Multiply by {@link Dungeon#vision}.
 	 */
 	protected static final int DISCOVEREDPERSTEP=4;
 
@@ -78,11 +82,7 @@ public class DungeonFloor implements Serializable{
 	public Point squadlocation=null;
 	/** Tiles already revealed. */
 	public HashSet<Point> discovered=new HashSet<>();
-	/**
-	 * A grid of characters representing dungeon objects.
-	 *
-	 * @see MapTemplate
-	 */
+	/** @see MapTemplate */
 	public char[][] map=null;
 	/**
 	 * {@link #map} size (width and height).
@@ -90,20 +90,20 @@ public class DungeonFloor implements Serializable{
 	 * TODO support non-square maps
 	 */
 	public int size;
-	/** Chance for a {@link RandomDungeonEncounter}. */
+	/** @see #generate() */
 	public int stepsperencounter;
 	/** Dungeon encounter level. -1 if not initialized. */
 	public int level=-1;
 	/**
-	 * Table of encounters to roll from when generating
+	 * Table of {@link Encounter}s to roll from when generating
 	 * {@link RandomDungeonEncounter}s.
 	 *
 	 * Entries can be set to <code>null</code> when certain encounters are
 	 * pacified. If rolled, these will result in skipped encounters (ie: the
-	 * {@link Squad} met them but they weren't hostile). Pacified encounters do
-	 * not carry over to the next level.
+	 * {@link Squad} met them but they weren't hostile).
 	 *
 	 * @see Leader
+	 * @see Dungeon#fight()
 	 */
 	public List<Combatants> encounters=new ArrayList<>();
 	/** Dungeon this floor is a part of. */
@@ -111,10 +111,10 @@ public class DungeonFloor implements Serializable{
 	/** @see Fight#map */
 	public Terrain terrain=Terrain.UNDERGROUND;
 
-	int revealed=0;
+	int knownfeatures=0;
 	Tables tables;
 
-	transient int nrooms;
+	transient Integer nrooms=null;
 
 	/** Constructor for top floor. */
 	public DungeonFloor(Integer level,Dungeon d){
@@ -124,9 +124,9 @@ public class DungeonFloor implements Serializable{
 
 	/**
 	 * This function generates the dungeon map using {@link DungeonGenerator} and
-	 * then {@link #createfeatures(int)}. One notable thing that happens here is
-	 * the determination of how many {@link RandomDungeonEncounter}s should take
-	 * for the player to explore the whole level.
+	 * then {@link #populate()}. One notable thing that happens here is the
+	 * determination of how many {@link RandomDungeonEncounter}s should take for
+	 * the player to explore the whole level.
 	 *
 	 * Currently, the calculation is done by setting a goal of one fight per room
 	 * on average (so naturally, larger {@link DungeonTier}s will have more fights
@@ -136,16 +136,16 @@ public class DungeonFloor implements Serializable{
 	 *
 	 * Since a Squad of the dungeon's intended level cannot hope to clear a
 	 * dungeon if it's large (in average they can only take 4-5 encounters of the
-	 * same EL), this is then offset by placing enough fountains that would
-	 * theoretically allow them to do the one dungeon in one go.
+	 * same EL), this is then offset by placing {@link Feature}s like
+	 * {@link Fountain}s and {@link Campfire}s that would theoretically allow them
+	 * to do the floor in one go - not counting backtracking out of the dungeon or
+	 * finding their way back to {@link Town} safely, so this naturally makes the
+	 * dungeon more challenging (hopefully being offset by the cool rewards).
 	 *
-	 * This is currently not counting backtracking out of the dungeon or finding
-	 * your way back to town safely, so this naturally makes the dungeon more
-	 * challenging (hopefully being offset by the rewards inside).
+	 * @see #stepsperencounter
 	 */
 	public void generate(){
 		if(map!=null) return;
-		var previous=Dungeon.active;
 		var p=getparent();
 		tables=p==null?new Tables():p.tables.clone();
 		map=map();
@@ -159,7 +159,6 @@ public class DungeonFloor implements Serializable{
 		for(int x=0;x<size;x++)
 			for(int y=0;y<size;y++)
 				visible[x][y]=false;
-		Dungeon.active=previous;
 	}
 
 	/** @return Floor above this one or <code>null</code> if top floor. */
@@ -169,9 +168,8 @@ public class DungeonFloor implements Serializable{
 	}
 
 	/**
-	 * Generates Dungeon area.
-	 *
-	 * @return {@link #map}.
+	 * @see DungeonGenerator
+	 * @see #map
 	 */
 	protected char[][] map(){
 		var tier=gettier();
@@ -182,22 +180,21 @@ public class DungeonFloor implements Serializable{
 
 	/** Define {@link #encounters}. */
 	protected void generateencounters(){
-		var target=3+RPG.r(1,4)+DungeonTier.TIERS.indexOf(gettier());
 		var parent=getparent();
 		if(parent!=null){
 			encounters=new ArrayList<>(parent.encounters);
-			while(encounters.contains(null))
-				encounters.remove(null);
+			while(encounters.remove(null))
+				continue;
 			encounters.sort(EncountersByEl.INSTANCE);
 			var crop=RPG.r(1,encounters.size());
 			encounters.removeAll(encounters.subList(0,crop));
 		}
+		var target=DungeonTier.TIERS.indexOf(gettier())+RPG.randomize(6,4,7);
 		var attempts=0;
 		while(encounters.size()<target){
 			var el=level+Difficulty.get();
-			var encounter=generateencounter(el,dungeon.terrains);
-			if(encounter!=null&&!encounters.contains(encounter))
-				encounters.add(encounter);
+			var e=generateencounter(el,dungeon.terrains);
+			if(e!=null&&!encounters.contains(e)) encounters.add(e);
 			if(Javelin.DEBUG){
 				attempts+=1;
 				if(attempts>ENCOUNTERATTEMPTS){
@@ -208,6 +205,10 @@ public class DungeonFloor implements Serializable{
 		}
 	}
 
+	/**
+	 * @see #generateencounters()
+	 * @see EncounterGenerator
+	 */
 	protected Combatants generateencounter(int level,List<Terrain> terrains){
 		return EncounterGenerator.generate(level,terrains);
 	}
@@ -217,15 +218,15 @@ public class DungeonFloor implements Serializable{
 			for(int y=0;y<size;y++)
 				if(map[x][y]==MapTemplate.DOOR
 						&&gettable(DoorExists.class).rollboolean()){
-					Door d=Door.generate(this,new Point(x,y));
+					var d=Door.generate(this,new Point(x,y));
 					if(d!=null) d.place(this,d.getlocation());
 				}
 	}
 
 	/**
 	 * Tries to come up with a number roughly similar to what you'd have if you
-	 * explored all rooms, fought all monsters and then left (plus random
-	 * encounters).
+	 * explored all rooms, fought all monsters and then left (plus a 10% random
+	 * encounter chance).
 	 *
 	 * @return {@link #stepsperencounter}.
 	 */
@@ -244,33 +245,27 @@ public class DungeonFloor implements Serializable{
 		return floortiles;
 	}
 
-	/**
-	 * @return Generated furniture or <code>null</code> if Dungeon doesn't have
-	 *         any.
-	 */
+	/** @return Generated furniture or <code>null</code> if Dungeon doesn't. */
 	protected LinkedList<Furniture> generatefurniture(int minimum){
-		var table=gettable(FurnitureTable.class);
-		var unnocupied=new ArrayList<Point>(size*size/2);
+		var unnocupied=new ArrayList<Point>(size*size/10);
 		for(var x=0;x<size;x++)
 			for(var y=0;y<size;y++){
 				var p=new Point(x,y);
 				if(!isoccupied(p)) unnocupied.add(p);
 			}
-		var target=RPG.randomize(gettier().minrooms,minimum,unnocupied.size());
 		RPG.shuffle(unnocupied);
+		var target=RPG.randomize(gettier().minrooms,minimum,unnocupied.size());
 		var furniture=new LinkedList<Furniture>();
+		var t=gettable(FurnitureTable.class);
 		for(var i=0;i<target;i++){
-			var f=new Furniture((String)table.roll(),this);
+			var f=new Furniture((String)t.roll(),this);
 			furniture.add(f);
 			f.place(this,unnocupied.get(i));
 		}
 		return furniture;
 	}
 
-	/**
-	 * Place {@link StairsUp}, deifne {@link #squadlocation} and create
-	 * {@link Features}.
-	 */
+	/** Place {@link Features}s and defines {@link #squadlocation}. */
 	protected void populate(){
 		/*if placed too close to the edge, the carving in #createstairs() will make it look weird as the edge will look empty without walls */
 		while(squadlocation==null||!squadlocation.validate(2,2,size-3,size-3))
@@ -279,7 +274,7 @@ public class DungeonFloor implements Serializable{
 		generatestairs(zoner);
 		generatekeys(zoner);
 		var ntraps=getfeaturequantity(nrooms,dungeon.ratiotraps);
-		int ntreasure=getfeaturequantity(nrooms,dungeon.ratiotreasure);
+		var ntreasure=getfeaturequantity(nrooms,dungeon.ratiotreasure);
 		var furniture=generatefurniture(ntraps+ntreasure+1);
 		var traps=generatetraps(ntraps,furniture);
 		var pool=0;
@@ -290,26 +285,26 @@ public class DungeonFloor implements Serializable{
 	}
 
 	void generatekeys(DungeonZoner zoner){
-		try{
-			var generated=new HashSet<Class<? extends Key>>();
-			var area=new ArrayList<Point>();
-			for(var zone:zoner.zones){
-				area.addAll(zone.area);
-				for(var door:zone.doors){
-					if(!door.locked||!generated.add(door.key)) continue;
-					Point p=null;
-					while(p==null||isoccupied(p))
-						p=RPG.pick(area);
-					var key=door.key.getConstructor(DungeonFloor.class).newInstance(this);
-					new Chest(key,this).place(this,p);
+		var generated=new HashSet<Class<? extends Key>>();
+		var area=new ArrayList<Point>();
+		for(var z:zoner.zones){
+			area.addAll(z.area);
+			for(var door:z.doors){
+				if(!door.locked||!generated.add(door.key)) continue;
+				Point p=null;
+				while(p==null||isoccupied(p))
+					p=RPG.pick(area);
+				try{
+					var k=door.key.getConstructor(DungeonFloor.class).newInstance(this);
+					new Chest(k,this).place(this,p);
+				}catch(ReflectiveOperationException e){
+					throw new RuntimeException(e);
 				}
 			}
-		}catch(ReflectiveOperationException e){
-			throw new RuntimeException(e);
 		}
 	}
 
-	/** * @return A free space in this dungeon floor. */
+	/** * @return A random, free {@link DungeonTile}. */
 	public Point getunnocupied(){
 		Point p=null;
 		while(p==null||isoccupied(p))
@@ -325,16 +320,15 @@ public class DungeonFloor implements Serializable{
 		if(!isdeepest()) new StairsDown(this).place(this,zoner.getpoint());
 	}
 
-	/** @return <code>true</code> if final floor. */
+	/** @return <code>true</code> if lowest floor. */
 	public boolean isdeepest(){
-		return dungeon.floors.indexOf(this)==dungeon.floors.size()-1;
+		return this==dungeon.floors.getLast();
 	}
 
-	/** @param nfeatures Target quantity of Features to place. */
+	/** @param nfeatures Target quantity of {@link Feature}s to place. */
 	protected void generatefeatures(int nfeatures,DungeonZoner zoner){
 		while(nfeatures>0){
-			var f=generatefeature();
-			f.place(this,zoner.getpoint());
+			generatefeature().place(this,zoner.getpoint());
 			nfeatures-=1;
 		}
 	}
@@ -342,15 +336,15 @@ public class DungeonFloor implements Serializable{
 	/**
 	 * @return A feature chosen from {@link #DEBUGFEATURE},
 	 *         {@link RareFeatureTable} or {@link CommonFeatureTable}. May return
-	 *         <code>null</code>, in which case it should usually be possible to
-	 *         try again.
+	 *         <code>null</code> in event of failure, in which case it should
+	 *         usually be possible to try again.
 	 */
 	protected Feature generatefeature(){
 		if(Javelin.DEBUG&&DEBUGFEATURE!=null) try{
-			return DEBUGFEATURE.getDeclaredConstructor().newInstance();
+			return DEBUGFEATURE.getDeclaredConstructor(DungeonFloor.class)
+					.newInstance(this);
 		}catch(ReflectiveOperationException e){
-			if(Javelin.DEBUG) throw new RuntimeException(e);
-			return null;
+			throw new RuntimeException(e);
 		}
 		var t=gettable(FeatureRarityTable.class).roll();
 		return t.rollfeature(this);
@@ -367,25 +361,17 @@ public class DungeonFloor implements Serializable{
 		for(var i=0;i<ntraps;i++){
 			var cr=level+Difficulty.get()+modifier.roll();
 			var t=Trap.generate(cr,special.rollboolean(),this);
-			if(t!=null){
-				traps.add(t);
-				if(furniture==null)
-					t.place(this,getunnocupied());
-				else
-					furniture.pop().hide(t);
-			}
+			if(t==null) continue;
+			traps.add(t);
+			if(furniture==null)
+				t.place(this,getunnocupied());
+			else
+				furniture.pop().hide(t);
 		}
 		return traps;
 	}
 
-	/**
-	 * @return <code>true</code> if given point is between 0 and {@link #SIZE}.
-	 */
-	public boolean valid(int coordinate){
-		return 0<=coordinate&&coordinate<=size;
-	}
-
-	void generatechest(Class<? extends Chest> type,int gold,DungeonZoner zoner,
+	void generatechest(Class<? extends Chest> type,int gold,DungeonZoner z,
 			Furniture f){
 		var percentmodifier=gettable(FeatureModifierTable.class).roll()*2;
 		gold=Math.round(gold*(100+percentmodifier)/100f);
@@ -400,7 +386,7 @@ public class DungeonFloor implements Serializable{
 					return;
 				}
 			}
-			c.place(this,zoner.getpoint());
+			c.place(this,z.getpoint());
 		}catch(ReflectiveOperationException e){
 			throw new RuntimeException(e);
 		}
@@ -441,6 +427,9 @@ public class DungeonFloor implements Serializable{
 		return new RubyChest(this);
 	}
 
+	/**
+	 * @return <code>true</code> if a {@link MapTemplate#WALL} or {@link Feature}.
+	 */
 	public boolean isoccupied(Point p){
 		if(map[p.x][p.y]==MapTemplate.WALL) return true;
 		for(Feature f:features)
@@ -457,29 +446,25 @@ public class DungeonFloor implements Serializable{
 		Dungeon.active=null;
 	}
 
-	/**
-	 * Called when reaching {@link StairsUp}
-	 */
+	/** @see StairsUp */
 	public void goup(){
 		Squad.active.delay(1);
-		int floor=dungeon.floors.indexOf(this);
-		if(floor==0)
+		var f=dungeon.floors.indexOf(this);
+		if(f==0)
 			Dungeon.active.leave();
 		else{
-			var up=dungeon.floors.get(floor-1);
+			var up=dungeon.floors.get(f-1);
 			up.squadlocation=up.features.get(StairsDown.class).getlocation();
 			up.enter();
 		}
 	}
 
-	/**
-	 * Called when reaching {@link StairsDown}.
-	 */
+	/** @see StairsDown */
 	public void godown(){
 		Squad.active.delay(1);
-		var floor=dungeon.floors.get(dungeon.floors.indexOf(this)+1);
-		floor.squadlocation=floor.features.get(StairsUp.class).getlocation();
-		floor.enter();
+		var f=dungeon.floors.get(dungeon.floors.indexOf(this)+1);
+		f.squadlocation=f.features.get(StairsUp.class).getlocation();
+		f.enter();
 	}
 
 	/**
@@ -488,36 +473,36 @@ public class DungeonFloor implements Serializable{
 	 * @return <code>true</code> if a hazard happens.
 	 */
 	public boolean hazard(){
-		// no hazards in normal dungeons
 		return false;
 	}
 
+	/** Makes this {@link Point} visible to the player. */
 	public void setvisible(int x,int y){
-		if(!valid(x)||!valid(y)) return;
-		visible[x][y]=true;
-		BattleScreen.active.mappanel.tiles[x][y].discovered=true;
+		if(0<=x&&x<=size&&0<=y&&y<=size){
+			visible[x][y]=true;
+			BattleScreen.active.mappanel.tiles[x][y].discovered=true;
+		}
 	}
 
+	/** @param f {@link #setvisible(int, int)} and reveals {@link Feature}. */
 	public void discover(Feature f){
 		setvisible(f.x,f.y);
 		f.discover(null,9000);
 	}
 
+	/** @see Tables */
 	public <K extends Table> K gettable(Class<K> table){
 		return tables.get(table,this);
 	}
 
-	public List<Combatant> rasterizenecounters(){
-		ArrayList<Combatant> enemies=new ArrayList<>();
-		for(Combatants encounter:encounters)
-			enemies.addAll(encounter);
-		Collections.shuffle(enemies);
-		return enemies;
+	/** @return All {@link #encounters} {@link Combatants}. */
+	public List<Combatant> getcombatants(){
+		var combatants=encounters.stream().flatMap(e->e.stream())
+				.collect(Collectors.toList());
+		return RPG.shuffle(new ArrayList<>(combatants));
 	}
 
-	/**
-	 * @param to Moves {@link Squad} location to these coordinates.
-	 */
+	/** @param to Moves {@link Squad} location to these coordinates. */
 	public void teleport(Point to){
 		squadlocation=to;
 		JavelinApp.context.view(to.x,to.y);
@@ -526,8 +511,8 @@ public class DungeonFloor implements Serializable{
 
 	/**
 	 * @return A human-intended count of how deep this floor is (1 for first, 2
-	 *         for the one below that, etc).
-	 * @see #floors
+	 *         for the one below that)...
+	 * @see Dungeon#floors
 	 */
 	public int getfloor(){
 		return dungeon.floors.indexOf(this)+1;

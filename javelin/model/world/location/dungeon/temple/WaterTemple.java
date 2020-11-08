@@ -50,8 +50,10 @@ public class WaterTemple extends Temple{
 		@Override
 		protected void generate(){
 			var w=World.getseed();
-			while(x==-1||Terrain.search(new Point(x,y),Terrain.WATER,1,w)==0)
+			while(x==-1||Terrain.search(new Point(x,y),Terrain.WATER,1,w)==0){
+				x=-1;
 				super.generate();
+			}
 		}
 	}
 

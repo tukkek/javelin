@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import javelin.model.world.location.dungeon.DungeonEntrance;
+import javelin.model.world.location.dungeon.Lore;
 import javelin.model.world.location.dungeon.feature.LoreNote;
 import javelin.view.frame.text.TextScreen;
 import javelin.view.screen.WorldScreen;
@@ -35,7 +36,7 @@ public class ShowLore extends WorldAction{
 				return tiera!=tierb?tierb-tiera:a.toString().compareTo(b.toString());
 			});
 			for(var d:dungeons){
-				var lore=d.dungeon.lore.stream().filter(l->l.discovered)
+				var lore=d.dungeon.lore.stream().filter(l->l.discovered||Lore.DEBUG)
 						.map(l->"- "+l.text).sorted().collect(Collectors.toList());
 				if(!lore.isEmpty()) text.add(d+":\n"+String.join("\n",lore));
 			}

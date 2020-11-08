@@ -15,7 +15,6 @@ import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.Feature;
-import javelin.model.world.location.dungeon.temple.TempleFloor;
 import javelin.old.RPG;
 import javelin.view.Images;
 
@@ -78,7 +77,7 @@ public abstract class Inhabitant extends Feature{
 	 */
 	public Combatant select(DungeonFloor f){
 		HashSet<String> invalid=new HashSet<>();
-		for(Combatant c:f.rasterizenecounters()){
+		for(Combatant c:f.getcombatants()){
 			Monster m=c.source;
 			String name=m.name;
 			if(invalid.contains(name)||!validate(m,f)){

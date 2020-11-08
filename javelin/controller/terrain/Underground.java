@@ -50,6 +50,6 @@ public class Underground extends Terrain{
 
 	@Override
 	public Integer getweather(){
-		return Math.max(0,Weather.current-1);
+		return Math.max(Weather.CLEAR,Weather.current-1);
 	}
 }

@@ -1,7 +1,5 @@
 package javelin.model.world.location.dungeon.temple;
 
-import java.util.List;
-
 import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.fight.Fight;
@@ -9,12 +7,9 @@ import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.Water;
 import javelin.model.Realm;
 import javelin.model.item.artifact.Crown;
-import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.feature.Fountain;
 
@@ -54,17 +49,9 @@ public class WaterTemple extends Temple{
 				x=-1;
 				super.generate();
 			}
-		}
-	}
-
-	class WaterTempleFloor extends TempleFloor{
-		WaterTempleFloor(Integer level,Dungeon d){
-			super(level,d);
-		}
-
-		@Override
-		protected Combatants generateencounter(int level,List<Terrain> terrains){
-			return super.generateencounter(level,List.of(Terrain.WATER));
+			var t=dungeon.terrains;
+			t.add(Terrain.get(x,y));
+			t.add(Terrain.WATER);
 		}
 	}
 
@@ -75,11 +62,6 @@ public class WaterTemple extends Temple{
 		images.put(DungeonImages.WALL,"walltemplewater");
 		doorbackground=false;
 		feature=Fountain.class;
-	}
-
-	@Override
-	protected DungeonFloor createfloor(int level){
-		return new WaterTempleFloor(level,this);
 	}
 
 	@Override

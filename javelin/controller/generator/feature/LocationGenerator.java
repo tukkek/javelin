@@ -153,6 +153,7 @@ public class LocationGenerator implements Serializable{
 			p=new Point(RPG.r(min,max),RPG.r(min,max));
 			if(RPG.chancein(2)) p.x*=-1;
 			if(RPG.chancein(2)) p.y*=-1;
+			WorldGenerator.retry();
 		}
 		a.x=p.x+t.x;
 		a.y=p.y+t.y;

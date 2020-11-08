@@ -28,8 +28,9 @@ public class Tables implements Serializable,Cloneable{
 		try{
 			var c=(Tables)super.clone();
 			c.tables=new HashMap<>(tables.size());
-			for(var t:tables.keySet())
-				c.tables.put(t,tables.get(t).clone());
+			//using keySet() here produces the weirdest bug, don't
+			for(var t:tables.entrySet())
+				c.tables.put(t.getKey(),t.getValue().clone());
 			return c;
 		}catch(CloneNotSupportedException e){
 			throw new RuntimeException(e);
@@ -39,7 +40,7 @@ public class Tables implements Serializable,Cloneable{
 	@Override
 	public String toString(){
 		String tables="";
-		for(Class<? extends Table> table:this.tables.keySet())
+		for(var table:this.tables.keySet())
 			tables+=this.tables.get(table)+"\n\n";
 		return tables;
 	}

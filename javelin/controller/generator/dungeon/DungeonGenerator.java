@@ -26,7 +26,7 @@ public class DungeonGenerator{
 
 	static final boolean DEBUGROOMS=true;
 	static final int DEBUGSIZE=1;
-	static final int MAXATTEMPTS=10000/2;
+	static final int MAXATTEMPTS=10000;
 
 	/**
 	 * TODO temporary: will need to be refactored when more than one level can be

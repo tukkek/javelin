@@ -34,7 +34,7 @@ public class TieredList<K>extends ArrayList<K>{
 	 *          Otherwise, add the element once for each tier (beginnign at 0)
 	 */
 	public void addtiered(K item,int tier){
-		if(tier<this.tier) return;
+		if(tier>this.tier) return;
 		for(var i=0;i<=tier;i++)
 			add(item);
 	}

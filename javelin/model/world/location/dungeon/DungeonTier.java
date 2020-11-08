@@ -3,6 +3,7 @@ package javelin.model.world.location.dungeon;
 import java.util.List;
 
 import javelin.model.item.Tier;
+import javelin.model.world.location.dungeon.temple.Temple;
 
 public class DungeonTier{
 	public static final DungeonTier CAVE=new DungeonTier("Cave",Tier.LOW,"cave");
@@ -40,5 +41,10 @@ public class DungeonTier{
 
 	public String getimagename(){
 		return name.toLowerCase();
+	}
+
+	@Override
+	public String toString(){
+		return name;
 	}
 }

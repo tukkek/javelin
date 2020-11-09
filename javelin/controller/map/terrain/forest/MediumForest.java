@@ -10,9 +10,9 @@ import javelin.view.Images;
 /**
  * @see DndMap
  */
-public class Medium extends DndMap{
+public class MediumForest extends DndMap{
 	/** Constructor. */
-	public Medium(){
+	public MediumForest(){
 		super("Forest",.3,.2,0);
 		standarize(this);
 	}

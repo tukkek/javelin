@@ -4,8 +4,8 @@ import java.util.Set;
 
 import javelin.controller.Point;
 import javelin.controller.map.Maps;
-import javelin.controller.map.terrain.hill.Gentle;
-import javelin.controller.map.terrain.hill.Rugged;
+import javelin.controller.map.terrain.hill.GentleHill;
+import javelin.controller.map.terrain.hill.RuggedHill;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.terrain.hazard.Rockslide;
 import javelin.model.world.World;
@@ -30,8 +30,8 @@ public class Hill extends Terrain{
 	@Override
 	public Maps getmaps(){
 		Maps m=new Maps();
-		m.add(new Gentle());
-		m.add(new Rugged());
+		m.add(new GentleHill());
+		m.add(new RuggedHill());
 		return m;
 	}
 

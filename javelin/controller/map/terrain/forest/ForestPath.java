@@ -33,7 +33,7 @@ public class ForestPath extends Map{
 	/** Constructor. */
 	public ForestPath(){
 		super("Forest path",DndMap.SIZE,DndMap.SIZE);
-		Medium.standarize(this);
+		MediumForest.standarize(this);
 		obstacle=Images.get(List.of("terrain","bush2"));
 	}
 

@@ -6,8 +6,8 @@ import java.util.Set;
 import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.map.Maps;
-import javelin.controller.map.terrain.hill.Rugged;
-import javelin.controller.map.terrain.mountain.Forbidding;
+import javelin.controller.map.terrain.hill.RuggedHill;
+import javelin.controller.map.terrain.mountain.ForbiddingMountain;
 import javelin.controller.map.terrain.mountain.Meadow;
 import javelin.controller.map.terrain.mountain.MountainCave;
 import javelin.controller.map.terrain.mountain.MountainPass;
@@ -41,7 +41,7 @@ public class Mountains extends Terrain{
 	@Override
 	public Maps getmaps(){
 		Maps m=new Maps();
-		m.addAll(List.of(new Meadow(),new Rugged(),new Forbidding(),
+		m.addAll(List.of(new Meadow(),new RuggedHill(),new ForbiddingMountain(),
 				new MountainPass(),new MountainCave(),new MountainPath()));
 		if(Weather.current==Weather.STORM||Season.current==Season.WINTER)
 			m.add(new MountainsOfMadness());

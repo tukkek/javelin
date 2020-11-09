@@ -5,10 +5,10 @@ import java.util.Set;
 
 import javelin.controller.Point;
 import javelin.controller.map.Maps;
-import javelin.controller.map.terrain.forest.Dense;
+import javelin.controller.map.terrain.forest.DenseForest;
 import javelin.controller.map.terrain.forest.ForestPath;
-import javelin.controller.map.terrain.forest.Medium;
-import javelin.controller.map.terrain.forest.Sparse;
+import javelin.controller.map.terrain.forest.MediumForest;
+import javelin.controller.map.terrain.forest.SparseForest;
 import javelin.controller.terrain.hazard.Break;
 import javelin.controller.terrain.hazard.FallingTrees;
 import javelin.controller.terrain.hazard.GettingLost;
@@ -36,9 +36,9 @@ public class Forest extends Terrain{
 	@Override
 	public Maps getmaps(){
 		Maps m=new Maps();
-		m.add(new Sparse());
-		m.add(new Medium());
-		m.add(new Dense());
+		m.add(new SparseForest());
+		m.add(new MediumForest());
+		m.add(new DenseForest());
 		m.add(new ForestPath());
 		return m;
 	}

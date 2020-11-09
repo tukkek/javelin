@@ -10,10 +10,10 @@ import javelin.view.Images;
 /**
  * @see DndMap
  */
-public class Gentle extends DndMap{
+public class RuggedHill extends DndMap{
 	/** Constructor. */
-	public Gentle(){
-		super("Gentle hill",.1,.4,0);
+	public RuggedHill(){
+		super("Rugged hill",.1,.7,0);
 		floor=Images.get(List.of("terrain","forestfloor"));
 		wallfloor=floor;
 		wall=Images.get(List.of("terrain","tree"));
@@ -21,6 +21,6 @@ public class Gentle extends DndMap{
 
 	@Override
 	public Image getobstacle(int x,int y){
-		return RPG.r(1,2)==1?rock:obstacle;
+		return RPG.r(1,7)<=2?obstacle:rock;
 	}
 }

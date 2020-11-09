@@ -10,9 +10,9 @@ import javelin.view.Images;
 /**
  * @see DndMap
  */
-public class Rugged extends DndMap{
+public class RuggedMountain extends DndMap{
 	/** Constructor. */
-	public Rugged(){
+	public RuggedMountain(){
 		super("Rugged mountain",.3,.2,0);
 		rock=Images.get(List.of("terrain","rock2"));
 		wall=Images.get(List.of("terrain","ruggedwall"));

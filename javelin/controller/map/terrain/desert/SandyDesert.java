@@ -10,9 +10,9 @@ import javelin.view.Images;
 /**
  * @see DndMap
  */
-public class Sandy extends DndMap{
+public class SandyDesert extends DndMap{
 	/** Constructor. */
-	public Sandy(){
+	public SandyDesert(){
 		super("Sandy desert",0,.1,0);
 		floor=Images.get(List.of("terrain","desert"));
 		maxflooding=Weather.CLEAR;

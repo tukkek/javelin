@@ -7,7 +7,7 @@ import javelin.model.state.Square;
 import javelin.old.RPG;
 import javelin.view.Images;
 
-public class Rocks extends Sandy{
+public class Rocks extends SandyDesert{
 	public Rocks(){
 		name="Desert rocks";
 		wall=Images.get(List.of("terrain","ruggedwall"));

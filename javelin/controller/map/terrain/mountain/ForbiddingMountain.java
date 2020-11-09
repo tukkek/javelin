@@ -11,9 +11,9 @@ import javelin.view.Images;
  *
  * @see DndMap
  */
-public class Forbidding extends DndMap{
+public class ForbiddingMountain extends DndMap{
 	/** Constructor. */
-	public Forbidding(){
+	public ForbiddingMountain(){
 		super("Forbidding mountain",.4,0,0);
 		floor=Images.get(List.of("terrain","ruggedwall"));
 		wall=Images.get(List.of("terrain","orcwall"));

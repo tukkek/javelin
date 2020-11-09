@@ -5,10 +5,10 @@ import javelin.controller.map.DndMap;
 /**
  * @see DndMap
  */
-public class Dense extends DndMap{
+public class SparseForest extends DndMap{
 	/** Constructor. */
-	public Dense(){
-		super("Dense forest",.4,.3,0);
-		Medium.standarize(this);
+	public SparseForest(){
+		super("Sparse forest",.3,0,0);
+		MediumForest.standarize(this);
 	}
 }

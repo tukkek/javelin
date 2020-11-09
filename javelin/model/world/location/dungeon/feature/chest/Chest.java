@@ -27,20 +27,6 @@ import javelin.view.Images;
  * @author alex
  */
 public class Chest extends Feature{
-	/**
-	 * Attempts to generate items via {@link Item#randomize()} before giving up
-	 * that one will fit a given {@link #generateitem()} {@link #gold} range. A
-	 * number 10x this size doesn't seem to produce any better results.
-	 *
-	 * Impact on performance seems non-noticeable and the {@link #generateitem()}
-	 * implementation does its best to be graceful about it and to handle
-	 * best-case scenarios gracefully.
-	 *
-	 * This has an impact of reducing cases where subclasses need to fallback to
-	 * the basic chest implementation from 1/2 cases to 1/3 and up to 1/5.
-	 */
-	static final int GENERATIONATTEMPTS=1000;
-
 	/** Items inside the chest. */
 	public ItemSelection items=new ItemSelection();
 	/** Gold inside the chest. */
@@ -88,11 +74,9 @@ public class Chest extends Feature{
 		range.sort(null);
 		var candidates=new ArrayList<>(
 				Item.ITEMS.stream().filter(i->allow(i)).collect(Collectors.toList()));
-		Item item=null;
-		for(var j=0;j<GENERATIONATTEMPTS&&item==null;j++)
-			item=RPG.shuffle(candidates).stream().map(i->i.randomize())
-					.filter(i->range.get(0)<=i.price&&i.price<=range.get(1)).findAny()
-					.orElse(null);
+		var item=RPG.shuffle(candidates).stream().map(i->i.randomize())
+				.filter(i->range.get(0)<=i.price&&i.price<=range.get(1)).findAny()
+				.orElse(null);
 		if(item==null) return false;
 		gold=0;
 		items.add(item);

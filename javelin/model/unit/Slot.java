@@ -2,6 +2,7 @@ package javelin.model.unit;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.model.item.gear.Gear;
@@ -67,6 +68,8 @@ public class Slot implements Serializable{
 			//don't
 		}
 	};
+	public static final List<Slot> SLOTS=List.of(ARMS,EYES,FEET,FINGERS,HANDS,
+			HEAD,NECK,SHOULDERS,SLOTLESS,TORSO,WAIST);
 
 	String name;
 

@@ -32,6 +32,9 @@ import javelin.controller.table.dungeon.feature.RareFeatureTable;
 import javelin.controller.table.dungeon.feature.SpecialTrapTable;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
+import javelin.model.item.Item;
+import javelin.model.item.consumable.Ruby;
+import javelin.model.item.gear.rune.RuneGear;
 import javelin.model.item.key.door.Key;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
@@ -44,7 +47,7 @@ import javelin.model.world.location.dungeon.feature.StairsDown;
 import javelin.model.world.location.dungeon.feature.StairsUp;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
 import javelin.model.world.location.dungeon.feature.chest.Crate;
-import javelin.model.world.location.dungeon.feature.chest.RubyChest;
+import javelin.model.world.location.dungeon.feature.chest.SpecialChest;
 import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.model.world.location.dungeon.feature.inhabitant.Leader;
 import javelin.model.world.location.dungeon.feature.trap.Trap;
@@ -371,7 +374,7 @@ public class DungeonFloor implements Serializable{
 		return traps;
 	}
 
-	void generatechest(Class<? extends Chest> type,int gold,DungeonZoner z,
+	Chest generatechest(Class<? extends Chest> type,int gold,DungeonZoner z,
 			Decoration f){
 		var percentmodifier=gettable(FeatureModifierTable.class).roll()*2;
 		gold=Math.round(gold*(100+percentmodifier)/100f);
@@ -383,10 +386,11 @@ public class DungeonFloor implements Serializable{
 				c.generateitem();
 				if(f!=null){
 					f.hide(c);
-					return;
+					return c;
 				}
 			}
 			c.place(this,z.getpoint());
+			return c;
 		}catch(ReflectiveOperationException e){
 			throw new RuntimeException(e);
 		}
@@ -424,7 +428,16 @@ public class DungeonFloor implements Serializable{
 
 	/** @return Most special chest here. */
 	protected Feature generatespecialchest(){
-		return new RubyChest(this);
+		var gear=new ArrayList<>(
+				Item.ITEMS.stream().filter(i->i instanceof RuneGear).map(i->(RuneGear)i)
+						.collect(Collectors.toList()));
+		var gold=RewardCalculator.getgold(level);
+		Item generated=null;
+		for(var i=0;generated==null&&i<1000;i++)
+			generated=RPG.shuffle(gear).stream().map(g->RuneGear.generate(g))
+					.filter(g->gold*1/2<=g.price&&g.price<=gold*2).findAny().orElse(null);
+		if(generated==null) generated=new Ruby();
+		return new SpecialChest(this,generated);
 	}
 
 	/**

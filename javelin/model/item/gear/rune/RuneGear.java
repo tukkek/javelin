@@ -7,13 +7,17 @@ import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.action.CastSpell;
+import javelin.controller.exception.battle.EndBattle;
 import javelin.model.item.Item;
 import javelin.model.item.Recharger;
+import javelin.model.item.focus.Rod;
 import javelin.model.item.gear.Gear;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Slot;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
+import javelin.model.unit.abilities.spell.conjuration.healing.RaiseDead;
+import javelin.model.unit.abilities.spell.conjuration.healing.Ressurect;
 import javelin.model.unit.condition.Condition;
 import javelin.model.unit.condition.Condition.Effect;
 import javelin.old.RPG;
@@ -24,12 +28,27 @@ import javelin.old.RPG;
  * and non-cumulative while the item is equipped. A suffix is an at-will spell
  * that can be cast by using the item.
  *
+ * How many daily charges a {@link #suffix} should have is an open question.
+ * Going with one for now so that it feels like a more noteworthy expenditure
+ * but 2 would also be good to nearly guarantee a recovered charge per rest.
+ * At-will (5) would make the items feel a lot more powerful but would intrude
+ * on the province of spellcaster-{@link Gear} like {@link Rod}s.
+ *
  * @author alex
  */
 public class RuneGear extends Gear{
 	static final HashMap<Slot,List<String>> NAMES=new HashMap<>();
 	static final List<Condition> PREFIXES=new ArrayList<>();
 	static final List<Spell> SUFFIXES=new ArrayList<>();
+	static final int CHARGES=1;
+	static final HashMap<Slot,Integer> PRICES=new HashMap<>();
+	/**
+	 * TODO should be possible to implement these eventually
+	 *
+	 * @see EndBattle
+	 */
+	static final List<Class<? extends Spell>> BANNED=List.of(RaiseDead.class,
+			Ressurect.class);
 
 	static{
 		NAMES.put(Slot.EYES,List.of("Goggles","Glasses"));
@@ -42,25 +61,35 @@ public class RuneGear extends Gear{
 		NAMES.put(Slot.TORSO,List.of("Fur","Poncho"));
 		NAMES.put(Slot.WAIST,List.of("Belt","Kilt"));
 		NAMES.put(Slot.SLOTLESS,List.of("Medal","Brooch"));
+		PRICES.put(Slot.EYES,10);
+		PRICES.put(Slot.FEET,20);
+		PRICES.put(Slot.FINGERS,5);
+		PRICES.put(Slot.HANDS,10);
+		PRICES.put(Slot.HEAD,30);
+		PRICES.put(Slot.NECK,10);
+		PRICES.put(Slot.SHOULDERS,5);
+		PRICES.put(Slot.TORSO,10);
+		PRICES.put(Slot.WAIST,1);
+		PRICES.put(Slot.SLOTLESS,5);
 	}
 
 	/** Creates item instances. */
-	@SuppressWarnings("unused")
 	public static void generate(){
-		PREFIXES.addAll(Spell.SPELLS.stream().filter(s->s.isrune!=null)
+		var candidates=Spell.SPELLS.stream()
+				.filter(s->!BANNED.contains(s.getClass())).collect(Collectors.toList());
+		PREFIXES.addAll(candidates.stream().filter(s->s.isrune!=null)
 				.map(s->s.isrune).collect(Collectors.toList()));
-		SUFFIXES.addAll(Spell.SPELLS.stream().filter(s->!(s instanceof Summon))
-				.collect(Collectors.toList()));
-		new RuneGear(Slot.EYES,10);
-		new RuneGear(Slot.FEET,20);
-		new RuneGear(Slot.HANDS,10);
-		new RuneGear(Slot.HEAD,30);
-		new RuneGear(Slot.NECK,10);
-		new RuneGear(Slot.FINGERS,5);
-		new RuneGear(Slot.SHOULDERS,5);
-		new RuneGear(Slot.TORSO,10);
-		new RuneGear(Slot.WAIST,1);
-		new RuneGear(Slot.SLOTLESS,5);
+		SUFFIXES.addAll(
+				candidates.stream().filter(s->!(s instanceof Summon)&&s.isrune==null)
+						.collect(Collectors.toList()));
+		for(var s:Slot.SLOTS)
+			if(s!=Slot.ARMS){//TODO
+				var p=PRICES.get(s);
+				for(var prefix:PREFIXES)
+					new RuneGear(s,p).set(prefix);
+				for(var suffix:SUFFIXES)
+					new RuneGear(s,p).set(suffix);
+			}
 	}
 
 	Condition prefix=null;
@@ -73,6 +102,7 @@ public class RuneGear extends Gear{
 	public RuneGear(Slot s,int baseprice){
 		super(s+" gear",0,s);
 		this.baseprice=baseprice;
+		name=Javelin.DEBUG?NAMES.get(s).get(0):RPG.pick(NAMES.get(s));
 		waste=false;
 		usedinbattle=false;
 		usedoutofbattle=false;
@@ -91,8 +121,12 @@ public class RuneGear extends Gear{
 		return p;
 	}
 
+	@SuppressWarnings("unused")
 	static int price(Spell suffix){
-		return suffix==null?0:suffix.casterlevel*suffix.level*2000;
+		if(suffix==null) return 0;
+		var p=suffix.casterlevel*suffix.level*400*CHARGES;
+		p+=CHARGES>=5?suffix.components*100:suffix.components*50;
+		return p;
 	}
 
 	@Override
@@ -145,7 +179,7 @@ public class RuneGear extends Gear{
 	public void set(Spell suffix){
 		this.suffix=suffix.clone();
 		this.suffix.provokeaoo=false;
-		charges=new Recharger(5);
+		charges=new Recharger(CHARGES);
 		define();
 	}
 
@@ -192,11 +226,13 @@ public class RuneGear extends Gear{
 		return true;
 	}
 
-	@Override
-	public RuneGear randomize(){
-		assert owner==null;
-		var g=(RuneGear)super.randomize();
-		g.name=Javelin.DEBUG?NAMES.get(slot).get(0):RPG.pick(NAMES.get(slot));
+	/**
+	 * @return A {@link #clone()} verison of this {@link Gear} with either a
+	 *         {@link #prefix}, a {@link #suffix} or both.
+	 */
+	static public RuneGear generate(RuneGear g){
+		assert g.owner==null;
+		g=g.clone();
 		g.prefix=null;
 		g.prefixprice=0;
 		g.suffix=null;

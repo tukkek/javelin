@@ -25,8 +25,9 @@ public class Flask extends Potion{
 
 	/** Constructor. */
 	public Flask(Spell s,int capacity){
-		super("Flask",s,
-				s.level*s.casterlevel*2000/(5.0/capacity)+s.components*capacity,true);
+		super("Flask",s,0,true);
+		price=s.level*s.casterlevel*400*capacity;
+		price+=capacity>=5?s.components*100:s.components*50;
 		charges=new Recharger(capacity);
 		consumable=false;
 		waste=true;

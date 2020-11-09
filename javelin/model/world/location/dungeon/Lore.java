@@ -12,6 +12,7 @@ import javelin.model.item.key.door.Key;
 import javelin.model.world.location.dungeon.feature.LoreNote;
 import javelin.model.world.location.dungeon.feature.chest.ArtifactChest;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
+import javelin.model.world.location.dungeon.feature.chest.Crate;
 
 /**
  * A note of interest about a {@link DungeonFloor} that can later be accessed
@@ -73,7 +74,9 @@ public class Lore implements Serializable{
 
 	@Override
 	public String toString(){
-		return text;
+		var s=text;
+		if(Lore.DEBUG) s+=" $"+Javelin.format(value);
+		return s;
 	}
 
 	/** @return Generates {@link DungeonFloor#lore} for the given floor. */
@@ -89,7 +92,8 @@ public class Lore implements Serializable{
 				.collect(Collectors.toList());
 		for(var f:features)
 			lore.add(new Lore(prefix+f,floor.dungeon));
-		var items=floor.features.stream().filter(f->f instanceof Chest)
+		var items=floor.features.stream()
+				.filter(f->f instanceof Chest&&!(f instanceof Crate))
 				.flatMap(c->((Chest)c).items.stream()).filter(i->!(i instanceof Key))
 				.collect(Collectors.toList());
 		for(var i:items)

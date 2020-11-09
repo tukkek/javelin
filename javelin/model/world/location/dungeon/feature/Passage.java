@@ -27,7 +27,7 @@ public class Passage extends Feature{
 
 	/** Target. <code>null</code> means outside. */
 	public Passage destination=null;
-	public DungeonFloor floor=Dungeon.active;
+	public DungeonFloor floor;
 	public boolean found=false;
 	public String description=DESCRIPTIONS.pop();
 
@@ -36,6 +36,7 @@ public class Passage extends Feature{
 	public Passage(DungeonFloor f){
 		super("passage");
 		remove=false;
+		floor=f;
 	}
 
 	public Passage(Passage entrance,DungeonFloor floor){

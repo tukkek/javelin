@@ -22,7 +22,7 @@ import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.feature.Feature;
-import javelin.model.world.location.dungeon.feature.Furniture;
+import javelin.model.world.location.dungeon.feature.Decoration;
 import javelin.model.world.location.dungeon.feature.Passage;
 import javelin.model.world.location.dungeon.feature.StairsUp;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
@@ -48,7 +48,7 @@ public class Dungeon implements Serializable{
 	public LinkedList<DungeonFloor> floors=new LinkedList<>();
 	/**
 	 * Images that should be cohesive between {@link #floors}. {@link Chest}s,
-	 * {@link Furniture}...
+	 * {@link Decoration}...
 	 */
 	public DungeonImages images;
 	/** All available lore about this dungeon. */

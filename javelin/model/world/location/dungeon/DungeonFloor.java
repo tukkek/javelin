@@ -25,9 +25,9 @@ import javelin.controller.table.Tables;
 import javelin.controller.table.dungeon.ChestTable;
 import javelin.controller.table.dungeon.door.DoorExists;
 import javelin.controller.table.dungeon.feature.CommonFeatureTable;
+import javelin.controller.table.dungeon.feature.DecorationTable;
 import javelin.controller.table.dungeon.feature.FeatureModifierTable;
 import javelin.controller.table.dungeon.feature.FeatureRarityTable;
-import javelin.controller.table.dungeon.feature.FurnitureTable;
 import javelin.controller.table.dungeon.feature.RareFeatureTable;
 import javelin.controller.table.dungeon.feature.SpecialTrapTable;
 import javelin.controller.terrain.Terrain;
@@ -37,9 +37,9 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.feature.Campfire;
+import javelin.model.world.location.dungeon.feature.Decoration;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Fountain;
-import javelin.model.world.location.dungeon.feature.Furniture;
 import javelin.model.world.location.dungeon.feature.StairsDown;
 import javelin.model.world.location.dungeon.feature.StairsUp;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
@@ -245,8 +245,8 @@ public class DungeonFloor implements Serializable{
 		return floortiles;
 	}
 
-	/** @return Generated furniture or <code>null</code> if Dungeon doesn't. */
-	protected LinkedList<Furniture> generatefurniture(int minimum){
+	/** @return Generated decoration or <code>null</code> if Dungeon doesn't. */
+	protected LinkedList<Decoration> generatedecoration(int minimum){
 		var unnocupied=new ArrayList<Point>(size*size/10);
 		for(var x=0;x<size;x++)
 			for(var y=0;y<size;y++){
@@ -255,14 +255,14 @@ public class DungeonFloor implements Serializable{
 			}
 		RPG.shuffle(unnocupied);
 		var target=RPG.randomize(gettier().minrooms,minimum,unnocupied.size());
-		var furniture=new LinkedList<Furniture>();
-		var t=gettable(FurnitureTable.class);
+		var d=new LinkedList<Decoration>();
+		var t=gettable(DecorationTable.class);
 		for(var i=0;i<target;i++){
-			var f=new Furniture((String)t.roll(),this);
-			furniture.add(f);
+			var f=new Decoration((String)t.roll(),this);
+			d.add(f);
 			f.place(this,unnocupied.get(i));
 		}
-		return furniture;
+		return d;
 	}
 
 	/** Place {@link Features}s and defines {@link #squadlocation}. */
@@ -275,12 +275,12 @@ public class DungeonFloor implements Serializable{
 		generatekeys(zoner);
 		var ntraps=getfeaturequantity(nrooms,dungeon.ratiotraps);
 		var ntreasure=getfeaturequantity(nrooms,dungeon.ratiotreasure);
-		var furniture=generatefurniture(ntraps+ntreasure+1);
-		var traps=generatetraps(ntraps,furniture);
+		var d=generatedecoration(ntraps+ntreasure+1);
+		var traps=generatetraps(ntraps,d);
 		var pool=0;
 		for(var t:traps)
 			pool+=RewardCalculator.getgold(t.cr);
-		generatechests(ntreasure,pool,zoner,furniture);
+		generatechests(ntreasure,pool,zoner,d);
 		generatefeatures(getfeaturequantity(nrooms,dungeon.ratiofeatures),zoner);
 	}
 
@@ -354,7 +354,7 @@ public class DungeonFloor implements Serializable{
 		return RPG.randomize(Math.round(quantity*ratio),0,Integer.MAX_VALUE);
 	}
 
-	List<Trap> generatetraps(int ntraps,LinkedList<Furniture> furniture){
+	List<Trap> generatetraps(int ntraps,LinkedList<Decoration> d){
 		var modifier=gettable(FeatureModifierTable.class);
 		var special=gettable(SpecialTrapTable.class);
 		var traps=new ArrayList<Trap>(ntraps);
@@ -363,16 +363,16 @@ public class DungeonFloor implements Serializable{
 			var t=Trap.generate(cr,special.rollboolean(),this);
 			if(t==null) continue;
 			traps.add(t);
-			if(furniture==null)
+			if(d==null)
 				t.place(this,getunnocupied());
 			else
-				furniture.pop().hide(t);
+				d.pop().hide(t);
 		}
 		return traps;
 	}
 
 	void generatechest(Class<? extends Chest> type,int gold,DungeonZoner z,
-			Furniture f){
+			Decoration f){
 		var percentmodifier=gettable(FeatureModifierTable.class).roll()*2;
 		gold=Math.round(gold*(100+percentmodifier)/100f);
 		try{
@@ -393,18 +393,18 @@ public class DungeonFloor implements Serializable{
 	}
 
 	void generatechests(int chests,int pool,DungeonZoner zoner,
-			LinkedList<Furniture> furniture){
+			LinkedList<Decoration> d){
 		generatespecialchest().place(this,zoner.getpoint());
 		if(pool==0) return;
 		if(chests<1) chests=1;
 		var hidden=Math.max(2,chests/10);
 		hidden=RPG.randomize(hidden,0,chests);
-		if(furniture!=null&&hidden>0){
+		if(d!=null&&hidden>0){
 			chests-=hidden;
 			var hiddenpool=pool/2;
 			pool-=hiddenpool;
 			for(var i=0;i<hidden;i++)
-				generatechest(Chest.class,pool/hidden,zoner,furniture.pop());
+				generatechest(Chest.class,pool/hidden,zoner,d.pop());
 		}
 		var t=gettable(ChestTable.class);
 		for(var i=0;i<chests;i++)

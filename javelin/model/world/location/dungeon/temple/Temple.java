@@ -29,7 +29,7 @@ import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.DungeonZoner;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Fountain;
-import javelin.model.world.location.dungeon.feature.Furniture;
+import javelin.model.world.location.dungeon.feature.Decoration;
 import javelin.model.world.location.dungeon.feature.chest.ArtifactChest;
 import javelin.model.world.location.dungeon.temple.WaterTemple.WaterTempleEntrance;
 import javelin.old.RPG;
@@ -109,7 +109,7 @@ public abstract class Temple extends Dungeon{
 		}
 
 		@Override
-		protected LinkedList<Furniture> generatefurniture(int minimum){
+		protected LinkedList<Decoration> generatedecoration(int minimum){
 			return null;
 		}
 	}

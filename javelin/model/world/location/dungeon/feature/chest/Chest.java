@@ -16,7 +16,7 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.feature.Feature;
-import javelin.model.world.location.dungeon.feature.Furniture;
+import javelin.model.world.location.dungeon.feature.Decoration;
 import javelin.old.RPG;
 import javelin.view.Images;
 
@@ -50,7 +50,7 @@ public class Chest extends Feature{
 	 * {@link Skill#PERCEPTION} difficulty class or <code>null</code> if not
 	 * hidden.
 	 *
-	 * @see Furniture#hide(Feature)
+	 * @see Decoration#hide(Feature)
 	 */
 	Integer searchdc;
 

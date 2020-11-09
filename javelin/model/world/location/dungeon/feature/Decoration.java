@@ -25,7 +25,7 @@ import javelin.view.Images;
  * @see Trap
  * @author alex
  */
-public class Furniture extends Feature{
+public class Decoration extends Feature{
 	static final String FOUND="You have found a hidden %s!";
 
 	static Image easteregg=null;
@@ -39,15 +39,15 @@ public class Furniture extends Feature{
 		var d=today.get(Calendar.DAY_OF_MONTH);
 		int m=today.get(Calendar.MONTH);
 		if(d==31&&m==10)
-			easteregg=Images.get(List.of("dungeon","furniture","halloween"));
+			easteregg=Images.get(List.of("dungeon","decoration","halloween"));
 		else if(d==25&&m==12)
-			easteregg=Images.get(List.of("dungeon","furniture","christmas"));
+			easteregg=Images.get(List.of("dungeon","decoration","christmas"));
 	}
 
 	Feature hidden;
 
 	/** Constructor. */
-	public Furniture(String avatar,DungeonFloor f){
+	public Decoration(String avatar,DungeonFloor f){
 		super(avatar);
 	}
 
@@ -75,7 +75,7 @@ public class Furniture extends Feature{
 	@Override
 	public Image getimage(){
 		if(easteregg!=null) return easteregg;
-		return Images.get(List.of("dungeon","furniture",avatarfile));
+		return Images.get(List.of("dungeon","decoration",avatarfile));
 	}
 
 	public void hide(Feature f){

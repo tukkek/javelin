@@ -12,7 +12,7 @@ import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.Feature;
-import javelin.model.world.location.dungeon.feature.Furniture;
+import javelin.model.world.location.dungeon.feature.Decoration;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
 
 /**
@@ -23,7 +23,7 @@ import javelin.model.world.location.dungeon.feature.chest.Chest;
  * partly because since the traps are permanent (so as to be strategic) it would
  * be easy to continually step on traps to plunder XP.
  *
- * Traps are now always hidden on {@link Furniture} in {@link DungeonFloor}s
+ * Traps are now always hidden on {@link Decoration} in {@link DungeonFloor}s
  * that allow for it - letting players to somewhat strategically avoid them or
  * pursue them for high-rish, high-reward plays (as {@link Chest}s can also be
  * hidden).
@@ -102,8 +102,8 @@ public abstract class Trap extends Feature{
 	public boolean reveal(boolean found){
 		if(found) return true;
 		draw=true;
-		Furniture.revealmessage="You stumble upon a hidden trap!";
-		Furniture.onreveal=()->spring();
+		Decoration.revealmessage="You stumble upon a hidden trap!";
+		Decoration.onreveal=()->spring();
 		return true;
 	}
 }

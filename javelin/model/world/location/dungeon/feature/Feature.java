@@ -82,7 +82,7 @@ public abstract class Feature implements Serializable{
 	 *          number like 9000, because if you use {@link Integer#MAX_VALUE}, it
 	 *          may overflow after internal bonuses being applied.
 	 * @return <code>true</code> if this feature has been seen. Does not result in
-	 *         side effects other than for {@link Furniture#hidden}.
+	 *         side effects other than for {@link Decoration#hidden}.
 	 *
 	 * @see #draw
 	 */
@@ -135,11 +135,11 @@ public abstract class Feature implements Serializable{
 	}
 
 	/**
-	 * Called when a feature hidden in {@link Furniture} is found.
+	 * Called when a feature hidden in {@link Decoration} is found.
 	 *
 	 * @param found <code>true</code> if the party has beated
 	 *          {@link #getsearchdc()}.
-	 * @return <code>true</code> for the furniture be replaced with this,
+	 * @return <code>true</code> for the {@link Decoration} be replaced with this,
 	 *         <code>false</code> to continue hidden. By the default returns
 	 *         <code>true</code> if the {@link Squad} passed the search test.
 	 */

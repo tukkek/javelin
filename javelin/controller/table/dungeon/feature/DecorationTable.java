@@ -8,16 +8,16 @@ import javelin.controller.TieredList;
 import javelin.controller.table.Table;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.DungeonTier;
-import javelin.model.world.location.dungeon.feature.Furniture;
+import javelin.model.world.location.dungeon.feature.Decoration;
 import javelin.old.RPG;
-import javelin.test.TestFurniture;
+import javelin.test.TestDecoration;
 
 /**
- * @see Furniture
+ * @see Decoration
  * @author alex
  */
-public class FurnitureTable extends Table{
-	/** @see TestFurniture */
+public class DecorationTable extends Table{
+	/** @see TestDecoration */
 	public static class Type extends Table{
 		String name;
 		DungeonTier rarity;
@@ -56,7 +56,7 @@ public class FurnitureTable extends Table{
 	static final int AMOUNTPERTYPE=3;
 
 	/** Constructor. */
-	public FurnitureTable(DungeonFloor f){
+	public DecorationTable(DungeonFloor f){
 		var tiered=new TieredList<Type>(f.gettier());
 		for(var c:CATEGORIES)
 			tiered.addtiered(c,c.rarity);
@@ -70,7 +70,7 @@ public class FurnitureTable extends Table{
 		}
 	}
 
-	/** @return Total number of {@link Furniture} images. */
+	/** @return Total number of {@link Decoration} images. */
 	public static int count(){
 		var c=0;
 		for(var category:CATEGORIES)

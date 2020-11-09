@@ -25,7 +25,7 @@ public class TestItem{
 	 *         different approaches and parameters to systems - a higher number is
 	 *         preferrable, generally speaking.
 	 */
-	public static int testrange(List<Item> items,boolean print){
+	public static int testrange(List<? extends Item> items,boolean print){
 		var hits=new Integer[]{0,0,0,0};
 		for(var i:items)
 			for(int t=0;t<=4;t++){

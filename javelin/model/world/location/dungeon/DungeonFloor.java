@@ -34,7 +34,6 @@ import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.item.Item;
 import javelin.model.item.consumable.Ruby;
-import javelin.model.item.gear.rune.RuneGear;
 import javelin.model.item.key.door.Key;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
@@ -396,9 +395,10 @@ public class DungeonFloor implements Serializable{
 		}
 	}
 
-	void generatechests(int chests,int pool,DungeonZoner zoner,
+	void generatechests(int chests,int pool,DungeonZoner z,
 			LinkedList<Decoration> d){
-		generatespecialchest().place(this,zoner.getpoint());
+		generatespecialchest(this==dungeon.floors.getLast()).place(this,
+				z.getpoint());
 		if(pool==0) return;
 		if(chests<1) chests=1;
 		var hidden=Math.max(2,chests/10);
@@ -408,12 +408,12 @@ public class DungeonFloor implements Serializable{
 			var hiddenpool=pool/2;
 			pool-=hiddenpool;
 			for(var i=0;i<hidden;i++)
-				generatechest(Chest.class,pool/hidden,zoner,d.pop());
+				generatechest(Chest.class,pool/hidden,z,d.pop());
 		}
 		var t=gettable(ChestTable.class);
 		for(var i=0;i<chests;i++)
-			generatechest(t.roll(),pool/chests,zoner,null);
-		generatecrates(zoner);
+			generatechest(t.roll(),pool/chests,z,null);
+		generatecrates(z);
 	}
 
 	/** @see Crate */
@@ -426,18 +426,14 @@ public class DungeonFloor implements Serializable{
 		}
 	}
 
-	/** @return Most special chest here. */
-	protected Feature generatespecialchest(){
-		var gear=new ArrayList<>(
-				Item.ITEMS.stream().filter(i->i instanceof RuneGear).map(i->(RuneGear)i)
-						.collect(Collectors.toList()));
-		var gold=RewardCalculator.getgold(level);
-		Item generated=null;
-		for(var i=0;generated==null&&i<1000;i++)
-			generated=RPG.shuffle(gear).stream().map(g->RuneGear.generate(g))
-					.filter(g->gold*1/2<=g.price&&g.price<=gold*2).findAny().orElse(null);
-		if(generated==null) generated=new Ruby();
-		return new SpecialChest(this,generated);
+	/** @see SpecialChest */
+	protected Feature generatespecialchest(boolean deepestfloor){
+		if(deepestfloor) return new SpecialChest(this,new Ruby());
+		var value=RewardCalculator.getgold(level);
+		var items=RPG.shuffle(new ArrayList<>(Item.ITEMS));
+		var item=items.stream().filter(i->value/2<=i.price&&i.price<=value*2)
+				.findAny().orElse(null);
+		return new SpecialChest(this,item==null?new Ruby():item);
 	}
 
 	/**

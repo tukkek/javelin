@@ -13,7 +13,9 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public class Recharger implements Serializable,Cloneable{
-	int capacity;
+	/** Number of charges when full. */
+	public int capacity;
+
 	int used=0;
 	double recharging=0;
 

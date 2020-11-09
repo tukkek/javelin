@@ -227,6 +227,9 @@ public class RuneGear extends Gear{
 	}
 
 	/**
+	 * TODO not currently used but might be for the better - less special cases
+	 * for Item types
+	 *
 	 * @return A {@link #clone()} verison of this {@link Gear} with either a
 	 *         {@link #prefix}, a {@link #suffix} or both.
 	 */

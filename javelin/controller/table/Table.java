@@ -186,4 +186,9 @@ public class Table implements Serializable,Cloneable{
 	public boolean isempty(){
 		return getchances()==0;
 	}
+
+	/** @return All unique rows, without any chance information. */
+	public Set<Object> getrows(){
+		return rows.keySet();
+	}
 }

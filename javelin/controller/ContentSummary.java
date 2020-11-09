@@ -15,6 +15,7 @@ import javelin.Javelin;
 import javelin.controller.event.urban.UrbanEvents;
 import javelin.controller.event.wild.WildEvents;
 import javelin.controller.kit.Kit;
+import javelin.controller.table.dungeon.feature.FurnitureTable;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.diplomacy.mandate.Mandate;
@@ -183,6 +184,8 @@ public class ContentSummary{
 		print(WildEvents.instance.printsummary("wilderness events"));
 		print(UrbanEvents.instance.printsummary("Urban events"));
 		print(Mandate.printsummary());
+		print(String.format("%s furniture categories, %s total images",
+				FurnitureTable.CATEGORIES.size(),FurnitureTable.count()));
 	}
 
 	void printmaps() throws IOException{

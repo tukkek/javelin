@@ -37,7 +37,7 @@ public class ShowLore extends WorldAction{
 			});
 			for(var d:dungeons){
 				var lore=d.dungeon.lore.stream().filter(l->l.discovered||Lore.DEBUG)
-						.map(l->"- "+l.text).sorted().collect(Collectors.toList());
+						.map(l->"- "+l).sorted().collect(Collectors.toList());
 				if(!lore.isEmpty()) text.add(d+":\n"+String.join("\n",lore));
 			}
 			return text.isEmpty()?"No lore discovered yet..."

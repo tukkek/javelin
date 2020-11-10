@@ -14,8 +14,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import javelin.Javelin;
-import javelin.controller.CountingSet;
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.collection.CountingSet;
 import javelin.controller.db.reader.fields.Alignment;
 import javelin.controller.db.reader.fields.ArmorClass;
 import javelin.controller.db.reader.fields.Attacks;

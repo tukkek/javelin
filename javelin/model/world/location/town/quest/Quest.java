@@ -94,7 +94,7 @@ public abstract class Quest implements Serializable{
 
 		@Override
 		public Image getimage(){
-			return Images.get("questmarker");
+			return Images.get(List.of("world","questmarker"));
 		}
 
 		@Override

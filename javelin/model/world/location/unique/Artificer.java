@@ -62,7 +62,7 @@ public class Artificer extends Fortification{
 
 	void stock(){
 		int i=0;
-		while(!selection.add(RPG.pick(Item.ARTIFACT))){
+		while(!selection.add(RPG.pick(Item.GEAR))){
 			// wait until 1 item enters
 			i+=1;
 			if(i>=10000){

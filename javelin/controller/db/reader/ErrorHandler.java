@@ -1,6 +1,6 @@
 package javelin.controller.db.reader;
 
-import javelin.controller.CountingSet;
+import javelin.controller.collection.CountingSet;
 
 /**
  * Logging utility for {@link MonsterReader}.

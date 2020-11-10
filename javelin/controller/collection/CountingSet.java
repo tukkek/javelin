@@ -1,4 +1,4 @@
-package javelin.controller;
+package javelin.controller.collection;
 
 import java.util.ArrayList;
 import java.util.Comparator;

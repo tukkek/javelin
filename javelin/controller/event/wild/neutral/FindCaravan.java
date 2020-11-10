@@ -19,7 +19,7 @@ public class FindCaravan extends WildEvent{
 
 	@Override
 	public void happen(Squad s){
-		new Caravan(location.x,location.y,s.getel()).place();
+		new Caravan(location.getlocation(),s.getel()).place();
 		Javelin.redraw();
 		Javelin.message("You come across a caravan of merchants!",true);
 	}

@@ -153,7 +153,9 @@ public class Mine extends Fortification{
 	@Override
 	public void turn(long time,WorldScreen world){
 		if(ishostile()||!monsters.isEmpty()) return;
-		var population=getdistrict().town.population;
+		var d=getdistrict();
+		if(d==null) return;
+		var population=d.town.population;
 		progress+=population+RPG.randomize(population);
 		var upgrade=level*Period.Time.YEAR/20;
 		if(progress>upgrade){

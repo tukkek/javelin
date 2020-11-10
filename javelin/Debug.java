@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javelin.controller.CountingSet;
 import javelin.controller.action.Help;
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.collection.CountingSet;
 import javelin.controller.db.Preferences;
 import javelin.controller.event.EventCard;
 import javelin.controller.exception.RepeatTurn;

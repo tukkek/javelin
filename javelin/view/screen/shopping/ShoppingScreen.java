@@ -1,6 +1,7 @@
 package javelin.view.screen.shopping;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
@@ -98,5 +99,10 @@ public abstract class ShoppingScreen extends PurchaseScreen{
 	@Override
 	protected int getgold(){
 		return Squad.active.gold;
+	}
+
+	@Override
+	protected Comparator<Option> sort(){
+		return (a,b)->-Double.compare(a.price,b.price);
 	}
 }

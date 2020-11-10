@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import javelin.controller.ContentSummary;
-import javelin.controller.InfiniteList;
+import javelin.controller.collection.InfiniteList;
 import javelin.controller.event.urban.UrbanEvents;
 import javelin.controller.event.wild.WildEvents;
 import javelin.model.unit.Squad;

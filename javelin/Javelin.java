@@ -19,7 +19,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
-import javelin.controller.CountingSet;
+import javelin.controller.collection.CountingSet;
 import javelin.controller.db.Preferences;
 import javelin.controller.db.StateManager;
 import javelin.controller.db.reader.MonsterReader;

@@ -32,6 +32,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
+import javelin.model.world.Caravan;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
@@ -214,6 +215,7 @@ public class Town extends Location{
 		work();
 		updatequests();
 		diplomacy.turn();
+		Caravan.spawn(this);
 	}
 
 	void work(){

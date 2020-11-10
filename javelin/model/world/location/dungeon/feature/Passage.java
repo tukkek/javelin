@@ -3,8 +3,8 @@ package javelin.model.world.location.dungeon.feature;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.InfiniteList;
 import javelin.controller.action.world.WorldMove;
+import javelin.controller.collection.InfiniteList;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;

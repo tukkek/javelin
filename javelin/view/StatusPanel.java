@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Set;
 
 import javelin.Javelin;
-import javelin.controller.CountingSet;
 import javelin.controller.action.Examine;
+import javelin.controller.collection.CountingSet;
 import javelin.controller.fight.Fight;
 import javelin.model.item.Item;
 import javelin.model.state.BattleState;

@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.JavelinApp;
-import javelin.controller.CountingSet;
 import javelin.controller.action.world.WorldAction;
+import javelin.controller.collection.CountingSet;
 import javelin.model.item.Item;
 import javelin.model.item.gear.Gear;
 import javelin.model.unit.Combatant;

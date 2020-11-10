@@ -1,6 +1,6 @@
 package javelin.model.unit;
 
-import javelin.controller.CountingSet;
+import javelin.controller.collection.CountingSet;
 import javelin.model.unit.condition.Condition;
 
 public class Conditions extends CloneableList<Condition>{

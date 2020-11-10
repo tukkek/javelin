@@ -138,9 +138,7 @@ public abstract class Actor implements Serializable{
 		return from&&to;
 	}
 
-	/**
-	 * Moves actor to nearby square until a free square is found.
-	 */
+	/** Moves actor to nearby square until a free square is found. */
 	public void displace(){
 		displace(0);
 	}

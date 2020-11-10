@@ -156,7 +156,7 @@ public class ContentSummary{
 			itemtypes+=n+" "+NAMES.get(type)+", ";
 		}
 		itemtypes=itemtypes.substring(0,itemtypes.length()-2);
-		print(Item.ITEMS.size()-Item.ARTIFACT.size()+" items, "+Item.ARTIFACT.size()
+		print(Item.ITEMS.size()-Item.GEAR.size()+" items, "+Item.GEAR.size()
 				+" artifacts, 7 relics ("+itemtypes+")");
 		Collection<Spell> spells=Spell.BYNAME.values();
 		var upgrades=Upgrade.getall();

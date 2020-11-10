@@ -3,7 +3,7 @@ package javelin.controller.action.world;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.controller.CountingSet;
+import javelin.controller.collection.CountingSet;
 import javelin.model.Miniatures;
 import javelin.view.screen.WorldScreen;
 

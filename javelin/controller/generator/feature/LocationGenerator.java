@@ -18,7 +18,6 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.Tier;
 import javelin.model.world.Actor;
-import javelin.model.world.Caravan;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
@@ -78,11 +77,6 @@ public class LocationGenerator implements Serializable{
 		resources.seeds=Realm.values().length*2;
 		resources.max=Realm.values().length*2;
 		generators.put(ResourceSite.class,resources);
-		if(Caravan.ALLOW){
-			Frequency caravan=new Frequency(Frequency.MONTHLY,true,false);
-			caravan.seeds=0;
-			generators.put(Caravan.class,caravan);
-		}
 		convertchances();
 	}
 

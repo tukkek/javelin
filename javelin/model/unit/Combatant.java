@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.controller.CountingSet;
 import javelin.controller.Point;
 import javelin.controller.SpellbookGenerator;
 import javelin.controller.Weather;
@@ -21,6 +20,7 @@ import javelin.controller.action.ai.attack.MeleeAttack;
 import javelin.controller.action.ai.attack.RangedAttack;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.collection.CountingSet;
 import javelin.controller.db.reader.fields.Skills;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.EndBattle;

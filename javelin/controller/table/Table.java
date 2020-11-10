@@ -1,8 +1,11 @@
 package javelin.controller.table;
 
+import java.io.OptionalDataException;
 import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
 import java.util.Set;
 
 import javelin.Javelin;
@@ -58,8 +61,12 @@ public class Table implements Serializable,Cloneable{
 		}
 	}
 
-	HashMap<Object,Integer> rows=new HashMap<>();
-	HashMap<Object,RowData> data=new HashMap<>();
+	/**
+	 * {@link HashMap} was throwing {@link OptionalDataException} during
+	 * deserialization.
+	 */
+	Map<Object,Integer> rows=new Hashtable<>();
+	Map<Object,RowData> data=new Hashtable<>();
 
 	/**
 	 * If adding a preexisting result, will instead raise its current chances and
@@ -103,8 +110,8 @@ public class Table implements Serializable,Cloneable{
 	public Table clone(){
 		try{
 			var c=(Table)super.clone();
-			c.data=new HashMap<>(data);
-			c.rows=new HashMap<>(rows);
+			c.data=new Hashtable<>(data);
+			c.rows=new Hashtable<>(rows);
 			for(var k:data.keySet())
 				c.data.put(k,data.get(k).clone());
 			c.modify();

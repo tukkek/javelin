@@ -39,6 +39,11 @@ public class DecorationTable extends Table{
 			var t=o instanceof Type?(Type)o:null;
 			return t!=null&&name.equals(t.name);
 		}
+
+		@Override
+		public String roll(){
+			return (String)super.roll();
+		}
 	}
 
 	static final Type COBWEB=new Type("cobweb",20,DungeonTier.CAVE);

@@ -97,7 +97,7 @@ public class Lore implements Serializable{
 				.flatMap(c->((Chest)c).items.stream()).filter(i->!(i instanceof Key))
 				.collect(Collectors.toList());
 		for(var i:items)
-			lore.add(new Lore(prefix+i,i.price));
+			lore.add(new Lore(prefix+i.name,i.price));
 		var artifacts=floor.features.stream().filter(f->f instanceof ArtifactChest)
 				.collect(Collectors.toList());
 		for(var a:artifacts)

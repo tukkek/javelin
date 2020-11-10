@@ -4,6 +4,7 @@ import javelin.controller.quality.perception.Vision;
 import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.model.unit.abilities.spell.divination.DiscernLocation;
 import javelin.model.unit.abilities.spell.divination.FindTraps;
+import javelin.model.unit.abilities.spell.divination.Identify;
 import javelin.model.unit.abilities.spell.divination.LocateObject;
 import javelin.model.unit.abilities.spell.divination.PryingEyes;
 
@@ -28,5 +29,6 @@ public class Diviner extends Wizard{
 		extension.add(new PryingEyes());
 		extension.add(new DiscernLocation());
 		extension.add(new FindTraps());
+		extension.add(new Identify());
 	}
 }

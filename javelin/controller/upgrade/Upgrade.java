@@ -161,4 +161,13 @@ public abstract class Upgrade implements Serializable{
 		return getall().stream().filter(u->type.isInstance(u)).map(u->(K)u)
 				.collect(Collectors.toSet());
 	}
+
+	/**
+	 * @return <code>true</code> by default but some upgrades, even when listed on
+	 *         {@link Kit}s, are meant to be internal-only and should not be shwon
+	 *         to the player.
+	 */
+	public boolean showupgrade(){
+		return true;
+	}
 }

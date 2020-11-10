@@ -91,7 +91,7 @@ public class Shrine extends Fortification{
 	}
 
 	/** Rituals are spells that this shrine will cast for a fee. */
-	final ArrayList<Spell> rituals=new ArrayList<>(2);
+	public ArrayList<Spell> rituals=new ArrayList<>(2);
 	int level=1;
 
 	/** Constructor. */
@@ -177,8 +177,9 @@ public class Shrine extends Fortification{
 			target=squad.members.get(i);
 		}
 		if(!s.validate(null,target)) return false;
-		s.castpeacefully(null,target,squad.members);
 		squad.gold-=price;
+		var message=s.castpeacefully(null,target,squad.members);
+		if(message!=null) Javelin.message(message,true);
 		return true;
 	}
 

@@ -121,7 +121,11 @@ public abstract class Spell extends Upgrade
 	 * about this stuff.
 	 */
 	public float cr;
-	/** Material components cost. */
+	/**
+	 * Material components cost. A spell with components cannot
+	 * {@link #apply(Combatant)} normally but is usually a source for items like
+	 * {@link Scroll}s.
+	 */
 	public int components=0;
 
 	/**
@@ -156,6 +160,7 @@ public abstract class Spell extends Upgrade
 
 	@Override
 	public boolean apply(Combatant c){
+		if(components>0) return false;
 		int hitdice=c.source.hd.count();
 		if(!checkcasterlevel(hitdice,c)||c.spells.count()>=hitdice) // design parameters
 			return false;
@@ -461,5 +466,10 @@ public abstract class Spell extends Upgrade
 	@Override
 	public int getheals(){
 		return perday-used;
+	}
+
+	@Override
+	public boolean showupgrade(){
+		return components==0;
 	}
 }

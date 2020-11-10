@@ -26,6 +26,7 @@ Level 1 (caster level 1)
   Bless: all allies gain +1 to attack rolls.
   Cure light wounds: cures 5 hit points. Touch.
   Doom: shakens an enemy.
+  Identify: reveals the function of a consumable magic item.
   Inflict light wounds: causes 5 points of damage. Touch, safe.
   Longstrider: increases caster's walking speed by 10 feet per round.
   Magic missile: deals 1d4+1 of force damage, always hits.

@@ -247,7 +247,7 @@ public abstract class UpgradingScreen extends SelectScreen{
 		Collection<Upgrade> upgrades=getupgrades();
 		ArrayList<Option> options=new ArrayList<>(upgrades.size());
 		for(Upgrade u:upgrades)
-			options.add(createoption(u));
+			if(u.showupgrade()) options.add(createoption(u));
 		return options;
 	}
 

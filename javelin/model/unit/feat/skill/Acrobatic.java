@@ -6,7 +6,7 @@ import javelin.model.unit.skill.Skill;
 
 public class Acrobatic extends Feat{
 	public static final Feat SINGLETON=new Acrobatic();
-	public static final int BONUS=4;
+	public static final int BONUS=+4;
 
 	public Acrobatic(){
 		super("Acrobatic");

@@ -1,5 +1,6 @@
 package javelin.model.world.location.unique;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
@@ -7,7 +8,6 @@ import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.gear.Gear;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Squad;
 import javelin.model.world.Period;
 import javelin.model.world.location.Fortification;
 import javelin.model.world.location.Location;
@@ -61,16 +61,12 @@ public class Artificer extends Fortification{
 	}
 
 	void stock(){
-		int i=0;
-		while(!selection.add(RPG.pick(Item.GEAR))){
-			// wait until 1 item enters
-			i+=1;
-			if(i>=10000){
-				if(Javelin.DEBUG)
-					throw new RuntimeException("Cannot generate artificer item!");
-				break; // tough luck :/
-			}
-		}
+		var shuffled=RPG.shuffle(new ArrayList<>(Item.ITEMS));
+		var gear=shuffled.stream().filter(i->i instanceof Gear).findAny()
+				.orElse(null);
+		if(gear==null)
+			throw new RuntimeException("Cannot generate artificer item!");
+		selection.add(gear);
 	}
 
 	@Override
@@ -86,10 +82,10 @@ public class Artificer extends Fortification{
 			return true;
 		}
 		MessagePanel.active.clear();
-		Javelin.message("\"I still need "+crafting.geteta(Period.gettime())
-				+" before your "+crafting.item.toString().toLowerCase()
-				+" is completed.\"",false);
-		Javelin.input();
+		var message="\"I still need %s before your %s is completed.\"";
+		var eta=crafting.geteta(Period.gettime());
+		var i=crafting.item.toString().toLowerCase();
+		Javelin.prompt(String.format(message,eta,i));
 		return true;
 	}
 

@@ -41,7 +41,6 @@ public abstract class Gear extends Item{
 	/** Constructor. */
 	protected Gear(String name,int price,Slot slotp){
 		super(name,price,true);
-		GEAR.add(this);
 		usedinbattle=false;
 		usedoutofbattle=false;
 		consumable=false;

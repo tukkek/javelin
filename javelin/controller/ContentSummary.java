@@ -26,6 +26,7 @@ import javelin.model.item.consumable.Scroll;
 import javelin.model.item.focus.Rod;
 import javelin.model.item.focus.Staff;
 import javelin.model.item.focus.Wand;
+import javelin.model.item.gear.Gear;
 import javelin.model.item.gear.rune.Rune;
 import javelin.model.item.gear.rune.RuneGear;
 import javelin.model.item.potion.Flask;
@@ -156,8 +157,9 @@ public class ContentSummary{
 			itemtypes+=n+" "+NAMES.get(type)+", ";
 		}
 		itemtypes=itemtypes.substring(0,itemtypes.length()-2);
-		print(Item.ITEMS.size()-Item.GEAR.size()+" items, "+Item.GEAR.size()
-				+" artifacts, 7 relics ("+itemtypes+")");
+		var ngear=Item.ITEMS.stream().filter(i->i instanceof Gear).count();
+		print(Item.ITEMS.size()-ngear+" items, "+ngear+" equipment, 7 relics ("
+				+itemtypes+")");
 		Collection<Spell> spells=Spell.BYNAME.values();
 		var upgrades=Upgrade.getall();
 		int nskills=Upgrade.getall(SkillUpgrade.class).size();

@@ -68,8 +68,6 @@ public abstract class Item implements Serializable,Cloneable,Healing{
 	public static final TreeMap<Integer,ItemSelection> BYPRICE=new TreeMap<>();
 	/** Map of items by price {@link Tier} */
 	public static final HashMap<Tier,ItemSelection> BYTIER=new HashMap<>();
-	/** @see Gear */
-	public static final ItemSelection GEAR=new ItemSelection();
 	/** All utility items (not {@link PreciousObject}s). */
 	public static final ItemSelection NONPRECIOUS=new ItemSelection();
 

@@ -37,6 +37,7 @@ public class Scroll extends Item{
 		usedinbattle=s.castinbattle;
 		usedoutofbattle=s.castoutofbattle;
 		apcost=0;
+		identified=false;
 		SCROLLS.add(this);
 	}
 
@@ -74,9 +75,6 @@ public class Scroll extends Item{
 	}
 
 	/**
-	 * TODO move to scroll?
-	 *
-	 * @param c TODO
 	 * @return <code>true</code> if can read a {@link Spell} from a
 	 *         {@link Scroll}.
 	 */
@@ -85,5 +83,10 @@ public class Scroll extends Item{
 		int spellcraft=Skill.SPELLCRAFT.getranks(c);
 		return c.decipher(spell)
 				&&10+c.source.hd.count()+spellcraft/2>=spell.casterlevel+1;
+	}
+
+	@Override
+	public boolean identify(Combatant c){
+		return read(c)||super.identify(c);
 	}
 }

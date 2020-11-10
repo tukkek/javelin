@@ -32,6 +32,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureLightWounds;
+import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Academy;
@@ -432,5 +433,11 @@ public abstract class Item implements Serializable,Cloneable,Healing{
 	@Override
 	public int getheals(){
 		return 0;
+	}
+
+	/** @see #identified */
+	public boolean identify(Combatant c){
+		var spellcraftdc=15+getlevel();
+		return c.taketen(Skill.SPELLCRAFT)>=spellcraftdc;
 	}
 }

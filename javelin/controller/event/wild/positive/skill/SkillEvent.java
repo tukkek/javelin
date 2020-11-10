@@ -68,6 +68,8 @@ public abstract class SkillEvent extends WildEvent{
 			s.gold+=gold;
 		}else{
 			reward=Javelin.group(items).toLowerCase();
+			for(var i:items)
+				i.identified=true;
 			s.equipment.get(active).addAll(items);
 		}
 		return reward;

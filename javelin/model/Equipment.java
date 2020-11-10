@@ -82,6 +82,7 @@ public class Equipment implements Serializable{
 
 	/** @param i Adds to a random bag, with no user interaction. */
 	public void add(Item i){
+		i.identified=squad.identify(i);
 		get(RPG.pick(squad.members)).add(i);
 	}
 
@@ -126,6 +127,8 @@ public class Equipment implements Serializable{
 	}
 
 	public void put(Combatant c,ArrayList<Item> items){
+		for(var i:items)
+			i.identified=squad.identify(i);
 		equipment.put(c.id,items);
 	}
 
@@ -143,10 +146,6 @@ public class Equipment implements Serializable{
 			for(final Item i:bag)
 				if(i.equals(item)) return (K)i;
 		return null;
-	}
-
-	public void add(Combatant target,ArrayList<Item> bad){
-		equipment.put(target.id,bad);
 	}
 
 	public <K extends Item> List<K> getall(Class<K> type){

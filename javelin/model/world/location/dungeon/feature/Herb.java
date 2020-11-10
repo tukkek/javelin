@@ -114,7 +114,9 @@ public class Herb extends Feature{
 			potions.clear();
 			int pool=reward;
 			for(var i=0;i<MAXCOPIES&&pool>0;i++){
-				potions.add((Potion)p.clone());
+				var c=(Potion)p.clone();
+				c.identified=true;
+				potions.add(c);
 				pool-=p.price;
 			}
 			if(-reward*10<=pool&&pool<=0) return potions;

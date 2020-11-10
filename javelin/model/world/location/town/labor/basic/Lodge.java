@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
@@ -192,11 +193,12 @@ public class Lodge extends Fortification{
 	 */
 	public static void rest(int restperiods,int hours,boolean advancetime,
 			Lodging a){
+		var s=Squad.active;
 		for(int i=0;i<restperiods;i++){
-			Squad.active.quickheal();
-			for(final Combatant c:Squad.active.members){
+			s.quickheal();
+			for(final Combatant c:s){
 				int heal=c.source.hd.count();
-				if(!a.equals(HOSPITAL)&&Squad.active.heal()>=15) heal*=2;
+				if(!a.equals(HOSPITAL)&&s.heal()>=15) heal*=2;
 				if(heal<1) heal=1;
 				c.heal(heal,false);
 				for(Spell p:c.spells)
@@ -208,6 +210,21 @@ public class Lodge extends Fortification{
 				c.terminateconditions(hours);
 			}
 		}
-		if(advancetime) Squad.active.delay(hours);
+		if(advancetime) s.delay(hours);
+		identifyitems(s);
+	}
+
+	static void identifyitems(Squad s){
+		var identified=new ArrayList<Item>(0);
+		for(var i:s.equipment.getall())
+			if(!i.identified&&s.identify(i)){
+				i.identified=true;
+				identified.add(i);
+			}
+		if(!identified.isEmpty()){
+			String message="The following items have been identified: %s!";
+			message=String.format(message,Javelin.group(identified).toLowerCase());
+			Javelin.message(message,true);
+		}
 	}
 }

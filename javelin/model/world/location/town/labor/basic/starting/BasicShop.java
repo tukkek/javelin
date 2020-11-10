@@ -27,6 +27,8 @@ public class BasicShop extends Shop{
 		}
 		var cheap=Item.randomize(Item.NONPRECIOUS.stream().filter(i->i.price<100)
 				.collect(Collectors.toList()));
+		for(var i:cheap)
+			i.identified=true;
 		selection.addAll(cheap.subList(0,Math.min(5,cheap.size())));
 	}
 

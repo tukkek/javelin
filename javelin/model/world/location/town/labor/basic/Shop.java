@@ -74,6 +74,7 @@ public class Shop extends Location{
 					if(i.sell()){
 						var listing="["+c+"] "+i.describe(c);
 						var sellingprice=Math.round(Math.min(buylimit,i.price*i.sellvalue));
+						if(!i.identified) sellingprice=1;
 						var o=new Option(listing,sellingprice);
 						selling.put(o,i);
 						options.add(o);

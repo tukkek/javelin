@@ -77,6 +77,7 @@ public class Caravan extends Actor{
 			if(!(i instanceof PreciousObject)){
 				i=i.clone();
 				inventory.add(i);
+				i.identified=true;
 			}
 		}
 		int withartifacts=inventory.size()+RPG.r(MINARTIFACTS,MAXARTIFACTS);

@@ -67,6 +67,8 @@ public class Trader extends Inhabitant{
 		Collections.shuffle(inventory);
 		while(inventory.size()>inventorysize)
 			inventory.remove(0);
+		for(var i:inventory)
+			i.identified=true;
 		return inventory;
 	}
 

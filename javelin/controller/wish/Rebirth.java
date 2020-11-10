@@ -32,7 +32,7 @@ public class Rebirth extends Wish{
 		if(xp>0) reborn.learn(xp);
 		ArrayList<Item> equipment=Squad.active.equipment.get(target);
 		Squad.active.equipment.remove(target);
-		Squad.active.equipment.add(reborn,equipment);
+		Squad.active.equipment.put(reborn,equipment);
 		for(Gear a:new ArrayList<>(target.equipped)){
 			target.unequip(a);
 			reborn.equip(a);

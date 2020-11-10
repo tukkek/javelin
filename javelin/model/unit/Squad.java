@@ -727,4 +727,14 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 	public void settime(long time){
 		this.time=time;
 	}
+
+	/** @see Item#identified */
+	public boolean identify(Item i){
+		if(i.identified) return true;
+		for(var c:this){
+			var spellcraftdc=15+i.getlevel();
+			if(c.taketen(Skill.SPELLCRAFT)>=spellcraftdc) return true;
+		}
+		return false;
+	}
 }

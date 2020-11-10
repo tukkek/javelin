@@ -26,6 +26,7 @@ public class Potion extends Item{
 		usedinbattle=s.castinbattle;
 		usedoutofbattle=s.castoutofbattle;
 		spell=s;
+		identified=false;
 	}
 
 	/** Constructor. */

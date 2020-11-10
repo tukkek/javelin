@@ -47,6 +47,7 @@ public class Eidolon extends Item{
 		usedinbattle=true;
 		usedoutofbattle=false;
 		waste=true;
+		if(charges==0) identified=false;
 	}
 
 	@Override
@@ -61,6 +62,7 @@ public class Eidolon extends Item{
 
 	@Override
 	public String toString(){
+		if(!identified) return "Unidentified minor eidolon";
 		var name=super.toString();
 		return charges==null?name:name+" "+charges;
 	}

@@ -40,6 +40,7 @@ import javelin.model.world.location.dungeon.feature.chest.Chest;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.TrainingOrder;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.basic.Lodge;
 import javelin.old.RPG;
 import javelin.view.screen.WorldScreen;
 
@@ -75,7 +76,7 @@ public abstract class Item implements Serializable,Cloneable,Healing{
 	public static Integer cheapestartifact=null;
 
 	/** If not <code>null</code> will be used for {@link #describefailure()}. */
-	static protected String failure=null;
+	static public String failure=null;
 
 	static{
 		for(Tier t:Tier.TIERS)
@@ -154,6 +155,21 @@ public abstract class Item implements Serializable,Cloneable,Healing{
 	 * Default is 50% original {@link #price}.
 	 */
 	public double sellvalue=.5f;
+	/**
+	 * <code>true</code> by default, only one-use {@link #consumable} items should
+	 * use this mechanic, as they can still be used with their true identity
+	 * hidden by {@link #toString()} and it won't ever lock the player away
+	 * regardless of game-state circumstances.
+	 *
+	 * {@link #toString()} will use the class name as a guess for what to call
+	 * non-identified items but subclasses should provide their method override
+	 * when that is not enough.
+	 *
+	 * @see Squad#identify(Item)
+	 * @see Lodge#rest(int, int, boolean,
+	 *      javelin.model.world.location.town.labor.basic.Lodge.Lodging)
+	 */
+	public boolean identified=true;
 
 	/**
 	 * Constructor.
@@ -198,6 +214,8 @@ public abstract class Item implements Serializable,Cloneable,Healing{
 
 	@Override
 	public String toString(){
+		if(!identified)
+			return "Unidentified "+getClass().getSimpleName().toLowerCase();
 		return name;
 	}
 
@@ -273,6 +291,7 @@ public abstract class Item implements Serializable,Cloneable,Healing{
 	 * item and updates {@link Squad#equipment}.
 	 */
 	public void grab(Squad s){
+		identified=s.identify(this);
 		var action=this instanceof Gear?EquipGear.INSTANCE:UseItems.INSTANCE;
 		String list=action.listitems(null,false)+"\n";
 		list+="Who will take the "+toString().toLowerCase()+"?";

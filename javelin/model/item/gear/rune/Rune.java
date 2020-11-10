@@ -16,7 +16,7 @@ import javelin.model.unit.condition.Condition;
  * @author alex
  */
 public class Rune extends Item{
-	static final String PROMPT="Select an item to apply %s to.\n"
+	static final String PROMPT="Select an item to apply the %s to.\n"
 			+"(Note that selecting an already enchanted item may override an existing prefix or suffix)";
 	Condition prefix;
 	Spell suffix;
@@ -41,16 +41,17 @@ public class Rune extends Item{
 		price=prefix!=null?RuneGear.price(prefix):RuneGear.price(suffix);
 		targeted=false;
 		usedinbattle=false;
+		identified=false;
 	}
 
 	@Override
 	public boolean usepeacefully(Combatant user){
 		var gear=Squad.active.equipment.getall(RuneGear.class);
 		if(gear.isEmpty()){
-			failure="You don't currently possess any gear that can be augmented with a rune...";
+			failure="You don't currently possess any gear that can be augmented with a rune";
 			return false;
 		}
-		var prompt=String.format(PROMPT,this);
+		var prompt=String.format(PROMPT,toString().toLowerCase());
 		var names=new ArrayList<String>(gear.size());
 		for(var g:gear){
 			var name=g.toString();

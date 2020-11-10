@@ -31,6 +31,7 @@ public class Flask extends Potion{
 		charges=new Recharger(capacity);
 		consumable=false;
 		waste=true;
+		identified=true;
 	}
 
 	void quaff(){

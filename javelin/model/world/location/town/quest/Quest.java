@@ -175,9 +175,10 @@ public abstract class Quest implements Serializable{
 		var max=RewardCalculator.getgold(target+1);
 		gold=Math.max(1,Javelin.round(RPG.r(min,max)));
 		var items=RewardCalculator.generateloot(gold,1,Item.ITEMS);
-		if(items.size()>0){
+		if(!items.isEmpty()){
 			gold=0;
 			item=items.get(0);
+			item.identified=true;
 		}
 	}
 

@@ -11,6 +11,7 @@ import javelin.JavelinApp;
 import javelin.controller.CountingSet;
 import javelin.controller.action.world.WorldAction;
 import javelin.model.item.Item;
+import javelin.model.item.gear.Gear;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.view.screen.InfoScreen;
@@ -93,7 +94,10 @@ public class UseItems extends WorldAction{
 	}
 
 	boolean use(InfoScreen infoscreen,Item i){
-		if(!i.usedoutofbattle) return false;
+		if(!i.usedoutofbattle){
+			Item.failure="Can only be used in combat";
+			return false;
+		}
 		Combatant target=null;
 		if(i.targeted) target=inputmember(
 				"Which member will use the "+i.toString().toLowerCase()+"?");
@@ -148,7 +152,7 @@ public class UseItems extends WorldAction{
 
 	/** @return Items to be shown on this screen, from all given. */
 	protected List<Item> filter(List<Item> items){
-		return items.stream().filter(i->i.usedoutofbattle)
+		return items.stream().filter(i->i.usedoutofbattle||!(i instanceof Gear))
 				.collect(Collectors.toList());
 	}
 

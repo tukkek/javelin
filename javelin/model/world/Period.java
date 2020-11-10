@@ -16,7 +16,8 @@ import javelin.view.screen.WorldScreen;
  *
  * @author alex
  */
-public class Period implements Serializable,javelin.model.Cloneable{
+public class Period
+		implements Serializable,javelin.model.Cloneable,Comparable<Period>{
 	/** 6AM to noon. */
 	public static final Period MORNING=new Period("Morning",6,12);
 	/** Noon to 6PM. */
@@ -60,9 +61,9 @@ public class Period implements Serializable,javelin.model.Cloneable{
 
 	String name;
 	/** Inclusive. */
-	int from;
+	public int from;
 	/** Exclusive. */
-	int to;
+	public int to;
 
 	Period(String name,int from,int to){
 		this.name=name;
@@ -130,5 +131,10 @@ public class Period implements Serializable,javelin.model.Cloneable{
 		for(var p:ALL)
 			if(p.is()) return p;
 		throw new RuntimeException("Unknown hour: "+gethour());
+	}
+
+	@Override
+	public int compareTo(Period o){
+		return Integer.compare(from,o.from);
 	}
 }

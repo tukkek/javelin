@@ -266,6 +266,7 @@ public class Shop extends Location{
 	@Override
 	public boolean interact(){
 		if(!super.interact()) return false;
+		if(!isopen(List.of(Period.MORNING,Period.AFTERNOON),this)) return false;
 		for(Order o:crafting.reclaim(Period.gettime())){
 			CraftingOrder done=(CraftingOrder)o;
 			done.item.grab();

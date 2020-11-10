@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.Javelin.Delay;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
@@ -42,9 +41,9 @@ import javelin.view.Images;
  * One issue with the Arean is that it's easy to fall into a rhythm of endless
  * grinding, sending your hurt {@link Combatant}s to rest or train and continue
  * fighting for experience. While that approach is sub-optimal for several other
- * reaons (better rewards in {@link DungeonFloor}s, letting {@link Incursion}s run
- * rampant will make your life harder in the long run, less difficult encounters
- * in level-appropriate areas meaning better chances of not losing a
+ * reaons (better rewards in {@link DungeonFloor}s, letting {@link Incursion}s
+ * run rampant will make your life harder in the long run, less difficult
+ * encounters in level-appropriate areas meaning better chances of not losing a
  * {@link Squad} member and not losing and getting away with nothing)... but
  * despite this, being designed as a safe-zone, the allure of not doing anything
  * else is seductive. The current approach to prevent this is to introduce
@@ -77,8 +76,6 @@ public class Arena extends UniqueLocation{
 	static final String CONFIRM="Begin an Arena match with these fighters?\n"
 			+"Press ENTER to confirm or any other key to cancel...\n\n";
 	static final String DESCRIPTION="The Arena";
-	static final String CLOSED="The arena is closed. Come back from noon to midnight...\n"
-			+"Press w to wait or any other key to continue...";
 
 	class ArenaMap extends LocationMap{
 		List<Point> minionspawn=new ArrayList<>();
@@ -174,13 +171,7 @@ public class Arena extends UniqueLocation{
 	@Override
 	public boolean interact(){
 		if(!super.interact()) return false;
-		if(!Period.AFTERNOON.is()&&!Period.EVENING.is()){
-			Javelin.message(CLOSED,Delay.NONE);
-			/*TODO this could easily be refactored into Squad#waitfor(Period) */
-			if(Javelin.input().getKeyChar()=='w')
-				Squad.active.delay(12-Period.gethour());
-			return false;
-		}
+		if(!isopen(List.of(Period.AFTERNOON,Period.EVENING),this)) return false;
 		var hurt=Squad.active.members.stream()
 				.filter(c->c.getnumericstatus()<Combatant.STATUSSCRATCHED).limit(1);
 		if(hurt.count()>0){

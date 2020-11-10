@@ -2,10 +2,12 @@ package javelin.model.world.location;
 
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javelin.Debug;
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
@@ -27,6 +29,7 @@ import javelin.model.unit.skill.Knowledge;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
+import javelin.model.world.Period;
 import javelin.model.world.World;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
@@ -57,6 +60,8 @@ public abstract class Location extends Actor{
 	 * square-steps.
 	 */
 	static final int CLOSE=4;
+	static final String CLOSED="%s is closed. Come back from %s to %s...\n"
+			+"Press w to wait or any other key to continue...";
 
 	/**
 	 * If <code>false</code> will make sure no {@link Squad} occupies the same
@@ -412,5 +417,36 @@ public abstract class Location extends Actor{
 	public void place(Point p){
 		setlocation(p);
 		place();
+	}
+
+	/**
+	 * Blocks access to a building unless on proper hours by returning
+	 * <code>false</code>. Shows a message about available hours and handles
+	 * player input to wait for the business to open if so desired.
+	 *
+	 * TODO this could easily be refactored into its own class, with open periods
+	 * as a class field with sensible default values. This method could still be
+	 * available for locations that would not fit into the hierarchy.
+	 *
+	 * @param openp Open times.
+	 * @return <code>true</code> if the location is open, <code>false</code> if
+	 *         closed and the {@link Squad} decided to wait.
+	 * @throws RepeatTurn If it's closed but the {@link Squad} is not waiting.
+	 */
+	protected static boolean isopen(List<Period> openp,Location l){
+		var open=new LinkedList<>(openp);
+		open.sort(null);
+		for(var period:open)
+			if(period.is()) return true;
+		var from=open.getFirst().toString().toLowerCase();
+		var var=open.getLast().toString().toLowerCase();
+		var message=String.format(CLOSED,l,from,var);
+		Javelin.message(message,Delay.NONE);
+		/*TODO this could easily be refactored into Squad#waitfor(Period) */
+		if(Javelin.input().getKeyChar()!='w') throw new RepeatTurn();
+		var wait=open.get(0).from-Period.gethour();
+		if(wait<0) wait+=24;
+		Squad.active.delay(wait);
+		return false;
 	}
 }

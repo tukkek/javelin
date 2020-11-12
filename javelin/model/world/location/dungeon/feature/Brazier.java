@@ -12,7 +12,7 @@ import javelin.controller.walker.Walker;
 import javelin.controller.walker.pathing.DirectPath;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
-import javelin.model.world.location.dungeon.temple.FireTemple;
+import javelin.model.world.location.dungeon.branch.temple.FireTemple;
 import javelin.view.mappanel.dungeon.DungeonTile;
 
 /**

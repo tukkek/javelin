@@ -28,8 +28,8 @@ public class Crown extends Artifact{
 	}
 
 	/** Constructor. */
-	public Crown(Integer level){
-		super("Crown of knowlege",level);
+	public Crown(){
+		super("Crown of knowlege");
 		usedinbattle=false;
 		usedoutofbattle=true;
 	}

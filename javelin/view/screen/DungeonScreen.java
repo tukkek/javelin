@@ -6,9 +6,7 @@ import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.action.world.WorldMove;
-import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
-import javelin.controller.fight.RandomEncounter;
 import javelin.controller.generator.dungeon.template.MapTemplate;
 import javelin.controller.walker.Walker;
 import javelin.model.unit.Combatant;
@@ -44,12 +42,7 @@ public class DungeonScreen extends WorldScreen{
 
 	@Override
 	public boolean explore(int x,int y){
-		try{
-			RandomEncounter.encounter(1f/floor.stepsperencounter);
-		}catch(StartBattle e){
-			throw e;
-		}
-		return !floor.hazard();
+		return floor.explore();
 	}
 
 	@Override

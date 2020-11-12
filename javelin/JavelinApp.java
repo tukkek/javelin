@@ -3,6 +3,7 @@ package javelin;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.math.BigDecimal;
 import java.util.HashSet;
 
@@ -34,16 +35,17 @@ import javelin.view.screen.WorldScreen;
  *
  * @author alex
  */
-public class JavelinApp extends QuestApp{
+public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
 	static final String CRASHMESSAGE="\n\nUnfortunately an error ocurred.\n"
 			+"Please send a screenshot of the next message or the log file (error.txt)\n"
-			+"to one of the channels below, so we can get this fixed on future releases.\n\n"
-			+"If for any reason your current game fails to load when you restart Javelin\n"
-			+"you can find backups on the \"backup\" folder. Just move one of them to the\n"
-			+"main folder and rename it to \"javelin.save\" to restore your progress.\n\n"
-			+"Post to our reddit forum -- http://www.reddit.com/r/javelinrl\n"
-			+"Leave a comment on our website -- http://javelinrl.wordpress.com\n"
-			+"Or write us an e-mail -- javelinrl@gmail.com\n";
+			+"to one of the channels below, to help it get fixed on future releases.\n\n"
+			+"Post to reddit -- http://www.reddit.com/r/javelinrl\n"
+			+"Leave a comment the website -- http://javelinrl.wordpress.com\n"
+			+"Or write an e-mail -- javelinrl@gmail.com\n\n"
+			+"Thank you for your patience and support!\n\n"
+			+"If for any reason your current game fails to load when you restart Javelin,\n"
+			+"you can find backups on the \"backup\" folder. Just copy one of them to the\n"
+			+"main folder and rename it to \"campaign.save\" to restore your progress.\n\n";
 	static final String[] CRASHQUOTES=new String[]{"A wild error appears!",
 			"You were eaten by a grue.","So again it has come to pass...",
 			"Mamma mia!",};
@@ -82,7 +84,7 @@ public class JavelinApp extends QuestApp{
 			try{
 				loop();
 			}catch(RuntimeException e){
-				handlefatalexception(e);
+				uncaughtException(Thread.currentThread(),e);
 			}
 	}
 
@@ -108,35 +110,6 @@ public class JavelinApp extends QuestApp{
 			Javelin.app.fight=null;
 			Fight.state=null;
 		}
-	}
-
-	/**
-	 * @param e Show this error to the user and log it.
-	 */
-	static public void handlefatalexception(RuntimeException e){
-		String quote=CRASHQUOTES[RPG.r(CRASHQUOTES.length)];
-		JOptionPane.showMessageDialog(Javelin.app,quote+CRASHMESSAGE);
-		if(!version.endsWith("\n")) version+="\n";
-		System.err.print(version);
-		e.printStackTrace();
-		String system="System: ";
-		for(String info:new String[]{"os.name","os.version","os.arch"})
-			system+=System.getProperty(info)+" ";
-		system+="\n";
-		String error=version+system+"\n"+printstacktrace(e);
-		Throwable t=e;
-		HashSet<Throwable> errors=new HashSet<>(2);
-		while(t.getCause()!=null&&errors.add(t)){
-			t=t.getCause();
-			error+=System.lineSeparator()+printstacktrace(t);
-		}
-		try{
-			Preferences.write(error,"error.txt");
-		}catch(IOException e1){
-			// ignore
-		}
-		JOptionPane.showMessageDialog(Javelin.app,error);
-		System.exit(1);
 	}
 
 	/** @return A pretty-printed stack trace. */
@@ -183,5 +156,32 @@ public class JavelinApp extends QuestApp{
 		if(Debug.gold!=null) Squad.active.gold=Debug.gold;
 		if(Debug.xp!=null) for(final Combatant m:Squad.active.members)
 			m.xp=new BigDecimal(Debug.xp/100f);
+	}
+
+	@Override
+	public void uncaughtException(Thread thread,Throwable e){
+		String quote=CRASHQUOTES[RPG.r(CRASHQUOTES.length)];
+		JOptionPane.showMessageDialog(Javelin.app,quote+CRASHMESSAGE);
+		if(!version.endsWith("\n")) version+="\n";
+		System.err.print(version);
+		e.printStackTrace();
+		String system="System: ";
+		for(String info:new String[]{"os.name","os.version","os.arch"})
+			system+=System.getProperty(info)+" ";
+		system+="\n";
+		String error=version+system+"\n"+printstacktrace(e);
+		Throwable t=e;
+		HashSet<Throwable> errors=new HashSet<>(2);
+		while(t.getCause()!=null&&errors.add(t)){
+			t=t.getCause();
+			error+=System.lineSeparator()+printstacktrace(t);
+		}
+		try{
+			Preferences.write(error,"error.txt");
+		}catch(IOException e1){
+			// ignore
+		}
+		JOptionPane.showMessageDialog(Javelin.app,error);
+		System.exit(1);
 	}
 }

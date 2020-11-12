@@ -10,6 +10,7 @@ import javelin.controller.quality.Quality;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.Size;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.unit.abilities.spell.Spell;
@@ -71,7 +72,7 @@ public class StatisticsScreen extends InfoScreen{
 		var monstername=m.name;
 		if(!m.group.isEmpty()) monstername+=", "+m.group.toLowerCase();
 		lines.add(monstername);
-		var type=capitalize(Monster.SIZES[m.size]);
+		var type=capitalize(Size.SIZES[m.size]);
 		type=capitalize(m.type.toString().replaceAll("_"," ").toLowerCase());
 		if(!m.subtypes.isEmpty()) type+=" ("+String.join(",",m.subtypes)+")";
 		lines.add(type);

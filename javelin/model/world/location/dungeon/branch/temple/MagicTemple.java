@@ -1,11 +1,10 @@
-package javelin.model.world.location.dungeon.temple;
+package javelin.model.world.location.dungeon.branch.temple;
 
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.terrain.Hill;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.artifact.Amulet;
-import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.feature.Throne;
 
 /**
@@ -23,14 +22,18 @@ public class MagicTemple extends Temple{
 			+"There are a few stones along the walls, they give off a faint octarine glow.\n"
 			+"You walk along a grand mural written in an ancient language but alas you cannot decipher it.";
 
+	static class MagicBranch extends TempleBranch{
+		protected MagicBranch(){
+			super("floortemplemagic","walltemplemagic");
+			features.add(Throne.class);
+		}
+	}
+
 	/**
 	 * @param level Level of this temple.
 	 * @see ChallengeCalculator#leveltoel(int)
 	 */
 	public MagicTemple(Integer level){
-		super(Realm.MAGIC,Terrain.HILL,level,new Amulet(level),FLUFF);
-		images.put(DungeonImages.FLOOR,"floortemplemagic");
-		images.put(DungeonImages.WALL,"walltemplemagic");
-		feature=Throne.class;
+		super(Realm.MAGIC,Terrain.HILL,level,FLUFF,new MagicBranch(),new Amulet());
 	}
 }

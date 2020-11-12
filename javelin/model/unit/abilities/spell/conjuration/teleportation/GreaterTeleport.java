@@ -14,7 +14,7 @@ import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.dungeon.temple.Temple.TempleEntrance;
+import javelin.model.world.location.dungeon.branch.temple.Temple.TempleEntrance;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.unique.UniqueLocation;
 

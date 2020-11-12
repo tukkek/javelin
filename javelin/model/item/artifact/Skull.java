@@ -15,8 +15,8 @@ import javelin.old.RPG;
  */
 public class Skull extends Artifact{
 	/** Constructor. */
-	public Skull(Integer level){
-		super("Skull of Pain",level);
+	public Skull(){
+		super("Skull of Pain");
 		usedinbattle=true;
 		usedoutofbattle=false;
 	}

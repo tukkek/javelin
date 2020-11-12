@@ -6,7 +6,7 @@ import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.DungeonFloor;
-import javelin.model.world.location.dungeon.temple.EarthTemple;
+import javelin.model.world.location.dungeon.branch.temple.EarthTemple;
 
 /**
  * @see EarthTemple

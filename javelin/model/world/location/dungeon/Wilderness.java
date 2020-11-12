@@ -1,14 +1,16 @@
 package javelin.model.world.location.dungeon;
 
+import java.util.List;
 import java.util.Set;
 
 import javelin.controller.Point;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.db.EncounterIndex;
 import javelin.controller.fight.Fight;
+import javelin.controller.fight.RandomDungeonEncounter;
 import javelin.controller.generator.dungeon.template.MapTemplate;
 import javelin.controller.generator.encounter.EncounterGenerator;
-import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.item.Tier;
 import javelin.model.unit.Squad;
@@ -70,7 +72,6 @@ public class Wilderness extends Dungeon{
 	class WildernessFloor extends DungeonFloor{
 		public WildernessFloor(Integer level,Dungeon d){
 			super(level,d);
-			terrain=type;
 		}
 
 		/** Places {@link Exit} and {@link Squad} on a border {@link Tile}. */
@@ -96,8 +97,10 @@ public class Wilderness extends Dungeon{
 		@Override
 		protected char[][] map(){
 			var e=Wilderness.this.entrance.getlocation();
-			type=World.seed.map[e.x][e.y];
-			var fightmap=RPG.pick(type.getmaps());
+			var t=World.seed.map[e.x][e.y];
+			terrains.clear();
+			terrains.add(t);
+			var fightmap=RPG.pick(t.getmaps());
 			fightmap.generate();
 			var width=fightmap.map.length;
 			int height=fightmap.map[0].length;
@@ -121,11 +124,11 @@ public class Wilderness extends Dungeon{
 		}
 
 		@Override
-		protected void generateencounters(){
+		protected void generateencounters(List<EncounterIndex> index){
 			var target=RPG.randomize(6,1,Integer.MAX_VALUE);
 			while(encounters.size()<target){
 				var el=level+Difficulty.get()+Difficulty.EASY;
-				var e=EncounterGenerator.generate(el,type);
+				var e=EncounterGenerator.generatebyindex(el,index);
 				if(e!=null) encounters.add(e);
 			}
 		}
@@ -156,8 +159,6 @@ public class Wilderness extends Dungeon{
 		}
 	}
 
-	Terrain type;
-
 	/** Constructor. */
 	public Wilderness(){
 		super(DESCRIPTION,-1,1);
@@ -185,7 +186,7 @@ public class Wilderness extends Dungeon{
 	}
 
 	@Override
-	public Fight fight(){
+	public RandomDungeonEncounter fight(){
 		var e=super.fight();
 		e.map.floor=Images.get(images.get(DungeonImages.FLOOR));
 		e.map.wall=Images.get(images.get(DungeonImages.WALL));

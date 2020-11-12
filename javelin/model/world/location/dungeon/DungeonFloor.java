@@ -14,8 +14,9 @@ import javelin.controller.action.world.WorldMove;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.EncountersByEl;
-import javelin.controller.fight.Fight;
+import javelin.controller.db.EncounterIndex;
 import javelin.controller.fight.RandomDungeonEncounter;
+import javelin.controller.fight.RandomEncounter;
 import javelin.controller.generator.dungeon.DungeonGenerator;
 import javelin.controller.generator.dungeon.template.MapTemplate;
 import javelin.controller.generator.encounter.Encounter;
@@ -30,7 +31,7 @@ import javelin.controller.table.dungeon.feature.FeatureModifierTable;
 import javelin.controller.table.dungeon.feature.FeatureRarityTable;
 import javelin.controller.table.dungeon.feature.RareFeatureTable;
 import javelin.controller.table.dungeon.feature.SpecialTrapTable;
-import javelin.controller.terrain.Terrain;
+import javelin.controller.template.Template;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.item.Item;
 import javelin.model.item.consumable.Ruby;
@@ -110,8 +111,6 @@ public class DungeonFloor implements Serializable{
 	public List<Combatants> encounters=new ArrayList<>();
 	/** Dungeon this floor is a part of. */
 	public Dungeon dungeon;
-	/** @see Fight#map */
-	public Terrain terrain=Terrain.UNDERGROUND;
 
 	int knownfeatures=0;
 	Tables tables;
@@ -144,9 +143,11 @@ public class DungeonFloor implements Serializable{
 	 * finding their way back to {@link Town} safely, so this naturally makes the
 	 * dungeon more challenging (hopefully being offset by the cool rewards).
 	 *
+	 * @param index {@link Encounter}s, possibly {@link Template}-based.
+	 *
 	 * @see #stepsperencounter
 	 */
-	public void generate(){
+	public void generate(List<EncounterIndex> index){
 		if(map!=null) return;
 		var p=getparent();
 		tables=p==null?new Tables():p.tables.clone();
@@ -155,7 +156,7 @@ public class DungeonFloor implements Serializable{
 		generatedoors();
 		stepsperencounter=calculateencounterrate();
 		if(stepsperencounter<2) stepsperencounter=2;
-		generateencounters();
+		generateencounters(index);
 		populate();
 		visible=new boolean[size][size];
 		for(int x=0;x<size;x++)
@@ -180,11 +181,11 @@ public class DungeonFloor implements Serializable{
 		return generator.grid;
 	}
 
-	/** Define {@link #encounters}. */
-	protected void generateencounters(){
-		var parent=getparent();
-		if(parent!=null){
-			encounters=new ArrayList<>(parent.encounters);
+	/** * Defines {@link #encounters}. */
+	protected void generateencounters(List<EncounterIndex> index){
+		var p=getparent();
+		if(p!=null){
+			encounters=new ArrayList<>(p.encounters);
 			while(encounters.remove(null))
 				continue;
 			encounters.sort(EncountersByEl.INSTANCE);
@@ -192,27 +193,16 @@ public class DungeonFloor implements Serializable{
 			encounters.removeAll(encounters.subList(0,crop));
 		}
 		var target=DungeonTier.TIERS.indexOf(gettier())+RPG.randomize(6,4,7);
-		var attempts=0;
-		while(encounters.size()<target){
+		for(var i=0;encounters.size()<target;i++){
 			var el=level+Difficulty.get();
-			var e=generateencounter(el,dungeon.terrains);
-			if(e!=null&&!encounters.contains(e)) encounters.add(e);
-			if(Javelin.DEBUG){
-				attempts+=1;
-				if(attempts>ENCOUNTERATTEMPTS){
-					var error="Cannot generate encounters for level $s %s!";
-					System.out.println(String.format(error,level,this));
-				}
+			var e=EncounterGenerator.generatebyindex(el,index);
+			if(e!=null) encounters.add(e);
+			if(i>ENCOUNTERATTEMPTS){
+				if(!Javelin.DEBUG) return;
+				var error="Cannot generate encounters for %s [EL %s]!";
+				throw new RuntimeException(String.format(error,this,level));
 			}
 		}
-	}
-
-	/**
-	 * @see #generateencounters()
-	 * @see EncounterGenerator
-	 */
-	protected Combatants generateencounter(int level,List<Terrain> terrains){
-		return EncounterGenerator.generate(level,terrains);
 	}
 
 	void generatedoors(){
@@ -249,6 +239,7 @@ public class DungeonFloor implements Serializable{
 
 	/** @return Generated decoration or <code>null</code> if Dungeon doesn't. */
 	protected LinkedList<Decoration> generatedecoration(int minimum){
+		if(!dungeon.branches.isEmpty()) return null;
 		var unnocupied=new ArrayList<Point>(size*size/10);
 		for(var x=0;x<size;x++)
 			for(var y=0;y<size;y++){
@@ -329,6 +320,11 @@ public class DungeonFloor implements Serializable{
 
 	/** @param nfeatures Target quantity of {@link Feature}s to place. */
 	protected void generatefeatures(int nfeatures,DungeonZoner zoner){
+		var t=gettable(CommonFeatureTable.class);
+		var c=t.getchances();
+		dungeon.branches.stream().flatMap(b->b.features.stream()).forEach(f->{
+			t.add(f,c);
+		});
 		while(nfeatures>0){
 			generatefeature().place(this,zoner.getpoint());
 			nfeatures-=1;
@@ -397,20 +393,19 @@ public class DungeonFloor implements Serializable{
 
 	void generatechests(int chests,int pool,DungeonZoner z,
 			LinkedList<Decoration> d){
-		generatespecialchest(this==dungeon.floors.getLast()).place(this,
-				z.getpoint());
+		generatespecialchest().place(this,z.getpoint());
 		if(pool==0) return;
 		if(chests<1) chests=1;
 		var hidden=Math.max(2,chests/10);
 		hidden=RPG.randomize(hidden,0,chests);
+		var t=gettable(ChestTable.class);
 		if(d!=null&&hidden>0){
 			chests-=hidden;
 			var hiddenpool=pool/2;
 			pool-=hiddenpool;
 			for(var i=0;i<hidden;i++)
-				generatechest(Chest.class,pool/hidden,z,d.pop());
+				generatechest(t.roll(),pool/hidden,z,d.pop());
 		}
-		var t=gettable(ChestTable.class);
 		for(var i=0;i<chests;i++)
 			generatechest(t.roll(),pool/chests,z,null);
 		generatecrates(z);
@@ -427,8 +422,11 @@ public class DungeonFloor implements Serializable{
 	}
 
 	/** @see SpecialChest */
-	protected Feature generatespecialchest(boolean deepestfloor){
-		if(deepestfloor) return new SpecialChest(this,new Ruby());
+	protected Feature generatespecialchest(){
+		var branchchests=dungeon.branches.stream().map(b->b.generatespecialchest())
+				.filter(c->c!=null).collect(Collectors.toList());
+		if(!branchchests.isEmpty()) return RPG.pick(branchchests);
+		if(this==dungeon.floors.getLast()) return new SpecialChest(this,new Ruby());
 		var value=RewardCalculator.getgold(level);
 		var items=RPG.shuffle(new ArrayList<>(Item.ITEMS));
 		var item=items.stream().filter(i->value/2<=i.price&&i.price<=value*2)
@@ -479,9 +477,15 @@ public class DungeonFloor implements Serializable{
 	/**
 	 * Akin to terrain {@link Hazard}s.
 	 *
-	 * @return <code>true</code> if a hazard happens.
+	 * @return <code>true</code> if a hazard has happened.
 	 */
-	public boolean hazard(){
+	public boolean triggerhazard(){
+		var hazards=dungeon.branches.stream().map(b->b.hazard).filter(h->h!=null)
+				.collect(Collectors.toList());
+		for(var h:hazards){
+			var steps=Math.round(stepsperencounter*hazards.size()/h.chancemodifier);
+			if(RPG.chancein((int)steps)) return h.trigger();
+		}
 		return false;
 	}
 
@@ -545,5 +549,11 @@ public class DungeonFloor implements Serializable{
 	/** @see Dungeon#gettier() */
 	public DungeonTier gettier(){
 		return dungeon.gettier();
+	}
+
+	/** @see DungeonScreen#explore(int, int) */
+	public boolean explore(){
+		RandomEncounter.encounter(1f/stepsperencounter);
+		return !triggerhazard();
 	}
 }

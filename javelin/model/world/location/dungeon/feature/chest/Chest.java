@@ -15,8 +15,8 @@ import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.DungeonImages;
-import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Decoration;
+import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.old.RPG;
 import javelin.view.Images;
 
@@ -61,6 +61,11 @@ public class Chest extends Feature{
 	public Chest(Item i,DungeonFloor f){
 		this(f);
 		items.add(i);
+	}
+
+	/** Subclass contructor. */
+	protected Chest(String description,String avatar){
+		super(description,avatar);
 	}
 
 	/**

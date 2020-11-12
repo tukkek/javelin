@@ -11,8 +11,8 @@ import javelin.model.unit.condition.Heroic;
  */
 public class Ankh extends Artifact{
 	/** Constructor. */
-	public Ankh(Integer level){
-		super("Ankh of Life",level);
+	public Ankh(){
+		super("Ankh of Life");
 		usedinbattle=false;
 		usedoutofbattle=true;
 	}

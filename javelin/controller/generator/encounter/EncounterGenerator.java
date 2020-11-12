@@ -61,8 +61,8 @@ public class EncounterGenerator{
 	/**
 	 * @param el Target encounter level - will work around this is cannot generate
 	 *          exactly what is given.
-	 * @param terrains Usually {@link Terrain#current()} but not necessarily - for
-	 *          example not when generation a
+	 * @param encounters Usually {@link Terrain#current()} but not necessarily -
+	 *          for example not when generation a
 	 *          {@link javelin.model.world.location.Location#garrison}, which uses
 	 *          the local terrain instead.
 	 * @return Enemy units for an encounter. <code>null</code> should not be
@@ -72,12 +72,13 @@ public class EncounterGenerator{
 	 *         happens to have an empty gap in EL for some reason. In most typical
 	 *         cases it should be safe to not expect a <code>null</code> return.
 	 */
-	public static Combatants generate(int el,List<Terrain> terrains){
+	public static Combatants generatebyindex(int el,
+			List<EncounterIndex> encounters){
 		if(el<minel) el=minel;
 		if(el>maxel) el=maxel;
 		Combatants encounter=null;
 		for(int i=0;i<MAXTRIES;i++){
-			encounter=select(el,terrains);
+			encounter=select(el,encounters);
 			if(encounter==null) continue;
 			var f=Javelin.app.fight;
 			if(f==null||f.validate(encounter)) return encounter;
@@ -85,7 +86,17 @@ public class EncounterGenerator{
 		return null;
 	}
 
-	static Combatants select(int elp,List<Terrain> terrains){
+	/** {@link #generatebyindex(int, List)} with {@link Terrain}s instead. */
+	public static Combatants generate(int el,List<Terrain> terrains){
+		var encounters=new ArrayList<EncounterIndex>(terrains.size());
+		for(var t:terrains)
+			encounters.add(Organization.ENCOUNTERSBYTERRAIN.get(t.toString()));
+		while(encounters.remove(null))
+			continue;
+		return generatebyindex(el,encounters);
+	}
+
+	static Combatants select(int elp,List<EncounterIndex> encounters){
 		ArrayList<Integer> popper=new ArrayList<>();
 		popper.add(elp);
 		while(RPG.chancein(2)){
@@ -97,7 +108,7 @@ public class EncounterGenerator{
 		}
 		final Combatants foes=new Combatants();
 		for(final int el:popper){
-			List<Combatant> group=makeencounter(el,terrains);
+			List<Combatant> group=makeencounter(el,encounters);
 			if(group==null) return null;
 			for(Combatant invitee:group)
 				if(!validatecreature(invitee,foes)) return null;
@@ -134,14 +145,12 @@ public class EncounterGenerator{
 		return MAXSIZEDIFFERENCE+current;
 	}
 
-	static List<Combatant> makeencounter(final int el,List<Terrain> terrains){
+	static List<Combatant> makeencounter(final int el,
+			List<EncounterIndex> encounters){
 		List<Encounter> possibilities=new ArrayList<>();
-		for(Terrain t:terrains){
-			EncounterIndex index=Organization.ENCOUNTERSBYTERRAIN.get(t.toString());
-			if(index!=null){
-				List<Encounter> tier=index.get(el);
-				if(tier!=null) possibilities.addAll(tier);
-			}
+		for(var index:encounters){
+			List<Encounter> tier=index.get(el);
+			if(tier!=null) possibilities.addAll(tier);
 		}
 		return possibilities.isEmpty()?null:RPG.pick(possibilities).generate();
 	}

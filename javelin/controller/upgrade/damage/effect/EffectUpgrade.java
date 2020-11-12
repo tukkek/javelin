@@ -2,6 +2,7 @@ package javelin.controller.upgrade.damage.effect;
 
 import java.util.HashSet;
 
+import javelin.controller.kit.Kit;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
@@ -9,7 +10,8 @@ import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
 
 /**
- * Adds an effect to all melee attacks.
+ * Adds an effect to all melee attacks. A {@link Kit} should ever only have one
+ * of thse.
  *
  * @author alex
  */
@@ -46,9 +48,13 @@ public class EffectUpgrade extends Upgrade{
 
 	@Override
 	protected boolean apply(Combatant c){
+		var upgraded=false;
 		for(AttackSequence as:c.source.melee)
 			for(Attack a:as)
-				a.seteffect(effect);
-		return true;
+				if(!effect.equals(a.geteffect())){
+					a.seteffect(effect);
+					upgraded=true;
+				}
+		return upgraded;
 	}
 }

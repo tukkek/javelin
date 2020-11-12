@@ -14,6 +14,7 @@ import javelin.controller.exception.RepeatTurn;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.Size;
 import javelin.model.unit.condition.Condition;
 import javelin.model.unit.feat.Feat;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
@@ -154,7 +155,7 @@ public abstract class ExpertiseAction extends Target implements AiAction{
 	}
 
 	static int size(final Combatant combatant){
-		return combatant.source.size-Monster.MEDIUM;
+		return combatant.source.size-Size.MEDIUM;
 	}
 
 	abstract int getsavebonus(Combatant targetCombatant);

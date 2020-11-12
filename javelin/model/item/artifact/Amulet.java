@@ -13,8 +13,8 @@ import javelin.model.unit.condition.Condition;
 public class Amulet extends Artifact{
 
 	/** Constructor. */
-	public Amulet(Integer level){
-		super("Amulet of Mana",level);
+	public Amulet(){
+		super("Amulet of Mana");
 		usedinbattle=false;
 		usedoutofbattle=true;
 	}

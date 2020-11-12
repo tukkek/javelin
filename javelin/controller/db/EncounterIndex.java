@@ -32,4 +32,8 @@ public class EncounterIndex extends TreeMap<Integer,List<Encounter>>{
 		return count;
 	}
 
+	/** @param e Uses {@link Encounter#el}. */
+	public void put(Encounter e){
+		put(e.el,e);
+	}
 }

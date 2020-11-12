@@ -3,8 +3,8 @@ package javelin.controller.fight;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
+import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
@@ -18,27 +18,33 @@ import javelin.old.RPG;
  * @author alex
  */
 public class RandomDungeonEncounter extends RandomEncounter{
-	List<Combatants> encounters;
+	Combatants encounter;
 
 	RandomDungeonEncounter(){
 		meld=true;
 	}
 
 	/** {@link Dungeon} constructor. */
-	public RandomDungeonEncounter(DungeonFloor d){
+	public RandomDungeonEncounter(DungeonFloor f){
 		this();
-		map=d.terrain.getmaps().pick();
-		weather=d.terrain.getweather();
-		encounters=d.encounters;
+		encounter=RPG.pick(f.encounters);
+		setterrain(RPG.pick(f.dungeon.terrains));
+	}
+
+	/** Picks a random map to use from this pool. */
+	public void setterrain(Terrain t){
+		map=t.getmaps().pick();
+		weather=t.getweather();
 	}
 
 	@Override
 	public ArrayList<Combatant> generate(){
-		Combatants encounter=RPG.pick(encounters);
 		/*TODO once there is a better strategical skip for encounters, this won't be
-		* encessary anymore.*/
-		return encounter!=null&&ChallengeCalculator.calculateel(encounter)
-				-Squad.active.getel()>Difficulty.VERYEASY?encounter.generate():null;
+		 * encessary anymore.*/
+		if(Difficulty.calculate(Squad.active.members,
+				encounter)<=Difficulty.VERYEASY)
+			return null;
+		return encounter==null?null:encounter.generate();
 	}
 
 	@Override

@@ -258,6 +258,19 @@ public class Debug{
 	/** @see Preferences */
 	public static boolean bypassdoors;
 
+	/**
+	 * Java doesn't have programmatic breakpoints but sometimes it's useful to
+	 * emulate them by setting a breakpoint here instead of directly into code.
+	 */
+	public static void breakpoint(){
+		return;
+	}
+
+	/** Called every time a game starts (before player interaction). */
+	public static void oninit(){
+
+	}
+
 	/** @see StartBattle */
 	public static void onbattlestart(){
 
@@ -265,11 +278,6 @@ public class Debug{
 
 	/** Called only once when a {@link Scenario} is initialized. */
 	public static void oncampaignstart(){
-
-	}
-
-	/** Called every time a game starts (before player interaction). */
-	public static void oninit(){
 
 	}
 

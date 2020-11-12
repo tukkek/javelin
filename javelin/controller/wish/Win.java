@@ -10,7 +10,7 @@ import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
-import javelin.model.world.location.dungeon.temple.Temple;
+import javelin.model.world.location.dungeon.branch.temple.Temple;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.WorldScreen;
 

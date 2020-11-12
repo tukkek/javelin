@@ -11,18 +11,26 @@ import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.Javelin.Delay;
+import javelin.controller.challenge.Difficulty;
+import javelin.controller.db.EncounterIndex;
 import javelin.controller.db.StateManager;
+import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomDungeonEncounter;
+import javelin.controller.generator.WorldGenerator;
+import javelin.controller.generator.encounter.Encounter;
+import javelin.controller.template.Template;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Tier;
-import javelin.model.unit.Monster;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.branch.Branch;
+import javelin.model.world.location.dungeon.branch.temple.Temple;
 import javelin.model.world.location.dungeon.feature.Decoration;
+import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Passage;
 import javelin.model.world.location.dungeon.feature.StairsUp;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
@@ -38,6 +46,14 @@ import javelin.view.screen.BattleScreen;
  * @author alex
  */
 public class Dungeon implements Serializable{
+	/**
+	 * This is a trade-off between having the most variety in {@link Encounter}s
+	 * with how long that process takes to complete in {@link WorldGenerator}.
+	 * This is only one of the optimization steps taken when it comes to applying
+	 * {@link Template}s to encounters and it's only barely fast enough.
+	 */
+	static final int TEMPLATEENCOUNTERS=100/3;
+
 	/** Current dungeon or <code>null</code> if not in one. */
 	public static DungeonFloor active=null;
 
@@ -73,6 +89,8 @@ public class Dungeon implements Serializable{
 	public String fluff=null;
 	/** Usually {@link Terrain#UNDERGROUND}. */
 	public List<Terrain> terrains=new ArrayList<>(List.of(Terrain.UNDERGROUND));
+	/** Usually either zero or two, with {@link Temple}s being the exception. */
+	public List<Branch> branches=new ArrayList<>(2);
 
 	String name;
 
@@ -125,17 +143,69 @@ public class Dungeon implements Serializable{
 		}
 	}
 
+	List<EncounterIndex> indexencounters(){
+		var indexes=terrains.stream()
+				.map(t->Organization.ENCOUNTERSBYTERRAIN.get(t.toString()))
+				.collect(Collectors.toList());
+		var templates=branches.stream().flatMap(b->b.templates.stream())
+				.collect(Collectors.toList());
+		if(templates.isEmpty()) return indexes;
+		var encounters=indexes.stream().flatMap(i->i.values().stream())
+				.flatMap(es->es.stream())
+				.filter(e->Difficulty.VERYEASY<=e.el-level
+						&&e.el-level<=Difficulty.DIFFICULT&&validate(e.group))
+				.collect(Collectors.toList());
+		var modified=new EncounterIndex();
+		var total=0;
+		for(var e:RPG.shuffle(encounters)){
+			for(var t:templates){
+				var combatants=e.generate();
+				if(t.apply(combatants)>0){
+					modified.put(new Encounter(combatants));
+					total+=1;
+				}
+			}
+			if(total>=TEMPLATEENCOUNTERS) return List.of(modified);
+		}
+		//if TEMPLATEENCOUNTERS is done away with, remove this:
+		indexes=new ArrayList<>(indexes.size()+1);
+		indexes.add(modified);
+		return indexes;
+	}
+
 	/**
 	 * Calls {@link #generate()} on all floors; then {@link Feature#define()} on
 	 * each floor's {@link #features}; then generates {@link Lore}.
 	 */
 	public void generate(){
+		var encounters=indexencounters();
 		for(var f:floors)
-			f.generate();
+			f.generate(encounters);
 		for(var f:floors)
 			for(var feature:f.features.getall())
 				feature.define(f,floors);
 		generatelore();
+		generateappearance();
+		for(var b:branches)
+			b.define(this);
+	}
+
+	/**
+	 * If there are {@link #branches}, pick between them and the base image for
+	 * each tile, meaning there are 9 tileset variations (per
+	 * {@link DungeonTier})! Simple but pretty effective.
+	 */
+	protected void generateappearance(){
+		var nbranches=branches.size();
+		var floor=RPG.r(0,nbranches);
+		if(floor<nbranches)
+			images.put(DungeonImages.FLOOR,branches.get(floor).floor);
+		var wall=RPG.r(0,nbranches);
+		if(wall<nbranches){
+			var b=branches.get(wall);
+			images.put(DungeonImages.WALL,b.floor);
+			doorbackground=b.doorbackground;
+		}
 	}
 
 	/**
@@ -198,16 +268,18 @@ public class Dungeon implements Serializable{
 		return gettier().name.toLowerCase();
 	}
 
-	/**
-	 * @return <code>false</code> if any units aren't theme- or
-	 *         gameplay-appropriate. <code>true</code> by default.
-	 */
-	public boolean validate(List<Monster> monsters){
-		return true;
+	/** @see RandomDungeonEncounter */
+	public RandomDungeonEncounter fight(){
+		var f=new RandomDungeonEncounter(active);
+		for(var b:RPG.shuffle(new ArrayList<>(branches)))
+			b.fight(f);
+		return f;
 	}
 
-	/** @see RandomDungeonEncounter */
-	public Fight fight(){
-		return new RandomDungeonEncounter(active);
+	/** @return <code>false</code> to discard this {@link Encounter}. */
+	public boolean validate(List<Combatant> group){
+		for(var b:branches)
+			if(!b.validate(group)) return false;
+		return true;
 	}
 }

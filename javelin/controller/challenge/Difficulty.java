@@ -88,4 +88,9 @@ public class Difficulty{
 		return ChallengeCalculator.calculateel(opponents)
 				-ChallengeCalculator.calculateel(squad);
 	}
+
+	/** @return Just the subtraction, done in the right order. */
+	public static int calculate(int squad,int opponents){
+		return opponents-squad;
+	}
 }

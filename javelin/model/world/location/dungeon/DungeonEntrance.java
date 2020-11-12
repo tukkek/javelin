@@ -11,8 +11,8 @@ import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.dungeon.branch.temple.Temple;
 import javelin.model.world.location.dungeon.feature.inhabitant.Inhabitant;
-import javelin.model.world.location.dungeon.temple.Temple;
 
 /**
  * {@link World} gate to a {@link Dungeon}.

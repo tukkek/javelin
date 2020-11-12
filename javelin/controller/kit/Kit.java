@@ -308,12 +308,14 @@ public abstract class Kit implements Serializable{
 	}
 
 	public boolean upgrade(Combatant c){
-		Upgrade upgrade=RPG.pick(getupgrades());
-		if(!upgrade.upgrade(c)) return false;
-		c.postupgradeautomatic();
-		ChallengeCalculator.calculatecr(c.source);
-		c.source.elite=true;
-		return true;
+		for(var u:RPG.shuffle(new ArrayList<>(getupgrades()))){
+			if(!u.upgrade(c)) continue;
+			c.postupgradeautomatic();
+			ChallengeCalculator.calculatecr(c.source);
+			c.source.elite=true;
+			return true;
+		}
+		return false;
 	}
 
 	/**

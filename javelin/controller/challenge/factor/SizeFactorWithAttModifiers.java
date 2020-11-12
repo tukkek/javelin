@@ -4,6 +4,7 @@
 package javelin.controller.challenge.factor;
 
 import javelin.model.unit.Monster;
+import javelin.model.unit.Size;
 
 /**
  * @see CrFactor
@@ -12,23 +13,23 @@ public class SizeFactorWithAttModifiers extends CrFactor{
 	@Override
 	public float calculate(final Monster monster){
 		switch(monster.size){
-			case Monster.FINE:
+			case Size.FINE:
 				return .55f;
-			case Monster.DIMINUTIVE:
+			case Size.DIMINUTIVE:
 				return -.3f;
-			case Monster.TINY:
+			case Size.TINY:
 				return -.55f;
-			case Monster.SMALL:
+			case Size.SMALL:
 				return -0.4f;
-			case Monster.MEDIUM:
+			case Size.MEDIUM:
 				return 0f;
-			case Monster.LARGE:
+			case Size.LARGE:
 				return 1.4f;
-			case Monster.HUGE:
+			case Size.HUGE:
 				return 2.9f;
-			case Monster.GARGANTUAN:
+			case Size.GARGANTUAN:
 				return 4.4f;
-			case Monster.COLOSSAL:
+			case Size.COLOSSAL:
 				return 5.6f;
 			default:
 				throw new RuntimeException("Invalid size. > gargantuan = 2.1");

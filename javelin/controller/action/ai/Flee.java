@@ -34,9 +34,10 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
  */
 public class Flee extends Action implements AiAction{
 	public static final Action SINGLETON=new Flee();
+	/** @see Difficulty */
+	public static final int FLEEAT=Difficulty.VERYEASY;
 
 	static final boolean ALLOWFLEE=true;
-	static final int FLEEAT=Difficulty.VERYEASY;
 
 	private Flee(){
 		super("Flee");

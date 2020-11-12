@@ -6,7 +6,6 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
-import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.view.Images;
 
 /**
@@ -16,12 +15,14 @@ import javelin.view.Images;
  *
  * @author alex
  */
-public class ArtifactChest extends Feature{
+public class ArtifactChest extends SpecialChest{
+	static final String INSTRUCTIONS="This chest contains the %s!\n"
+			+"If it is lost for any reason it shall be teleported back to safety here.";
 	Artifact artifact;
 
 	/** Constructor. */
 	public ArtifactChest(Artifact a){
-		super("artifact chest");
+		super("artifact chest",null);
 		artifact=a;
 		remove=false;
 	}
@@ -31,9 +32,7 @@ public class ArtifactChest extends Feature{
 		if(Item.getplayeritems().contains(artifact))
 			Javelin.message("The "+artifact+" is not here anymore...",true);
 		else{
-			String text="This chest contains the "+artifact+"!";
-			text+="\nIf it is lost for any reason it shall be teleported back to safety here.";
-			Javelin.message(text,true);
+			Javelin.message(String.format(INSTRUCTIONS,artifact),true);
 			artifact.clone().grab();
 		}
 		return true;

@@ -32,6 +32,9 @@ public class ChestTable extends Table{
 		var highlights=TYPES.subList(0,nhighlights);
 		for(var t:TYPES)
 			add(t,highlights.contains(t)?TYPES.size():1);
+		var c=getchances();
+		for(var b:f.dungeon.branches)
+			if(b.treasure!=null) add(b.treasure,c);
 	}
 
 	@SuppressWarnings("unchecked")

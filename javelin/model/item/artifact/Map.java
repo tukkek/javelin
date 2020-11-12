@@ -19,8 +19,8 @@ public class Map extends Artifact{
 	static final int RADIUS=2;
 
 	/** Constructor. */
-	public Map(Integer level){
-		super("Map of Creation",level);
+	public Map(){
+		super("Map of Creation");
 		usedinbattle=false;
 		usedoutofbattle=true;
 	}

@@ -27,7 +27,7 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonEntrance;
 import javelin.model.world.location.dungeon.DungeonTier;
 import javelin.model.world.location.dungeon.Wilderness;
-import javelin.model.world.location.dungeon.temple.Temple;
+import javelin.model.world.location.dungeon.branch.temple.Temple;
 import javelin.model.world.location.haunt.AbandonedManor;
 import javelin.model.world.location.haunt.BeastLair;
 import javelin.model.world.location.haunt.Conflux;

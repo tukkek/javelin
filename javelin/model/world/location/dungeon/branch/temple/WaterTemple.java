@@ -1,4 +1,4 @@
-package javelin.model.world.location.dungeon.temple;
+package javelin.model.world.location.dungeon.branch.temple;
 
 import javelin.controller.Point;
 import javelin.controller.Weather;
@@ -10,7 +10,6 @@ import javelin.model.item.artifact.Crown;
 import javelin.model.unit.Monster;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.feature.Fountain;
 
 /**
@@ -55,19 +54,22 @@ public class WaterTemple extends Temple{
 		}
 	}
 
-	/** Constructor. */
-	public WaterTemple(Integer level){
-		super(Realm.WATER,Terrain.NONWATER,level,new Crown(level),FLUFF);
-		images.put(DungeonImages.FLOOR,"floordungeon");
-		images.put(DungeonImages.WALL,"walltemplewater");
-		doorbackground=false;
-		feature=Fountain.class;
+	static class WaterBranch extends TempleBranch{
+		protected WaterBranch(){
+			super("floordungeon","walltemplewater");
+			doorbackground=false;
+			features.add(Fountain.class);
+		}
+
+		@Override
+		public void fight(Fight f){
+			f.weather=Weather.STORM;
+		}
 	}
 
-	@Override
-	public Fight fight(){
-		var f=super.fight();
-		f.weather=Weather.STORM;
-		return f;
+	/** Constructor. */
+	public WaterTemple(Integer level){
+		super(Realm.WATER,Terrain.NONWATER,level,FLUFF,new WaterBranch(),
+				new Crown());
 	}
 }

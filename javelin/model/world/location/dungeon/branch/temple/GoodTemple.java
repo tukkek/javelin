@@ -1,4 +1,4 @@
-package javelin.model.world.location.dungeon.temple;
+package javelin.model.world.location.dungeon.branch.temple;
 
 import java.util.List;
 
@@ -6,9 +6,9 @@ import javelin.controller.terrain.Plains;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.artifact.Ankh;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Monster.MonsterType;
-import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Spirit;
 
@@ -26,19 +26,26 @@ public class GoodTemple extends Temple{
 			+"In fact, the eerie silence around the entire place makes you wonder if this is truly happening or only a fleeting dream.\n"
 			+"You enter the holy ground, daring say nothing as you breath deeply in anticipation of the vistas inside.";
 
-	/** Constructor. */
-	public GoodTemple(Integer level){
-		super(Realm.GOOD,Terrain.PLAIN,level,new Ankh(level),FLUFF);
-		images.put(DungeonImages.FLOOR,"floortemplegood");
-		images.put(DungeonImages.WALL,"walldungeon");
-		feature=Spirit.class;
+	static class GoodBranch extends TempleBranch{
+		protected GoodBranch(){
+			super("floortemplegood","walldungeon");
+			features.add(Spirit.class);
+		}
+
+		@Override
+		public boolean validate(List<Combatant> foes){
+			for(var foe:foes){
+				var m=foe.source;
+				if(m.alignment.isevil()||MonsterType.UNDEAD.equals(m.type))
+					return false;
+			}
+			return true;
+		}
+
 	}
 
-	@Override
-	public boolean validate(List<Monster> foes){
-		for(var foe:foes)
-			if(foe.alignment.isevil()||MonsterType.UNDEAD.equals(foe.type))
-				return false;
-		return true;
+	/** Constructor. */
+	public GoodTemple(Integer level){
+		super(Realm.GOOD,Terrain.PLAIN,level,FLUFF,new GoodBranch(),new Ankh());
 	}
 }

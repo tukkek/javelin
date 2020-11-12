@@ -222,6 +222,7 @@ public class WorldGenerator extends Thread{
 		var pool=Executors.newFixedThreadPool(NTHREADS);
 		for(var d:dungeons)
 			pool.execute(()->{
+				Thread.setDefaultUncaughtExceptionHandler(Javelin.app);
 				d.generate();
 				dungeonsgenerated+=1;
 			});

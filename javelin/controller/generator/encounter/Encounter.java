@@ -1,11 +1,11 @@
 package javelin.controller.generator.encounter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Combatants;
 
 /**
  * A group of monsters to be fought against.
@@ -26,8 +26,8 @@ public class Encounter{
 	/**
 	 * @return Copy of {@link #group}.
 	 */
-	public ArrayList<Combatant> generate(){
-		final ArrayList<Combatant> encounter=new ArrayList<>(group.size());
+	public Combatants generate(){
+		final Combatants encounter=new Combatants(group.size());
 		for(final Combatant m:group)
 			encounter.add(new Combatant(m.source,true));
 		return encounter;

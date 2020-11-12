@@ -5,7 +5,7 @@ import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
-import javelin.model.world.location.dungeon.temple.GoodTemple;
+import javelin.model.world.location.dungeon.branch.temple.GoodTemple;
 import javelin.old.RPG;
 import javelin.view.mappanel.dungeon.DungeonTile;
 import javelin.view.screen.BattleScreen;

@@ -15,7 +15,6 @@ import java.util.Calendar;
 import javax.swing.JOptionPane;
 
 import javelin.Javelin;
-import javelin.JavelinApp;
 import javelin.controller.Weather;
 import javelin.controller.action.world.meta.OpenJournal;
 import javelin.controller.event.EventDealer;
@@ -48,6 +47,9 @@ public class StateManager{
 	static final File SAVEFILE=new File(SAVEFOLDER,
 			World.scenario.getsaveprefix()+".save");
 	static final int MINUTE=60*1000;
+	static final String LOADERROR="Your save file could not be loaded.\n"
+			+"It has been deleted so you can start a new game instead.\n"
+			+"If this is happening constantly please consider letting us know.\n\n";
 
 	/**
 	 * Always called on normal exit. Saves a backup.
@@ -72,7 +74,7 @@ public class StateManager{
 				System.exit(0);
 			}catch(RuntimeException exception){
 				w.dispose();
-				JavelinApp.handlefatalexception(exception);
+				Javelin.app.uncaughtException(Thread.currentThread(),exception);
 				System.exit(0);
 			}
 		}
@@ -152,11 +154,11 @@ public class StateManager{
 			stream.close();
 			filestream.close();
 			return true;
-		}catch(final Throwable e1){
-			e1.printStackTrace(System.out);
-			System.out.println("Your save file could not be loaded.\n"
-					+"It has been deleted so you can start a new game instead.\n"
-					+"If this is happening constantly please inform us of the error message above.");
+		}catch(final Throwable error){
+			if(!Javelin.DEBUG){
+				var e=new RuntimeException(LOADERROR,error);
+				Javelin.app.uncaughtException(Thread.currentThread(),e);
+			}
 			StateManager.clear();
 			System.exit(20140406);
 			return false;

@@ -8,8 +8,8 @@ import javelin.model.unit.Combatant;
 /** Brings a single creature to 1hp. */
 public class Candle extends Artifact{
 	/** Constructor. */
-	public Candle(int level){
-		super("Candle of searing",level);
+	public Candle(){
+		super("Candle of searing");
 		usedinbattle=true;
 		usedoutofbattle=false;
 	}

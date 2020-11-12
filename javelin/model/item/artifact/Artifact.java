@@ -18,7 +18,7 @@ public abstract class Artifact extends Item{
 	long lastused=-RECHARGEPERIOD;
 
 	/** Constructor. */
-	public Artifact(String name,int templelevel){
+	public Artifact(String name){
 		super(name,0,false);
 		consumable=false;
 		waste=false;

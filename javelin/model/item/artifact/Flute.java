@@ -14,8 +14,8 @@ import javelin.view.screen.BattleScreen;
  */
 public class Flute extends Artifact{
 	/** Constructor. */
-	public Flute(Integer level){
-		super("Flute of Wind",level);
+	public Flute(){
+		super("Flute of Wind");
 		usedinbattle=false;
 		usedoutofbattle=true;
 	}

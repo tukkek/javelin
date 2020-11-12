@@ -102,7 +102,7 @@ public abstract class Inhabitant extends Feature{
 
 	/** @see Dungeon#validate(List) */
 	protected boolean validate(Monster m,DungeonFloor f){
-		return m.think(-1)&&f.dungeon.validate(List.of(m));
+		return m.think(-1)&&f.dungeon.validate(List.of(new Combatant(m,true)));
 	}
 
 	@Override

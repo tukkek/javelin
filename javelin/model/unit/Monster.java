@@ -73,6 +73,10 @@ public class Monster implements Cloneable,Serializable{
 	public static final List<Monster> ALL=new ArrayList<>();
 	/** All loaded monster mapped by challenge rating. */
 	public static final TreeMap<Float,List<Monster>> BYCR=new TreeMap<>();
+	/** TODO make enumeration */
+	public static final int VISION_LOWLIGHT=1;
+	/** TODO make enumeration */
+	public static final int VISION_DARK=2;
 
 	/**
 	 * Monster types as per the SRD.
@@ -83,25 +87,6 @@ public class Monster implements Cloneable,Serializable{
 	public enum MonsterType{
 		ABERRATION,ANIMAL,CONSTRUCT,DRAGON,ELEMENTAL,FEY,GIANT,HUMANOID,MAGICALBEAST,MONSTROUSHUMANOID,OOZE,OUTSIDER,PLANT,SHAPECHANGER,UNDEAD,VERMIN;
 	}
-
-	/** TODO make enumeration */
-	public static final int VISION_LOWLIGHT=1;
-	/** TODO make enumeration */
-	public static final int VISION_DARK=2;
-
-	public static final int FINE=0;
-	public static final int DIMINUTIVE=1;
-	public static final int TINY=2;
-	public static final int SMALL=3;
-	public static final int MEDIUM=4;
-	public static final int LARGE=5;
-	public static final int HUGE=6;
-	public static final int GARGANTUAN=7;
-	public static final int COLOSSAL=8;
-
-	/** An array of all sizes valid in this class. */
-	public static String[] SIZES={"fine","diminutive","tiny","small",
-			"medium-size","large","huge","gargantuan","colossal"};
 
 	/**
 	 * Map of {@link Terrain} types, mapped by {@link Monster#name}.
@@ -638,23 +623,23 @@ public class Monster implements Cloneable,Serializable{
 	 */
 	public float size(){
 		switch(size){
-			case Monster.FINE:
+			case Size.FINE:
 				return 1/16f;
-			case Monster.DIMINUTIVE:
+			case Size.DIMINUTIVE:
 				return 1/8f;
-			case Monster.TINY:
+			case Size.TINY:
 				return 1/4f;
-			case Monster.SMALL:
+			case Size.SMALL:
 				return 1/2f;
-			case Monster.MEDIUM:
+			case Size.MEDIUM:
 				return 1;
-			case Monster.LARGE:
+			case Size.LARGE:
 				return 2;
-			case Monster.HUGE:
+			case Size.HUGE:
 				return 4;
-			case Monster.GARGANTUAN:
+			case Size.GARGANTUAN:
 				return 8;
-			case Monster.COLOSSAL:
+			case Size.COLOSSAL:
 				return 16;
 			default:
 				throw new RuntimeException("Unknown size "+size);

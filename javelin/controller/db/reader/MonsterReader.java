@@ -35,6 +35,7 @@ import javelin.controller.db.reader.fields.Speed;
 import javelin.model.unit.Body;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Monster.MonsterType;
+import javelin.model.unit.Size;
 import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.unit.abilities.BreathWeapon.BreathArea;
 import javelin.model.unit.abilities.BreathWeapon.SavingThrow;
@@ -285,8 +286,8 @@ public class MonsterReader extends DefaultHandler{
 
 	static int getSize(final String size){
 		int result=-1;
-		for(int i=0;i<Monster.SIZES.length;i++)
-			if(size.compareTo(Monster.SIZES[i])==0) result=i;
+		for(int i=0;i<Size.SIZES.length;i++)
+			if(size.compareTo(Size.SIZES[i])==0) result=i;
 		return result;
 	}
 

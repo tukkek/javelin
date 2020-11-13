@@ -16,6 +16,7 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import javelin.Debug;
+import javelin.Javelin;
 import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -28,6 +29,7 @@ import javelin.model.world.location.town.Town;
  * @author alex
  */
 public class Images{
+
 	/**
 	 * Reverse of {@link #CACHE}, holds an Image's relative path without
 	 * extension..
@@ -65,6 +67,8 @@ public class Images{
 	public static final Image SUMMONED=Images.get(List.of("overlay","summoned"));
 	public static final Image ELITE=Images.get(List.of("overlay","elite"));
 	public static final Image TEXTUREMAP=Images.get("texturemap");
+	public static final Image[] ICONS=new Image[]{Images.get("javelin")};
+	public static final Image DEFAULTTEXTURE=Images.get("texture");
 
 	/** @return The string version of a list path. */
 	static String topath(List<String> path){
@@ -95,7 +99,7 @@ public class Images{
 	 * @return An image from the avatar folder.
 	 */
 	synchronized public static Image get(final String file){
-		Image i=CACHE.get(file);
+		var i=CACHE.get(file);
 		if(i!=null) return i;
 		try{
 			var raw=ImageIO.read(new File("avatars"+File.separator+file+".png"));
@@ -103,10 +107,12 @@ public class Images{
 			var h=raw.getHeight(null);
 			i=ENVIRONMENT.createCompatibleImage(w,h,Transparency.TRANSLUCENT);
 			i.getGraphics().drawImage(raw,0,0,null);
+			Javelin.tracker.addImage(i,i.hashCode());
+			Javelin.tracker.waitForAll();
 			CACHE.put(file,i);
 			NAMES.put(i,file);
 			return i;
-		}catch(IOException e){
+		}catch(IOException|InterruptedException e){
 			var dir=" (pwd="+System.getProperty("user.dir")+")";
 			throw new RuntimeException(file+dir,e);
 		}

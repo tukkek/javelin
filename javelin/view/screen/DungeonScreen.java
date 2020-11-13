@@ -2,7 +2,6 @@ package javelin.view.screen;
 
 import java.awt.Image;
 import java.util.HashSet;
-import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.action.world.WorldMove;
@@ -13,11 +12,8 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.DungeonFloor;
-import javelin.model.world.location.dungeon.DungeonImages;
-import javelin.model.world.location.dungeon.Wilderness;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.door.Door;
-import javelin.view.Images;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.dungeon.DungeonPanel;
 
@@ -102,11 +98,8 @@ public class DungeonScreen extends WorldScreen{
 
 	@Override
 	public Image gettile(int x,int y){
-		var i=floor.dungeon.images;
-		var file=floor.map[x][y]==MapTemplate.WALL?i.get(DungeonImages.WALL)
-				:i.get(DungeonImages.FLOOR);
-		var folder=floor.dungeon instanceof Wilderness?"":"dungeon";
-		return Images.get(List.of(folder,file));
+		//handled by DungeonTile
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

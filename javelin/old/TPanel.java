@@ -7,6 +7,8 @@ import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+import javelin.view.Images;
+
 public class TPanel extends Panel{
 	protected Image buffer;
 
@@ -48,7 +50,7 @@ public class TPanel extends Panel{
 		int width=bounds.width;
 		int height=bounds.height;
 
-		Image texture=QuestApp.DEFAULTTEXTURE;
+		Image texture=Images.DEFAULTTEXTURE;
 		int twidth=texture.getWidth(null);
 		int theight=texture.getHeight(null);
 		for(int lx=0;lx<width;lx+=twidth)

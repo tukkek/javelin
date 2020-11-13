@@ -19,7 +19,7 @@ import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
 
-import javelin.Javelin;
+import javelin.view.Images;
 
 /**
  * Represents an AWT window.
@@ -105,7 +105,7 @@ public abstract class Frame{
 
 	/** Open dialog. */
 	public void show(){
-		frame.setIconImages(Arrays.asList(Javelin.ICONS));
+		frame.setIconImages(Arrays.asList(Images.ICONS));
 		frame.setContentPane(generate());
 		frame.pack();
 		position(frame);

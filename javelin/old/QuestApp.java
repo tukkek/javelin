@@ -6,7 +6,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Toolkit;
 
@@ -16,7 +15,6 @@ import javelin.view.mappanel.MapPanel;
 import javelin.view.screen.WorldScreen;
 
 public abstract class QuestApp extends Applet implements Runnable{
-	public static final Image DEFAULTTEXTURE=Images.get("texture");
 	public static final Color TEXTCOLOUR=new Color(192,192,192);
 	public static final Color PANELCOLOUR=new Color(64,64,64);
 	public static final Color PANELHIGHLIGHT=new Color(120,80,20);
@@ -32,7 +30,7 @@ public abstract class QuestApp extends Applet implements Runnable{
 		final Applet applet=new Applet();
 		// Create mediatracker for the images
 		final MediaTracker mediaTracker=new MediaTracker(applet);
-		mediaTracker.addImage(QuestApp.DEFAULTTEXTURE,1);
+		mediaTracker.addImage(Images.DEFAULTTEXTURE,1);
 		// Wait for images to load
 		try{
 			mediaTracker.waitForID(1);

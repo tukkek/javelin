@@ -135,11 +135,6 @@ public abstract class MapPanel extends Panel{
 	}
 
 	@Override
-	public void update(Graphics g){
-		repaint();
-	}
-
-	@Override
 	public Dimension getPreferredSize(){
 		try{
 			return getParent().getBounds().getSize();
@@ -156,12 +151,10 @@ public abstract class MapPanel extends Panel{
 	 * @param redraw <code>true</code> to {@link Javelin#redraw()}.
 	 */
 	public void zoom(int factor,int x,int y,boolean redraw){
+		Tile.cache.clear();
 		tilesize+=factor*4;
 		updatetilesize();
-		if(redraw){
-			Javelin.redraw();
-			BattleScreen.delayedredraw();
-		}
+		if(redraw) BattleScreen.delayedredraw();
 		center(x,y,true);
 		Preferences.setoption(configurationkey,tilesize);
 	}

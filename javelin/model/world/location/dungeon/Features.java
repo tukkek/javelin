@@ -2,19 +2,24 @@ package javelin.model.world.location.dungeon;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javelin.Javelin;
+import javelin.controller.Point;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Spirit;
 import javelin.old.RPG;
+import javelin.view.screen.DungeonScreen;
 
 public class Features implements Iterable<Feature>,Serializable{
-	List<Feature> list=new ArrayList<>();
+	/** Much faster, may help drawing {@link DungeonScreen}. */
+	HashMap<Point,Feature> map=new HashMap<>();
 	DungeonFloor dungeon;
 
 	public Features(DungeonFloor d){
@@ -23,23 +28,24 @@ public class Features implements Iterable<Feature>,Serializable{
 
 	@Override
 	public Iterator<Feature> iterator(){
-		return list.iterator();
+		return map.values().iterator();
 	}
 
 	public boolean isEmpty(){
-		return list.isEmpty();
+		return map.isEmpty();
 	}
 
 	public void add(Feature f){
-		list.add(f);
+		if(Javelin.DEBUG&&f.getlocation()==null) throw new NullPointerException();
+		map.put(f.getlocation(),f);
 	}
 
 	public ArrayList<Feature> copy(){
-		return new ArrayList<>(list);
+		return new ArrayList<>(map.values());
 	}
 
 	public void remove(Feature f){
-		list.remove(f);
+		map.remove(f.getlocation());
 	}
 
 	public <K extends Feature> K get(Class<K> type){
@@ -48,18 +54,16 @@ public class Features implements Iterable<Feature>,Serializable{
 	}
 
 	public <K extends Feature> List<K> getall(Class<K> type){
-		return list.stream().filter(f->type.isInstance(f)).map(f->(K)f)
+		return map.values().stream().filter(f->type.isInstance(f)).map(f->(K)f)
 				.collect(Collectors.toList());
 	}
 
 	public Feature get(int x,int y){
-		for(Feature f:this)
-			if(f.x==x&&f.y==y) return f;
-		return null;
+		return map.get(new Point(x,y));
 	}
 
 	public List<Feature> getallundiscovered(){
-		return list.stream().filter(f->!dungeon.visible[f.x][f.y]||!f.draw)
+		return map.values().stream().filter(f->!dungeon.visible[f.x][f.y]||!f.draw)
 				.collect(Collectors.toList());
 	}
 
@@ -89,15 +93,15 @@ public class Features implements Iterable<Feature>,Serializable{
 
 	/** @return A stream for functional processing. */
 	public Stream<Feature> stream(){
-		return list.stream();
+		return map.values().stream();
 	}
 
 	public int size(){
-		return list.size();
+		return map.size();
 	}
 
 	/** @return A copy of the internal Feature list. */
 	public List<Feature> getall(){
-		return new ArrayList<>(list);
+		return new ArrayList<>(map.values());
 	}
 }

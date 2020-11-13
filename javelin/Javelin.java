@@ -2,7 +2,7 @@ package javelin;
 
 import java.awt.BorderLayout;
 import java.awt.Frame;
-import java.awt.Image;
+import java.awt.MediaTracker;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.FileReader;
@@ -62,8 +62,6 @@ public class Javelin{
 	 */
 	public static final boolean DEBUG=System.getProperty("debug")!=null;
 
-	public static final Image[] ICONS=new Image[]{Images.get("javelin")};
-
 	/** Roll target on a d20. */
 	public static final int HARD=16;
 	/** Roll target on a d20. */
@@ -104,6 +102,8 @@ public class Javelin{
 		Debug.oninit();
 	}
 
+	public static MediaTracker tracker;
+
 	/**
 	 * First method to be called.
 	 *
@@ -111,15 +111,16 @@ public class Javelin{
 	 */
 	public static void main(final String[] args){
 		Thread.currentThread().setName("Javelin");
-		app=new JavelinApp();
 		final JFrame f=new JFrame(TITLE);
+		tracker=new MediaTracker(f);
+		app=new JavelinApp();
 		f.setExtendedState(f.getExtendedState()|Frame.MAXIMIZED_BOTH);
 		f.setBackground(java.awt.Color.black);
 		f.addWindowListener(StateManager.SAVEONCLOSE);
 		f.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		f.setLayout(new BorderLayout());
 		f.setFocusTraversalKeysEnabled(false);
-		f.setIconImages(Arrays.asList(ICONS));
+		f.setIconImages(Arrays.asList(Images.ICONS));
 		app.frame=f;
 		app.setVisible(false);
 		f.add(app);

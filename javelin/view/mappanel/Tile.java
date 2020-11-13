@@ -3,6 +3,7 @@ package javelin.view.mappanel;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.util.HashMap;
 
 import javelin.controller.Point;
 import javelin.model.state.Square;
@@ -15,6 +16,8 @@ import javelin.view.screen.BattleScreen;
  * @author alex
  */
 public abstract class Tile{
+	public static HashMap<Image,Image> cache=new HashMap<>();
+
 	public final int x;
 	public final int y;
 	public boolean discovered;
@@ -27,10 +30,16 @@ public abstract class Tile{
 
 	abstract public void paint(Graphics c);
 
-	protected void draw(final Graphics g,final Image i){
+	synchronized protected void draw(final Graphics g,final Image i){
+		var size=MapPanel.tilesize;
 		try{
-			Point p=getposition();
-			g.drawImage(i,p.x,p.y,MapPanel.tilesize,MapPanel.tilesize,null);
+			var scaled=cache.get(i);
+			if(scaled==null){
+				scaled=i.getScaledInstance(size,size,Image.SCALE_DEFAULT);
+				cache.put(i,scaled);
+			}
+			var p=getposition();
+			g.drawImage(scaled,p.x,p.y,size,size,null);
 		}catch(NullPointerException e){
 			/**
 			 * On Windows 8 this method can raise a "NullPointerException: HDC for
@@ -42,7 +51,7 @@ public abstract class Tile{
 			 */
 			e.printStackTrace();
 			System.out.println("Image: "+i);
-			System.out.println("Tile size: "+MapPanel.tilesize);
+			System.out.println("Tile size: "+size);
 		}
 	}
 

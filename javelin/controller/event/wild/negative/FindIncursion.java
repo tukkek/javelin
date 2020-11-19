@@ -37,13 +37,12 @@ public class FindIncursion extends WildEvent{
 		var nincursions=1;
 		while(RPG.chancein(2))
 			nincursions+=1;
-		var realm=Realm.random();
-		var tries=ATTEMPTS;
+		var r=RPG.pick(Realm.REALMS);
 		while(incursions.size()<nincursions){
 			var el=squadel+Difficulty.get();
 			var terrain=Terrain.get(location.x,location.y);
 			var group=EncounterGenerator.generate(el,terrain);
-			incursions.add(new Incursion(location.x,location.y,group,realm));
+			incursions.add(new Incursion(location.x,location.y,group,r));
 		}
 		return true;
 	}

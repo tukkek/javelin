@@ -3,7 +3,6 @@ package javelin.model.world.location.town.labor.cultural;
 import java.util.HashSet;
 
 import javelin.controller.kit.Bard;
-import javelin.controller.terrain.Terrain;
 import javelin.model.world.location.Academy;
 import javelin.model.world.location.Guild;
 import javelin.model.world.location.town.Rank;
@@ -42,12 +41,5 @@ public class BardsGuild extends Guild{
 	 */
 	public BardsGuild(){
 		super(DESCRIPTION,Bard.INSTANCE);
-	}
-
-	@Override
-	protected void generate(){
-		while(x==-1||!(Terrain.get(x,y).equals(Terrain.PLAIN)
-				||Terrain.get(x,y).equals(Terrain.HILL)))
-			super.generate();
 	}
 }

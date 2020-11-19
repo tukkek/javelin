@@ -6,6 +6,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
+import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.view.Images;
 
 /**
@@ -15,14 +16,14 @@ import javelin.view.Images;
  *
  * @author alex
  */
-public class ArtifactChest extends SpecialChest{
+public class ArtifactChest extends Feature{
 	static final String INSTRUCTIONS="This chest contains the %s!\n"
 			+"If it is lost for any reason it shall be teleported back to safety here.";
 	Artifact artifact;
 
 	/** Constructor. */
 	public ArtifactChest(Artifact a){
-		super("artifact chest",null);
+		super("artifact chest");
 		artifact=a;
 		remove=false;
 	}

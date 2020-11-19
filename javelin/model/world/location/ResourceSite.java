@@ -194,9 +194,14 @@ public class ResourceSite extends Location{
 	}
 
 	@Override
-	protected void generate(){
-		while(x==-1||!type.terrain.equals(Terrain.get(x,y)))
-			generate(this,true);
+	protected boolean validatelocation(boolean water,World w,List<Actor> actors){
+		return type.terrain.equals(Terrain.get(x,y))
+				&&super.validatelocation(water,w,actors);
+	}
+
+	@Override
+	protected void generate(boolean water){
+		super.generate(true);
 		description=type.name+" (resource)";
 		sacrificeable=true;
 		allowentry=type!=FISH;

@@ -69,7 +69,7 @@ public class Campaign extends Scenario{
 		size=30;
 		startingdungeons=20;
 		statictowns=false;
-		towns=Realm.values().length;
+		towns=Realm.REALMS.size();
 		worldencounters=true;
 		worldhazards=true;
 		dominationwin=false;

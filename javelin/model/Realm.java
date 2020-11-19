@@ -1,97 +1,84 @@
 package javelin.model;
 
-import javelin.model.unit.Combatant;
-import javelin.old.RPG;
+import java.awt.Color;
+import java.io.Serializable;
+import java.util.List;
+
+import javelin.controller.terrain.Terrain;
+import javelin.controller.terrain.Underground;
+import javelin.model.item.artifact.Amulet;
+import javelin.model.item.artifact.Ankh;
+import javelin.model.item.artifact.Artifact;
+import javelin.model.item.artifact.Candle;
+import javelin.model.item.artifact.Crown;
+import javelin.model.item.artifact.Flute;
+import javelin.model.item.artifact.Map;
+import javelin.model.item.artifact.Skull;
 
 /**
- * A realm is an in-game faction, associated with d20 concepts in an arbitrary
- * manner, following a generic lore of colors (as in Magic: The Gathering) or
- * factions/races (as featured in many real-time strategy titles).
+ * A realm is an in-game faction, associated with OGL concepts in an arbitrary
+ * manner, representing a "generic strategy game lore" of colors/factions/races.
+ *
+ * TODO this needn't be {@link Serializable} necessarily
  *
  * @author alex
  */
-public enum Realm{
-	AIR,FIRE,EARTH,WATER,GOOD,EVIL,MAGIC;
+public class Realm implements Serializable{
+	/** Realm of the element of air. */
+	public static final Realm AIR=new Realm("air",Color.GRAY,Terrain.MOUNTAINS,
+			List.of(new Flute()));
+	/** Realm of the element of earth. */
+	public static final Realm EARTH=new Realm("earth",Color.GREEN.darker(),
+			Terrain.FOREST,List.of(new Map()));
+	/** Realm of negative energy. */
+	public static final Realm EVIL=new Realm("evil",Color.BLACK,Terrain.MARSH,
+			List.of(new Skull()));
+	/** Realm of the element of fire. */
+	public static final Realm FIRE=new Realm("fire",Color.RED,Terrain.DESERT,
+			List.of(new Candle()));
+	/** Realm of positive energy. */
+	public static final Realm GOOD=new Realm("good",Color.WHITE,Terrain.PLAIN,
+			List.of(new Ankh()));
+	/** Transcendent realm. */
+	public static final Realm MAGIC=new Realm("magic",Color.MAGENTA,Terrain.HILL,
+			List.of(new Amulet()));
+	/** Realm of the element of water. */
+	public static final Realm WATER=new Realm("water",Color.BLUE,Terrain.WATER,
+			List.of(new Crown()));
+	/** Every realm. */
+	public static final List<Realm> REALMS=List.of(AIR,EARTH,EVIL,FIRE,GOOD,MAGIC,
+			WATER);
 
-	/**
-	 * @return Equivalent color for the view package or <code>null</code> for
-	 *         {@link #AIR}.
-	 */
-	public java.awt.Color getawtcolor(){
-		switch(this){
-			case WATER:
-				return java.awt.Color.BLUE;
-			case MAGIC:
-				return java.awt.Color.MAGENTA;
-			case GOOD:
-				return java.awt.Color.WHITE;
-			case FIRE:
-				return java.awt.Color.RED;
-			case EARTH:
-				return java.awt.Color.GREEN.darker();
-			case EVIL:
-				return java.awt.Color.BLACK;
-			case AIR:
-				return java.awt.Color.GRAY;
-			default:
-				throw new RuntimeException("#unknownColor");
-		}
+	/** Human-friendly name. */
+	public String name;
+	/** Realm color for view components. */
+	public Color color;
+	/** Each Terrain corresponds to a Realm (except {@link Underground}). */
+	public Terrain terrain;
+	/** Each artifact is associated with a Realm. */
+	public List<Artifact> artifacts;
+
+	Realm(String name,Color c,Terrain t,List<Artifact> artifacts){
+		this.name=name;
+		color=c;
+		terrain=t;
+		this.artifacts=artifacts;
+	}
+
+	@Override
+	public boolean equals(Object o){
+		if(!(o instanceof Realm)) return false;
+		var r=(Realm)o;
+		return name.equals(r.name);
+	}
+
+	@Override
+	public int hashCode(){
+		return name.hashCode();
 	}
 
 	@Override
 	public String toString(){
-		switch(this){
-			case WATER:
-				return "Water";
-			case FIRE:
-				return "Fire";
-			case EARTH:
-				return "Earth";
-			case AIR:
-				return "Air";
-			case GOOD:
-				return "Blessed";
-			case EVIL:
-				return "Cursed";
-			case MAGIC:
-				return "Magic";
-			default:
-				throw new RuntimeException("#unknownColor");
-		}
-	}
-
-	/**
-	 * @return A randomly-chosen realm.
-	 */
-	public static Realm random(){
-		Realm[] realms=Realm.values();
-		return realms[RPG.r(0,realms.length-1)];
-	}
-
-	/**
-	 * @param opponent Add's a realm-related keyword as a prefix to this unit's
-	 *          name.
-	 */
-	public void baptize(Combatant opponent){
-		String prefix=prefixate();
-		opponent.source.customName=prefix+" "+opponent.source.name.toLowerCase();
-		opponent.source.customName=Character
-				.toUpperCase(opponent.source.customName.charAt(0))
-				+opponent.source.customName.substring(1).toLowerCase();
-	}
-
-	public String prefixate(){
-		if(equals(GOOD)) return "Blessed";
-		if(equals(EVIL)) return "Cursed";
-		String prefix=name();
-		return prefix.charAt(0)+prefix.substring(1).toLowerCase();
-	}
-
-	/**
-	 * @return Names in the following format: Water, Earth, Good...
-	 */
-	public String getname(){
-		String name=name();
-		return name.charAt(0)+name().substring(1).toLowerCase();
+		return name;
 	}
 }

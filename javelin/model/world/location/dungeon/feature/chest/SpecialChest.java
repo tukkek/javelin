@@ -19,11 +19,6 @@ public class SpecialChest extends Chest{
 		super(i,f);
 	}
 
-	/** Subclass contructor. */
-	protected SpecialChest(String description,String avatar){
-		super(description,avatar);
-	}
-
 	@Override
 	public Image getimage(){
 		return Images.get(List.of("dungeon","chest","special"));

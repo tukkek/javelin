@@ -2,21 +2,15 @@ package javelin.model.world.location;
 
 import java.util.List;
 
-import javelin.controller.generator.WorldGenerator;
 import javelin.model.unit.Combatant;
+import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.view.screen.WorldScreen;
 
 /**
- * An outpost allows for vision of a wide area around it.
+ * An outpost maintains vision of an area around it.
  *
- * TODO fog of war: daily obscure all unseen squares. non-hostile locations
- * become source of vision. outposts become hostile (easy) and
- * non-sacrificeable. Probably better to make it progressive (like 1/7 chance a
- * day of a unseen spot disappearing - as to not negate the benefire of Gather
- * Information and such).
- *
- * @see WorldGenerator#makemap()
+ * @see World#discovered
  * @author alex
  */
 public class Outpost extends Fortification{
@@ -102,11 +96,10 @@ public class Outpost extends Fortification{
 	}
 
 	@Override
-	protected void generate(){
-		x=-1;
-		while(x==-1||findnearest(Outpost.class)!=null
-				&&findnearest(Outpost.class).distance(x,y)<=VISIONRANGE*2)
-			generateawayfromtown();
+	protected boolean validatelocation(boolean water,World w,List<Actor> actors){
+		var o=findnearest(Outpost.class);
+		if(o!=null&&o.distance(x,y)<=VISIONRANGE*2) return false;
+		return super.validatelocation(water,w,actors);
 	}
 
 	@Override

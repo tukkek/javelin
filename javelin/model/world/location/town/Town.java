@@ -186,7 +186,7 @@ public class Town extends Location{
 	}
 
 	@Override
-	protected void generate(){
+	protected void generate(boolean water){
 		// location is given in the constructor
 	}
 

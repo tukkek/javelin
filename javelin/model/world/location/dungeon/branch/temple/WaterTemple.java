@@ -1,13 +1,15 @@
 package javelin.model.world.location.dungeon.branch.temple;
 
+import java.util.List;
+
 import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.fight.Fight;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.Water;
 import javelin.model.Realm;
-import javelin.model.item.artifact.Crown;
 import javelin.model.unit.Monster;
+import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.feature.Fountain;
@@ -42,13 +44,19 @@ public class WaterTemple extends Temple{
 		}
 
 		@Override
-		protected void generate(){
-			var w=World.getseed();
-			while(x==-1||Terrain.search(new Point(x,y),Terrain.WATER,1,w)==0){
-				x=-1;
-				super.generate();
-			}
+		protected boolean validatelocation(boolean water,World w,
+				List<Actor> actors){
+			return Terrain.search(new Point(x,y),Terrain.WATER,1,w)>0
+					&&super.validatelocation(water,w,actors);
+		}
+
+		@Override
+		protected void generate(boolean water){
 			var t=dungeon.terrains;
+			t.clear();
+			t.addAll(Terrain.NONWATER);
+			super.generate(false);
+			t.clear();
 			t.add(Terrain.get(x,y));
 			t.add(Terrain.WATER);
 		}
@@ -56,7 +64,7 @@ public class WaterTemple extends Temple{
 
 	static class WaterBranch extends TempleBranch{
 		protected WaterBranch(){
-			super("floordungeon","walltemplewater");
+			super(Realm.WATER,"floordungeon","walltemplewater");
 			doorbackground=false;
 			features.add(Fountain.class);
 		}
@@ -68,8 +76,12 @@ public class WaterTemple extends Temple{
 	}
 
 	/** Constructor. */
-	public WaterTemple(Integer level){
-		super(Realm.WATER,Terrain.NONWATER,level,FLUFF,new WaterBranch(),
-				new Crown());
+	public WaterTemple(){
+		super(new WaterBranch(),FLUFF);
+	}
+
+	@Override
+	protected void place(){
+		new WaterTempleEntrance(this).place();
 	}
 }

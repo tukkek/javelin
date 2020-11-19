@@ -3,7 +3,6 @@ package javelin.model.world.location.dungeon.branch.temple;
 import javelin.controller.terrain.Forest;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
-import javelin.model.item.artifact.Map;
 import javelin.model.world.location.dungeon.feature.FruitTree;
 
 /**
@@ -20,13 +19,14 @@ public class EarthTemple extends Temple{
 
 	public static class EarthBranch extends TempleBranch{
 		public EarthBranch(){
-			super("floordirt","walltempleearth");
+			super(Realm.EARTH,"floordirt","walltempleearth");
 			features.add(FruitTree.class);
+			terrains.add(Terrain.FOREST);
 		}
 	}
 
 	/** Constructor. */
-	public EarthTemple(Integer level){
-		super(Realm.EARTH,Terrain.FOREST,level,FLUFF,new EarthBranch(),new Map());
+	public EarthTemple(){
+		super(new EarthBranch(),FLUFF);
 	}
 }

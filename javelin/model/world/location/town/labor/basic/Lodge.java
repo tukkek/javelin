@@ -9,7 +9,6 @@ import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
-import javelin.model.world.Actor;
 import javelin.model.world.location.Fortification;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;
@@ -153,19 +152,6 @@ public class Lodge extends Fortification{
 		Squad.active.gold-=price;
 		rest(periods,RESTPERIOD*periods,true,LODGING[level]);
 		return true;
-	}
-
-	@Override
-	protected void generate(){
-		x=-1;
-		while(x==-1||getdistrict()!=null||checkproximity())
-			generateawayfromtown();
-	}
-
-	/** @return <code>true</code> if there is another lodge nearby. */
-	public boolean checkproximity(){
-		Actor nearest=findnearest(Lodge.class);
-		return nearest!=null&&nearest.distance(x,y)<=District.RADIUSMAX;
 	}
 
 	@Override

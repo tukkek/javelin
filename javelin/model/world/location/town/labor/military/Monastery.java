@@ -1,7 +1,6 @@
 package javelin.model.world.location.town.labor.military;
 
 import javelin.controller.kit.Monk;
-import javelin.controller.terrain.Terrain;
 import javelin.model.world.location.Academy;
 import javelin.model.world.location.Guild;
 import javelin.model.world.location.town.Rank;
@@ -34,11 +33,5 @@ public class Monastery extends Guild{
 	/** Constructor. */
 	public Monastery(){
 		super("Monastery",Monk.INSTANCE);
-	}
-
-	@Override
-	protected void generate(){
-		while(x==-1||!Terrain.get(x,y).equals(Terrain.MOUNTAINS))
-			super.generate();
 	}
 }

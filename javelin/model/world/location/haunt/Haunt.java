@@ -24,6 +24,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
+import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.Fortification;
@@ -324,9 +325,9 @@ public abstract class Haunt extends Fortification{
 	}
 
 	@Override
-	protected void generate(){
-		while(x==-1||!terrains.contains(Terrain.get(x,y)))
-			super.generate();
+	protected boolean validatelocation(boolean water,World w,List<Actor> actors){
+		return terrains.contains(Terrain.get(x,y))
+				&&super.validatelocation(water,w,actors);
 	}
 
 	/** @return <code>true</code> if monster has any of the subtypes. */

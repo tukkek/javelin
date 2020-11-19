@@ -96,11 +96,7 @@ public class Wilderness extends Dungeon{
 
 		@Override
 		protected char[][] map(){
-			var e=Wilderness.this.entrance.getlocation();
-			var t=World.seed.map[e.x][e.y];
-			terrains.clear();
-			terrains.add(t);
-			var fightmap=RPG.pick(t.getmaps());
+			var fightmap=RPG.pick(terrains.get(0).getmaps());
 			fightmap.generate();
 			var width=fightmap.map.length;
 			int height=fightmap.map[0].length;
@@ -171,6 +167,15 @@ public class Wilderness extends Dungeon{
 	}
 
 	@Override
+	public void generate(){
+		var e=entrance.getlocation();
+		var t=World.seed.map[e.x][e.y];
+		terrains.clear();
+		terrains.add(t);
+		super.generate();
+	}
+
+	@Override
 	public String getimagename(){
 		return "wilderness";
 	}
@@ -188,6 +193,7 @@ public class Wilderness extends Dungeon{
 	@Override
 	public RandomDungeonEncounter fight(){
 		var e=super.fight();
+		e.set(RPG.pick(terrains));
 		e.map.floor=Images.get(images.get(DungeonImages.FLOOR));
 		e.map.wall=Images.get(images.get(DungeonImages.WALL));
 		e.map.wallfloor=e.map.floor;

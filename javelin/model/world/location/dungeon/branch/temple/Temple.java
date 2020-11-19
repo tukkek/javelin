@@ -1,36 +1,34 @@
 package javelin.model.world.location.dungeon.branch.temple;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.fight.RandomDungeonEncounter;
-import javelin.controller.generator.NpcGenerator;
 import javelin.controller.generator.feature.LocationGenerator;
-import javelin.controller.template.KitTemplate;
 import javelin.controller.terrain.Terrain;
-import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.wish.Win;
-import javelin.controller.wish.Wish;
 import javelin.model.Realm;
 import javelin.model.item.Tier;
 import javelin.model.item.artifact.Artifact;
-import javelin.model.unit.Combatant;
+import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonEntrance;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.DungeonImages;
-import javelin.model.world.location.dungeon.branch.temple.WaterTemple.WaterTempleEntrance;
+import javelin.model.world.location.dungeon.branch.Branch;
+import javelin.model.world.location.dungeon.feature.Decoration;
 import javelin.old.RPG;
 
 /**
- * Temples are Javelin's {@link Tier#EPIC} {@link Dungeon}s, with features that
- * distinguish them from ordinary {@link Dungeon}s like {@link Hazard}s and
- * {@link NpcGenerator}-based {@link Combatant}s from
- * non-{@link Terrain#UNDERGROUND} pools.
+ * Temples are {@link Tier#EPIC} {@link Dungeon}s with a single {@link Branch},
+ * Each Temple is focused on a particular {@link Realm}.
  *
- * Deep in the Temple there will be an {@link Artifact} and once all of those
- * are collected the player can make the {@link Win} {@link Wish}.
+ * Deep in each Temple there will be an {@link Artifact} and once all of those
+ * are collected, the player can {@link Win}.
  *
  * @author alex
  */
@@ -43,26 +41,31 @@ public abstract class Temple extends Dungeon{
 		}
 
 		@Override
-		protected void generate(){
+		protected boolean validatelocation(boolean water,World w,
+				List<Actor> actors){
 			var t=(Temple)dungeon;
-			while(x==-1||!t.terrains.contains(Terrain.get(x,y)))
-				super.generate();
+			return t.terrains.contains(Terrain.get(x,y))
+					&&super.validatelocation(water,w,actors);
+		}
+	}
+
+	class TempleFloor extends DungeonFloor{
+		TempleFloor(Integer level,Dungeon d){
+			super(level,d);
+		}
+
+		@Override
+		protected LinkedList<Decoration> generatedecoration(int minimum){
+			return null;
 		}
 	}
 
 	/** @see LocationGenerator */
 	public static void generatetemples(){
-		var w=new WaterTemple(Tier.EPIC.getrandomel(false));
-		new WaterTempleEntrance(w).place();
-		for(var type:List.of(AirTemple.class,EarthTemple.class,FireTemple.class,
-				EvilTemple.class,GoodTemple.class,MagicTemple.class))
-			try{
-				var el=Tier.EPIC.getrandomel(false);
-				var t=type.getConstructor(Integer.class).newInstance(el);
-				new TempleEntrance(t).place();
-			}catch(ReflectiveOperationException e){
-				throw new RuntimeException(e);
-			}
+		var temples=List.of(new AirTemple(),new EarthTemple(),new FireTemple(),
+				new EvilTemple(),new GoodTemple(),new MagicTemple(),new WaterTemple());
+		for(var t:RPG.shuffle(new ArrayList<>(temples)))
+			t.place();
 	}
 
 	/** @return All temple {@link Location}s. */
@@ -73,45 +76,44 @@ public abstract class Temple extends Dungeon{
 		return temples;
 	}
 
-	Realm realm;
-	Artifact artifact;
-
 	/** Constructor. */
-	public Temple(Realm r,List<Terrain> t,int level,String f,TempleBranch b,
-			Artifact a){
-		super("The Temple of "+r.getname(),level,
-				RPG.randomize(2,1,Integer.MAX_VALUE));
+	public Temple(TempleBranch b,String f){
+		super("The Temple of "+Javelin.capitalize(b.realm.name),
+				Tier.EPIC.getrandomel(false),RPG.randomize(2,1,Integer.MAX_VALUE));
 		fluff=f;
-		realm=r;
-		artifact=a;
-		terrains.clear();
-		terrains.addAll(t);
-		b.temple=this;
-		b.templates.add(new KitTemplate(level/2));
 		branches.add(b);
-	}
-
-	public Temple(Realm r,Terrain t,int level,String f,TempleBranch b,Artifact a){
-		this(r,List.of(t),level,f,b,a);
+		terrains.clear();
+		terrains.addAll(b.terrains);
 	}
 
 	@Override
 	public String getimagename(){
-		return "temple"+realm.getname().toLowerCase();
+		var b=(TempleBranch)branches.get(0);
+		return "temple"+b.realm;
 	}
 
 	@Override
 	public RandomDungeonEncounter fight(){
 		var f=super.fight();
-		f.setterrain(Terrain.UNDERGROUND);
+		f.set(Terrain.UNDERGROUND);
 		return f;
 	}
 
 	@Override
 	protected void generateappearance(){
-		var b=branches.get(0);
+		var b=(TempleBranch)branches.get(0);
 		doorbackground=b.doorbackground;
 		images.put(DungeonImages.FLOOR,b.floor);
 		images.put(DungeonImages.WALL,b.wall);
+	}
+
+	@Override
+	protected DungeonFloor createfloor(int level){
+		return new TempleFloor(level,this);
+	}
+
+	/** @see TempleEntrance#place() */
+	protected void place(){
+		new TempleEntrance(this).place();
 	}
 }

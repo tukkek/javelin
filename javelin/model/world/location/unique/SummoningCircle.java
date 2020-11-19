@@ -4,8 +4,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
-import javelin.Javelin;
-import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Monster.MonsterType;
@@ -74,12 +72,5 @@ public class SummoningCircle extends Academy{
 			Summon s=uo!=null&&uo.u instanceof Summon?(Summon)uo.u:null;
 			if(s!=null) o.priority+=s.cr/21f;
 		}
-	}
-
-	@Override
-	protected void generate(){
-		while(x==-1||Terrain.get(x,y).equals(Terrain.PLAIN)
-				||Terrain.get(x,y).equals(Terrain.HILL))
-			super.generate();
 	}
 }

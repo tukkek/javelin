@@ -29,7 +29,7 @@ public class DeepDungeon extends Dungeon{
 		}
 
 		@Override
-		public void generate(){
+		protected void generate(boolean water){
 			//handled by LocationGenerator
 		}
 	}

@@ -15,6 +15,7 @@ import javelin.controller.action.world.inventory.EquipGear;
 import javelin.controller.action.world.inventory.UseItems;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.model.Healing;
+import javelin.model.item.artifact.Artifact;
 import javelin.model.item.consumable.Eidolon;
 import javelin.model.item.consumable.Scroll;
 import javelin.model.item.focus.Rod;
@@ -293,7 +294,9 @@ public abstract class Item implements Serializable,Cloneable,Healing{
 		identified=s.identify(this);
 		var action=this instanceof Gear?EquipGear.INSTANCE:UseItems.INSTANCE;
 		String list=action.listitems(null,false)+"\n";
-		list+="Who will take the "+toString().toLowerCase()+"?";
+		var name=toString();
+		if(!(this instanceof Artifact)) name=name.toLowerCase();
+		list+="Who will take the "+name+"?";
 		s.equipment.get(UseItems.selectmember(s.members,this,list)).add(this);
 	}
 

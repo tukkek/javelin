@@ -38,10 +38,9 @@ public class DungeonTile extends Tile{
 			wallimage=Images.get(List.of(folder,d.images.get(DungeonImages.WALL)));
 			if(f!=null) featureimage=f.getimage();
 		}
+		draw(g,floorimage);
 		if(floor.map[x][y]==MapTemplate.WALL||f instanceof Door&&d.doorbackground)
 			draw(g,wallimage);
-		else
-			draw(g,floorimage);
 		if(f!=null&&f.draw) draw(g,featureimage);
 		if(floor.squadlocation.x==x&&floor.squadlocation.y==y)
 			draw(g,Squad.active.getimage());

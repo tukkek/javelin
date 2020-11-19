@@ -239,7 +239,6 @@ public class DungeonFloor implements Serializable{
 
 	/** @return Generated decoration or <code>null</code> if Dungeon doesn't. */
 	protected LinkedList<Decoration> generatedecoration(int minimum){
-		if(!dungeon.branches.isEmpty()) return null;
 		var unnocupied=new ArrayList<Point>(size*size/10);
 		for(var x=0;x<size;x++)
 			for(var y=0;y<size;y++){
@@ -423,8 +422,9 @@ public class DungeonFloor implements Serializable{
 
 	/** @see SpecialChest */
 	protected Feature generatespecialchest(){
-		var branchchests=dungeon.branches.stream().map(b->b.generatespecialchest())
-				.filter(c->c!=null).collect(Collectors.toList());
+		var branchchests=dungeon.branches.stream()
+				.map(b->b.generatespecialchest(this)).filter(c->c!=null)
+				.collect(Collectors.toList());
 		if(!branchchests.isEmpty()) return RPG.pick(branchchests);
 		if(this==dungeon.floors.getLast()) return new SpecialChest(this,new Ruby());
 		var value=RewardCalculator.getgold(level);

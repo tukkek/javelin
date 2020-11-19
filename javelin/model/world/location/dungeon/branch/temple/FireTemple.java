@@ -3,7 +3,6 @@ package javelin.model.world.location.dungeon.branch.temple;
 import javelin.controller.terrain.Desert;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
-import javelin.model.item.artifact.Candle;
 import javelin.model.world.location.dungeon.feature.Brazier;
 
 /**
@@ -21,14 +20,15 @@ public class FireTemple extends Temple{
 
 	public static class FireBranch extends TempleBranch{
 		FireBranch(){
-			super("floortemplefire","walltemplefire");
+			super(Realm.FIRE,"floortemplefire","walltemplefire");
 			features.add(Brazier.class);
+			terrains.add(Terrain.DESERT);
 			doorbackground=false;
 		}
 	}
 
 	/** Constructor. */
-	public FireTemple(Integer level){
-		super(Realm.FIRE,Terrain.DESERT,level,FLUFF,new FireBranch(),new Candle());
+	public FireTemple(){
+		super(new FireBranch(),FLUFF);
 	}
 }

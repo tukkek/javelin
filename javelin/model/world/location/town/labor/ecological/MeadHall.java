@@ -1,7 +1,6 @@
 package javelin.model.world.location.town.labor.ecological;
 
 import javelin.controller.kit.Barbarian;
-import javelin.controller.terrain.Terrain;
 import javelin.model.world.location.Academy;
 import javelin.model.world.location.Guild;
 import javelin.model.world.location.town.Rank;
@@ -34,12 +33,5 @@ public class MeadHall extends Guild{
 	/** Constructor. */
 	public MeadHall(){
 		super("Mead hall",Barbarian.INSTANCE);
-	}
-
-	@Override
-	protected void generate(){
-		while(x==-1||!(Terrain.get(x,y).equals(Terrain.PLAIN)
-				||Terrain.get(x,y).equals(Terrain.HILL)))
-			super.generate();
 	}
 }

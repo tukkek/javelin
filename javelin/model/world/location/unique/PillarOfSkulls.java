@@ -209,9 +209,9 @@ public class PillarOfSkulls extends UniqueLocation{
 	}
 
 	@Override
-	protected void generate(){
-		while(x==-1||!Terrain.get(x,y).equals(Terrain.MARSH))
-			super.generate();
+	protected boolean validatelocation(boolean water,World w,List<Actor> actors){
+		return Terrain.get(x,y).equals(Terrain.MARSH)
+				&&super.validatelocation(water,w,actors);
 	}
 
 	@Override

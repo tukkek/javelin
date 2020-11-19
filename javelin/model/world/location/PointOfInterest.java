@@ -82,10 +82,4 @@ public class PointOfInterest extends Actor{
 	public Integer getel(Integer attackerel){
 		return null;
 	}
-
-	@Override
-	public void place(){
-		if(x==-1) Location.generate(this,false);
-		super.place();
-	}
 }

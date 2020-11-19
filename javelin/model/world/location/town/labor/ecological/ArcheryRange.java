@@ -1,7 +1,6 @@
 package javelin.model.world.location.town.labor.ecological;
 
 import javelin.controller.kit.Ranger;
-import javelin.controller.terrain.Terrain;
 import javelin.model.world.location.Academy;
 import javelin.model.world.location.Guild;
 import javelin.model.world.location.town.Rank;
@@ -34,11 +33,5 @@ public class ArcheryRange extends Guild{
 	/** Constructor. */
 	public ArcheryRange(){
 		super("Archery range",Ranger.INSTANCE);
-	}
-
-	@Override
-	protected void generate(){
-		while(x==-1||!Terrain.get(x,y).equals(Terrain.FOREST))
-			super.generate();
 	}
 }

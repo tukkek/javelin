@@ -2,7 +2,7 @@ package javelin.controller.template;
 
 import javelin.controller.kit.Kit;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Monster;
+import javelin.model.world.location.dungeon.Dungeon;
 import javelin.old.RPG;
 
 /**
@@ -12,30 +12,21 @@ import javelin.old.RPG;
  * @author alex
  */
 public class KitTemplate extends Template{
-	int levels;
-
-	/**
-	 * @param levels How many {@link Kit#getupgrades()}-worth of levels to give
-	 *          each {@link Combatant}.
-	 *
-	 * @see Monster#cr
-	 */
-	public KitTemplate(int levels){
+	/** Constructor. */
+	public KitTemplate(){
 		super(null);
-		this.levels=levels;
 	}
 
 	@Override
-	public int apply(Combatant c){
+	public int apply(Combatant c,Dungeon d){
 		var kits=Kit.getpreferred(c.source,true);
 		var k=RPG.pick(kits);
-		var target=Math.min(c.source.cr+levels,c.source.cr*2);
+		var cr=c.source.cr;
+		var target=cr*2;
+		if(d!=null) target=Math.min(target,cr+d.level/2);
 		var upgrades=0;
-		while(c.source.cr<target)
-			if(k.upgrade(c))
-				upgrades+=1;
-			else
-				break;
+		while(c.source.cr<target&&k.upgrade(c))
+			upgrades+=1;
 		return upgrades;
 	}
 }

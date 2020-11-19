@@ -63,6 +63,7 @@ import javelin.old.RPG;
  */
 public class LocationGenerator implements Serializable{
 	final HashMap<Class<? extends Actor>,Frequency> generators=new HashMap<>();
+	private Set<Class<? extends Actor>> features;
 
 	/**
 	 * The ultimate goal of this method is to try and make it so one feature only
@@ -74,8 +75,8 @@ public class LocationGenerator implements Serializable{
 		generators.put(Outpost.class,new Frequency(.1f));
 		generators.put(PointOfInterest.class,new Frequency(2f));
 		var resources=new Frequency(.5f);
-		resources.seeds=Realm.values().length*2;
-		resources.max=Realm.values().length*2;
+		resources.seeds=Realm.REALMS.size()*2;
+		resources.max=resources.seeds;
 		generators.put(ResourceSite.class,resources);
 		convertchances();
 	}
@@ -113,20 +114,12 @@ public class LocationGenerator implements Serializable{
 	public void spawn(float chance,boolean generatingworld){
 		if(count()>=World.scenario.startingfeatures) return;
 		if(!generatingworld&&!World.scenario.respawnlocations) return;
-		List<Class<? extends Actor>> features=new ArrayList<>(generators.keySet());
-		Collections.shuffle(features);
-		for(Class<? extends Actor> feature:features){
-			Frequency g=generators.get(feature);
-			if(generatingworld&&!g.starting) continue;
-			if(g.max!=null&&World.getall(feature).size()>=g.max) continue;
-			if(RPG.random()<=chance*g.chance){
-				var f=g.generate(feature);
-				f.place();
-				//				if(f.realm!=null&&f instanceof Fortification&&generatingworld){
-				//					Actor town=((Fortification)f).findclosest(Town.class);
-				//					f.realm=town==null?null:((Town)town).realm;
-				//				}
-			}
+		features=generators.keySet();
+		for(var f:RPG.shuffle(new ArrayList<>(features))){
+			var frequency=generators.get(f);
+			if(generatingworld&&!frequency.starting) continue;
+			if(frequency.max!=null&&World.getall(f).size()>=frequency.max) continue;
+			if(RPG.random()<=chance*frequency.chance) frequency.generate(f).place();
 		}
 	}
 

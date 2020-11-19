@@ -36,8 +36,10 @@ public class EvilTemple extends Temple{
 
 	static class EvilBranch extends TempleBranch{
 		protected EvilBranch(){
-			super("floortempleevil","walltempleevil");
+			super(Realm.EVIL,"floortempleevil","walltempleevil");
 			doorbackground=false;
+			hazard=new MacabreForce();
+			terrains.add(Terrain.MARSH);
 		}
 
 		@Override
@@ -60,8 +62,8 @@ public class EvilTemple extends Temple{
 	}
 
 	/** Constructor. */
-	public EvilTemple(Integer level){
-		super(Realm.EVIL,Terrain.MARSH,level,FLUFF,new EvilBranch(),new Skull());
+	public EvilTemple(){
+		super(new EvilBranch(),FLUFF);
 	}
 
 	static class MacabreForce extends DungeonHazard{
@@ -71,6 +73,7 @@ public class EvilTemple extends Temple{
 
 		@Override
 		public boolean trigger(){
+			Javelin.message("A macabre force draws upon you...",true);
 			Class<? extends Feature> targettype;
 			if(Squad.active.equipment.get(Skull.class)==null)
 				targettype=StairsUp.class;
@@ -82,7 +85,6 @@ public class EvilTemple extends Temple{
 					.filter(f->targettype.isInstance(f)).findAny().orElse(null);
 			if(target==null) return false;
 			Dungeon.active.squadlocation=target.getlocation();
-			Javelin.message("A macabre force draws upon you...",true);
 			return true;
 		}
 	}

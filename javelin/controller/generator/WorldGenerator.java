@@ -1,7 +1,6 @@
 package javelin.controller.generator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -100,7 +99,7 @@ public class WorldGenerator extends Thread{
 		try{
 			retries=0;
 			world=new World();
-			var realms=RPG.shuffle(new LinkedList<>(Arrays.asList(Realm.values())));
+			var realms=RPG.shuffle(new LinkedList<>(Realm.REALMS));
 			var regions=new ArrayList<HashSet<Point>>(realms.size());
 			generategeography(realms,regions,world);
 			world.featuregenerator=World.scenario.locationgenerator

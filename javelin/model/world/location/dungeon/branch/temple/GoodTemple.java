@@ -5,7 +5,6 @@ import java.util.List;
 import javelin.controller.terrain.Plains;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
-import javelin.model.item.artifact.Ankh;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Monster.MonsterType;
@@ -28,8 +27,9 @@ public class GoodTemple extends Temple{
 
 	static class GoodBranch extends TempleBranch{
 		protected GoodBranch(){
-			super("floortemplegood","walldungeon");
+			super(Realm.GOOD,"floortemplegood","walldungeon");
 			features.add(Spirit.class);
+			terrains.add(Terrain.PLAIN);
 		}
 
 		@Override
@@ -45,7 +45,7 @@ public class GoodTemple extends Temple{
 	}
 
 	/** Constructor. */
-	public GoodTemple(Integer level){
-		super(Realm.GOOD,Terrain.PLAIN,level,FLUFF,new GoodBranch(),new Ankh());
+	public GoodTemple(){
+		super(new GoodBranch(),FLUFF);
 	}
 }

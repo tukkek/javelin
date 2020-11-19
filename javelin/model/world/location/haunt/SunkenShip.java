@@ -8,6 +8,7 @@ import javelin.controller.map.location.LocationMap;
 import javelin.controller.terrain.Terrain;
 import javelin.model.state.Square;
 import javelin.model.unit.Monster;
+import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.view.Images;
 
@@ -40,22 +41,19 @@ public class SunkenShip extends Haunt{
 
 	/** Constructor. */
 	public SunkenShip(){
-		super("Sunken ship",SunkenShipMap.class,POOL,null);
+		super("Sunken ship",SunkenShipMap.class,POOL,List.of(Terrain.WATER));
 		allowentry=false;
 	}
 
-	boolean nearland(){
-		var size=World.scenario.size;
-		return new Point(x,y).getadjacent().stream()
-				.anyMatch(p->p.validate(0,0,size,size)
-						&&!Terrain.get(p.x,p.y).equals(Terrain.WATER));
+	@Override
+	protected boolean validatelocation(boolean water,World w,List<Actor> actors){
+		return Terrain.get(x,y).equals(Terrain.WATER)
+				&&Terrain.search(getlocation(),Terrain.WATER,1,w)>0
+				&&super.validatelocation(water,w,actors);
 	}
 
 	@Override
-	protected void generate(){
-		x=-1;
-		while(x==-1||!Terrain.get(x,y).equals(Terrain.WATER)||!nearland())
-			generate(this,true);
+	protected void generate(boolean water){
+		super.generate(true);
 	}
-
 }

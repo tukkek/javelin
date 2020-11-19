@@ -1,7 +1,6 @@
 package javelin.model.world.location.unique;
 
 import javelin.controller.kit.Ninja;
-import javelin.controller.terrain.Terrain;
 import javelin.model.world.location.Academy;
 import javelin.model.world.location.Guild;
 import javelin.model.world.location.town.Rank;
@@ -35,12 +34,5 @@ public class NinjaDojo extends Guild{
 	/** Constructor. */
 	public NinjaDojo(){
 		super(DESCRITPION,Ninja.INSTANCE);
-	}
-
-	@Override
-	protected void generate(){
-		while(x<0||Terrain.get(x,y).equals(Terrain.PLAIN)
-				||Terrain.get(x,y).equals(Terrain.HILL))
-			super.generate();
 	}
 }

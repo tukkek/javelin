@@ -60,12 +60,7 @@ public class Chest extends Feature{
 	/** Constructor with {@link #items}. */
 	public Chest(Item i,DungeonFloor f){
 		this(f);
-		items.add(i);
-	}
-
-	/** Subclass contructor. */
-	protected Chest(String description,String avatar){
-		super(description,avatar);
+		if(i!=null) items.add(i);
 	}
 
 	/**

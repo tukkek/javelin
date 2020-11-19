@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.challenge.Difficulty;
+import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
@@ -13,7 +14,8 @@ import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.old.RPG;
 
 /**
- * Generates a harder battle than a {@link RandomEncounter}.
+ * Generates a {@link RandomEncounter} based on {@link Dungeon}
+ * {@link Encounter}s. By default always uses a {@link Terrain#UNDERGROUND} map.
  *
  * @author alex
  */
@@ -28,11 +30,11 @@ public class RandomDungeonEncounter extends RandomEncounter{
 	public RandomDungeonEncounter(DungeonFloor f){
 		this();
 		encounter=RPG.pick(f.encounters);
-		setterrain(RPG.pick(f.dungeon.terrains));
+		set(Terrain.UNDERGROUND);
 	}
 
 	/** Picks a random map to use from this pool. */
-	public void setterrain(Terrain t){
+	public void set(Terrain t){
 		map=t.getmaps().pick();
 		weather=t.getweather();
 	}

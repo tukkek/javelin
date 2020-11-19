@@ -9,7 +9,6 @@ import javelin.controller.generator.dungeon.template.MapTemplate;
 import javelin.controller.terrain.Mountains;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
-import javelin.model.item.artifact.Flute;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.branch.DungeonHazard;
 import javelin.model.world.location.dungeon.feature.Feature;
@@ -30,14 +29,15 @@ public class AirTemple extends Temple{
 
 	static class AirBranch extends TempleBranch{
 		protected AirBranch(){//TODO boring tiles
-			super("floordungeon","walldungeon");
+			super(Realm.AIR,"floordungeon","walldungeon");
+			terrains.add(Terrain.MOUNTAINS);
 			hazard=new Wind();
 		}
 	}
 
 	/** Constructor. */
-	public AirTemple(Integer level){
-		super(Realm.AIR,Terrain.MOUNTAINS,level,FLUFF,new AirBranch(),new Flute());
+	public AirTemple(){
+		super(new AirBranch(),FLUFF);
 	}
 
 	static class Wind extends DungeonHazard{

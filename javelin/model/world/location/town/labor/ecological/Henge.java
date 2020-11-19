@@ -3,9 +3,7 @@ package javelin.model.world.location.town.labor.ecological;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import javelin.Javelin;
 import javelin.controller.kit.Druid;
-import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Monster.MonsterType;
@@ -66,12 +64,5 @@ public class Henge extends Guild{
 			if(s!=null&&s.monstername.equals(m.name)) return true;
 		}
 		return false;
-	}
-
-	@Override
-	protected void generate(){
-		while(x==-1||!Terrain.get(x,y).equals(Terrain.FOREST)
-				&&!Terrain.get(x,y).equals(Terrain.HILL))
-			super.generate();
 	}
 }

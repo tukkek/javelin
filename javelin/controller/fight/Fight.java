@@ -250,7 +250,7 @@ public abstract class Fight{
 	 * @param el Target encounter level for the fight. Taken as a guideline
 	 *          because given {@link Terrain} and such a fight cannot be generated
 	 *          for this exact level.
-	 * @param terrain Terrain this fight takes place on.
+	 * @param terrains Terrain this fight takes place on.
 	 * @return The resulting opponents.
 	 */
 	public ArrayList<Combatant> generate(){

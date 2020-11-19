@@ -16,7 +16,6 @@ import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.LocationFight;
 import javelin.controller.fight.Siege;
-import javelin.controller.generator.WorldGenerator;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
@@ -35,7 +34,6 @@ import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.unique.UniqueLocation;
-import javelin.old.RPG;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.Images;
 import javelin.view.mappanel.world.WorldMouse;
@@ -124,42 +122,6 @@ public abstract class Location extends Actor{
 	 */
 	public Location(String description){
 		this.description=description;
-	}
-
-	/**
-	 * Determines {@link World} location for this.
-	 */
-	protected void generate(){
-		generate(this,false);
-	}
-
-	/**
-	 * Default implementation of {@link #generate()}, will try random positioning
-	 * a {@link Actor} until it lands on a free space.
-	 *
-	 * @param allowwater <code>true</code> if it is allowed to place the actor on
-	 *          {@link Terrain#WATER}.
-	 */
-	static public void generate(Actor p,boolean allowwater){
-		p.x=-1;
-		ArrayList<Actor> actors=World.getactors();
-		actors.remove(p);
-		final World w=World.getseed();
-		int size=World.scenario.size-1;
-		while(p.x==-1||!allowwater&&w.map[p.x][p.y].equals(Terrain.WATER)
-				||World.get(p.x,p.y,actors)!=null||neartown(p)||w.roads[p.x][p.y]
-				||w.highways[p.x][p.y]){
-			p.x=RPG.r(0,size);
-			p.y=RPG.r(0,size);
-			WorldGenerator.retry();
-		}
-	}
-
-	/**
-	 * @return <code>true</code> if given actor is too close to a town.
-	 */
-	static boolean neartown(Actor p){
-		return p.getdistrict()!=null;
 	}
 
 	@Override
@@ -300,16 +262,6 @@ public abstract class Location extends Actor{
 	}
 
 	/**
-	 * Convenience method for subclasses to use as {@link #generate()}. Warning:
-	 * when using this do not override {@link #generate(Location)}!
-	 */
-	protected void generateawayfromtown(){
-		x=-1;
-		while(x==-1||neartown(this))
-			generate(this,false);
-	}
-
-	/**
 	 * @param targets Class of other places to verify if nearby.
 	 * @return <code>true</code> if there is one of the given places under
 	 *         {@value #CLOSE} distance from here.
@@ -358,7 +310,7 @@ public abstract class Location extends Actor{
 
 	@Override
 	public void place(){
-		if(x==-1) generate();
+		if(x==-1) generate(false);
 		super.place();
 	}
 

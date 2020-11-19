@@ -107,7 +107,8 @@ public class Herb extends Feature{
 	 */
 	List<Potion> generate(DungeonFloor f){
 		if(!validate(f)) return Collections.EMPTY_LIST;
-		RPG.shuffle(POTIONS).sort(ItemsByPrice.SINGLETON);
+		var all=new ArrayList<>(POTIONS); //avoid concurrency issues
+		RPG.shuffle(all).sort(ItemsByPrice.SINGLETON);
 		var potions=new ArrayList<Potion>(MAXCOPIES);
 		int reward=RewardCalculator.getgold(f.level);
 		for(var p:POTIONS){

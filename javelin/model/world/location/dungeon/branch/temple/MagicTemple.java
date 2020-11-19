@@ -4,7 +4,6 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.terrain.Hill;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
-import javelin.model.item.artifact.Amulet;
 import javelin.model.world.location.dungeon.feature.Throne;
 
 /**
@@ -24,8 +23,9 @@ public class MagicTemple extends Temple{
 
 	static class MagicBranch extends TempleBranch{
 		protected MagicBranch(){
-			super("floortemplemagic","walltemplemagic");
+			super(Realm.MAGIC,"floortemplemagic","walltemplemagic");
 			features.add(Throne.class);
+			terrains.add(Terrain.HILL);
 		}
 	}
 
@@ -33,7 +33,7 @@ public class MagicTemple extends Temple{
 	 * @param level Level of this temple.
 	 * @see ChallengeCalculator#leveltoel(int)
 	 */
-	public MagicTemple(Integer level){
-		super(Realm.MAGIC,Terrain.HILL,level,FLUFF,new MagicBranch(),new Amulet());
+	public MagicTemple(){
+		super(new MagicBranch(),FLUFF);
 	}
 }

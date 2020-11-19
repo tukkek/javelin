@@ -99,7 +99,7 @@ public class Win extends Wish{
 		for(Combatant c:Squad.active.members)
 			for(Item i:Squad.active.equipment.get(c))
 				if(i instanceof Artifact) nrelics+=1;
-		int all=Realm.values().length;
+		int all=Realm.REALMS.size();
 		return nrelics==all?null:"You need the "+all+" relics first!";
 	}
 }

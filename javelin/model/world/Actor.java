@@ -10,6 +10,7 @@ import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.comparator.ActorByDistance;
 import javelin.controller.exception.RepeatTurn;
+import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
@@ -19,6 +20,7 @@ import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
+import javelin.old.RPG;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.WorldScreen;
 
@@ -68,7 +70,7 @@ public abstract class Actor implements Serializable{
 		deregisterinstance();
 	}
 
-	/** Adds this actor to the game. Should only be used once in theory. */
+	/** Adds this actor to the {@link World}. */
 	public void place(){
 		if(World.scenario.allowallactors||allowedinscenario) registerinstance();
 	}
@@ -326,5 +328,33 @@ public abstract class Actor implements Serializable{
 	/** @return <code>true</code> to signal the game shouldn't be lost yet. */
 	public boolean hold(){
 		return false;
+	}
+
+	/** @return <code>true</code> if {@link #getlocation()} is valid. */
+	protected boolean validatelocation(boolean water,World w,List<Actor> actors){
+		if(!water&&w.map[x][y].equals(Terrain.WATER)) return false;
+		if(World.get(x,y,actors)!=null||getdistrict()!=null) return false;
+		if(w.roads[x][y]||w.highways[x][y]) return false;
+		return true;
+	}
+
+	/**
+	 * Will try positioning this actor until it lands on a valid {@link Point}.
+	 *
+	 * @param allowwater <code>true</code> means allowed to place the actor on
+	 *          {@link Terrain#WATER}. Subclasses should explicitly override this.
+	 * @see #validatelocation(boolean, World, List)
+	 */
+	protected void generate(boolean allowwater){
+		var actors=World.getactors();
+		actors.remove(this);
+		var w=World.getseed();
+		var points=Point.getrange(0,0,World.scenario.size,World.scenario.size);
+		for(var p:RPG.shuffle(new ArrayList<>(points))){
+			x=p.x;
+			y=p.y;
+			if(validatelocation(allowwater,w,actors)) return;
+		}
+		throw new RestartWorldGeneration();
 	}
 }

@@ -199,13 +199,6 @@ public class Mine extends Fortification{
 	}
 
 	@Override
-	protected void generate(){
-		if(x!=-1) return;
-		while(x==-1||!Terrain.get(x,y).equals(Terrain.MOUNTAINS))
-			super.generate();
-	}
-
-	@Override
 	public List<Combatant> getcombatants(){
 		return monsters;
 	}

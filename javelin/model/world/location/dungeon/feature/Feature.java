@@ -50,7 +50,8 @@ public abstract class Feature implements Serializable{
 	 * {@link DungeonTile} as a feature.
 	 */
 	public boolean enter=true;
-	public final String description;
+	/** Human-friendly name. */
+	public String description;
 
 	/** Constructor. */
 	public Feature(String description,String avatar){

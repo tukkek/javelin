@@ -144,7 +144,10 @@ public class Dungeon implements Serializable{
 	}
 
 	List<EncounterIndex> indexencounters(){
-		var indexes=terrains.stream()
+		var terrain=new ArrayList<>(terrains);
+		for(var b:branches)
+			terrain.addAll(b.terrains);
+		var indexes=terrain.stream()
 				.map(t->Organization.ENCOUNTERSBYTERRAIN.get(t.toString()))
 				.collect(Collectors.toList());
 		var templates=branches.stream().flatMap(b->b.templates.stream())
@@ -160,7 +163,7 @@ public class Dungeon implements Serializable{
 		for(var e:RPG.shuffle(encounters)){
 			for(var t:templates){
 				var combatants=e.generate();
-				if(t.apply(combatants)>0){
+				if(t.apply(combatants,this)>0){
 					modified.put(new Encounter(combatants));
 					total+=1;
 				}

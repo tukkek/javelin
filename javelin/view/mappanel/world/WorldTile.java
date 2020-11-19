@@ -74,7 +74,7 @@ public class WorldTile extends Tile{
 		}
 		draw(g,a.getimage());
 		if(a.getrealmoverlay()!=null){
-			g.setColor(a.getrealmoverlay().getawtcolor());
+			g.setColor(a.getrealmoverlay().color);
 			g.fillRect(x,y+MapPanel.tilesize-5,MapPanel.tilesize,5);
 		}
 		final Location l=a instanceof Location?(Location)a:null;

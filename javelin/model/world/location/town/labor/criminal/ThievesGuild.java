@@ -3,7 +3,6 @@ package javelin.model.world.location.town.labor.criminal;
 import java.util.HashSet;
 
 import javelin.controller.kit.Rogue;
-import javelin.controller.terrain.Terrain;
 import javelin.model.world.location.Academy;
 import javelin.model.world.location.Guild;
 import javelin.model.world.location.town.Rank;
@@ -40,11 +39,5 @@ public class ThievesGuild extends Guild{
 	 */
 	public ThievesGuild(){
 		super("Thieves guild",Rogue.INSTANCE);
-	}
-
-	@Override
-	protected void generate(){
-		while(x==-1||Terrain.get(x,y).equals(Terrain.DESERT))
-			super.generate();
 	}
 }

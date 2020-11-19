@@ -59,7 +59,7 @@ public class DiplomacyScreen extends Frame{
 		name.setFont(name.getFont().deriveFont(15f));
 		name.setHorizontalAlignment(SwingConstants.CENTER);
 		var realm=t.realm==null?t.originalrealm:t.realm;
-		if(realm!=null) name.setForeground(realm.getawtcolor());
+		if(realm!=null) name.setForeground(realm.color);
 		p.add(space(name));
 		var info=new ArrayList<>();
 		var rank=new JLabel(t.getrank().toString());

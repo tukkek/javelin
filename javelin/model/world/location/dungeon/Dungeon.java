@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import javelin.Javelin;
 import javelin.Javelin.Delay;
 import javelin.controller.challenge.Difficulty;
+import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.db.EncounterIndex;
 import javelin.controller.db.StateManager;
 import javelin.controller.db.reader.fields.Organization;
@@ -22,7 +23,9 @@ import javelin.controller.generator.WorldGenerator;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.template.Template;
 import javelin.controller.terrain.Terrain;
+import javelin.model.item.Item;
 import javelin.model.item.Tier;
+import javelin.model.item.consumable.Ruby;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
@@ -34,6 +37,7 @@ import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Passage;
 import javelin.model.world.location.dungeon.feature.StairsUp;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
+import javelin.model.world.location.dungeon.feature.chest.SpecialChest;
 import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.model.world.location.dungeon.feature.trap.Trap;
 import javelin.model.world.location.unique.DeepDungeon;
@@ -275,7 +279,7 @@ public class Dungeon implements Serializable{
 	public RandomDungeonEncounter fight(){
 		var f=new RandomDungeonEncounter(active);
 		for(var b:RPG.shuffle(new ArrayList<>(branches)))
-			b.fight(f);
+			f.mutators.addAll(b.mutators);
 		return f;
 	}
 
@@ -284,5 +288,15 @@ public class Dungeon implements Serializable{
 		for(var b:branches)
 			if(!b.validate(group)) return false;
 		return true;
+	}
+
+	/** @see SpecialChest */
+	protected Feature generatespecialchest(DungeonFloor f){
+		if(f==floors.getLast()) return new SpecialChest(f,new Ruby());
+		var value=RewardCalculator.getgold(f.level);
+		var items=RPG.shuffle(new ArrayList<>(Item.ITEMS));
+		var item=items.stream().filter(i->value/2<=i.price&&i.price<=value*2)
+				.findAny().orElse(null);
+		return new SpecialChest(f,item==null?new Ruby():item);
 	}
 }

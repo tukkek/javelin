@@ -38,8 +38,8 @@ public class Underground extends Terrain{
 			DungeonFloor d=Dungeon.active;
 			if(d!=null){
 				var images=d.dungeon.images;
-				m.floor=Images.get(List.of(images.get(DungeonImages.FLOOR)));
-				m.wall=Images.get(List.of(images.get(DungeonImages.WALL)));
+				m.floor=Images.get(List.of("dungeon",images.get(DungeonImages.FLOOR)));
+				m.wall=Images.get(List.of("dungeon",images.get(DungeonImages.WALL)));
 				if(m.wall==m.obstacle)
 					m.obstacle=Images.get(List.of("terrain","rock2"));
 			}

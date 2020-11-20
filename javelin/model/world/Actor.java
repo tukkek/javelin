@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.Debug;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
@@ -72,7 +73,9 @@ public abstract class Actor implements Serializable{
 
 	/** Adds this actor to the {@link World}. */
 	public void place(){
+		if(x==-1) generate(false);
 		if(World.scenario.allowallactors||allowedinscenario) registerinstance();
+		if(Javelin.DEBUG&&!World.validatecoordinate(x,y)) Debug.breakpoint();
 	}
 
 	/** Move actor to the given coordinates. */
@@ -331,7 +334,7 @@ public abstract class Actor implements Serializable{
 	}
 
 	/** @return <code>true</code> if {@link #getlocation()} is valid. */
-	protected boolean validatelocation(boolean water,World w,List<Actor> actors){
+	protected boolean validateplacement(boolean water,World w,List<Actor> actors){
 		if(!water&&w.map[x][y].equals(Terrain.WATER)) return false;
 		if(World.get(x,y,actors)!=null||getdistrict()!=null) return false;
 		if(w.roads[x][y]||w.highways[x][y]) return false;
@@ -343,7 +346,7 @@ public abstract class Actor implements Serializable{
 	 *
 	 * @param allowwater <code>true</code> means allowed to place the actor on
 	 *          {@link Terrain#WATER}. Subclasses should explicitly override this.
-	 * @see #validatelocation(boolean, World, List)
+	 * @see #validateplacement(boolean, World, List)
 	 */
 	protected void generate(boolean allowwater){
 		var actors=World.getactors();
@@ -353,7 +356,7 @@ public abstract class Actor implements Serializable{
 		for(var p:RPG.shuffle(new ArrayList<>(points))){
 			x=p.x;
 			y=p.y;
-			if(validatelocation(allowwater,w,actors)) return;
+			if(validateplacement(allowwater,w,actors)) return;
 		}
 		throw new RestartWorldGeneration();
 	}

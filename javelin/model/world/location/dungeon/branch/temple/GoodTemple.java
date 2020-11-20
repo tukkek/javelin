@@ -8,6 +8,7 @@ import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Monster.MonsterType;
+import javelin.model.world.location.dungeon.branch.Branch;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Spirit;
 
@@ -25,9 +26,9 @@ public class GoodTemple extends Temple{
 			+"In fact, the eerie silence around the entire place makes you wonder if this is truly happening or only a fleeting dream.\n"
 			+"You enter the holy ground, daring say nothing as you breath deeply in anticipation of the vistas inside.";
 
-	static class GoodBranch extends TempleBranch{
+	static class GoodBranch extends Branch{
 		protected GoodBranch(){
-			super(Realm.GOOD,"floortemplegood","walldungeon");
+			super("floortemplegood","walldungeon");
 			features.add(Spirit.class);
 			terrains.add(Terrain.PLAIN);
 		}
@@ -46,6 +47,6 @@ public class GoodTemple extends Temple{
 
 	/** Constructor. */
 	public GoodTemple(){
-		super(new GoodBranch(),FLUFF);
+		super(Realm.GOOD,new GoodBranch(),FLUFF);
 	}
 }

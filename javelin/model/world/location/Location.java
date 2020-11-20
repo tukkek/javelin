@@ -308,12 +308,6 @@ public abstract class Location extends Actor{
 		return ishostile();
 	}
 
-	@Override
-	public void place(){
-		if(x==-1) generate(false);
-		super.place();
-	}
-
 	/** @return 0 if {@link #ishostile()} or {@link #vision}. */
 	public int watch(){
 		return ishostile()?0:vision;

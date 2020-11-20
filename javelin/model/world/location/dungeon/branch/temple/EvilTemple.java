@@ -4,6 +4,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.fight.Fight;
+import javelin.controller.fight.mutator.Mutator;
 import javelin.controller.terrain.Marsh;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
@@ -13,6 +14,7 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.Period;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.branch.Branch;
 import javelin.model.world.location.dungeon.branch.DungeonHazard;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.StairsDown;
@@ -34,12 +36,21 @@ public class EvilTemple extends Temple{
 			+"It is said that a once powerful king oversaw his domain from his throne here but bad tidings befell him.\n"
 			+"The once great castle became a prison, torture chamber and hall of twisted pleasures as the kingdom's honor slowly faded into oblivion.";
 
-	static class EvilBranch extends TempleBranch{
+	static class Dark extends Mutator{
+		@Override
+		public void setup(Fight f){
+			super.setup(f);
+			f.period=Period.NIGHT;
+		}
+	}
+
+	static class EvilBranch extends Branch{
 		protected EvilBranch(){
-			super(Realm.EVIL,"floortempleevil","walltempleevil");
+			super("floortempleevil","walltempleevil");
 			doorbackground=false;
 			hazard=new MacabreForce();
 			terrains.add(Terrain.MARSH);
+			mutators.add(new Dark());
 		}
 
 		@Override
@@ -54,16 +65,11 @@ public class EvilTemple extends Temple{
 				if(c.source.alignment.isgood()) return false;
 			return true;
 		}
-
-		@Override
-		public void fight(Fight f){
-			f.period=Period.NIGHT;
-		}
 	}
 
 	/** Constructor. */
 	public EvilTemple(){
-		super(new EvilBranch(),FLUFF);
+		super(Realm.EVIL,new EvilBranch(),FLUFF);
 	}
 
 	static class MacabreForce extends DungeonHazard{

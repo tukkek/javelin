@@ -14,7 +14,7 @@ import javelin.controller.comparator.MonstersByName;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.LocationFight;
-import javelin.controller.fight.WavesFight;
+import javelin.controller.fight.mutator.WavesFight;
 import javelin.controller.generator.NpcGenerator;
 import javelin.controller.map.location.LocationMap;
 import javelin.controller.terrain.Terrain;
@@ -325,9 +325,9 @@ public abstract class Haunt extends Fortification{
 	}
 
 	@Override
-	protected boolean validatelocation(boolean water,World w,List<Actor> actors){
+	protected boolean validateplacement(boolean water,World w,List<Actor> actors){
 		return terrains.contains(Terrain.get(x,y))
-				&&super.validatelocation(water,w,actors);
+				&&super.validateplacement(water,w,actors);
 	}
 
 	/** @return <code>true</code> if monster has any of the subtypes. */

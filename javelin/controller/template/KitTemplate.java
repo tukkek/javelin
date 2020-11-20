@@ -12,8 +12,11 @@ import javelin.old.RPG;
  * @author alex
  */
 public class KitTemplate extends Template{
+	/** Unique instance. */
+	public static final KitTemplate SINGLETON=new KitTemplate();
+
 	/** Constructor. */
-	public KitTemplate(){
+	KitTemplate(){
 		super(null);
 	}
 

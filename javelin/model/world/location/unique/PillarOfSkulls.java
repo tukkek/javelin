@@ -209,9 +209,9 @@ public class PillarOfSkulls extends UniqueLocation{
 	}
 
 	@Override
-	protected boolean validatelocation(boolean water,World w,List<Actor> actors){
+	protected boolean validateplacement(boolean water,World w,List<Actor> actors){
 		return Terrain.get(x,y).equals(Terrain.MARSH)
-				&&super.validatelocation(water,w,actors);
+				&&super.validateplacement(water,w,actors);
 	}
 
 	@Override

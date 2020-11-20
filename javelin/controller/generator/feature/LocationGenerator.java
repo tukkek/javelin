@@ -63,7 +63,6 @@ import javelin.old.RPG;
  */
 public class LocationGenerator implements Serializable{
 	final HashMap<Class<? extends Actor>,Frequency> generators=new HashMap<>();
-	private Set<Class<? extends Actor>> features;
 
 	/**
 	 * The ultimate goal of this method is to try and make it so one feature only
@@ -114,7 +113,7 @@ public class LocationGenerator implements Serializable{
 	public void spawn(float chance,boolean generatingworld){
 		if(count()>=World.scenario.startingfeatures) return;
 		if(!generatingworld&&!World.scenario.respawnlocations) return;
-		features=generators.keySet();
+		var features=generators.keySet();
 		for(var f:RPG.shuffle(new ArrayList<>(features))){
 			var frequency=generators.get(f);
 			if(generatingworld&&!frequency.starting) continue;

@@ -4,6 +4,7 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.terrain.Hill;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
+import javelin.model.world.location.dungeon.branch.Branch;
 import javelin.model.world.location.dungeon.feature.Throne;
 
 /**
@@ -21,9 +22,9 @@ public class MagicTemple extends Temple{
 			+"There are a few stones along the walls, they give off a faint octarine glow.\n"
 			+"You walk along a grand mural written in an ancient language but alas you cannot decipher it.";
 
-	static class MagicBranch extends TempleBranch{
+	static class MagicBranch extends Branch{
 		protected MagicBranch(){
-			super(Realm.MAGIC,"floortemplemagic","walltemplemagic");
+			super("floortemplemagic","walltemplemagic");
 			features.add(Throne.class);
 			terrains.add(Terrain.HILL);
 		}
@@ -34,6 +35,6 @@ public class MagicTemple extends Temple{
 	 * @see ChallengeCalculator#leveltoel(int)
 	 */
 	public MagicTemple(){
-		super(new MagicBranch(),FLUFF);
+		super(Realm.MAGIC,new MagicBranch(),FLUFF);
 	}
 }

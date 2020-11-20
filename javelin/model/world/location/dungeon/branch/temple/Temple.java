@@ -5,8 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.fight.RandomDungeonEncounter;
 import javelin.controller.generator.feature.LocationGenerator;
+import javelin.controller.template.KitTemplate;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.wish.Win;
 import javelin.model.Realm;
@@ -21,6 +21,8 @@ import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.branch.Branch;
 import javelin.model.world.location.dungeon.feature.Decoration;
+import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.chest.ArtifactChest;
 import javelin.old.RPG;
 
 /**
@@ -29,6 +31,9 @@ import javelin.old.RPG;
  *
  * Deep in each Temple there will be an {@link Artifact} and once all of those
  * are collected, the player can {@link Win}.
+ *
+ * TODO once all Temples have {@link Branch#templates}, remove
+ * {@link KitTemplate} (or keep)?
  *
  * @author alex
  */
@@ -41,11 +46,11 @@ public abstract class Temple extends Dungeon{
 		}
 
 		@Override
-		protected boolean validatelocation(boolean water,World w,
+		protected boolean validateplacement(boolean water,World w,
 				List<Actor> actors){
 			var t=(Temple)dungeon;
 			return t.terrains.contains(Terrain.get(x,y))
-					&&super.validatelocation(water,w,actors);
+					&&super.validateplacement(water,w,actors);
 		}
 	}
 
@@ -76,11 +81,15 @@ public abstract class Temple extends Dungeon{
 		return temples;
 	}
 
+	Realm realm;
+
 	/** Constructor. */
-	public Temple(TempleBranch b,String f){
-		super("The Temple of "+Javelin.capitalize(b.realm.name),
+	public Temple(Realm r,Branch b,String f){
+		super("The Temple of "+Javelin.capitalize(r.name),
 				Tier.EPIC.getrandomel(false),RPG.randomize(2,1,Integer.MAX_VALUE));
+		realm=r;
 		fluff=f;
+		b.templates.add(KitTemplate.SINGLETON);
 		branches.add(b);
 		terrains.clear();
 		terrains.addAll(b.terrains);
@@ -88,20 +97,12 @@ public abstract class Temple extends Dungeon{
 
 	@Override
 	public String getimagename(){
-		var b=(TempleBranch)branches.get(0);
-		return "temple"+b.realm;
-	}
-
-	@Override
-	public RandomDungeonEncounter fight(){
-		var f=super.fight();
-		f.set(Terrain.UNDERGROUND);
-		return f;
+		return "temple"+realm;
 	}
 
 	@Override
 	protected void generateappearance(){
-		var b=(TempleBranch)branches.get(0);
+		var b=branches.get(0);
 		doorbackground=b.doorbackground;
 		images.put(DungeonImages.FLOOR,b.floor);
 		images.put(DungeonImages.WALL,b.wall);
@@ -115,5 +116,12 @@ public abstract class Temple extends Dungeon{
 	/** @see TempleEntrance#place() */
 	protected void place(){
 		new TempleEntrance(this).place();
+	}
+
+	@Override
+	public Feature generatespecialchest(DungeonFloor f){
+		return realm!=null&&f==f.dungeon.floors.getLast()
+				?new ArtifactChest(RPG.pick(realm.artifacts))
+				:super.generatespecialchest(f);
 	}
 }

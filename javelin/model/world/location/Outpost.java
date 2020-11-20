@@ -96,10 +96,10 @@ public class Outpost extends Fortification{
 	}
 
 	@Override
-	protected boolean validatelocation(boolean water,World w,List<Actor> actors){
+	protected boolean validateplacement(boolean water,World w,List<Actor> actors){
 		var o=findnearest(Outpost.class);
 		if(o!=null&&o.distance(x,y)<=VISIONRANGE*2) return false;
-		return super.validatelocation(water,w,actors);
+		return super.validateplacement(water,w,actors);
 	}
 
 	@Override

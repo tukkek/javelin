@@ -1,4 +1,4 @@
-package javelin.controller.fight;
+package javelin.controller.fight.mutator;
 
 import java.util.List;
 import java.util.Map;
@@ -6,6 +6,8 @@ import java.util.TreeMap;
 
 import javelin.Javelin;
 import javelin.controller.Point;
+import javelin.controller.fight.Fight;
+import javelin.controller.fight.LocationFight;
 import javelin.controller.fight.setup.LocationFightSetup;
 import javelin.controller.map.location.LocationMap;
 import javelin.model.unit.Combatant;

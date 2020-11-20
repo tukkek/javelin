@@ -46,10 +46,10 @@ public class SunkenShip extends Haunt{
 	}
 
 	@Override
-	protected boolean validatelocation(boolean water,World w,List<Actor> actors){
+	protected boolean validateplacement(boolean water,World w,List<Actor> actors){
 		return Terrain.get(x,y).equals(Terrain.WATER)
 				&&Terrain.search(getlocation(),Terrain.WATER,1,w)>0
-				&&super.validatelocation(water,w,actors);
+				&&super.validateplacement(water,w,actors);
 	}
 
 	@Override

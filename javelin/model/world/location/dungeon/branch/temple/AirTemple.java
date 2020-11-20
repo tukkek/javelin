@@ -10,6 +10,7 @@ import javelin.controller.terrain.Mountains;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.branch.Branch;
 import javelin.model.world.location.dungeon.branch.DungeonHazard;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.old.RPG;
@@ -27,9 +28,9 @@ public class AirTemple extends Temple{
 			+"At last you manage to overcome the stone entryway that dives deep into the summit's core.\n"
 			+"As you enter you immediately feel warmer but the strong gale coming from the outside threatens to carry you along its momentum.";
 
-	static class AirBranch extends TempleBranch{
+	static class AirBranch extends Branch{
 		protected AirBranch(){//TODO boring tiles
-			super(Realm.AIR,"floordungeon","walldungeon");
+			super("floordungeon","walldungeon");
 			terrains.add(Terrain.MOUNTAINS);
 			hazard=new Wind();
 		}
@@ -37,7 +38,7 @@ public class AirTemple extends Temple{
 
 	/** Constructor. */
 	public AirTemple(){
-		super(new AirBranch(),FLUFF);
+		super(Realm.AIR,new AirBranch(),FLUFF);
 	}
 
 	static class Wind extends DungeonHazard{

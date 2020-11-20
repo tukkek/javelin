@@ -194,9 +194,9 @@ public class ResourceSite extends Location{
 	}
 
 	@Override
-	protected boolean validatelocation(boolean water,World w,List<Actor> actors){
+	protected boolean validateplacement(boolean water,World w,List<Actor> actors){
 		return type.terrain.equals(Terrain.get(x,y))
-				&&super.validatelocation(water,w,actors);
+				&&super.validateplacement(water,w,actors);
 	}
 
 	@Override

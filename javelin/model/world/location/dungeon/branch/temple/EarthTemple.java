@@ -3,6 +3,7 @@ package javelin.model.world.location.dungeon.branch.temple;
 import javelin.controller.terrain.Forest;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
+import javelin.model.world.location.dungeon.branch.Branch;
 import javelin.model.world.location.dungeon.feature.FruitTree;
 
 /**
@@ -17,9 +18,9 @@ public class EarthTemple extends Temple{
 			+"A slimy little frog looks at you from atop a big boulder, unaware of you quest.\n"
 			+"As you try to find you way through the temple's entrance you must tear away the overgrowth as you wander in.";
 
-	public static class EarthBranch extends TempleBranch{
+	public static class EarthBranch extends Branch{
 		public EarthBranch(){
-			super(Realm.EARTH,"floordirt","walltempleearth");
+			super("floordirt","walltempleearth");
 			features.add(FruitTree.class);
 			terrains.add(Terrain.FOREST);
 		}
@@ -27,6 +28,6 @@ public class EarthTemple extends Temple{
 
 	/** Constructor. */
 	public EarthTemple(){
-		super(new EarthBranch(),FLUFF);
+		super(Realm.EARTH,new EarthBranch(),FLUFF);
 	}
 }

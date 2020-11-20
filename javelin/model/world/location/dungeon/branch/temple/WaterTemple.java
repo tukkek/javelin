@@ -5,6 +5,7 @@ import java.util.List;
 import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.fight.Fight;
+import javelin.controller.fight.mutator.Mutator;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.Water;
 import javelin.model.Realm;
@@ -12,6 +13,7 @@ import javelin.model.unit.Monster;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.dungeon.branch.Branch;
 import javelin.model.world.location.dungeon.feature.Fountain;
 
 /**
@@ -44,10 +46,10 @@ public class WaterTemple extends Temple{
 		}
 
 		@Override
-		protected boolean validatelocation(boolean water,World w,
+		protected boolean validateplacement(boolean water,World w,
 				List<Actor> actors){
 			return Terrain.search(new Point(x,y),Terrain.WATER,1,w)>0
-					&&super.validatelocation(water,w,actors);
+					&&super.validateplacement(water,w,actors);
 		}
 
 		@Override
@@ -62,22 +64,26 @@ public class WaterTemple extends Temple{
 		}
 	}
 
-	static class WaterBranch extends TempleBranch{
+	static class Flooded extends Mutator{
+		@Override
+		public void setup(Fight f){
+			super.setup(f);
+			f.weather=Weather.STORM;
+		}
+	}
+
+	static class WaterBranch extends Branch{
 		protected WaterBranch(){
-			super(Realm.WATER,"floordungeon","walltemplewater");
+			super("floordungeon","walltemplewater");
 			doorbackground=false;
 			features.add(Fountain.class);
-		}
-
-		@Override
-		public void fight(Fight f){
-			f.weather=Weather.STORM;
+			mutators.add(new Flooded());
 		}
 	}
 
 	/** Constructor. */
 	public WaterTemple(){
-		super(new WaterBranch(),FLUFF);
+		super(Realm.WATER,new WaterBranch(),FLUFF);
 	}
 
 	@Override

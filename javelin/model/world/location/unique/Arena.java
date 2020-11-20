@@ -12,7 +12,7 @@ import javelin.controller.challenge.Difficulty;
 import javelin.controller.comparator.CombatantsByNameAndMercenary;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
-import javelin.controller.fight.WavesFight;
+import javelin.controller.fight.mutator.WavesFight;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.map.location.LocationMap;
 import javelin.controller.terrain.Terrain;

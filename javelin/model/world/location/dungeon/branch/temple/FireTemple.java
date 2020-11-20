@@ -3,6 +3,7 @@ package javelin.model.world.location.dungeon.branch.temple;
 import javelin.controller.terrain.Desert;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
+import javelin.model.world.location.dungeon.branch.Branch;
 import javelin.model.world.location.dungeon.feature.Brazier;
 
 /**
@@ -18,9 +19,9 @@ public class FireTemple extends Temple{
 			+"This was clearly built as a strong defensive outpost - the walls are tall and strong, the towers full of small openings for defense.\n"
 			+"As you creep in you can't help but wonder who have built these halls, why'd they leave it and where could they be now.";
 
-	public static class FireBranch extends TempleBranch{
+	public static class FireBranch extends Branch{
 		FireBranch(){
-			super(Realm.FIRE,"floortemplefire","walltemplefire");
+			super("floortemplefire","walltemplefire");
 			features.add(Brazier.class);
 			terrains.add(Terrain.DESERT);
 			doorbackground=false;
@@ -29,6 +30,6 @@ public class FireTemple extends Temple{
 
 	/** Constructor. */
 	public FireTemple(){
-		super(new FireBranch(),FLUFF);
+		super(Realm.FIRE,new FireBranch(),FLUFF);
 	}
 }

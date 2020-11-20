@@ -18,6 +18,7 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.EndBattle;
+import javelin.controller.fight.mutator.Mutator;
 import javelin.controller.fight.setup.BattleSetup;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.map.Map;
@@ -48,9 +49,7 @@ public abstract class Fight{
 	public static BattleState state=null;
 	/** See {@link #win(BattleScreen)}. */
 	public static Boolean victory;
-	/**
-	 * @return <code>true</code> if {@link Meld} should be generated.
-	 */
+	/** <code>true</code> if {@link Meld} should be generated. */
 	public boolean meld=false;
 	/**
 	 * Map this battle is to happen on or <code>null</code> for one to be
@@ -117,6 +116,8 @@ public abstract class Fight{
 	 * before actual battle begins. At this point the entire stack should be
 	 * setup.
 	 *
+	 * TODO refactor as {@link Mutator}
+	 *
 	 * @see BattleSetup
 	 */
 	public List<Runnable> onready=new ArrayList<>(0);
@@ -124,8 +125,12 @@ public abstract class Fight{
 	 * Called after {@value #originalblueteam} and {@value #originalredteam} team
 	 * are set but before they are placed, allowing for temporary combatants to be
 	 * included.
+	 *
+	 * TODO refactor as {@link Mutator}
 	 */
 	public List<Runnable> onprepare=new ArrayList<>(0);
+	/** Custom combat rules. */
+	public List<Mutator> mutators=new ArrayList<>(0);
 
 	/**
 	 * @return an encounter level for which an appropriate challenge should be
@@ -373,6 +378,8 @@ public abstract class Fight{
 				.orElseThrow();
 		Fight.state=new BattleState(this);
 		Fight.state.blueTeam=new ArrayList<>(getblueteam());
+		for(var m:mutators)
+			m.setup(this);
 		return generate();
 	}
 

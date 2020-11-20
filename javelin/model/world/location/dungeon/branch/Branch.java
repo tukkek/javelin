@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomDungeonEncounter;
+import javelin.controller.fight.mutator.Mutator;
 import javelin.controller.generator.dungeon.template.MapTemplate;
 import javelin.controller.table.dungeon.feature.CommonFeatureTable;
 import javelin.controller.template.Template;
@@ -15,19 +16,13 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.feature.Campfire;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
-import javelin.model.world.location.dungeon.feature.chest.SpecialChest;
 
 /**
  * See https://github.com/tukkek/javelin/issues/254 .
- *
- * TODO add {@link Fight} mechanics
- *
- * TODO add {@link MapTemplate}s
  *
  * @author alex
  */
@@ -49,16 +44,15 @@ public class Branch implements Serializable{
 	public List<Class<? extends Chest>> treasure=new ArrayList<>(1);
 	/** To be used as {@link Monster} pools. */
 	public Set<Terrain> terrains=new HashSet<>(1);
+	/** Map templates that give visual identity to this branch. */
+	public List<MapTemplate> tiles=new ArrayList<>(0);
+	/** Special {@link Fight} mechanics. */
+	public List<Mutator> mutators=new ArrayList<>(1);
 
 	/** Constructor. */
 	protected Branch(String floor,String wall){
 		this.floor=floor;
 		this.wall=wall;
-	}
-
-	/** @return If not-<code>null</code>, one replaces {@link SpecialChest}. */
-	public Feature generatespecialchest(DungeonFloor f){
-		return null;
 	}
 
 	/**
@@ -67,11 +61,6 @@ public class Branch implements Serializable{
 	 */
 	public boolean validate(List<Combatant> foes){
 		return true;
-	}
-
-	/** Allows custimization of battles. */
-	public void fight(Fight f){
-		return;
 	}
 
 	/** Allows customization of dungeons. */

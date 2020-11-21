@@ -2,6 +2,7 @@ package javelin.controller.fight.mutator;
 
 import java.io.Serializable;
 
+import javelin.controller.action.Action;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.Fight;
 import javelin.model.unit.Combatant;
@@ -48,6 +49,16 @@ public abstract class Mutator implements Serializable{
 
 	/** @throws EndBattle */
 	public void checkend(Fight f){
+		return;
+	}
+
+	/** After any unit ends its {@link Action}. */
+	public void endturn(Fight fight){
+		return;
+	}
+
+	/** Called when a fight ends but before clean-ups. */
+	public void end(Fight fight){
 		return;
 	}
 }

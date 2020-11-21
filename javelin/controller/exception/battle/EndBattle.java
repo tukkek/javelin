@@ -7,6 +7,7 @@ import javelin.Javelin;
 import javelin.controller.ai.ThreadManager;
 import javelin.controller.ai.cache.AiCache;
 import javelin.controller.fight.Fight;
+import javelin.controller.fight.mutator.Friendly;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.wish.Ressurect;
 import javelin.model.item.consumable.Scroll;
@@ -69,7 +70,7 @@ public class EndBattle extends BattleEvent{
 		var f=Javelin.app.fight;
 		if(Fight.victory)
 			combatresult=f.reward();
-		else if(f.friendly!=null&&!s.blueTeam.isEmpty())
+		else if(f.has(Friendly.class)!=null&&!s.blueTeam.isEmpty())
 			combatresult="You lost!";
 		else if(s.getfleeing(Fight.originalblueteam).isEmpty()){
 			Squad.active.disband();

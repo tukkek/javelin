@@ -13,6 +13,7 @@ import javelin.controller.comparator.CombatantsByNameAndMercenary;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.LocationFight;
+import javelin.controller.fight.mutator.Friendly;
 import javelin.controller.fight.mutator.Waves;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.map.location.LocationMap;
@@ -102,7 +103,7 @@ public class Arena extends UniqueLocation{
 
 		ArenaFight(ArrayList<Combatant> fighters,int el){
 			super(Arena.this,new ArenaMap());
-			friendly=Combatant.STATUSINJURED;
+			mutators.add(new Friendly(Combatant.STATUSINJURED));
 			this.fighters=fighters;
 			period=Period.AFTERNOON;
 			teamel=el;

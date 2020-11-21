@@ -18,6 +18,7 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.EndBattle;
+import javelin.controller.fight.mutator.Friendly;
 import javelin.controller.fight.mutator.Mutator;
 import javelin.controller.fight.setup.BattleSetup;
 import javelin.controller.generator.encounter.EncounterGenerator;
@@ -85,11 +86,6 @@ public abstract class Fight{
 	public Integer weather=Weather.current;
 	/** Time of day / lightning level. */
 	public Period period=Period.now();
-	/**
-	 * {@link Combatant#getnumericstatus()}n to remove {@link Combatant} from a
-	 * battle or <code>null</code> if non-friendly (default).
-	 */
-	public Integer friendly=null;
 	/** Delegates some setup details.TODO */
 	public BattleSetup setup=new BattleSetup();
 	/** Wheter {@link Withdraw} is enabled. */
@@ -172,12 +168,8 @@ public abstract class Fight{
 	 */
 	public boolean onend(){
 		state.blueTeam.addAll(state.getfleeing(Fight.originalblueteam));
-		if(friendly!=null){
-			var survivors=state.dead.stream().filter(d->d.hp>Combatant.DEADATHP)
-					.collect(Collectors.toList());
-			state.dead.removeAll(survivors);
-			state.blueTeam.addAll(survivors);
-		}
+		for(var m:mutators)
+			m.end(this);
 		EndBattle.showcombatresult();
 		return true;
 	}
@@ -345,33 +337,8 @@ public abstract class Fight{
 	 * Called after a unit completes an {@link Action}.
 	 */
 	public void endturn(){
-		if(friendly!=null){
-			BattleState s=Fight.state;
-			int ncombatants=s.blueTeam.size()+s.redTeam.size();
-			cleanwounded(s.blueTeam,s);
-			cleanwounded(s.redTeam,s);
-			if(s.blueTeam.size()+s.redTeam.size()<ncombatants){
-				Fight.state=s;
-				Javelin.redraw();
-			}
-		}
-	}
-
-	void cleanwounded(ArrayList<Combatant> team,BattleState s){
-		for(Combatant c:(List<Combatant>)team.clone()){
-			if(c.getnumericstatus()>friendly) continue;
-			if(team==s.blueTeam) s.fleeing.add(c);
-			team.remove(c);
-			if(s.next==c) s.next();
-			addmeld(c.location[0],c.location[1],c,s);
-			Javelin.message(
-					c+" is removed from the battlefield!\n"+"Press ENTER to continue...",
-					Javelin.Delay.NONE);
-			while(Javelin.input().getKeyChar()!='\n'){
-				// wait for enter
-			}
-			MessagePanel.active.clear();
-		}
+		for(var m:mutators)
+			m.endturn(this);
 	}
 
 	/**
@@ -416,7 +383,7 @@ public abstract class Fight{
 			throw new RepeatTurn();
 		}
 		if(Javelin.DEBUG) withdrawall(true);
-		if(friendly==null&&Fight.state.isengaged(combatant)){
+		if(has(Friendly.class)==null&&Fight.state.isengaged(combatant)){
 			Javelin.prompt("Disengage first!");
 			throw new RepeatTurn();
 		}
@@ -503,5 +470,12 @@ public abstract class Fight{
 				||state.isblocked(p.x,p.y))
 			p.displace();
 		return p;
+	}
+
+	/** @return Mutator instance if currenclty active. */
+	public Mutator has(Class<? extends Mutator> type){
+		for(var m:mutators)
+			if(type.isInstance(m)) return m;
+		return null;
 	}
 }

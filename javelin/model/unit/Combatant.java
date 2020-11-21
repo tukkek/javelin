@@ -403,13 +403,11 @@ public class Combatant implements Serializable,Cloneable{
 		switch(source.vision){
 			case 0:
 				return p;
-			case 2:
-				return Javelin.app.fight.denydarkvision?Period.EVENING:Period.AFTERNOON;
-			case 1:
+			case Monster.VISION_DARK:
+				return Period.AFTERNOON;
+			case Monster.VISION_LOWLIGHT:
 				if(p.equals(Period.NIGHT)) return Period.EVENING;
-				if(p.equals(Period.EVENING))
-					return Javelin.app.fight.denydarkvision?Period.EVENING
-							:Period.AFTERNOON;
+				if(p.equals(Period.EVENING)) return Period.AFTERNOON;
 		}
 		return p;
 	}

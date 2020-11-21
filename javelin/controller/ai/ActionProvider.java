@@ -8,7 +8,6 @@ import java.util.Stack;
 import javelin.Javelin;
 import javelin.controller.action.Action;
 import javelin.controller.action.ActionMapping;
-import javelin.controller.action.Defend;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.action.ai.Flee;
 import javelin.controller.exception.StopThinking;
@@ -54,8 +53,6 @@ public final class ActionProvider
 		}
 		if(Flee.flee(s.next,s))
 			actions.add(Flee.SINGLETON);
-		else if(Javelin.app.fight.endless&&s.getopponents(s.next).isEmpty())
-			actions.add(Defend.SINGLETON);
 		else
 			actions.addAll(ActionProvider.AIACTIONS);
 	}

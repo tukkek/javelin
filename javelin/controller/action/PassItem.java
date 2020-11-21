@@ -32,7 +32,7 @@ public class PassItem extends Action{
 			Javelin.message("Disengage first...",Javelin.Delay.WAIT);
 			return false;
 		}
-		final ArrayList<Combatant> surroudings=state.getsurroundings(sameme);
+		var surroudings=state.getsurroundings(sameme.getlocation());
 		for(final Combatant c:new ArrayList<>(surroudings))
 			if(!c.isally(sameme,state)||state.isengaged(c)) surroudings.remove(c);
 		if(surroudings.isEmpty()){

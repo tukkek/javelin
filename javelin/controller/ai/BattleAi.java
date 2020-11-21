@@ -2,7 +2,6 @@ package javelin.controller.ai;
 
 import java.util.List;
 
-import javelin.Javelin;
 import javelin.controller.ai.valueselector.ValueSelector;
 import javelin.controller.walker.Walker;
 import javelin.model.state.BattleState;
@@ -78,7 +77,6 @@ public class BattleAi extends AlphaBetaSearch{
 
 	@Override
 	public boolean terminalTest(final Node node){
-		if(Javelin.app.fight.endless) return false;
 		final BattleState state=(BattleState)node;
 		return state.redTeam.isEmpty()||state.blueTeam.isEmpty();
 	}

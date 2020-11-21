@@ -1,12 +1,9 @@
 package javelin.controller.fight;
 
-import java.util.ArrayList;
-
 import javelin.Debug;
 import javelin.JavelinApp;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.terrain.Terrain;
-import javelin.model.unit.Combatant;
 import javelin.old.RPG;
 
 /**
@@ -18,11 +15,6 @@ public class RandomEncounter extends Fight{
 	@Override
 	public Integer getel(int teamel){
 		return Terrain.current().getel(teamel);
-	}
-
-	@Override
-	public ArrayList<Combatant> getfoes(Integer teamel){
-		return null;
 	}
 
 	/**

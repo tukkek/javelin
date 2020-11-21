@@ -14,7 +14,7 @@ import javelin.controller.comparator.MonstersByName;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.LocationFight;
-import javelin.controller.fight.mutator.WavesFight;
+import javelin.controller.fight.mutator.Waves;
 import javelin.controller.generator.NpcGenerator;
 import javelin.controller.map.location.LocationMap;
 import javelin.controller.terrain.Terrain;
@@ -124,20 +124,20 @@ public abstract class Haunt extends Fortification{
 		}
 	}
 
-	class HauntFight extends WavesFight{
+	class HauntFight extends LocationFight{
 		HauntFight(Location l,LocationMap m){
-			super(l,m,-1);
-			waves=Haunt.this.waves; //TODO can we remove this data from Haunt?
-		}
-
-		@Override
-		protected Combatants generatewave(int el){
-			try{
-				return Haunt.this.generatewave();
-			}catch(GaveUp e){
-				if(Javelin.DEBUG) throw new RuntimeException(e);
-				return new Combatants();
-			}
+			super(l,m);
+			mutators.add(new Waves(targetel,null){
+				@Override
+				protected Combatants generatewave(int el,Fight f){
+					try{
+						return generatemonsters(el);
+					}catch(GaveUp e){
+						if(Javelin.DEBUG) throw new RuntimeException(e);
+						return new Combatants();
+					}
+				}
+			});
 		}
 
 		@Override
@@ -145,18 +145,17 @@ public abstract class Haunt extends Fortification{
 			if(!super.win()) return false;
 			defeated=Fight.originalredteam.stream().map(c->c.source)
 					.collect(Collectors.toSet());
+			garrison.clear();
 			return true;
 		}
 	}
 
+	/** Every unit that can be generated here. */
 	protected List<Monster> pool;
 
 	List<Monster> hires=new ArrayList<>();
 	Class<? extends LocationMap> map;
-	transient List<Terrain> terrains;
 	Combatant recruit;
-	int waves;
-	int waveel;
 
 	/** Constructor. */
 	protected Haunt(String description,Class<? extends LocationMap> map,
@@ -164,7 +163,7 @@ public abstract class Haunt extends Fortification{
 		super(description,description,0,0);
 		if(Javelin.DEBUG&&pool.isEmpty())
 			throw new RuntimeException("empty pool: "+getClass());
-		this.terrains=terrains;
+		terrain=terrains;
 		discard=false;
 		allowentry=false;
 		this.map=map;
@@ -173,56 +172,24 @@ public abstract class Haunt extends Fortification{
 		while(RPG.chancein(2)&&tieri<Tier.TIERS.size()-1)
 			tieri+=1;
 		var t=Tier.TIERS.get(tieri);
-		targetel=RPG.r(t.minlevel,t.maxlevel);
+		targetel=t.getrandomel(false);
 	}
 
 	@Override
 	public void generategarrison(){
-		waves=RPG.r(1,4);
-		if(waves>targetel) waves=targetel;
-		waveel=targetel+WavesFight.ELMODIFIER.get(waves);
-		try{
-			generatewave();
-		}catch(GaveUp e){
-			targetel+=1;
-			generategarrison();
-		}
-	}
-
-	Combatants generatemonsters() throws GaveUp{
-		var pool=getpool();
-		if(pool.isEmpty()) throw new GaveUp();
-		var wave=new Combatants();
-		for(var attempt=1;attempt<=ATTEMPTS;attempt++){
-			wave.clear();
-			var el=-Integer.MAX_VALUE;
-			while(el<waveel){
-				var m=RPG.pick(pool);
-				Combatant c;
-				if(RPG.chancein(LEADER)||m.cr<waveel-20){
-					if(m.cr>=waveel) continue;
-					c=NpcGenerator.generate(m,RPG.r(Math.round(m.cr),waveel));
-					if(c==null) continue;
-				}else
-					c=new Combatant(m,true);
-				wave.add(c);
-				el=ChallengeCalculator.calculateel(wave);
+		while(garrison.isEmpty())
+			try{
+				/*also make that any amount of waves can be generated*/
+				generatemonsters(targetel+Waves.ELMODIFIER.get(4));
+				garrison.addAll(generatemonsters(targetel+Waves.ELMODIFIER.get(1)));
+			}catch(GaveUp e){
+				targetel+=1;
+				garrison.clear();
 			}
-			if(el<=waveel) return wave;
-		}
-		throw new GaveUp();
 	}
 
-	Combatants generatewave() throws GaveUp{
-		garrison.clear();
-		waves-=1;
-		if(waves<0) return null;
-		garrison=generatemonsters();
-		return garrison;
-	}
-
-	List<Monster> getpool(){
-		return pool.stream().filter(m->m.cr<=waveel).collect(Collectors.toList());
+	List<Monster> getpool(int el){
+		return pool.stream().filter(m->m.cr<=el).collect(Collectors.toList());
 	}
 
 	@Override
@@ -232,7 +199,7 @@ public abstract class Haunt extends Fortification{
 
 	@Override
 	public Integer getel(Integer attackerel){
-		return waves==1?ChallengeCalculator.calculateel(garrison):targetel;
+		return ishostile()?super.getel(attackerel):targetel;
 	}
 
 	@Override
@@ -264,7 +231,7 @@ public abstract class Haunt extends Fortification{
 		}
 		hires.sort(MonstersByName.INSTANCE);
 		if(hires.isEmpty()){
-			var pool=RPG.shuffle(getpool());
+			var pool=RPG.shuffle(getpool(targetel));
 			var nhires=Math.min(RPG.rolldice(2,4),pool.size());
 			add(new HashSet<>(pool.subList(0,nhires)));
 		}
@@ -293,7 +260,6 @@ public abstract class Haunt extends Fortification{
 	protected void captureforai(Incursion attacker){
 		super.captureforai(attacker);
 		raiselevel();
-		waves=0;
 	}
 
 	@Override
@@ -326,7 +292,7 @@ public abstract class Haunt extends Fortification{
 
 	@Override
 	protected boolean validateplacement(boolean water,World w,List<Actor> actors){
-		return terrains.contains(Terrain.get(x,y))
+		return terrain.contains(Terrain.get(x,y))
 				&&super.validateplacement(water,w,actors);
 	}
 
@@ -338,15 +304,40 @@ public abstract class Haunt extends Fortification{
 		return false;
 	}
 
+	/** @return A haunt encounter or wave. */
+	public Combatants generatemonsters(int waveel) throws GaveUp{
+		var pool=getpool(waveel);
+		if(pool.isEmpty()) throw new GaveUp();
+		var wave=new Combatants();
+		for(var attempt=1;attempt<=ATTEMPTS;attempt++){
+			wave.clear();
+			var el=-Integer.MAX_VALUE;
+			while(el<waveel){
+				var m=RPG.pick(pool);
+				Combatant c;
+				if(RPG.chancein(LEADER)||m.cr<waveel-20){
+					c=NpcGenerator.generate(m,RPG.r(Math.round(m.cr),waveel));
+					if(c==null) continue;
+				}else
+					c=new Combatant(m,true);
+				wave.add(c);
+				el=ChallengeCalculator.calculateel(wave);
+			}
+			if(el<=waveel) return wave;
+		}
+		throw new GaveUp();
+	}
+
 	@Override
 	public void spawn(){
 		try{
-			Incursion.spawn(new Incursion(x,y,generatemonsters(),realm));
+			Incursion.spawn(new Incursion(x,y,generatemonsters(targetel),realm));
 		}catch(GaveUp e){
 			return;
 		}
 	}
 
+	/** @return All {@link World} haunts. */
 	static public List<Haunt> gethaunts(){
 		return World.getactors().stream().filter(a->a instanceof Haunt)
 				.map(a->(Haunt)a).collect(Collectors.toList());

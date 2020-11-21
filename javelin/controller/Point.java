@@ -131,9 +131,9 @@ public class Point implements Cloneable,Serializable{
 	 * @param toy Final y, exclusive.
 	 * @return A list containig all the Points in the given range.
 	 */
-	public static HashSet<Point> getrange(int x,int yp,int tox,int toy){
-		HashSet<Point> range=new HashSet<>((tox-x)*(toy-yp));
-		for(;x<tox;x++)
+	public static HashSet<Point> getrange(int xp,int yp,int tox,int toy){
+		HashSet<Point> range=new HashSet<>((tox-xp)*(toy-yp));
+		for(var x=xp;x<tox;x++)
 			for(int y=yp;y<toy;y++)
 				range.add(new Point(x,y));
 		return range;

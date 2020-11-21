@@ -12,7 +12,8 @@ import javelin.controller.challenge.Difficulty;
 import javelin.controller.comparator.CombatantsByNameAndMercenary;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
-import javelin.controller.fight.mutator.WavesFight;
+import javelin.controller.fight.LocationFight;
+import javelin.controller.fight.mutator.Waves;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.map.location.LocationMap;
 import javelin.controller.terrain.Terrain;
@@ -93,22 +94,46 @@ public class Arena extends UniqueLocation{
 		}
 	}
 
-	//TODO change map name
-	//TODO need to reward gold only after discounting ally's share
-	class ArenaFight extends WavesFight{
+	class ArenaFight extends LocationFight{
 		ArrayList<Combatant> fighters;
-		int allyel=0;
+		int alliesel=0;
 		int teamel;
 		int waveel;
 
 		ArenaFight(ArrayList<Combatant> fighters,int el){
-			super(Arena.this,new ArenaMap(),el);
-			friendly=true;
-			friendlylevel=Combatant.STATUSINJURED;
-			message="New gladiators enter the arena!";
+			super(Arena.this,new ArenaMap());
+			friendly=Combatant.STATUSINJURED;
 			this.fighters=fighters;
 			period=Period.AFTERNOON;
 			teamel=el;
+			var encounters=Arrays.asList(Terrain.ALL).stream()
+					.map(t->t.getencounters()).collect(Collectors.toList());
+			mutators.add(new Waves(el,encounters){
+				{
+					message="New gladiators enter the arena!";
+				}
+
+				void generateallies(){
+					if(!RPG.chancein(4))
+						//TODO perhaps only intelligent or NPC?
+						alliesel=ChallengeCalculator.calculateel(fighters)
+								+RPG.r(Difficulty.EASY,0);
+					var allies=EncounterGenerator.generatebyindex(alliesel,encounters);
+					for(var a:allies){
+						a.automatic=true;
+						a.mercenary=true;
+					}
+					var b=Fight.state.blueTeam;
+					add(allies,b,((ArenaMap)map).minionspawn,ArenaFight.this);
+					waveel=ChallengeCalculator.calculateel(b)+Waves.ELMODIFIER.get(waves);
+				}
+
+				@Override
+				protected Combatants generatewave(int el,Fight f){
+					if(wave==1) generateallies();
+					return EncounterGenerator.generatebyindex(el,encounters);
+				}
+			});
 		}
 
 		@Override
@@ -116,31 +141,10 @@ public class Arena extends UniqueLocation{
 			return fighters;
 		}
 
-		public void generateallies(){
-			if(!RPG.chancein(4))
-				//TODO perhaps only intelligent or NPC
-				allyel=ChallengeCalculator.calculateel(fighters)
-						+RPG.r(Difficulty.EASY,0);
-			var allies=EncounterGenerator.generate(allyel,Arrays.asList(Terrain.ALL));
-			for(var a:allies){
-				a.automatic=true;
-				a.mercenary=true;
-			}
-			add(allies,Fight.state.blueTeam,((ArenaMap)map).minionspawn);
-			waveel=ChallengeCalculator.calculateel(Fight.state.blueTeam)
-					+getelmodifier();
-		}
-
-		@Override
-		protected Combatants generatewave(int el){
-			if(wave==1) generateallies();
-			return EncounterGenerator.generate(waveel,Arrays.asList(Terrain.ALL));
-		}
-
 		@Override
 		protected int getgoldreward(List<Combatant> defeated){
 			var gold=super.getgoldreward(defeated);
-			return gold*teamel/(allyel+teamel);
+			return gold*teamel/(alliesel+teamel);
 		}
 	}
 

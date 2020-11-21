@@ -134,7 +134,7 @@ public class Mine extends Fortification{
 	/** Constructor. */
 	public Mine(){
 		super(DESCRIPTION,DESCRIPTION,6,10);
-		terrain=Terrain.UNDERGROUND;
+		terrain.add(Terrain.UNDERGROUND);
 		allowedinscenario=false;
 		gossip=true;
 		work=1;

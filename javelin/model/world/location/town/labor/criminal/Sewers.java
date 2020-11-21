@@ -88,7 +88,7 @@ public class Sewers extends Fortification{
 	/** Constructor. */
 	public Sewers(){
 		super(SEWERS,SEWERS,1,5);
-		terrain=Terrain.UNDERGROUND;
+		terrain.add(Terrain.UNDERGROUND);
 		sacrificeable=false;
 	}
 

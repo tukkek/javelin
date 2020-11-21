@@ -48,7 +48,8 @@ public class StartBattle extends BattleEvent{
 		if(!Squad.active.skipcombat(diffifculty)){
 			BattlePanel.current=Fight.state.next;
 			BattleScreen screen=new BattleScreen(true,true);
-			fight.draw();
+			for(var m:fight.mutators)
+				m.draw(fight);
 			if(Javelin.DEBUG) Debug.onbattlestart();
 			screen.mainloop();
 		}else
@@ -149,6 +150,8 @@ public class StartBattle extends BattleEvent{
 	/** TODO deduplicate originals */
 	public void preparebattle(ArrayList<Combatant> opponents){
 		Fight.state.redTeam=opponents;
+		for(var m:fight.mutators)
+			m.prepare(fight);
 		var blue=Fight.state.blueTeam;
 		Fight.originalblueteam=new Combatants(blue);
 		Fight.originalredteam=new Combatants(Fight.state.redTeam);
@@ -156,8 +159,6 @@ public class StartBattle extends BattleEvent{
 			var c=blue.get(i);
 			blue.set(i,c.clone().clonesource());
 		}
-		for(var p:fight.onprepare)
-			p.run();
 		Fight.state.next();
 	}
 

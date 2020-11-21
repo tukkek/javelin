@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import javelin.controller.fight.Fight;
+import javelin.controller.fight.mutator.Mutator;
 import javelin.controller.kit.Barbarian;
 import javelin.controller.kit.Rogue;
 import javelin.controller.upgrade.Upgrade;
@@ -81,7 +82,13 @@ public class Robbers extends UrbanEncounter{
 			var guards=new Guards(town).generatefoes();
 			for(var g:guards)
 				g.setmercenary(true);
-			f.onprepare.add(()->Fight.state.blueTeam.addAll(guards));
+			f.mutators.add(new Mutator(){
+				@Override
+				public void prepare(Fight f){
+					super.prepare(f);
+					Fight.state.blueTeam.addAll(guards);
+				}
+			});
 		}
 		return f;
 	}

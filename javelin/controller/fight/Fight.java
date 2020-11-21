@@ -12,7 +12,7 @@ import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.action.Action;
-import javelin.controller.action.world.WorldMove;
+import javelin.controller.action.Withdraw;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
@@ -49,6 +49,11 @@ public abstract class Fight{
 	public static BattleState state=null;
 	/** See {@link #win(BattleScreen)}. */
 	public static Boolean victory;
+	/** Red team at the moment the {@link Fight} begins. */
+	public static Combatants originalredteam;
+	/** Blue team at the moment the {@link Fight} begins. */
+	public static Combatants originalblueteam;
+
 	/** <code>true</code> if {@link Meld} should be generated. */
 	public boolean meld=false;
 	/**
@@ -56,11 +61,6 @@ public abstract class Fight{
 	 * generated according to current tile's terrain.
 	 */
 	public Map map=null;
-	/**
-	 * If <code>true</code> will remove opponents at first sign of blood instead
-	 * of at negative hit points.
-	 */
-	public boolean friendly=false;
 	/**
 	 * If <code>false</code> will not reward experience points after victory.
 	 */
@@ -79,58 +79,25 @@ public abstract class Fight{
 	 * <code>true</code> if this fight is susceptible to {@link Diplomacy}.
 	 */
 	public boolean bribe=true;
-	/** If not <code>null</code> will use this terrain when generating a map. */
+	/** If not <code>null</code> will use this when generating a {@link Map}. */
 	public Terrain terrain=null;
-	/**
-	 * If not <code>null</code> will override any other flooding level.
-	 *
-	 * TODO should set from {@link Weather#current} and then allow it to be
-	 * overriden.
-	 *
-	 * @see Weather#current
-	 * @see Map#maxflooding
-	 */
+	/** If not <code>null</code> will override any other {@link Weather} level. */
 	public Integer weather=Weather.current;
-	/**
-	 * Since {@link Squad#time} is always ticking and needs to be updated even
-	 * when fights do happen this by default holds the period at the moment of
-	 * instantiation, so we can be more faithful to what appears on screen instead
-	 * of the period after the {@link WorldMove} or similar has been completed.
-	 *
-	 * @see Javelin#getperiod()
-	 */
+	/** Time of day / lightning level. */
 	public Period period=Period.now();
-	/** Status to remove {@link Combatant} from a {@link #friendly} battle. */
-	public int friendlylevel=Combatant.STATUSWOUNDED;
+	/**
+	 * {@link Combatant#getnumericstatus()}n to remove {@link Combatant} from a
+	 * battle or <code>null</code> if non-friendly (default).
+	 */
+	public Integer friendly=null;
 	/** Delegates some setup details.TODO */
 	public BattleSetup setup=new BattleSetup();
-	public boolean denydarkvision=false;
+	/** Wheter {@link Withdraw} is enabled. */
 	public boolean canflee=true;
-	public boolean endless=false;
-	/** Red team at the moment the {@link Fight} begins. */
-	public static Combatants originalredteam;
-	/** Blue team at the moment the {@link Fight} begins. */
-	public static Combatants originalblueteam;
-	/**
-	 * These callbacks are called at the last opportunity for changing this fight
-	 * before actual battle begins. At this point the entire stack should be
-	 * setup.
-	 *
-	 * TODO refactor as {@link Mutator}
-	 *
-	 * @see BattleSetup
-	 */
-	public List<Runnable> onready=new ArrayList<>(0);
-	/**
-	 * Called after {@value #originalblueteam} and {@value #originalredteam} team
-	 * are set but before they are placed, allowing for temporary combatants to be
-	 * included.
-	 *
-	 * TODO refactor as {@link Mutator}
-	 */
-	public List<Runnable> onprepare=new ArrayList<>(0);
 	/** Custom combat rules. */
 	public List<Mutator> mutators=new ArrayList<>(0);
+
+	List<Terrain> terrains=getdefaultterrains(Terrain.current(),flood());
 
 	/**
 	 * @return an encounter level for which an appropriate challenge should be
@@ -144,14 +111,15 @@ public abstract class Fight{
 	}
 
 	/**
-	 * @param teamel usually comes from {@link #getel(int)}, and so might be
+	 * @param el usually comes from {@link #getel(int)}, and so might be
 	 *          <code>null</code>.
-	 *
 	 * @return The list of monsters that are going to be featured in this fight.
 	 *         If <code>null</code>, will then use
 	 *         {@link #getel(JavelinApp, int)}.
 	 */
-	public abstract ArrayList<Combatant> getfoes(Integer teamel);
+	public ArrayList<Combatant> getfoes(Integer el){
+		return generate(el,terrains);
+	}
 
 	/**
 	 * Called in case of a successful bribe.
@@ -204,7 +172,7 @@ public abstract class Fight{
 	 */
 	public boolean onend(){
 		state.blueTeam.addAll(state.getfleeing(Fight.originalblueteam));
-		if(Javelin.app.fight.friendly){
+		if(friendly!=null){
 			var survivors=state.dead.stream().filter(d->d.hp>Combatant.DEADATHP)
 					.collect(Collectors.toList());
 			state.dead.removeAll(survivors);
@@ -219,6 +187,8 @@ public abstract class Fight{
 	 * @throws EndBattle If this battle is over.
 	 */
 	public void checkend(){
+		for(var m:mutators)
+			m.checkend(this);
 		if(win()||Fight.state.blueTeam.isEmpty()) throw new EndBattle();
 	}
 
@@ -252,17 +222,15 @@ public abstract class Fight{
 	}
 
 	/**
-	 * @param el Target encounter level for the fight. Taken as a guideline
+	 * @param waveel Target encounter level for the fight. Taken as a guideline
 	 *          because given {@link Terrain} and such a fight cannot be generated
 	 *          for this exact level.
 	 * @param terrains Terrain this fight takes place on.
 	 * @return The resulting opponents.
 	 */
 	public ArrayList<Combatant> generate(){
-		Integer blueel=getel(ChallengeCalculator.calculateel(Fight.state.blueTeam));
-		ArrayList<Terrain> terrains=getterrains();
-		ArrayList<Combatant> foes=getfoes(blueel);
-		if(foes==null) foes=generate(blueel,terrains);
+		var blueel=getel(ChallengeCalculator.calculateel(Fight.state.blueTeam));
+		var foes=getfoes(blueel);
 		enhance(foes);
 		return foes;
 	}
@@ -273,10 +241,9 @@ public abstract class Fight{
 	 * @return A group of enemies that closely match the given EL, as far as
 	 *         possible.
 	 */
-	static public ArrayList<Combatant> generate(final int el,
-			ArrayList<Terrain> terrains){
+	static public Combatants generate(final int el,List<Terrain> terrains){
 		int delta=0;
-		ArrayList<Combatant> generated=null;
+		Combatants generated=null;
 		while(generated==null){
 			generated=chooseopponents(el-delta,terrains);
 			if(generated!=null) break;
@@ -286,8 +253,7 @@ public abstract class Fight{
 		return generated;
 	}
 
-	static ArrayList<Combatant> chooseopponents(final int el,
-			ArrayList<Terrain> terrains){
+	static Combatants chooseopponents(final int el,List<Terrain> terrains){
 		return EncounterGenerator.generate(el,terrains);
 	}
 
@@ -298,14 +264,6 @@ public abstract class Fight{
 	 */
 	public boolean validate(ArrayList<Combatant> encounter){
 		return true;
-	}
-
-	/**
-	 * @param town Terrain hint. Usually {@link Terrain#current()}.
-	 * @return A list of {@link Terrain}s which foes in this fight can inhabit.
-	 */
-	public ArrayList<Terrain> getterrains(){
-		return getdefaultterrains(Terrain.current(),flood());
 	}
 
 	/**
@@ -363,8 +321,8 @@ public abstract class Fight{
 
 	/** @see #onready */
 	public final void ready(){
-		for(var r:onready)
-			r.run();
+		for(var m:mutators)
+			m.ready(this);
 	}
 
 	/**
@@ -387,7 +345,7 @@ public abstract class Fight{
 	 * Called after a unit completes an {@link Action}.
 	 */
 	public void endturn(){
-		if(friendly){
+		if(friendly!=null){
 			BattleState s=Fight.state;
 			int ncombatants=s.blueTeam.size()+s.redTeam.size();
 			cleanwounded(s.blueTeam,s);
@@ -401,7 +359,7 @@ public abstract class Fight{
 
 	void cleanwounded(ArrayList<Combatant> team,BattleState s){
 		for(Combatant c:(List<Combatant>)team.clone()){
-			if(c.getnumericstatus()>friendlylevel) continue;
+			if(c.getnumericstatus()>friendly) continue;
 			if(team==s.blueTeam) s.fleeing.add(c);
 			team.remove(c);
 			if(s.next==c) s.next();
@@ -446,13 +404,6 @@ public abstract class Fight{
 	}
 
 	/**
-	 * Called after painting the {@link BattleScreen} for the first time.
-	 */
-	public void draw(){
-		// nothing by default
-	}
-
-	/**
 	 * TODO probablby better to just have flee=true/false in Fight.
 	 *
 	 * @param combatant Fleeing unit.
@@ -465,7 +416,7 @@ public abstract class Fight{
 			throw new RepeatTurn();
 		}
 		if(Javelin.DEBUG) withdrawall(true);
-		if(!friendly&&Fight.state.isengaged(combatant)){
+		if(friendly==null&&Fight.state.isengaged(combatant)){
 			Javelin.prompt("Disengage first!");
 			throw new RepeatTurn();
 		}

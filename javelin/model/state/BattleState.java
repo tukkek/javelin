@@ -152,24 +152,12 @@ public class BattleState implements Node,TeamContainer{
 		return list;
 	}
 
-	/**
-	 * @return All units surrounding the given {@link Combatant}.
-	 */
-	public ArrayList<Combatant> getsurroundings(final Combatant surrounded){
-		final ArrayList<Combatant> surroundings=new ArrayList<>();
-		final int[] location=surrounded.location;
-		final ArrayList<Combatant> combatants=getcombatants();
-		location:for(final Combatant c:combatants)
-			for(int x=location[0]-1;x<=location[0]+1;x++)
-				for(int y=location[1]-1;y<=location[1]+1;y++){
-					if(x==location[0]&&y==location[1]) /* center */
-						continue;
-					if(c.location[0]==x&&c.location[1]==y){
-						surroundings.add(c);
-						continue location;
-					}
-				}
-		return surroundings;
+	/** @return All units surrounding the given {@link Combatant}. */
+	public List<Combatant> getsurroundings(Point p){
+		var surroundings=p.getadjacent();
+		return getcombatants().stream()
+				.filter(c->surroundings.contains(c.getlocation()))
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -221,7 +209,7 @@ public class BattleState implements Node,TeamContainer{
 	 */
 	public boolean isengaged(final Combatant c){
 		if(c.burrowed) return false;
-		for(final Combatant nearby:getsurroundings(c))
+		for(var nearby:getsurroundings(c.getlocation()))
 			if(!nearby.source.passive&&!c.isally(nearby,this)) return true;
 		return false;
 	}
@@ -421,5 +409,10 @@ public class BattleState implements Node,TeamContainer{
 	/** @return <code>true</code> if given tile is occupied. */
 	public boolean isblocked(int x,int y){
 		return map[x][y].blocked||getmeld(x,y)!=null||getcombatant(x,y)!=null;
+	}
+
+	/** @return <code>true</code> if a {@link Combatant} can be placed here. */
+	public boolean isempty(int x,int y){
+		return Javelin.app.fight.map.validate(x,y)&&!isblocked(x,y);
 	}
 }

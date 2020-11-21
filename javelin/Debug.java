@@ -13,6 +13,7 @@ import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
+import javelin.controller.fight.mutator.Mutator;
 import javelin.controller.fight.setup.BattleSetup;
 import javelin.controller.generator.NpcGenerator;
 import javelin.controller.generator.WorldGenerator;
@@ -54,9 +55,13 @@ public class Debug{
 
 		public DebugFight(Combatants foes){
 			this.foes=foes;
-			onready.add(()->{
-				for(var c:state.redTeam)
-					c.ap=1000;
+			mutators.add(new Mutator(){
+				@Override
+				public void ready(Fight f){
+					super.ready(f);
+					for(var c:state.redTeam)
+						c.ap=1000;
+				}
 			});
 		}
 

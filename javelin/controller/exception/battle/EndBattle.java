@@ -69,7 +69,7 @@ public class EndBattle extends BattleEvent{
 		var f=Javelin.app.fight;
 		if(Fight.victory)
 			combatresult=f.reward();
-		else if(f.friendly&&!s.blueTeam.isEmpty())
+		else if(f.friendly!=null&&!s.blueTeam.isEmpty())
 			combatresult="You lost!";
 		else if(s.getfleeing(Fight.originalblueteam).isEmpty()){
 			Squad.active.disband();

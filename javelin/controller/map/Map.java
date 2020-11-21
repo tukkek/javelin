@@ -1,6 +1,7 @@
 package javelin.controller.map;
 
 import java.awt.Image;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,9 +9,12 @@ import java.util.stream.Collectors;
 import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.ai.BattleAi;
+import javelin.controller.fight.Fight;
 import javelin.controller.map.terrain.water.DeepWaters;
 import javelin.controller.terrain.Terrain;
+import javelin.model.state.BattleState;
 import javelin.model.state.Square;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.old.RPG;
@@ -61,8 +65,9 @@ public abstract class Map{
 	 *
 	 * This is done for consistency but mostly because it allows for the
 	 * {@link BattleAi} to just stay out of reach with flying creatures instead of
-	 * losing a fight. {@link DungeonFloor} maps for example can have wall placement
-	 * that makes it very hard to kill a flying unit unless you have one yourself.
+	 * losing a fight. {@link DungeonFloor} maps for example can have wall
+	 * placement that makes it very hard to kill a flying unit unless you have one
+	 * yourself.
 	 *
 	 * @see Monster#fly
 	 */
@@ -219,5 +224,30 @@ public abstract class Map{
 	/** @return Floor image for the given coordinate (usually {@link #floor}). */
 	public Image getfloor(int x,int y){
 		return floor;
+	}
+
+	/**
+	 * TODO test default implementation
+	 *
+	 * @param team {@link BattleState#blueTeam} or {@link BattleState#redTeam}.
+	 * @return Spawn points for the given team.
+	 */
+	public List<Point> getspawn(List<Combatant> team){
+		var s=Fight.state;
+		if(!team.isEmpty()){
+			var byproximity=team.stream()
+					.flatMap(c->c.getlocation().getadjacent().stream()).distinct()
+					.filter(p->s.isempty(p.x,p.y)).collect(Collectors.toSet());
+			if(!byproximity.isEmpty()) return new ArrayList<>(byproximity);
+		}
+		var byvision=s.getcombatants().stream()
+				.flatMap(c->c.calculatevision(Fight.state).stream()).distinct()
+				.filter(p->s.isempty(p.x,p.y)&&s.getsurroundings(p).isEmpty())
+				.collect(Collectors.toList());
+		if(!byvision.isEmpty()) return byvision;
+		var random=Point.getrange(0,0,map.length,map[0].length);
+		return RPG.shuffle(new ArrayList<>(random)).stream()
+				.filter(p->s.isempty(p.x,p.y)&&s.getsurroundings(p).isEmpty()).limit(3)
+				.collect(Collectors.toList());
 	}
 }

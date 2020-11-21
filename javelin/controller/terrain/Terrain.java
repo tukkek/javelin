@@ -12,7 +12,10 @@ import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.action.world.WorldMove;
 import javelin.controller.challenge.Difficulty;
+import javelin.controller.db.EncounterIndex;
+import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.generator.WorldGenerator;
+import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.map.Map;
 import javelin.controller.map.Maps;
 import javelin.controller.terrain.hazard.Hail;
@@ -410,5 +413,10 @@ public abstract class Terrain implements Serializable{
 	/** @return {@link Weather#current} by default. */
 	public Integer getweather(){
 		return Weather.current;
+	}
+
+	/** @return Terrain {@link Encounter}s. */
+	public EncounterIndex getencounters(){
+		return Organization.ENCOUNTERSBYTERRAIN.get(name);
 	}
 }

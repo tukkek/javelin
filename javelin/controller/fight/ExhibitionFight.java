@@ -1,7 +1,5 @@
 package javelin.controller.fight;
 
-import java.util.ArrayList;
-
 import javelin.controller.fight.tournament.Exhibition;
 import javelin.controller.map.Stadium;
 import javelin.model.unit.Combatant;
@@ -18,15 +16,10 @@ public class ExhibitionFight extends Fight{
 	public ExhibitionFight(){
 		map=new Stadium();
 		meld=true;
-		friendly=true;
+		friendly=Combatant.STATUSWOUNDED;
 		hide=false;
 		bribe=false;
 		canflee=false;
-	}
-
-	@Override
-	public ArrayList<Combatant> getfoes(Integer teamel){
-		return null;
 	}
 
 	@Override

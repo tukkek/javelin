@@ -1,6 +1,5 @@
 package javelin.controller.action;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +28,7 @@ public class AutoAttack extends Action{
 	@Override
 	public boolean perform(Combatant active){
 		BattleState s=Fight.state;
-		ArrayList<Combatant> melee=s.getsurroundings(active);
+		var melee=s.getsurroundings(active.getlocation());
 		melee.removeAll(active.getteam(s));
 		if(!melee.isEmpty()&&!active.source.melee.isEmpty()){
 			filterpassive(melee);

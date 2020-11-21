@@ -12,6 +12,7 @@ import javelin.controller.comparator.MonstersByCr;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
+import javelin.controller.fight.mutator.Mutator;
 import javelin.controller.map.Map;
 import javelin.controller.upgrade.classes.Commoner;
 import javelin.model.item.Tier;
@@ -52,12 +53,15 @@ public class Miniatures{
 			rewardgold=false;
 			rewardxp=false;
 			weather=Weather.CLEAR;
-			onready.add(()->{
-				for(var tiles:map.map)
-					for(var tile:tiles)
-						tile.obstructed=false;
-				while(balance())
-					continue;
+			mutators.add(new Mutator(){
+				@Override
+				public void ready(Fight f){
+					for(var tiles:map.map)
+						for(var tile:tiles)
+							tile.obstructed=false;
+					while(balance())
+						continue;
+				}
 			});
 		}
 

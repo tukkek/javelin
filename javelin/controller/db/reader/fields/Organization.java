@@ -12,6 +12,7 @@ import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.generator.NpcGenerator;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.generator.encounter.EncounterPossibilities;
+import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
@@ -28,9 +29,7 @@ public class Organization extends FieldReader{
 	public static HashMap<String,Monster> monstersbyname=new HashMap<>(
 			Monster.ALL.size());
 
-	/**
-	 * Possible encounters by terrain type.
-	 */
+	/** Possible {@link Encounter}s by {@link Terrain#name}. */
 	public static final HashMap<String,EncounterIndex> ENCOUNTERSBYTERRAIN=new HashMap<>();
 	/**
 	 * Possible encounters by monster type (encounters may have more than one

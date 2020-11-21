@@ -5,10 +5,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javelin.controller.Point;
+import javelin.controller.fight.Fight;
 import javelin.controller.map.Map;
 import javelin.model.state.Square;
+import javelin.model.unit.Combatant;
 
 /**
  * A map read and interpreted from a text file on the "maps" folder.
@@ -67,5 +70,10 @@ public class LocationMap extends Map{
 			spawnblue.add(new Point(x,y));
 		else if(c=='2') spawnred.add(new Point(x,y));
 		return s;
+	}
+
+	@Override
+	public List<Point> getspawn(List<Combatant> team){
+		return team==Fight.state.redTeam?spawnred:spawnblue;
 	}
 }

@@ -1,5 +1,6 @@
 package javelin.model.world.location;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.challenge.ChallengeCalculator;
@@ -47,11 +48,8 @@ public abstract class Fortification extends Location{
 	 * <code>true</code>.
 	 */
 	public boolean clear=false;
-	/**
-	 * If not <code>null</code> will use this for
-	 * {@link #generategarrison(int, int)}.
-	 */
-	protected Terrain terrain=null;
+	/** If not empty will use this for {@link #generategarrison(int, int)}. */
+	protected List<Terrain> terrain=new ArrayList<>(0);
 	/** Neutral location don't generate a garrison. */
 	protected boolean neutral=false;
 
@@ -109,9 +107,8 @@ public abstract class Fortification extends Location{
 			return;
 		}
 		int el=RPG.r(minlevel,maxlevel);
-		var t=terrain;
-		if(t==null) t=Terrain.get(x,y);
-		garrison.addAll(EncounterGenerator.generate(el,List.of(t)));
+		var t=terrain.isEmpty()?List.of(Terrain.get(x,y)):terrain;
+		garrison.addAll(EncounterGenerator.generate(el,t));
 		targetel=el;
 	}
 

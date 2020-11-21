@@ -187,4 +187,29 @@ public class BattleSetup{
 			p=new Point(RPG.r(2,width-3),RPG.r(2,height-3));
 		return p;
 	}
+
+	boolean place(Combatant c,int x,int y){
+		var m=Javelin.app.fight.map;
+		if(m.map[x][y].blocked||Fight.state.getcombatant(x,y)!=null) return false;
+		c.location[0]=x;
+		c.location[1]=y;
+		return true;
+	}
+
+	public void place(List<Combatant> team,List<Point> startingarea){
+		var m=Javelin.app.fight.map;
+		teamplacement:for(Combatant c:RPG.shuffle(team)){
+			for(var spawn:RPG.shuffle(new ArrayList<>(startingarea))){
+				var area=spawn.getadjacent();
+				area.add(spawn);
+				for(var p:RPG.shuffle(area))
+					if(m.validate(p.x,p.y)&&place(c,p.x,p.y)){
+						startingarea.add(p);
+						continue teamplacement;
+					}
+			}
+			var error="Couldn't place all combatants on map "+m.name;
+			throw new RuntimeException(error);
+		}
+	}
 }

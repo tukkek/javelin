@@ -55,8 +55,6 @@ public abstract class Fight{
 	/** Blue team at the moment the {@link Fight} begins. */
 	public static Combatants originalblueteam;
 
-	/** <code>true</code> if {@link Meld} should be generated. */
-	public boolean meld=false;
 	/**
 	 * Map this battle is to happen on or <code>null</code> for one to be
 	 * generated according to current tile's terrain.
@@ -355,22 +353,6 @@ public abstract class Fight{
 	}
 
 	/**
-	 * @param x Meld location.
-	 * @param y Meld location.
-	 * @param dead Unit that died, triggering {@link Meld} creation.
-	 * @param s Current battle state.
-	 * @return Created meld.
-	 */
-	public Meld addmeld(int x,int y,Combatant dead,BattleState s){
-		if(dead.summoned||dead.getnumericstatus()!=Combatant.STATUSDEAD
-				||!dead.source.isalive())
-			return null;
-		Meld m=new Meld(x,y,s.next.ap+1,dead);
-		s.meld.add(m);
-		return m;
-	}
-
-	/**
 	 * TODO probablby better to just have flee=true/false in Fight.
 	 *
 	 * @param combatant Fleeing unit.
@@ -425,7 +407,8 @@ public abstract class Fight{
 	}
 
 	public void die(Combatant c,BattleState s){
-		if(meld||Meld.DEBUG) addmeld(c.location[0],c.location[1],c,s);
+		for(var m:mutators)
+			m.die(c,s,this);
 		s.remove(c);
 		s.dead.add(c);
 	}

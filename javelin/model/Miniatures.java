@@ -12,6 +12,7 @@ import javelin.controller.comparator.MonstersByCr;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
+import javelin.controller.fight.mutator.Melding;
 import javelin.controller.fight.mutator.Mutator;
 import javelin.controller.map.Map;
 import javelin.controller.upgrade.classes.Commoner;
@@ -47,7 +48,7 @@ public class Miniatures{
 			map.wall=Images.get(List.of("terrain","boardwall"));
 			bribe=false;
 			hide=false;
-			meld=true;
+			mutators.add(new Melding());
 			period=Period.AFTERNOON;
 			rewardgold=false;
 			rewardgold=false;

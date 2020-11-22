@@ -2,6 +2,7 @@ package javelin.controller.fight;
 
 import java.util.ArrayList;
 
+import javelin.controller.fight.mutator.Melding;
 import javelin.controller.map.location.TownMap;
 import javelin.controller.terrain.Terrain;
 import javelin.model.state.BattleState;
@@ -33,7 +34,7 @@ public class Siege extends Fight{
 	public Siege(Location l){
 		location=l;
 		hide=false;
-		meld=true;
+		mutators.add(new Melding());
 		terrain=Terrain.get(l.x,l.y);
 		var d=l.getdistrict();
 		if(d!=null) map=new TownMap(d.town);

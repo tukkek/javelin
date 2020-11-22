@@ -129,8 +129,16 @@ public class Debug{
 		}
 
 		static void freezeopponents(){
-			for(Combatant c:Fight.state.blueTeam)
-				c.ap=-1000;
+			var m=new Mutator(){
+				@Override
+				public void endturn(Fight fight){
+					super.endturn(fight);
+					for(Combatant c:Fight.state.redTeam)
+						c.ap=1000;
+				}
+			};
+			m.endturn(null);
+			Javelin.app.fight.mutators.add(m);
 		}
 
 		static void teleport(Class<? extends Actor> type){

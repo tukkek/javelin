@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.challenge.Difficulty;
+import javelin.controller.fight.mutator.Melding;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
@@ -23,7 +24,7 @@ public class RandomDungeonEncounter extends RandomEncounter{
 	Combatants encounter;
 
 	RandomDungeonEncounter(){
-		meld=true;
+		mutators.add(new Melding());
 	}
 
 	/** {@link Dungeon} constructor. */

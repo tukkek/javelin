@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javelin.controller.action.Action;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.Fight;
+import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -59,6 +60,11 @@ public abstract class Mutator implements Serializable{
 
 	/** Called when a fight ends but before clean-ups. */
 	public void end(Fight fight){
+		return;
+	}
+
+	/** Called upon an unit's death. */
+	public void die(Combatant c,BattleState s,Fight fight){
 		return;
 	}
 }

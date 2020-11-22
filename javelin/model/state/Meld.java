@@ -19,12 +19,6 @@ import javelin.view.Images;
  * @author alex
  */
 public class Meld{
-	/**
-	 * If <code>true</code> will always generate meld.
-	 *
-	 * @see Fight#meld
-	 */
-	public static final boolean DEBUG=false;
 	/** Meld location. */
 	public final int x;
 	/** Meld location. */

@@ -3,6 +3,7 @@ package javelin.controller.fight;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.controller.fight.mutator.Melding;
 import javelin.controller.map.location.TownMap;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
@@ -21,7 +22,7 @@ public class IncursionFight extends Fight{
 	/** Constructor. */
 	public IncursionFight(final Incursion i){
 		incursion=i;
-		meld=true;
+		mutators.add(new Melding());
 		hide=false;
 		canflee=true;
 		var d=i.getdistrict();

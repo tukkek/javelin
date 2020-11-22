@@ -62,6 +62,14 @@ import javelin.old.RPG;
  * @author alex
  */
 public class LocationGenerator implements Serializable{
+	/** All haunt types. */
+	public static final List<Class<? extends Haunt>> HAUNTS=RPG
+			.shuffle(new ArrayList<>(List.of(SunkenShip.class,ShatteredTemple.class,
+					Graveyard.class,OrcSettlement.class,OrcSettlement.class,
+					AbandonedManor.class,BeastLair.class,Spire.class,Conflux.class,
+					GoodSettlement.class,EvilSettlement.class,LawfulSettlement.class,
+					ChaoticSettlement.class,HolyGrounds.class,DarkShrine.class)));
+
 	final HashMap<Class<? extends Actor>,Frequency> generators=new HashMap<>();
 
 	/**
@@ -152,7 +160,12 @@ public class LocationGenerator implements Serializable{
 	void generatestaticlocations(){
 		var locations=new ArrayList<Location>();
 		locations.add(new PillarOfSkulls());
-		locations.addAll(makehaunts());
+		for(var h:HAUNTS)
+			try{
+				locations.add(h.getConstructor().newInstance());
+			}catch(ReflectiveOperationException e){
+				throw new RuntimeException();
+			}
 		for(var level=Tier.LOW.minlevel;level<=Tier.HIGH.maxlevel;level++){
 			var nfloors=1;
 			var maxdepth=DungeonTier.TIERS.indexOf(DungeonTier.get(level))+1;
@@ -164,15 +177,6 @@ public class LocationGenerator implements Serializable{
 			locations.add(new DungeonEntrance(new Wilderness()));
 		for(Location l:RPG.shuffle(locations))
 			l.place();
-	}
-
-	/** @return An instance of each haunt type. */
-	public static List<Haunt> makehaunts(){
-		return List.of(new SunkenShip(),new ShatteredTemple(),new Graveyard(),
-				new OrcSettlement(),new AbandonedManor(),new BeastLair(),new Spire(),
-				new Conflux(),new GoodSettlement(),new EvilSettlement(),
-				new LawfulSettlement(),new ChaoticSettlement(),new HolyGrounds(),
-				new DarkShrine());
 	}
 
 	static void generatestartingarea(World w,Town t){

@@ -3,14 +3,19 @@ package javelin.controller.fight.mutator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.Point;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.db.EncounterIndex;
+import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
+import javelin.controller.generator.NpcGenerator;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
+import javelin.model.unit.Monster;
 import javelin.old.RPG;
 import javelin.view.screen.BattleScreen;
 
@@ -25,6 +30,8 @@ public class Waves extends Mutator{
 	public static final int MINIMUM=1;
 	/** Most amount of waves. */
 	public static final int MAXIMUM=4;
+
+	static final int ATTEMPTS=10_000;
 
 	/** EL modifier by number of waves. */
 	public static final Map<Integer,Integer> ELMODIFIER=new TreeMap<>();
@@ -103,5 +110,36 @@ public class Waves extends Mutator{
 	@Override
 	public void draw(Fight f){
 		checkend(f);
+	}
+
+	/** Generates a wave from a given monster pool. */
+	public static Combatants generate(int waveel,List<Monster> pool)
+			throws GaveUp{
+		pool=pool.stream().filter(m->m.cr<=waveel).collect(Collectors.toList());
+		if(pool.isEmpty()) throw new GaveUp();
+		for(var attempt=0;attempt<ATTEMPTS;attempt++){
+			var wave=new Combatants();
+			while(ChallengeCalculator.calculateel(wave)<waveel){
+				Combatant c;
+				if(RPG.chancein(2))
+					c=NpcGenerator.generate(RPG.pick(pool),waveel/2);
+				else
+					c=new Combatant(RPG.pick(pool),true);
+				wave.add(c);
+			}
+			if(ChallengeCalculator.calculateel(wave)<=waveel) return wave;
+		}
+		throw new GaveUp();
+	}
+
+	/** @return Generates at most {@link #MAXIMUM} waves and returns all units. */
+	public static Combatants generatewaves(int elp,List<Monster> pool)
+			throws GaveUp{
+		var nwaves=RPG.r(MINIMUM,MAXIMUM);
+		var waves=new Combatants();
+		int el=elp+ELMODIFIER.get(nwaves);
+		for(var i=0;i<nwaves;i++)
+			waves.addAll(generate(el,pool));
+		return waves;
 	}
 }

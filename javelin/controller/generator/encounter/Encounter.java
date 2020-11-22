@@ -4,6 +4,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.model.unit.Alignment;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 
@@ -43,5 +44,10 @@ public class Encounter{
 	 */
 	public int size(){
 		return group.size();
+	}
+
+	/** @return <code>true</code> if every unit is compatible. */
+	public boolean iscompatible(Alignment a){
+		return group.stream().allMatch(c->c.source.alignment.iscompatible(a));
 	}
 }

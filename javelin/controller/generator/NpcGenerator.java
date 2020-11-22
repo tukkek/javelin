@@ -130,7 +130,7 @@ public class NpcGenerator{
 		Float originalcr=m.cr;
 		int tries=10000;
 		Combatant c=new Combatant(m,true);
-		float base=c.source.cr+targetcr/2;
+		float base=c.source.cr+(targetcr-c.source.cr)/2;
 		while(c.source.cr<base&&k.classlevel.apply(c))
 			ChallengeCalculator.calculatecr(c.source);
 		while(c.source.cr<targetcr){
@@ -138,7 +138,7 @@ public class NpcGenerator{
 			tries-=1;
 			if(tries==0) return null;
 		}
-		if(c.source.cr<=originalcr) return null;
+		if(c.source.cr<=originalcr) return c;
 		k.rename(c.source);
 		c.source.elite=true;
 		return c;

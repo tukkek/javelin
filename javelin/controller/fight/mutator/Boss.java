@@ -107,23 +107,6 @@ public class Boss extends Mutator{
 		Fight.state.redTeam=generate();
 	}
 
-	//	@Override
-	//	public void endturn(Fight f){
-	//		super.endturn(f);
-	//		if(minions.isEmpty()) return;
-	//		var r=Fight.state.redTeam;
-	//		if(!r.contains(boss)) return;
-	//		var adds=new Combatants(r);
-	//		while(ChallengeCalculator.calculateel(adds)<el)
-	//			adds.addAll(RPG.pick(minions).generate());
-	//		adds.removeAll(r);
-	//		if(adds.isEmpty()) return;
-	//		Fight.state.redTeam.addAll(adds);
-	//		f.setup.place(adds,f.map.getspawn(r));
-	//		Javelin.redraw();
-	//		Javelin.message("New enemies enter the battlefield!",false);
-	//	}
-
 	/** Console-output helper to check valid EL range. */
 	public static void test(){
 		for(var el=3;el<=20+Difficulty.DEADLY;el++)

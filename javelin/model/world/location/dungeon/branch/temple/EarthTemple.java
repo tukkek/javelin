@@ -18,8 +18,9 @@ public class EarthTemple extends Temple{
 			+"A slimy little frog looks at you from atop a big boulder, unaware of you quest.\n"
 			+"As you try to find you way through the temple's entrance you must tear away the overgrowth as you wander in.";
 
-	public static class EarthBranch extends Branch{
-		public EarthBranch(){
+	static class EarthBranch extends Branch{
+		/** Constructor. */
+		EarthBranch(){
 			super("floordirt","walltempleearth");
 			features.add(FruitTree.class);
 			terrains.add(Terrain.FOREST);

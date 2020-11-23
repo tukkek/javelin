@@ -12,7 +12,8 @@ import javelin.model.world.location.dungeon.DungeonFloor;
  * @author alex
  */
 public class StairsUp extends Feature{
-	static final String PROMPT="Go up the stairs?";
+	/** Message to show on {@link #activate()}. */
+	protected String prompt="Go up the stairs?";
 
 	DungeonFloor floor;
 
@@ -26,17 +27,13 @@ public class StairsUp extends Feature{
 
 	@Override
 	public boolean activate(){
-		var prompt=prompt()+"\n"
+		var prompt=this.prompt+"\n"
 				+"Press ENTER to confirm, any other key to cancel...";
 		if(Javelin.prompt(prompt)=='\n'){
 			WorldMove.abort=true;
 			Dungeon.active.goup();
 		}
 		return false;
-	}
-
-	protected String prompt(){
-		return PROMPT;
 	}
 
 	@Override

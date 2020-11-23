@@ -147,11 +147,7 @@ public class Wilderness extends Dungeon{
 	class Exit extends StairsUp{
 		Exit(Point p){
 			super(p,Wilderness.this.floors.getFirst());
-		}
-
-		@Override
-		protected String prompt(){
-			return "Leave area?";
+			prompt="Leave area?";
 		}
 	}
 

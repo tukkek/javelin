@@ -11,7 +11,7 @@ import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.fight.Fight;
 import javelin.controller.map.Map;
-import javelin.model.state.Meld;
+import javelin.model.state.MeldCrystal;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
 import javelin.view.Images;
@@ -60,7 +60,7 @@ public class BattleTile extends Tile{
 		if(c!=null)
 			drawcombatant(g,c,this);
 		else
-			for(Meld meld:Fight.state.meld)
+			for(MeldCrystal meld:Fight.state.meld)
 				if(meld.x==x&&meld.y==y) draw(g,meld.getimage(Fight.state));
 		if(shrouded){
 			Point p=getposition();

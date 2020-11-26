@@ -133,7 +133,7 @@ public class Debug{
 				@Override
 				public void endturn(Fight fight){
 					super.endturn(fight);
-					for(Combatant c:Fight.state.redTeam)
+					for(var c:Fight.state.redTeam)
 						c.ap=1000;
 				}
 			};
@@ -272,8 +272,10 @@ public class Debug{
 	public static boolean bypassdoors;
 
 	/**
-	 * Java doesn't have programmatic breakpoints but sometimes it's useful to
+	 * Java doesn't have programatic breakpoints but sometimes it's useful to
 	 * emulate them by setting a breakpoint here instead of directly into code.
+	 * One example is using <code>if(something) Debug.breakpoint()</code>, which
+	 * is a one-line hack and much faster than conditional breakpoints in Eclipse.
 	 */
 	public static void breakpoint(){
 		return;

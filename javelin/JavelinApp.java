@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -40,7 +42,7 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
 			+"Please send a screenshot of the next message or the log file (error.txt)\n"
 			+"to one of the channels below, to help it get fixed on future releases.\n\n"
 			+"Post to reddit -- http://www.reddit.com/r/javelinrl\n"
-			+"Leave a comment the website -- http://javelinrl.wordpress.com\n"
+			+"Leave a comment on the blog -- http://javelinrl.wordpress.com\n"
 			+"Or write an e-mail -- javelinrl@gmail.com\n\n"
 			+"Thank you for your patience and support!\n\n"
 			+"If for any reason your current game fails to load when you restart Javelin,\n"
@@ -70,6 +72,7 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
 
 	@Override
 	public void run(){
+		Thread.setDefaultUncaughtExceptionHandler(this);
 		Preferences.setup();// pre
 		initialize();
 		if(!StateManager.load()){
@@ -160,18 +163,17 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
 
 	@Override
 	public void uncaughtException(Thread thread,Throwable e){
-		String quote=CRASHQUOTES[RPG.r(CRASHQUOTES.length)];
+		var quote=CRASHQUOTES[RPG.r(CRASHQUOTES.length)];
 		JOptionPane.showMessageDialog(Javelin.app,quote+CRASHMESSAGE);
 		if(!version.endsWith("\n")) version+="\n";
 		System.err.print(version);
 		e.printStackTrace();
-		String system="System: ";
-		for(String info:new String[]{"os.name","os.version","os.arch"})
-			system+=System.getProperty(info)+" ";
-		system+="\n";
-		String error=version+system+"\n"+printstacktrace(e);
-		Throwable t=e;
-		HashSet<Throwable> errors=new HashSet<>(2);
+		var properties=List.of("os.name","os.version","os.arch").stream()
+				.map(p->System.getProperty(p)).collect(Collectors.joining(" "));
+		properties=String.format("System: %s\n",properties);
+		var error=version+properties+"\n"+printstacktrace(e);
+		var t=e;
+		var errors=new HashSet<Throwable>(2);
 		while(t.getCause()!=null&&errors.add(t)){
 			t=t.getCause();
 			error+=System.lineSeparator()+printstacktrace(t);

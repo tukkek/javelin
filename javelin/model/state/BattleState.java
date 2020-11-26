@@ -52,8 +52,8 @@ public class BattleState implements Node,TeamContainer{
 	public ArrayList<Combatant> fleeing;
 	/** Dead and unconscious units. */
 	public ArrayList<Combatant> dead;
-	/** @see Meld */
-	public ArrayList<Meld> meld;
+	/** @see MeldCrystal */
+	public ArrayList<MeldCrystal> meld;
 	/**
 	 * Since it's immutable no need to clone it.
 	 */
@@ -80,13 +80,13 @@ public class BattleState implements Node,TeamContainer{
 	public BattleState(final ArrayList<Combatant> blueTeam,
 			final ArrayList<Combatant> redTeam,ArrayList<Combatant> dead,
 			ArrayList<Combatant> fleeing,final Square[][] map,Period period,
-			ArrayList<Meld> meld){
+			ArrayList<MeldCrystal> meld){
 		this.map=map;
 		this.period=period;
 		this.dead=(ArrayList<Combatant>)dead.clone();
 		this.blueTeam=(ArrayList<Combatant>)blueTeam.clone();
 		this.redTeam=(ArrayList<Combatant>)redTeam.clone();
-		this.meld=(ArrayList<Meld>)meld.clone();
+		this.meld=(ArrayList<MeldCrystal>)meld.clone();
 		next();
 	}
 
@@ -113,7 +113,7 @@ public class BattleState implements Node,TeamContainer{
 			clone.dead=(ArrayList<Combatant>)clone.dead.clone();
 			clone.blueTeam=(ArrayList<Combatant>)blueTeam.clone();
 			clone.redTeam=(ArrayList<Combatant>)redTeam.clone();
-			clone.meld=(ArrayList<Meld>)meld.clone();
+			clone.meld=(ArrayList<MeldCrystal>)meld.clone();
 			next();
 			return clone;
 		}catch(CloneNotSupportedException e){
@@ -341,8 +341,8 @@ public class BattleState implements Node,TeamContainer{
 	/**
 	 * @return Meld at the given coordinate or <code>null</code> if none.
 	 */
-	public Meld getmeld(int x,int y){
-		for(Meld m:meld)
+	public MeldCrystal getmeld(int x,int y){
+		for(MeldCrystal m:meld)
 			if(m.x==x&&m.y==y) return m;
 		return null;
 	}

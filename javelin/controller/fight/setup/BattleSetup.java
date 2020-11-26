@@ -67,13 +67,7 @@ public class BattleSetup{
 	/** Allows greater control of {@link Map} generation. */
 	public void generatemap(Fight f,Map m){
 		if(f.map==null){
-			Terrain t;
-			if(Dungeon.active!=null)
-				t=Terrain.UNDERGROUND;
-			else if(f.terrain==null)
-				t=Terrain.current();
-			else
-				t=f.terrain;
+			var t=Dungeon.active==null?RPG.pick(f.terrains):Terrain.UNDERGROUND;
 			f.map=t.getmaps().pick();
 		}
 		if(m!=null){
@@ -198,7 +192,7 @@ public class BattleSetup{
 
 	public void place(List<Combatant> team,List<Point> startingarea){
 		var m=Javelin.app.fight.map;
-		teamplacement:for(Combatant c:RPG.shuffle(team)){
+		teamplacement:for(var c:RPG.shuffle(team)){
 			for(var spawn:RPG.shuffle(new ArrayList<>(startingarea))){
 				var area=spawn.getadjacent();
 				area.add(spawn);

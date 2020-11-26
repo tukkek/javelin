@@ -37,17 +37,15 @@ public class Friendly extends Mutator{
 	public void endturn(Fight f){
 		super.endturn(f);
 		var s=Fight.state;
-		var removed=false;
 		for(var t:List.of(s.blueTeam,s.redTeam))
 			for(var c:new ArrayList<>(t)){
 				if(c.getnumericstatus()>removeat) continue;
-				if(t==s.blueTeam) s.fleeing.add(c);
 				t.remove(c);
-				removed=true;
+				if(t==s.blueTeam) s.fleeing.add(c);
 				if(s.next==c) s.next();
+				Javelin.redraw();
 				Javelin.message(String.format(REMOVED,c),true);
 			}
-		if(removed) Javelin.redraw();
 	}
 
 	@Override

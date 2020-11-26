@@ -18,7 +18,7 @@ import javelin.view.Images;
  *
  * @author alex
  */
-public class Meld{
+public class MeldCrystal{
 	/** Meld location. */
 	public final int x;
 	/** Meld location. */
@@ -36,7 +36,7 @@ public class Meld{
 	public final float cr;
 
 	/** Constructor. */
-	public Meld(final int x,final int y,final float meldsat,Combatant dead){
+	public MeldCrystal(final int x,final int y,final float meldsat,Combatant dead){
 		this.x=x;
 		this.y=y;
 		this.meldsat=meldsat;

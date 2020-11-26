@@ -9,7 +9,7 @@ import javelin.controller.action.Movement;
 import javelin.controller.walker.overlay.OverlayStep;
 import javelin.controller.walker.overlay.OverlayWalker;
 import javelin.model.state.BattleState;
-import javelin.model.state.Meld;
+import javelin.model.state.MeldCrystal;
 import javelin.model.unit.Combatant;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.mappanel.battle.BattleTile;
@@ -85,7 +85,7 @@ public class BattleWalker extends OverlayWalker{
 		boolean istarget=step.equals(to);
 		if(isengaged&&(!previous.isEmpty()||!istarget)) return false;
 		if(step.totalcost>1||state.getcombatant(step.x,step.y)!=null) return false;
-		Meld m=state.getmeld(step.x,step.y);
+		MeldCrystal m=state.getmeld(step.x,step.y);
 		if(m!=null) return istarget&&m.crystalize(state);
 		try{
 			BattleTile t=(BattleTile)BattleScreen.active.mappanel.tiles[p.x][p.y];

@@ -28,7 +28,7 @@ public abstract class EventCard{
 
 		/** Constructor. */
 		protected EventFight(Actor l){
-			terrain=Terrain.get(l.x,l.y);
+			terrains=List.of(Terrain.get(l.x,l.y));
 			hide=false;
 			bribe=false;
 		}

@@ -1,6 +1,7 @@
 package javelin.controller.collection;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -21,6 +22,14 @@ public class CountingSet{
 	/** Set to true if you don't want elements to be converted to lowercase. */
 	public boolean casesensitive=false;
 	TreeMap<String,Integer> map=new TreeMap<>();
+
+	public CountingSet(){
+		super();
+	}
+
+	public CountingSet(Collection<?> strings){
+		addall(strings);
+	}
 
 	/**
 	 * @param s Adds and counts this element (case-insensitive).
@@ -80,7 +89,7 @@ public class CountingSet{
 	}
 
 	/** @param items Consumed by {@link #add(Object)}. */
-	public void addAll(List<?> items){
+	public void addall(Collection<?> items){
 		for(var i:items)
 			add(i);
 	}

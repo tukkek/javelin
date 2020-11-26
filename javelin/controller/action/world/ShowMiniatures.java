@@ -21,7 +21,7 @@ public class ShowMiniatures extends WorldAction{
 		var list=new CountingSet();
 		list.comparator=(a,b)->a.compareTo(b);
 		list.casesensitive=true;
-		list.addAll(Miniatures.miniatures);
+		list.addall(Miniatures.miniatures);
 		var screen="Miniature collection:\n\n";
 		screen+=list.getorderedelements().stream().sequential()
 				.map(m->list.getcount(m)+"x "+m).collect(Collectors.joining("\n"));

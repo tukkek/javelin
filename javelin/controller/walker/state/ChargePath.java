@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import javelin.controller.Point;
 import javelin.controller.action.Charge;
 import javelin.model.state.BattleState;
-import javelin.model.state.Meld;
+import javelin.model.state.MeldCrystal;
 
 /**
  * @see Charge
@@ -24,7 +24,7 @@ public class ChargePath extends ClearPath{
 	@Override
 	public boolean validate(Point p,LinkedList<Point> previous){
 		if(p.equals(to)) return true;
-		for(Meld m:state.meld)
+		for(MeldCrystal m:state.meld)
 			if(m.x==p.x&&m.y==p.y) return false;
 		return (swimmer||!state.map[p.x][p.y].flooded)&&super.validate(p,previous);
 	}

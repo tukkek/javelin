@@ -1,5 +1,6 @@
 package javelin.controller.generator.encounter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
@@ -22,6 +23,11 @@ public class Encounter{
 	public Encounter(List<Combatant> groupp){
 		group=groupp;
 		el=ChallengeCalculator.calculateel(group);
+	}
+
+	/** One-unit constructor. */
+	public Encounter(Combatant c){
+		this(new ArrayList<>(List.of(c)));
 	}
 
 	/**

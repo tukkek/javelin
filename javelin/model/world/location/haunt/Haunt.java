@@ -3,6 +3,7 @@ package javelin.model.world.location.haunt;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -10,13 +11,14 @@ import java.util.stream.Collectors;
 import javelin.Javelin;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.comparator.MonstersByName;
+import javelin.controller.db.EncounterIndex;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.LocationFight;
 import javelin.controller.fight.mutator.Boss;
-import javelin.controller.fight.mutator.Mutator;
 import javelin.controller.fight.mutator.Waves;
 import javelin.controller.generator.NpcGenerator;
+import javelin.controller.generator.WorldGenerator;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.map.location.LocationMap;
 import javelin.controller.terrain.Terrain;
@@ -55,6 +57,7 @@ public abstract class Haunt extends Fortification{
 	public static final int MAXEL=Tier.EPIC.maxlevel+Difficulty.DEADLY;
 
 	static Set<Monster> defeated=new HashSet<>(0);
+	static Hashtable<Class<? extends Haunt>,EncounterIndex> INDEXCACHE=new Hashtable<>();
 
 	class RecruitOption extends Option{
 		Monster hire;
@@ -138,9 +141,9 @@ public abstract class Haunt extends Fortification{
 		}
 
 		@Override
-		protected Combatants generatewave(int el,Fight f){
+		public Combatants generate(Fight f){
 			try{
-				return generatemonsters(el);
+				return generatemonsters(waveel);
 			}catch(GaveUp e){
 				if(Javelin.DEBUG) throw new RuntimeException(e);
 				return new Combatants();
@@ -154,12 +157,12 @@ public abstract class Haunt extends Fortification{
 		}
 
 		@Override
-		protected List<Monster> getbosses(List<Terrain> terrains){
+		protected List<Monster> listbosses(List<Terrain> terrains){
 			return pool;
 		}
 
 		@Override
-		protected List<Encounter> getminions(List<Terrain> terrains){
+		protected List<Encounter> listminions(List<Terrain> terrains){
 			var minions=new ArrayList<Encounter>(pool.size()*4);
 			for(var m:pool){
 				var group=new Combatants(2);
@@ -172,13 +175,9 @@ public abstract class Haunt extends Fortification{
 	}
 
 	class HauntFight extends LocationFight{
-		HauntFight(Location l,LocationMap m,Mutator mode){
-			super(l,m);
-			mutators.add(mode);
-		}
-
 		HauntFight(Location l,LocationMap m){
-			this(l,m,RPG.pick(List.of(new HauntWaves(),new HauntBoss())));
+			super(l,m);
+			mutators.add(RPG.pick(List.of(new HauntWaves(),new HauntBoss())));
 		}
 
 		@Override
@@ -220,12 +219,16 @@ public abstract class Haunt extends Fortification{
 	public void generategarrison(){
 		while(garrison.isEmpty())
 			try{
-				/*ensure a minimum viable #targetel */
-				generatemonsters(targetel+Waves.ELMODIFIER.get(4));
-				garrison.addAll(generatemonsters(targetel+Waves.ELMODIFIER.get(1)));
+				testboss();
+				garrison.addAll(testwaves());
 			}catch(GaveUp e){
-				targetel+=1;
+				WorldGenerator.retry();
 				garrison.clear();
+				targetel+=1;
+				if(targetel>MAXEL){
+					if(Javelin.DEBUG) throw new InvalidParameterException();
+					return;
+				}
 			}
 	}
 
@@ -343,8 +346,13 @@ public abstract class Haunt extends Fortification{
 	}
 
 	/** @return A haunt encounter or wave. */
-	public Combatants generatemonsters(int waveel) throws GaveUp{
-		return Waves.generate(waveel,pool);
+	synchronized public Combatants generatemonsters(int waveel) throws GaveUp{
+		var index=INDEXCACHE.get(getClass());
+		if(index==null){
+			index=new EncounterIndex(pool);
+			INDEXCACHE.put(getClass(),index);
+		}
+		return Waves.generate(waveel,index);
 	}
 
 	@Override
@@ -362,10 +370,12 @@ public abstract class Haunt extends Fortification{
 				.map(a->(Haunt)a).collect(Collectors.toList());
 	}
 
-	public Combatants testboss(){
-		return new HauntBoss().generate();
+	/** @see TestHaunt */
+	public Combatants testboss() throws GaveUp{
+		return new HauntBoss().generate(null);
 	}
 
+	/** @see TestHaunt */
 	public Combatants testwaves() throws GaveUp{
 		generatemonsters(targetel+Waves.ELMODIFIER.get(4));
 		return generatemonsters(targetel+Waves.ELMODIFIER.get(1));

@@ -7,7 +7,7 @@ import javelin.controller.audio.Audio;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
-import javelin.model.state.Meld;
+import javelin.model.state.MeldCrystal;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.skill.Acrobatics;
 import javelin.model.unit.skill.Skill;
@@ -84,7 +84,7 @@ public class Movement extends Action{
 			boolean disengaging=Fight.state.isengaged(c);
 			final Point to=doDirection(this,Fight.state,c);
 			if(to==null) return false;
-			Meld meld=Fight.state.getmeld(to.x,to.y);
+			MeldCrystal meld=Fight.state.getmeld(to.x,to.y);
 			if(!Movement.lastmovewasattack){
 				float ap=cost(c,Fight.state,to.x,to.y,disengaging);
 				BattleScreen.partialmove+=ap;
@@ -166,7 +166,7 @@ public class Movement extends Action{
 		if(c==null&&state.map[x][y].blocked
 				&&(hero.source.fly==0||!Javelin.app.fight.map.flying))
 			return false;
-		Meld m=state.getmeld(x,y);
+		MeldCrystal m=state.getmeld(x,y);
 		if(m!=null&&!m.crystalize(state)) throw new RepeatTurn();
 		if(c==null){
 			hero.location[0]=x;

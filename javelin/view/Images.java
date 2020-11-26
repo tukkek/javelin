@@ -17,7 +17,7 @@ import javax.imageio.ImageIO;
 
 import javelin.Debug;
 import javelin.Javelin;
-import javelin.model.state.Meld;
+import javelin.model.state.MeldCrystal;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.world.location.Location;
@@ -52,9 +52,9 @@ public class Images{
 			.get(List.of("overlay","upgrading"));
 	/** @see Town#isworking() */
 	public static final Image LABOR=Images.get(List.of("overlay","labor"));
-	/** Show while a {@link Meld} is being generated. */
+	/** Show while a {@link MeldCrystal} is being generated. */
 	public static final Image DEAD=Images.get(List.of("overlay","dead"));
-	/** Show when a {@link Meld} is generated. */
+	/** Show when a {@link MeldCrystal} is generated. */
 	public static final Image MELD=Images.get(List.of("overlay","meld"));
 	/** @see Location#ishostile() */
 	public static final Image HOSTILE=Images.get(List.of("overlay","hostile"));

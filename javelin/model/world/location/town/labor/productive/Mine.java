@@ -53,7 +53,7 @@ import javelin.view.screen.WorldScreen;
 public class Mine extends Fortification{
 	class MineFight extends Fight{
 		public MineFight(){
-			terrain=Terrain.UNDERGROUND;
+			terrain=List.of(Terrain.UNDERGROUND);
 			hide=false;
 			bribe=false;
 		}

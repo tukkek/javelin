@@ -18,7 +18,7 @@ import javelin.controller.ai.ChanceNode;
 import javelin.controller.audio.Audio;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
-import javelin.model.state.Meld;
+import javelin.model.state.MeldCrystal;
 import javelin.model.unit.Combatant;
 import javelin.view.Images;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
@@ -47,7 +47,7 @@ public class AiMovement extends Action implements AiAction{
 		float score;
 
 		LongMove(Combatant c,BattleStep s,List<Point> steps,BattleWalker mover,
-				Meld m,BattleState n){
+				MeldCrystal m,BattleState n){
 			super(n,1,getmessage(c,m,s),
 					m==null?Javelin.Delay.WAIT:Javelin.Delay.BLOCK);
 			AiOverlay o=new AiOverlay(steps.subList(0,steps.indexOf(s)));
@@ -94,7 +94,7 @@ public class AiMovement extends Action implements AiAction{
 		HashSet<Point> interesting=new HashSet<>();
 		for(Combatant enemy:s.getopponents(c))
 			interesting.add(enemy.getlocation());
-		for(Meld m:s.meld)
+		for(MeldCrystal m:s.meld)
 			interesting.add(new Point(m.x,m.y));
 		return interesting;
 	}
@@ -118,7 +118,7 @@ public class AiMovement extends Action implements AiAction{
 		c.ap+=step.totalcost;
 		c.location[0]=step.x;
 		c.location[1]=step.y;
-		Meld m=s.getmeld(step.x,step.y);
+		MeldCrystal m=s.getmeld(step.x,step.y);
 		if(m!=null){
 			c.meld();
 			s.meld.remove(m);
@@ -151,7 +151,7 @@ public class AiMovement extends Action implements AiAction{
 			if(!point.validate(0,0,s.map.length,s.map[0].length)) continue;
 			if(!flies&&s.map[point.x][point.y].blocked) continue;
 			if(s.getcombatant(point.x,point.y)!=null) continue;
-			Meld m=s.getmeld(point.x,point.y);
+			MeldCrystal m=s.getmeld(point.x,point.y);
 			if(m!=null&&!m.crystalize(s)) continue;
 			if(s.haslineofsight(c,point)==Vision.BLOCKED) continue;
 			result.add(point);
@@ -165,7 +165,7 @@ public class AiMovement extends Action implements AiAction{
 		throw new UnsupportedOperationException();
 	}
 
-	static String getmessage(Combatant c,Meld m,BattleStep s){
+	static String getmessage(Combatant c,MeldCrystal m,BattleStep s){
 		if(m!=null) return c+" powers up!";
 		if(s.engaged) return c+" disengages...";
 		return c+" moves...";

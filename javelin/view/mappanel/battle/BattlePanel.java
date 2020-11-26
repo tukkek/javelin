@@ -8,9 +8,9 @@ import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.db.Preferences;
 import javelin.controller.fight.Fight;
-import javelin.controller.fight.mutator.Melding;
+import javelin.controller.fight.mutator.Meld;
 import javelin.model.state.BattleState;
-import javelin.model.state.Meld;
+import javelin.model.state.MeldCrystal;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Period;
 import javelin.view.mappanel.MapPanel;
@@ -65,7 +65,7 @@ public class BattlePanel extends MapPanel{
 				update.add(new Point(c.location[0],c.location[1]));
 			if(!daylight) calculatevision(update);
 			if(overlay!=null) update.addAll(overlay.affected);
-			if(Javelin.app.fight.has(Melding.class)!=null) for(Meld m:s.meld)
+			if(Javelin.app.fight.has(Meld.class)!=null) for(MeldCrystal m:s.meld)
 				update.add(new Point(m.x,m.y));
 			for(var p:update)
 				tiles[p.x][p.y].repaint();

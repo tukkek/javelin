@@ -63,12 +63,12 @@ import javelin.old.RPG;
  */
 public class LocationGenerator implements Serializable{
 	/** All haunt types. */
-	public static final List<Class<? extends Haunt>> HAUNTS=RPG
-			.shuffle(new ArrayList<>(List.of(SunkenShip.class,ShatteredTemple.class,
-					Graveyard.class,OrcSettlement.class,OrcSettlement.class,
-					AbandonedManor.class,BeastLair.class,Spire.class,Conflux.class,
-					GoodSettlement.class,EvilSettlement.class,LawfulSettlement.class,
-					ChaoticSettlement.class,HolyGrounds.class,DarkShrine.class)));
+	public static final List<Class<? extends Haunt>> HAUNTS=new ArrayList<>(
+			List.of(SunkenShip.class,ShatteredTemple.class,Graveyard.class,
+					OrcSettlement.class,OrcSettlement.class,AbandonedManor.class,
+					BeastLair.class,Spire.class,Conflux.class,GoodSettlement.class,
+					EvilSettlement.class,LawfulSettlement.class,ChaoticSettlement.class,
+					HolyGrounds.class,DarkShrine.class));
 
 	final HashMap<Class<? extends Actor>,Frequency> generators=new HashMap<>();
 
@@ -160,7 +160,7 @@ public class LocationGenerator implements Serializable{
 	void generatestaticlocations(){
 		var locations=new ArrayList<Location>();
 		locations.add(new PillarOfSkulls());
-		for(var h:HAUNTS)
+		for(var h:RPG.shuffle(HAUNTS))
 			try{
 				locations.add(h.getConstructor().newInstance());
 			}catch(ReflectiveOperationException e){

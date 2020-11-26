@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.challenge.Difficulty;
-import javelin.controller.fight.mutator.Melding;
+import javelin.controller.fight.mutator.Meld;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
@@ -23,15 +23,11 @@ import javelin.old.RPG;
 public class RandomDungeonEncounter extends RandomEncounter{
 	Combatants encounter;
 
-	RandomDungeonEncounter(){
-		mutators.add(new Melding());
-	}
-
 	/** {@link Dungeon} constructor. */
 	public RandomDungeonEncounter(DungeonFloor f){
-		this();
-		encounter=RPG.pick(f.encounters);
+		mutators.add(new Meld());
 		set(Terrain.UNDERGROUND);
+		encounter=RPG.pick(f.encounters);
 	}
 
 	/** Picks a random map to use from this pool. */

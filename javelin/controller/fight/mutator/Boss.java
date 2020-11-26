@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
+import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
 import javelin.controller.generator.NpcGenerator;
 import javelin.controller.generator.encounter.Encounter;
@@ -16,23 +17,26 @@ import javelin.model.item.Tier;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.old.RPG;
+import javelin.test.TestHaunt;
 
 /**
- * A Fight with one major enemy and a group of ever-replenishing nuisances. This
- * is only recommended for EL>=5, as it can be complicated to generate lesser
- * ELs with currently available {@link Monster}s.
+ * A {@link Fight} mode with one major enemy and a large group of minor
+ * nuisances. This is only recommended for EL>=5, as it can be complicated to
+ * generate lesser ELs with currently available {@link Monster}s.
  *
- * TODO expand this to work with at least EL 1 - 20
+ * TODO expand this to work with at least EL 1 - 20, may require (many) more
+ * monsters with low {@link Monster#cr}
  *
+ * @see TestHaunt
  * @author alex
  */
-public class Boss extends Mutator{
+public class Boss extends FightMode{
 	static final ArrayList<Encounter> EMPTY=new ArrayList<>(0);
 
 	List<Encounter> minions=new ArrayList<>();
 	Combatants bosses=new Combatants(4);
-	int el;
 	List<Terrain> terrains;
+	int el;
 
 	/**
 	 * @param targetel Intended Encounter Level.
@@ -46,19 +50,22 @@ public class Boss extends Mutator{
 	@Override
 	public void setup(Fight f){
 		super.setup(f);
-		var nbosses=Tier.get(el).getordinal();
-		if(nbosses<1) nbosses=1;
+		var max=Tier.get(el).getordinal();
+		var nbosses=1;
+		for(;nbosses<max&&RPG.chancein(2);nbosses++)
+			continue;
 		int bossel=el-2*nbosses;
-		var bosses=RPG.shuffle(getbosses(terrains)).stream().filter(m->m.cr<=bossel)
-				.collect(Collectors.toList());
-		if(bosses.isEmpty()) throw new InvalidParameterException();
+		var bosses=RPG.shuffle(listbosses(terrains)).stream()
+				.filter(m->m.cr<=bossel).collect(Collectors.toList());
+		if(Javelin.DEBUG&&bosses.isEmpty()) throw new InvalidParameterException();
 		while(this.bosses.size()<nbosses){
 			var b=NpcGenerator.generate(RPG.pick(bosses),bossel);
 			if(b!=null) this.bosses.add(b);
 		}
-		minions.addAll(RPG.shuffle(getminions(terrains)).stream()
-				.filter(e->e.el<=bossel&&e.group.stream().noneMatch(m->m.source.elite)
-						&&e.iscompatible(this.bosses.get(0).source.alignment))
+		var a=RPG.pick(this.bosses).source.alignment;
+		minions.addAll(RPG.shuffle(listminions(terrains)).stream()
+				.filter(e->e.el<=bossel&&e.group.size()>1
+						&&e.group.stream().noneMatch(m->m.source.elite)&&e.iscompatible(a))
 				.collect(Collectors.toList()));
 		if(minions.isEmpty())
 			while(ChallengeCalculator.calculateel(this.bosses)<el){
@@ -68,7 +75,7 @@ public class Boss extends Mutator{
 	}
 
 	/** @return Any units that can be bosses. */
-	protected List<Monster> getbosses(List<Terrain> terrains){
+	protected List<Monster> listbosses(List<Terrain> terrains){
 		var terrainnames=terrains.stream().map(t->t.name)
 				.collect(Collectors.toSet());
 		return Monster.ALL.stream()
@@ -78,33 +85,31 @@ public class Boss extends Mutator{
 	}
 
 	/** @return Any units that can be fodder. */
-	protected List<Encounter> getminions(List<Terrain> terrains){
+	protected List<Encounter> listminions(List<Terrain> terrains){
 		return terrains.stream().flatMap(t->t.getencounters().values().stream())
 				.flatMap(i->i.stream()).collect(Collectors.toList());
 	}
 
-	/** @return The initial enemy team. */
-	public Combatants generate(){
+	@Override
+	public Combatants generate(Fight f) throws GaveUp{
 		var foes=new Combatants(2);
-		if(bosses.isEmpty()) setup(null);
+		if(bosses.isEmpty()) try{
+			setup(null);
+		}catch(InvalidParameterException e){
+			throw new GaveUp();
+		}
 		foes.addAll(bosses);
 		if(!minions.isEmpty()) while(ChallengeCalculator.calculateel(foes)<el){
 			foes.addAll(RPG.pick(minions).generate());
-			if(foes.size()>10){
+			if(foes.size()>9){
 				var w=foes.getweakest();
 				foes.remove(w);
 				w=NpcGenerator.generatenpc(w.source,el*4/5);
 				if(w!=null) foes.add(bosses.size(),w);
 			}
 		}
-		if(foes.isEmpty()) throw new InvalidParameterException();
+		if(Javelin.DEBUG&&foes.isEmpty()) throw new InvalidParameterException();
 		return foes;
-	}
-
-	@Override
-	public void prepare(Fight f){
-		super.prepare(f);
-		Fight.state.redTeam=generate();
 	}
 
 	/** Console-output helper to check valid EL range. */
@@ -114,19 +119,17 @@ public class Boss extends Mutator{
 				try{
 					var f=new Boss(el,List.of(t));
 					f.setup(null);
-					var foes=f.generate();
+					var foes=f.generate(null);
 					System.out.println("Success: "+t+" "+el+" ("+Javelin.group(foes)
 							+") el "+ChallengeCalculator.calculateel(foes));
-				}catch(InvalidParameterException e){
+				}catch(InvalidParameterException|GaveUp e){
 					System.out.println("Failure: "+t+" "+el);
 					return;
 				}
 	}
 
-	/**
-	 * @return Uses the Boss Fight mechanic to just generate an encounter instead.
-	 */
-	public Combatants generateencounter(int el,List<Terrain> terrains){
-		return new Boss(el,terrains).generate();
-	}
+	//	/** @return Uses the Boss Fight mechanic to just generate a {@link Fight}. */
+	//	public static Combatants generateencounter(int el,List<Terrain> terrains){
+	//		return new Boss(el,terrains).generate(null);
+	//	}
 }

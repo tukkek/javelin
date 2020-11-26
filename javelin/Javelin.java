@@ -77,6 +77,8 @@ public class Javelin{
 	/** Singleton. */
 	public static JavelinApp app;
 	public static boolean delayblock=false;
+	/** Not sure how necessary this is - can do away with on 2.0+ TODO */
+	public static MediaTracker tracker;
 
 	static{
 		ClassLevelUpgrade.setup();
@@ -87,7 +89,7 @@ public class Javelin{
 					.getXMLReader();
 			xml.setContentHandler(monsterdb);
 			xml.setErrorHandler(monsterdb);
-			FileReader filereader=new FileReader("monsters.xml");
+			var filereader=new FileReader("monsters.xml");
 			xml.parse(new InputSource(filereader));
 			filereader.close();
 		}catch(final Exception e){
@@ -101,8 +103,6 @@ public class Javelin{
 		Item.setup();
 		Debug.oninit();
 	}
-
-	public static MediaTracker tracker;
 
 	/**
 	 * First method to be called.

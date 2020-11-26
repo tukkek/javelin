@@ -114,7 +114,8 @@ public class Arena extends UniqueLocation{
 					message="New gladiators enter the arena!";
 				}
 
-				void generateallies(){
+				@Override
+				public void draw(Fight f){
 					if(!RPG.chancein(4))
 						//TODO perhaps only intelligent or NPC?
 						alliesel=ChallengeCalculator.calculateel(fighters)
@@ -127,13 +128,14 @@ public class Arena extends UniqueLocation{
 					var b=Fight.state.blueTeam;
 					add(allies,b,((ArenaMap)map).minionspawn,ArenaFight.this);
 					waveel=ChallengeCalculator.calculateel(b)+Waves.ELMODIFIER.get(waves);
+					super.draw(f);
 				}
 
 				@Override
-				protected Combatants generatewave(int el,Fight f){
-					if(wave==1) generateallies();
-					return EncounterGenerator.generatebyindex(el,encounters);
+				public Combatants generate(Fight f){
+					return EncounterGenerator.generatebyindex(waveel,encounters);
 				}
+
 			});
 		}
 

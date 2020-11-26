@@ -29,7 +29,7 @@ import javelin.controller.terrain.Underground;
 import javelin.controller.terrain.Water;
 import javelin.model.item.Item;
 import javelin.model.state.BattleState;
-import javelin.model.state.Meld;
+import javelin.model.state.MeldCrystal;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
@@ -78,8 +78,6 @@ public abstract class Fight{
 	 * <code>true</code> if this fight is susceptible to {@link Diplomacy}.
 	 */
 	public boolean bribe=true;
-	/** If not <code>null</code> will use this when generating a {@link Map}. */
-	public Terrain terrain=null;
 	/** If not <code>null</code> will override any other {@link Weather} level. */
 	public Integer weather=Weather.current;
 	/** Time of day / lightning level. */
@@ -90,8 +88,8 @@ public abstract class Fight{
 	public boolean canflee=true;
 	/** Custom combat rules. */
 	public List<Mutator> mutators=new ArrayList<>(0);
-
-	List<Terrain> terrains=getdefaultterrains(Terrain.current(),flood());
+	/** If not <code>null</code> will use this when choosing a {@link Map}. */
+	public List<Terrain> terrains=getdefaultterrains();
 
 	/**
 	 * @return an encounter level for which an appropriate challenge should be
@@ -219,8 +217,8 @@ public abstract class Fight{
 	 * @return The resulting opponents.
 	 */
 	public ArrayList<Combatant> generate(){
-		var blueel=getel(ChallengeCalculator.calculateel(Fight.state.blueTeam));
-		var foes=getfoes(blueel);
+		var el=getel(ChallengeCalculator.calculateel(Fight.state.blueTeam));
+		var foes=getfoes(el);
 		enhance(foes);
 		return foes;
 	}
@@ -228,19 +226,16 @@ public abstract class Fight{
 	/**
 	 * @param el Encounter level.
 	 * @param terrains Possible {@link Monster} terrains.
-	 * @return A group of enemies that closely match the given EL, as far as
-	 *         possible.
+	 * @return A group of enemies that match the given EL as much as possible.
 	 */
 	static public Combatants generate(final int el,List<Terrain> terrains){
-		int delta=0;
-		Combatants generated=null;
-		while(generated==null){
-			generated=chooseopponents(el-delta,terrains);
-			if(generated!=null) break;
-			if(delta!=0) generated=chooseopponents(el+delta,terrains);
-			delta+=1;
+		var foes=chooseopponents(el,terrains);
+		for(var delta=1;foes==null;delta++){
+			if(delta==20) throw new RuntimeException("Cannot generate fight!");
+			foes=chooseopponents(el-delta,terrains);
+			if(foes==null) foes=chooseopponents(el+delta,terrains);
 		}
-		return generated;
+		return foes;
 	}
 
 	static Combatants chooseopponents(final int el,List<Terrain> terrains){
@@ -267,14 +262,11 @@ public abstract class Fight{
 	 * @see Map#maxflooding
 	 * @see Dungeon#active
 	 */
-	public static ArrayList<Terrain> getdefaultterrains(Terrain t,int floodlevel){
-		ArrayList<Terrain> terrains=new ArrayList<>();
-		if(Dungeon.active!=null){
-			terrains.add(Terrain.UNDERGROUND);
-			return terrains;
-		}
-		terrains.add(t);
-		if(floodlevel==Weather.STORM) terrains.add(Terrain.WATER);
+	public ArrayList<Terrain> getdefaultterrains(){
+		if(Dungeon.active!=null)
+			return new ArrayList<>(List.of(Terrain.UNDERGROUND));
+		var terrains=new ArrayList<>(List.of(Terrain.current()));
+		if(flood()==Weather.STORM) terrains.add(Terrain.WATER);
 		return terrains;
 	}
 
@@ -340,13 +332,13 @@ public abstract class Fight{
 	}
 
 	/**
-	 * Called when an unit reaches {@link Meld}. Note that only human units use
-	 * this, computer units use {@link Combatant#meld()} directly.
+	 * Called when an unit reaches {@link MeldCrystal}. Note that only human units
+	 * use this, computer units use {@link Combatant#meld()} directly.
 	 *
 	 * @param hero Meld collector.
 	 * @param meld2
 	 */
-	public void meld(Combatant hero,Meld m){
+	public void meld(Combatant hero,MeldCrystal m){
 		Javelin.message(hero+" powers up!",Javelin.Delay.BLOCK);
 		hero.meld();
 		Fight.state.meld.remove(m);

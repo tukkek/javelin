@@ -89,7 +89,7 @@ public class Difficulty{
 				-ChallengeCalculator.calculateel(squad);
 	}
 
-	/** @return Just the subtraction, done in the right order. */
+	/** @return EL difference, compatible with this class' constants. */
 	public static int calculate(int squad,int opponents){
 		return opponents-squad;
 	}

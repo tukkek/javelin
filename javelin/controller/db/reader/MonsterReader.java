@@ -345,7 +345,7 @@ public class MonsterReader extends DefaultHandler{
 		types.comparator=(a,b)->a.toString().compareTo(b.toString());
 		for(var m:Monster.ALL){
 			if(!m.group.isEmpty()) types.add(m.group);
-			types.addAll(m.subtypes);
+			types.addall(m.subtypes);
 		}
 		log("\nGroups and subtypes: "+types.toString(),log);
 	}

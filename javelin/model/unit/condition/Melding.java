@@ -1,12 +1,12 @@
 package javelin.model.unit.condition;
 
-import javelin.model.state.Meld;
+import javelin.model.state.MeldCrystal;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
 
 /**
- * @see Meld
+ * @see MeldCrystal
  * @author alex
  */
 public class Melding extends Condition{

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import javelin.Debug;
@@ -57,7 +58,6 @@ public class WorldGenerator extends Thread{
 	static final boolean DEBUG=false;
 
 	static int discarded=0;
-	static int dungeonsgenerated=0;
 
 	static class ProgressScreen extends InfoScreen{
 		LinkedList<String> reports=new LinkedList<>();
@@ -216,26 +216,21 @@ public class WorldGenerator extends Thread{
 		var dungeons=World.getactors().stream()
 				.filter(a->a instanceof DungeonEntrance)
 				.map(a->((DungeonEntrance)a).dungeon)
-				.sorted((a,b)->-Integer.compare(a.floors.size(),b.floors.size()))
+				.sorted((a,b)->Integer.compare(a.floors.size(),b.floors.size()))
 				.collect(Collectors.toList());
 		var pool=Executors.newFixedThreadPool(NTHREADS);
-		for(var d:dungeons)
-			pool.execute(()->{
-				Thread.setDefaultUncaughtExceptionHandler(Javelin.app);
-				d.generate();
-				dungeonsgenerated+=1;
-			});
-		pool.shutdown();
 		var ndungeons=dungeons.size();
-		while(!pool.isTerminated()){
-			var progress=100.0*dungeonsgenerated/ndungeons;
-			s.print(String.format(GENERATINGDUNGEONS,Math.round(progress)));
+		var tasks=new ArrayList<Future<?>>(ndungeons);
+		for(var d:dungeons)
+			tasks.add(pool.submit(()->d.generate()));
+		for(var i=0;i<ndungeons;i++)
 			try{
-				Thread.sleep(100);
-			}catch(InterruptedException e){
+				tasks.get(i).get();
+				var progress=100.0*(i+1)/ndungeons;
+				s.print(String.format(GENERATINGDUNGEONS,Math.round(progress)));
+			}catch(Exception e){
 				throw new RuntimeException(e);
 			}
-		}
 	}
 
 	static void startthread() throws ReflectiveOperationException{

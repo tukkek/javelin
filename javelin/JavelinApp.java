@@ -58,7 +58,7 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
 	/** TODO change into actual context (separate from UI code). */
 	static public WorldScreen context;
 
-	/** Controller. */
+	static String version="Version: ?";
 
 	/**
 	 * Controller for active battle. Should be <code>null</code> at any point a
@@ -67,8 +67,6 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
 	public Fight fight;
 	/** Root window. */
 	public JFrame frame;
-
-	static String version="Version: ?";
 
 	@Override
 	public void run(){
@@ -163,6 +161,7 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
 
 	@Override
 	public void uncaughtException(Thread thread,Throwable e){
+		if(Thread.currentThread()!=thread) return;
 		var quote=CRASHQUOTES[RPG.r(CRASHQUOTES.length)];
 		JOptionPane.showMessageDialog(Javelin.app,quote+CRASHMESSAGE);
 		if(!version.endsWith("\n")) version+="\n";

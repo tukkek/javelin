@@ -43,6 +43,8 @@ public class TestHaunt{
 				Haunt h=null;
 				try{
 					h=type.getConstructor().newInstance();
+					var m=h.getminimumel();
+					if(el<m) el=m;
 					h.targetel=el;
 					h.place();
 					var boss=h.testboss();

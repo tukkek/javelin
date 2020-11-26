@@ -16,9 +16,14 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Monster.MonsterType;
 import javelin.model.world.location.haunt.Haunt;
 import javelin.old.RPG;
+import javelin.test.TestHaunt;
 
 /**
  * A haunt for {@link MonsterType#HUMANOID}s of a certain {@link Alignment}.
+ *
+ * TODO would be good to have only {@link Monster#think(int)} units but
+ * currently there's not enough monsters to do that and pass {@link TestHaunt}
+ * standards.
  *
  * @author alex
  */

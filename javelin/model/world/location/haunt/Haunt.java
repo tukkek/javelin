@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.comparator.MonstersByName;
 import javelin.controller.db.EncounterIndex;
@@ -18,7 +19,6 @@ import javelin.controller.fight.LocationFight;
 import javelin.controller.fight.mutator.Boss;
 import javelin.controller.fight.mutator.Waves;
 import javelin.controller.generator.NpcGenerator;
-import javelin.controller.generator.WorldGenerator;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.map.location.LocationMap;
 import javelin.controller.terrain.Terrain;
@@ -212,24 +212,27 @@ public abstract class Haunt extends Fortification{
 		while(RPG.chancein(2)&&tieri<Tier.TIERS.size()-1)
 			tieri+=1;
 		var t=Tier.TIERS.get(tieri);
-		targetel=t.getrandomel(false);
+		targetel=Math.max(t.getrandomel(false),getminimumel());
+	}
+
+	/**
+	 * Haunts can scale upwards pretty well but cannot be a lower Encounter Level
+	 * than its lowest individual creature.
+	 */
+	public int getminimumel(){
+		var min=Float.MAX_VALUE;
+		for(var m:pool)
+			if(m.cr<min) min=m.cr;
+		return ChallengeCalculator.crtoel(min)-Waves.ELMODIFIER.get(Waves.MAXIMUM);
 	}
 
 	@Override
 	public void generategarrison(){
-		while(garrison.isEmpty())
-			try{
-				testboss();
-				garrison.addAll(testwaves());
-			}catch(GaveUp e){
-				WorldGenerator.retry();
-				garrison.clear();
-				targetel+=1;
-				if(targetel>MAXEL){
-					if(Javelin.DEBUG) throw new InvalidParameterException();
-					return;
-				}
-			}
+		try{
+			garrison.addAll(generatemonsters(targetel));
+		}catch(GaveUp e){
+			if(Javelin.DEBUG) throw new RuntimeException(e);
+		}
 	}
 
 	@Override

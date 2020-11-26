@@ -4,7 +4,6 @@ import java.awt.Graphics;
 import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 
-import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.db.Preferences;
 import javelin.controller.fight.Fight;
@@ -35,7 +34,7 @@ public class BattlePanel extends MapPanel{
 	/** Constructor. */
 	public BattlePanel(BattleState s){
 		super(s.map.length,s.map[0].length,Preferences.KEYTILEBATTLE);
-		var p=Javelin.app.fight.period;
+		var p=Fight.current.period;
 		daylight=p.equals(Period.MORNING)||p.equals(Period.AFTERNOON);
 	}
 
@@ -55,7 +54,7 @@ public class BattlePanel extends MapPanel{
 			updatestate();
 			var s=Fight.state;
 			if(s==null) return;
-			var update=new HashSet<Point>(s.redTeam.size()+s.blueTeam.size());
+			var update=new HashSet<Point>(s.redteam.size()+s.blueteam.size());
 			for(var c:s.getcombatants())
 				update.add(new Point(c.location[0],c.location[1]));
 			for(var c:previousstate.getcombatants())
@@ -65,7 +64,7 @@ public class BattlePanel extends MapPanel{
 				update.add(new Point(c.location[0],c.location[1]));
 			if(!daylight) calculatevision(update);
 			if(overlay!=null) update.addAll(overlay.affected);
-			if(Javelin.app.fight.has(Meld.class)!=null) for(MeldCrystal m:s.meld)
+			if(Fight.current.has(Meld.class)!=null) for(MeldCrystal m:s.meld)
 				update.add(new Point(m.x,m.y));
 			for(var p:update)
 				tiles[p.x][p.y].repaint();

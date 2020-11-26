@@ -49,8 +49,8 @@ public class PassItem extends Action{
 		final Combatant giver=getmonster(me);
 		receiver.ap+=ActionCost.PARTIAL;
 		giver.ap+=ActionCost.PARTIAL;
-		Javelin.app.fight.getbag(giver).remove(item);
-		Javelin.app.fight.getbag(receiver).add(item);
+		Fight.current.getbag(giver).remove(item);
+		Fight.current.getbag(receiver).add(item);
 		return true;
 	}
 

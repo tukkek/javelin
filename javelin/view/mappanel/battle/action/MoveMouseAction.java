@@ -41,7 +41,7 @@ public class MoveMouseAction extends BattleMouseAction{
 			c.location[1]=to.y;
 			c.ap+=to.totalcost-BattleScreen.partialmove;
 			MeldCrystal m=move.getmeld(to.x,to.y);
-			if(m!=null&&c.ap>=m.meldsat) Javelin.app.fight.meld(c,m);
+			if(m!=null&&c.ap>=m.meldsat) Fight.current.meld(c,m);
 			if(to.engaged) Javelin.message(c+" disengages...",Delay.WAIT);
 		};
 	}

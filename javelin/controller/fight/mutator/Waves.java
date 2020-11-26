@@ -85,7 +85,7 @@ public class Waves extends FightMode{
 
 	@Override
 	public void checkend(Fight f){
-		var red=Fight.state.redTeam;
+		var red=Fight.state.redteam;
 		if(!red.isEmpty()) return;
 		wave+=1;
 		if(wave>waves) return;

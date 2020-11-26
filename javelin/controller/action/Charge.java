@@ -151,9 +151,9 @@ public class Charge extends Fire implements AiAction{
 		if(solution==null) return null;
 		final List<Point> threatened=solution;
 		threatened.remove(threatened.size()-1);
-		final ArrayList<Combatant> opponents=state.blueTeam==state.getteam(me)
-				?state.redTeam
-				:state.blueTeam;
+		final ArrayList<Combatant> opponents=state.blueteam==state.getteam(me)
+				?state.redteam
+				:state.blueteam;
 		for(Point s:threatened)
 			for(Point p:Point.getadjacent2()){
 				p.x+=s.x;

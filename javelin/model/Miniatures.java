@@ -67,10 +67,10 @@ public class Miniatures{
 		}
 
 		boolean balance(){
-			var blue=ChallengeCalculator.calculateel(state.blueTeam);
-			var red=ChallengeCalculator.calculateel(state.redTeam);
+			var blue=ChallengeCalculator.calculateel(state.blueteam);
+			var red=ChallengeCalculator.calculateel(state.redteam);
 			if(blue+difficulty==red) return false;
-			var weak=blue<red?state.blueTeam:state.redTeam;
+			var weak=blue<red?state.blueteam:state.redteam;
 			var weakest=new Combatants(weak).getweakest();
 			if(!Commoner.SINGLETON.upgrade(weakest)) return false;
 			ChallengeCalculator.calculatecr(weakest.source);
@@ -97,7 +97,7 @@ public class Miniatures{
 				BattleScreen.active.messagepanel.clear();
 				return;
 			}
-			Fight.state.blueTeam.clear();
+			Fight.state.blueteam.clear();
 			throw new EndBattle();
 		}
 

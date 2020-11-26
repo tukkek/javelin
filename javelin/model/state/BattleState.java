@@ -45,9 +45,9 @@ public class BattleState implements Node,TeamContainer{
 	static public List<Point> lineofsight=null;
 
 	/** Player units. */
-	public ArrayList<Combatant> blueTeam;
+	public ArrayList<Combatant> blueteam;
 	/** Computer units. */
-	public ArrayList<Combatant> redTeam;
+	public ArrayList<Combatant> redteam;
 	/** Units that ran away from the fight. */
 	public ArrayList<Combatant> fleeing;
 	/** Dead and unconscious units. */
@@ -84,8 +84,8 @@ public class BattleState implements Node,TeamContainer{
 		this.map=map;
 		this.period=period;
 		this.dead=(ArrayList<Combatant>)dead.clone();
-		this.blueTeam=(ArrayList<Combatant>)blueTeam.clone();
-		this.redTeam=(ArrayList<Combatant>)redTeam.clone();
+		this.blueteam=(ArrayList<Combatant>)blueTeam.clone();
+		this.redteam=(ArrayList<Combatant>)redTeam.clone();
 		this.meld=(ArrayList<MeldCrystal>)meld.clone();
 		next();
 	}
@@ -98,8 +98,8 @@ public class BattleState implements Node,TeamContainer{
 		period=f.period;
 		fleeing=new ArrayList<>();
 		dead=new ArrayList<>();
-		blueTeam=new ArrayList<>();
-		redTeam=new ArrayList<>();
+		blueteam=new ArrayList<>();
+		redteam=new ArrayList<>();
 		meld=new ArrayList<>();
 		next();
 
@@ -111,8 +111,8 @@ public class BattleState implements Node,TeamContainer{
 			final BattleState clone=(BattleState)super.clone();
 			clone.fleeing=(ArrayList<Combatant>)clone.fleeing.clone();
 			clone.dead=(ArrayList<Combatant>)clone.dead.clone();
-			clone.blueTeam=(ArrayList<Combatant>)blueTeam.clone();
-			clone.redTeam=(ArrayList<Combatant>)redTeam.clone();
+			clone.blueteam=(ArrayList<Combatant>)blueteam.clone();
+			clone.redteam=(ArrayList<Combatant>)redteam.clone();
 			clone.meld=(ArrayList<MeldCrystal>)meld.clone();
 			next();
 			return clone;
@@ -147,8 +147,8 @@ public class BattleState implements Node,TeamContainer{
 
 	@Override
 	public ArrayList<Combatant> getcombatants(){
-		final ArrayList<Combatant> list=new ArrayList<>(blueTeam);
-		list.addAll(redTeam);
+		final ArrayList<Combatant> list=new ArrayList<>(blueteam);
+		list.addAll(redteam);
 		return list;
 	}
 
@@ -162,12 +162,12 @@ public class BattleState implements Node,TeamContainer{
 
 	@Override
 	public List<Combatant> getblueteam(){
-		return blueTeam;
+		return blueteam;
 	}
 
 	@Override
 	public List<Combatant> getredteam(){
-		return redTeam;
+		return redteam;
 	}
 
 	public Combatant clone(Combatant c){
@@ -195,7 +195,7 @@ public class BattleState implements Node,TeamContainer{
 	 */
 	public void remove(Combatant c){
 		// c = clone(c);
-		if(!blueTeam.remove(c)) redTeam.remove(c);
+		if(!blueteam.remove(c)) redteam.remove(c);
 		if(c.equals(next)) next();
 	}
 
@@ -246,7 +246,7 @@ public class BattleState implements Node,TeamContainer{
 	 *         only units in the opposite team.
 	 */
 	public List<Combatant> gettargets(Combatant combatant){
-		return gettargets(combatant,getteam(combatant)==blueTeam?redTeam:blueTeam);
+		return gettargets(combatant,getteam(combatant)==blueteam?redteam:blueteam);
 	}
 
 	/**
@@ -279,10 +279,10 @@ public class BattleState implements Node,TeamContainer{
 	 */
 	public boolean isflanked(final Combatant target,final Combatant attacker){
 		if(attacker.burrowed||Walker.distance(target,attacker)>=1.5) return false;
-		final ArrayList<Combatant> attackerteam=blueTeam.contains(attacker)?blueTeam
-				:redTeam;
-		final ArrayList<Combatant> defenderteam=blueTeam.contains(target)?blueTeam
-				:redTeam;
+		final ArrayList<Combatant> attackerteam=blueteam.contains(attacker)?blueteam
+				:redteam;
+		final ArrayList<Combatant> defenderteam=blueteam.contains(target)?blueteam
+				:redteam;
 		if(attackerteam==defenderteam) return false;
 		final int deltax=target.location[0]-attacker.location[0];
 		final int deltay=target.location[1]-attacker.location[1];
@@ -295,16 +295,16 @@ public class BattleState implements Node,TeamContainer{
 
 	/**
 	 * @return The team this unit is in. Assumes it is in one of them.
-	 * @see #blueTeam
-	 * @see #redTeam
+	 * @see #blueteam
+	 * @see #redteam
 	 */
 	public ArrayList<Combatant> getteam(Combatant c){
-		return blueTeam.contains(c)?blueTeam:redTeam;
+		return blueteam.contains(c)?blueteam:redteam;
 	}
 
 	@Override
 	public String toString(){
-		String out=blueTeam+"\n"+redTeam+"\n\n";
+		String out=blueteam+"\n"+redteam+"\n\n";
 		for(Square[] line:map){
 			for(Square s:line)
 				out+=s;
@@ -329,12 +329,12 @@ public class BattleState implements Node,TeamContainer{
 	@Override
 	public BattleState clonedeeply(){
 		BattleState cl=clone();
-		cl.blueTeam.clear();
-		cl.redTeam.clear();
-		for(Combatant c:blueTeam)
-			cl.blueTeam.add(c.clone());
-		for(Combatant c:redTeam)
-			cl.redTeam.add(c.clone());
+		cl.blueteam.clear();
+		cl.redteam.clear();
+		for(Combatant c:blueteam)
+			cl.blueteam.add(c.clone());
+		for(Combatant c:redteam)
+			cl.redteam.add(c.clone());
 		return cl;
 	}
 
@@ -354,7 +354,7 @@ public class BattleState implements Node,TeamContainer{
 
 	/**
 	 * This method returns a subset of fleeing characters. Note that
-	 * {@link #blueTeam} and {@link #redTeam} are modified for several
+	 * {@link #blueteam} and {@link #redteam} are modified for several
 	 * {@link EndBattle} purposes so it might be preferable to use
 	 * {@link Fight#originalblueteam} and {@link Fight#originalredteam} instead.
 	 *
@@ -383,7 +383,7 @@ public class BattleState implements Node,TeamContainer{
 	}
 
 	/**
-	 * New list with {@link #redTeam}, {@link #blueTeam}, {@link #fleeing} and
+	 * New list with {@link #redteam}, {@link #blueteam}, {@link #fleeing} and
 	 * {@link #dead}.
 	 */
 	public void getallcombatants(){
@@ -393,16 +393,16 @@ public class BattleState implements Node,TeamContainer{
 	}
 
 	public ArrayList<Combatant> getopponents(Combatant c){
-		return getteam(c)==blueTeam?redTeam:blueTeam;
+		return getteam(c)==blueteam?redteam:blueteam;
 	}
 
 	public void swapteam(Combatant c){
-		if(blueTeam.contains(c)){
-			blueTeam.remove(c);
-			redTeam.add(c);
+		if(blueteam.contains(c)){
+			blueteam.remove(c);
+			redteam.add(c);
 		}else{
-			redTeam.remove(c);
-			blueTeam.add(c);
+			redteam.remove(c);
+			blueteam.add(c);
 		}
 	}
 
@@ -413,6 +413,6 @@ public class BattleState implements Node,TeamContainer{
 
 	/** @return <code>true</code> if a {@link Combatant} can be placed here. */
 	public boolean isempty(int x,int y){
-		return Javelin.app.fight.map.validate(x,y)&&!isblocked(x,y);
+		return Fight.current.map.validate(x,y)&&!isblocked(x,y);
 	}
 }

@@ -142,7 +142,7 @@ public class Examine extends Action{
 			}
 		}else if(state.map[p.x][p.y].flooded)
 			lookmessage("Flooded",s);
-		else if(Javelin.app.fight.map.map[p.x][p.y].blocked)
+		else if(Fight.current.map.map[p.x][p.y].blocked)
 			lookmessage("Blocked",s);
 		s.statuspanel.repaint();
 	}

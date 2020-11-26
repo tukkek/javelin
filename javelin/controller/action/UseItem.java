@@ -48,7 +48,7 @@ public class UseItem extends Action{
 	 *         right now, canceled... Otherwise the selected item.
 	 */
 	public static Item queryforitemselection(final Combatant c,boolean validate){
-		final List<Item> items=new ArrayList<>(Javelin.app.fight.getbag(c));
+		final List<Item> items=new ArrayList<>(Fight.current.getbag(c));
 		var noeligible=c+" doesn't have any usable battle items right now...";
 		if(items.isEmpty()){
 			Javelin.message(noeligible,false);

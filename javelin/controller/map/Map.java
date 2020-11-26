@@ -229,7 +229,7 @@ public abstract class Map{
 	/**
 	 * TODO test default implementation
 	 *
-	 * @param team {@link BattleState#blueTeam} or {@link BattleState#redTeam}.
+	 * @param team {@link BattleState#blueteam} or {@link BattleState#redteam}.
 	 * @return Spawn points for the given team.
 	 */
 	public List<Point> getspawn(List<Combatant> team){

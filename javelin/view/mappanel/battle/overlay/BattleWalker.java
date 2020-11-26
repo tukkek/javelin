@@ -3,9 +3,9 @@ package javelin.view.mappanel.battle.overlay;
 import java.awt.Color;
 import java.util.LinkedList;
 
-import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.action.Movement;
+import javelin.controller.fight.Fight;
 import javelin.controller.walker.overlay.OverlayStep;
 import javelin.controller.walker.overlay.OverlayWalker;
 import javelin.model.state.BattleState;
@@ -80,7 +80,7 @@ public class BattleWalker extends OverlayWalker{
 			return false;
 		BattleStep step=(BattleStep)p;
 		if(state.map[step.x][step.y].blocked
-				&&(current.source.fly==0||!Javelin.app.fight.map.flying))
+				&&(current.source.fly==0||!Fight.current.map.flying))
 			return false;
 		boolean istarget=step.equals(to);
 		if(isengaged&&(!previous.isEmpty()||!istarget)) return false;

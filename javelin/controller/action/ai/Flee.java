@@ -11,6 +11,7 @@ import javelin.controller.ai.BattleAi;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
+import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
@@ -49,11 +50,11 @@ public class Flee extends Action implements AiAction{
 	}
 
 	public static boolean flee(Combatant active,BattleState s){
-		if(!ALLOWFLEE||!Javelin.app.fight.canflee||!s.redTeam.contains(s.next)
+		if(!ALLOWFLEE||!Fight.current.canflee||!s.redteam.contains(s.next)
 				||s.isengaged(active))
 			return false;
-		var red=ChallengeCalculator.calculateel(s.redTeam);
-		var blue=ChallengeCalculator.calculateel(s.blueTeam);
+		var red=ChallengeCalculator.calculateel(s.redteam);
+		var blue=ChallengeCalculator.calculateel(s.blueteam);
 		return red-blue<=FLEEAT;
 	}
 

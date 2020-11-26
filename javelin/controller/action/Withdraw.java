@@ -1,7 +1,7 @@
 package javelin.controller.action;
 
-import javelin.Javelin;
 import javelin.controller.action.ai.Flee;
+import javelin.controller.fight.Fight;
 import javelin.model.unit.Combatant;
 import javelin.view.screen.BattleScreen;
 
@@ -20,7 +20,7 @@ public class Withdraw extends Action{
 
 	@Override
 	public boolean perform(Combatant active){
-		Javelin.app.fight.withdraw(active,BattleScreen.active);
+		Fight.current.withdraw(active,BattleScreen.active);
 		return true;
 	}
 }

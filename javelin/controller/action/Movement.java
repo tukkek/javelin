@@ -99,7 +99,7 @@ public class Movement extends Action{
 				String action=disengaging?"disengages":"moves";
 				Javelin.message(c+" "+action+"...",Javelin.Delay.WAIT);
 			}else
-				Javelin.app.fight.meld(c,meld);
+				Fight.current.meld(c,meld);
 			return true;
 		}catch(RuntimeException e){
 			throw e;
@@ -164,7 +164,7 @@ public class Movement extends Action{
 	public static boolean tryMove(int x,int y,BattleState state,Combatant hero){
 		Combatant c=state.getcombatant(x,y);
 		if(c==null&&state.map[x][y].blocked
-				&&(hero.source.fly==0||!Javelin.app.fight.map.flying))
+				&&(hero.source.fly==0||!Fight.current.map.flying))
 			return false;
 		MeldCrystal m=state.getmeld(x,y);
 		if(m!=null&&!m.crystalize(state)) throw new RepeatTurn();

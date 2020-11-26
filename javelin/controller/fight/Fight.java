@@ -1,8 +1,6 @@
 package javelin.controller.fight;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,6 +52,11 @@ public abstract class Fight{
 	public static Combatants originalredteam;
 	/** Blue team at the moment the {@link Fight} begins. */
 	public static Combatants originalblueteam;
+	/**
+	 * Controller for active battle. Should be <code>null</code> at any point a
+	 * battle is not occurring.
+	 */
+	public static Fight current;
 
 	/**
 	 * Map this battle is to happen on or <code>null</code> for one to be
@@ -163,7 +166,7 @@ public abstract class Fight{
 	 *         for {@link Minigame}s.
 	 */
 	public boolean onend(){
-		state.blueTeam.addAll(state.getfleeing(Fight.originalblueteam));
+		state.blueteam.addAll(state.getfleeing(Fight.originalblueteam));
 		for(var m:mutators)
 			m.end(this);
 		EndBattle.showcombatresult();
@@ -177,14 +180,14 @@ public abstract class Fight{
 	public void checkend(){
 		for(var m:mutators)
 			m.checkend(this);
-		if(win()||Fight.state.blueTeam.isEmpty()) throw new EndBattle();
+		if(win()||Fight.state.blueteam.isEmpty()) throw new EndBattle();
 	}
 
 	/**
 	 * @return <code>true</code> if there are any active enemies here.
 	 */
 	public boolean checkforenemies(){
-		for(Combatant c:Fight.state.redTeam)
+		for(Combatant c:Fight.state.redteam)
 			if(c.hascondition(Dominated.class)==null) return true;
 		return false;
 	}
@@ -217,7 +220,7 @@ public abstract class Fight{
 	 * @return The resulting opponents.
 	 */
 	public ArrayList<Combatant> generate(){
-		var el=getel(ChallengeCalculator.calculateel(Fight.state.blueTeam));
+		var el=getel(ChallengeCalculator.calculateel(Fight.state.blueteam));
 		var foes=getfoes(el);
 		enhance(foes);
 		return foes;
@@ -274,7 +277,7 @@ public abstract class Fight{
 	 * @return <code>true</code> if battle has been won.
 	 */
 	public boolean win(){
-		return Fight.state.redTeam.isEmpty()||!checkforenemies();
+		return Fight.state.redteam.isEmpty()||!checkforenemies();
 	}
 
 	/**
@@ -308,7 +311,7 @@ public abstract class Fight{
 	}
 
 	/**
-	 * Setups {@link #state} and {@link BattleState#blueTeam}.
+	 * Setups {@link #state} and {@link BattleState#blueteam}.
 	 *
 	 * @return Opponent units.
 	 */
@@ -317,7 +320,7 @@ public abstract class Fight{
 				.filter(p->p.toString().equalsIgnoreCase(Debug.period)).findFirst()
 				.orElseThrow();
 		Fight.state=new BattleState(this);
-		Fight.state.blueTeam=new ArrayList<>(getblueteam());
+		Fight.state.blueteam=new ArrayList<>(getblueteam());
 		for(var m:mutators)
 			m.setup(this);
 		return generate();
@@ -365,7 +368,7 @@ public abstract class Fight{
 		Javelin.message(prompt,Javelin.Delay.NONE);
 		if(Javelin.input().getKeyChar()!='\n') throw new RepeatTurn();
 		combatant.escape(Fight.state);
-		throw Fight.state.blueTeam.isEmpty()?new EndBattle():new RepeatTurn();
+		throw Fight.state.blueteam.isEmpty()?new EndBattle():new RepeatTurn();
 	}
 
 	/**
@@ -383,7 +386,7 @@ public abstract class Fight{
 				return;
 			}
 		}
-		for(var c:new ArrayList<>(Fight.state.blueTeam))
+		for(var c:new ArrayList<>(Fight.state.blueteam))
 			c.escape(Fight.state);
 		throw new EndBattle();
 	}
@@ -398,6 +401,10 @@ public abstract class Fight{
 		// nothing
 	}
 
+	/**
+	 * Called when a unit becomes {@link Combatant#STATUSDEAD} or
+	 * {@link Combatant#STATUSUNCONSCIOUS}.
+	 */
 	public void die(Combatant c,BattleState s){
 		for(var m:mutators)
 			m.die(c,s,this);
@@ -414,29 +421,6 @@ public abstract class Fight{
 		if(exclude!=null) combatants.removeAll(exclude);
 		return combatants.stream().collect(Collectors.averagingDouble(c->c.ap))
 				.floatValue();
-	}
-
-	public void enter(List<Combatant> entering,List<Combatant> team,Point entry){
-		if(entering.isEmpty()) return;
-		var s=Fight.state;
-		while(!entry.validate(0,0,s.map.length,s.map.length)
-				||s.isblocked(entry.x,entry.y))
-			entry=displace(entry);
-		LinkedList<Combatant> place=new LinkedList<>(entering);
-		Collections.shuffle(place);
-		Combatant last=place.pop();
-		last.setlocation(entry);
-		float ap=getaverageap(null);
-		if(!team.contains(last)){
-			team.addAll(entering);
-			for(Combatant c:entering)
-				c.rollinitiative(ap);
-		}
-		while(!place.isEmpty()){
-			Point p=displace(last.getlocation());
-			last=place.pop();
-			last.setlocation(p);
-		}
 	}
 
 	static Point displace(Point reference){

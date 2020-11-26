@@ -108,6 +108,6 @@ public class DominateMonster extends Ray{
 	static void switchteams(Combatant target,BattleState s){
 		ArrayList<Combatant> from=s.getteam(target);
 		from.remove(target);
-		(from==s.redTeam?s.blueTeam:s.redTeam).add(target);
+		(from==s.redteam?s.blueteam:s.redteam).add(target);
 	}
 }

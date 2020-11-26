@@ -127,7 +127,7 @@ public class StatisticsScreen extends InfoScreen{
 	@SuppressWarnings("unused")
 	static String showhp(Combatant c,Monster m){
 		boolean isally=Fight.state==null?Squad.active.members.contains(c)
-				:Fight.state.blueTeam.contains(c);
+				:Fight.state.blueteam.contains(c);
 		final String hp;
 		if(Javelin.DEBUG&&DEBUG)
 			hp=Integer.toString(c.hp);

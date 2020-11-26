@@ -13,14 +13,14 @@ import javelin.model.unit.Combatants;
  * @author alex
  */
 public abstract class FightMode extends Mutator{
-	/** @return Enemies to start {@link BattleState#redTeam} with. */
+	/** @return Enemies to start {@link BattleState#redteam} with. */
 	public abstract Combatants generate(Fight f) throws GaveUp;
 
 	@Override
 	public void prepare(Fight f){
 		super.prepare(f);
 		try{
-			Fight.state.redTeam=generate(f);
+			Fight.state.redteam=generate(f);
 		}catch(GaveUp e){
 			if(Javelin.DEBUG) throw new RuntimeException(e);
 		}

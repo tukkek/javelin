@@ -7,7 +7,6 @@ import java.awt.Image;
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
-import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.fight.Fight;
 import javelin.controller.map.Map;
@@ -38,7 +37,7 @@ public class BattleTile extends Tile{
 			drawcover(g);
 			return;
 		}
-		final Map m=Javelin.app.fight.map;
+		final Map m=Fight.current.map;
 		final Square s=Fight.state.map[x][y];
 		if(!s.blocked){
 			//			if(m.floor==null)
@@ -71,7 +70,7 @@ public class BattleTile extends Tile{
 	}
 
 	void drawcombatant(final Graphics g,final Combatant c,final Tile t){
-		final boolean isblueteam=Fight.state.blueTeam.contains(c);
+		final boolean isblueteam=Fight.state.blueteam.contains(c);
 		Point p=getposition();
 		if(BattlePanel.current.equals(c)){
 			g.setColor(isblueteam?Color.GREEN:Color.ORANGE);

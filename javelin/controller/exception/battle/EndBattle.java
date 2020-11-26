@@ -34,7 +34,7 @@ public class EndBattle extends BattleEvent{
 
 	/** Start after-{@link Fight} cleanup. */
 	public static void end(){
-		var f=Javelin.app.fight;
+		var f=Fight.current;
 		Fight.victory=f.win();
 		terminateconditions(Fight.state,BattleScreen.active);
 		if(f.onend()){
@@ -67,10 +67,10 @@ public class EndBattle extends BattleEvent{
 		MessagePanel.active.clear();
 		String combatresult;
 		var s=Fight.state;
-		var f=Javelin.app.fight;
+		var f=Fight.current;
 		if(Fight.victory)
 			combatresult=f.reward();
-		else if(f.has(Friendly.class)!=null&&!s.blueTeam.isEmpty())
+		else if(f.has(Friendly.class)!=null&&!s.blueteam.isEmpty())
 			combatresult="You lost!";
 		else if(s.getfleeing(Fight.originalblueteam).isEmpty()){
 			Squad.active.disband();
@@ -94,7 +94,7 @@ public class EndBattle extends BattleEvent{
 	}
 
 	static void updateoriginal(List<Combatant> originalteam){
-		var update=new ArrayList<>(Fight.state.blueTeam);
+		var update=new ArrayList<>(Fight.state.blueteam);
 		for(var inbattle:update){
 			int originali=originalteam.indexOf(inbattle);
 			if(originali>=0){
@@ -124,7 +124,7 @@ public class EndBattle extends BattleEvent{
 			if(!originalteam.contains(c)) continue;
 			if(c.hp>Combatant.DEADATHP&&c.source.constitution>0){
 				c.hp=1;
-				Fight.state.blueTeam.add(c);
+				Fight.state.blueteam.add(c);
 			}else if(!Fight.victory||!revive(c,originalteam)){
 				originalteam.remove(c);
 				c.bury();
@@ -176,7 +176,7 @@ public class EndBattle extends BattleEvent{
 		originalteam.retainAll(s);
 		Fight.state.fleeing.retainAll(s);
 		Fight.state.dead.retainAll(s);
-		Fight.state.blueTeam.retainAll(s);
+		Fight.state.blueteam.retainAll(s);
 		//		for(Combatant c:Fight.state.getcombatants())
 		//			if(c.summoned){
 		//				Fight.state.blueTeam.remove(c);

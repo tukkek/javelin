@@ -86,7 +86,7 @@ public class Robbers extends UrbanEncounter{
 				@Override
 				public void prepare(Fight f){
 					super.prepare(f);
-					Fight.state.blueTeam.addAll(guards);
+					Fight.state.blueteam.addAll(guards);
 				}
 			});
 		}

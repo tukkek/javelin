@@ -42,7 +42,7 @@ public class FindWounded extends SkillEvent{
 
 		@Override
 		public boolean onend(){
-			if(state.blueTeam.contains(wounded))
+			if(state.blueteam.contains(wounded))
 				Javelin.message("The wounded "+wounded+" decides to join your party!",
 						true);
 			else

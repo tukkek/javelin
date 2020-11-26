@@ -57,7 +57,7 @@ public class Ruby extends Item{
 		int el=Math.max(1,Math.round(user.source.cr));
 		Combatants summoned=EncounterGenerator.generate(el,Terrain.NONWATER);
 		for(Combatant c:summoned)
-			Summon.place(user,c,Fight.state.blueTeam,Fight.state);
+			Summon.place(user,c,Fight.state.blueteam,Fight.state);
 		Javelin.redraw();
 		BattleScreen.active.center(user.location[0],user.location[1]);
 		String feedback="Summoned: "+Javelin.group(summoned).toLowerCase()+"!";

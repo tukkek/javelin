@@ -42,8 +42,8 @@ public class StartBattle extends BattleEvent{
 		fight.setup.setup();
 		Fight.state.next();
 		fight.ready();
-		final int elred=ChallengeCalculator.calculateel(Fight.state.redTeam);
-		final int elblue=ChallengeCalculator.calculateel(Fight.state.blueTeam);
+		final int elred=ChallengeCalculator.calculateel(Fight.state.redteam);
+		final int elblue=ChallengeCalculator.calculateel(Fight.state.blueteam);
 		int diffifculty=elred-elblue;
 		if(!Squad.active.skipcombat(diffifculty)){
 			BattlePanel.current=Fight.state.next;
@@ -90,7 +90,7 @@ public class StartBattle extends BattleEvent{
 			Fight.victory=true;
 			fight.onend();
 		}
-		Javelin.app.fight=null;
+		Fight.current=null;
 	}
 
 	private ArrayList<Float> damage(ArrayList<Combatant> blueteam,
@@ -149,12 +149,12 @@ public class StartBattle extends BattleEvent{
 
 	/** TODO deduplicate originals */
 	public void preparebattle(ArrayList<Combatant> opponents){
-		Fight.state.redTeam=opponents;
+		Fight.state.redteam=opponents;
 		for(var m:fight.mutators)
 			m.prepare(fight);
-		var blue=Fight.state.blueTeam;
+		var blue=Fight.state.blueteam;
 		Fight.originalblueteam=new Combatants(blue);
-		Fight.originalredteam=new Combatants(Fight.state.redTeam);
+		Fight.originalredteam=new Combatants(Fight.state.redteam);
 		for(int i=0;i<blue.size();i++){
 			var c=blue.get(i);
 			blue.set(i,c.clone().clonesource());

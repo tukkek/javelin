@@ -1,6 +1,6 @@
 package javelin.model.unit.condition;
 
-import javelin.Javelin;
+import javelin.controller.fight.Fight;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -58,7 +58,7 @@ public class Poisoned extends Condition{
 
 	@Override
 	public void end(Combatant c){
-		int heal=Javelin.app.fight==null?Squad.active.heal():c.taketen(Skill.HEAL);
+		int heal=Fight.current==null?Squad.active.heal():c.taketen(Skill.HEAL);
 		if(!neutralized&&heal<dc) damage(c,secondary);
 	}
 

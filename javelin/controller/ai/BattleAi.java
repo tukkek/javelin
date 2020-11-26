@@ -37,14 +37,14 @@ public class BattleAi extends AlphaBetaSearch{
 		if(redTeam==0f) return LIMIT;
 		final float blueTeam=BattleAi.ratechallenge(state.getblueteam());
 		if(blueTeam==0f) return -LIMIT;
-		return redTeam-measuredistances(state.redTeam,state.blueTeam)
+		return redTeam-measuredistances(state.redteam,state.blueteam)
 				-state.meld.size()-defending(state)
-				-(blueTeam-measuredistances(state.blueTeam,state.redTeam));
+				-(blueTeam-measuredistances(state.blueteam,state.redteam));
 	}
 
 	static float defending(BattleState state){
 		int ndefending=0;
-		for(Combatant c:state.redTeam)
+		for(Combatant c:state.redteam)
 			if(c.hascondition(Defending.class)!=null) ndefending+=1;
 		return ndefending;
 	}
@@ -78,12 +78,12 @@ public class BattleAi extends AlphaBetaSearch{
 	@Override
 	public boolean terminalTest(final Node node){
 		final BattleState state=(BattleState)node;
-		return state.redTeam.isEmpty()||state.blueTeam.isEmpty();
+		return state.redteam.isEmpty()||state.blueteam.isEmpty();
 	}
 
 	@Override
 	public ValueSelector getplayer(Node node){
 		BattleState s=(BattleState)node;
-		return s.blueTeam.contains(s.next)?minValueSelector:maxValueSelector;
+		return s.blueteam.contains(s.next)?minValueSelector:maxValueSelector;
 	}
 }

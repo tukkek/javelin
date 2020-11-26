@@ -3,7 +3,6 @@ package javelin.controller;
 import java.util.ArrayList;
 
 import javelin.Debug;
-import javelin.Javelin;
 import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.state.Square;
@@ -51,7 +50,7 @@ public class Weather{
 	}
 
 	public static void flood(){
-		int level=Javelin.app.fight.flood();
+		int level=Fight.current.flood();
 		final double r=RATIO[level];
 		if(r==0.0) return;
 		final ArrayList<Square> clear=new ArrayList<>();

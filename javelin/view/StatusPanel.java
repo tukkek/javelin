@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import javelin.Javelin;
 import javelin.controller.action.Examine;
 import javelin.controller.collection.CountingSet;
 import javelin.controller.fight.Fight;
@@ -72,7 +71,7 @@ public class StatusPanel extends TPanel{
 
 	private String itemdata(Combatant combatant){
 		CountingSet count=new CountingSet();
-		List<Item> bag=Javelin.app.fight.getbag(combatant);
+		List<Item> bag=Fight.current.getbag(combatant);
 		bag.stream().filter(i->i.usedinbattle&&i.canuse(combatant)==null)
 				.forEach(i->{
 					String name=i.toString().replaceAll("Potion of","");

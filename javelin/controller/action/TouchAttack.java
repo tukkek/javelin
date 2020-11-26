@@ -80,8 +80,8 @@ public class TouchAttack extends Fire implements AiAction{
 	@Override
 	protected void filtertargets(Combatant combatant,List<Combatant> targets,
 			BattleState s){
-		ArrayList<Combatant> opponents=s.blueTeam.contains(combatant)?s.redTeam
-				:s.blueTeam;
+		ArrayList<Combatant> opponents=s.blueteam.contains(combatant)?s.redteam
+				:s.blueteam;
 		for(Combatant target:new ArrayList<>(targets))
 			if(!opponents.contains(target)
 					||Math.abs(target.location[0]-combatant.location[0])>1

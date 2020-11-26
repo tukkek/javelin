@@ -59,7 +59,7 @@ public class Debug{
 				@Override
 				public void ready(Fight f){
 					super.ready(f);
-					for(var c:state.redTeam)
+					for(var c:state.redteam)
 						c.ap=1000;
 				}
 			});
@@ -88,7 +88,7 @@ public class Debug{
 				c.detox(c.source.poison);
 			}
 			if(Fight.state==null) return;
-			for(Combatant c:Fight.state.blueTeam){
+			for(Combatant c:Fight.state.blueteam){
 				c.hp=c.maxhp;
 				c.detox(c.source.poison);
 			}
@@ -96,7 +96,7 @@ public class Debug{
 
 		static void healopponenets(){
 			if(Fight.state==null) return;
-			for(Combatant c:Fight.state.redTeam)
+			for(Combatant c:Fight.state.redteam)
 				c.hp=c.maxhp;
 		}
 
@@ -133,12 +133,12 @@ public class Debug{
 				@Override
 				public void endturn(Fight fight){
 					super.endturn(fight);
-					for(var c:Fight.state.redTeam)
+					for(var c:Fight.state.redteam)
 						c.ap=1000;
 				}
 			};
 			m.endturn(null);
-			Javelin.app.fight.mutators.add(m);
+			Fight.current.mutators.add(m);
 		}
 
 		static void teleport(Class<? extends Actor> type){
@@ -222,7 +222,7 @@ public class Debug{
 						var f=new DebugFight(opponents);
 						f.avoid=false;
 						f.map=map.getConstructor().newInstance();
-						Javelin.app.fight=f;
+						Fight.current=f;
 						var clock=System.currentTimeMillis();
 						try{
 							new StartBattle(f).battle();

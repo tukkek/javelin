@@ -16,6 +16,7 @@ import javelin.controller.ai.AiThread;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.audio.Audio;
+import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
 import javelin.model.state.MeldCrystal;
@@ -142,7 +143,7 @@ public class AiMovement extends Action implements AiAction{
 			for(var y=from.y-range;y<=from.y+range;y++)
 				destinations.add(new Point(x,y));
 		destinations.remove(c.getlocation());
-		var flies=Javelin.app.fight.map.flying&&c.source.fly>0;
+		var flies=Fight.current.map.flying&&c.source.fly>0;
 		var target=MOVES*MOVES;
 		var result=new ArrayList<Point>(target);
 		var queue=new LinkedList<>(destinations);

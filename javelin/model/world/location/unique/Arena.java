@@ -125,7 +125,7 @@ public class Arena extends UniqueLocation{
 						a.automatic=true;
 						a.mercenary=true;
 					}
-					var b=Fight.state.blueTeam;
+					var b=Fight.state.blueteam;
 					add(allies,b,((ArenaMap)map).minionspawn,ArenaFight.this);
 					waveel=ChallengeCalculator.calculateel(b)+Waves.ELMODIFIER.get(waves);
 					super.draw(f);

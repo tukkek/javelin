@@ -301,7 +301,7 @@ public class Combatant implements Serializable,Cloneable{
 		hp-=damage;
 		if(hp<=0){
 			if(mercenary) hp=Math.min(hp,DEADATHP);
-			Javelin.app.fight.die(this,s);
+			Fight.current.die(this,s);
 		}
 	}
 
@@ -469,7 +469,7 @@ public class Combatant implements Serializable,Cloneable{
 	}
 
 	boolean isflanked(BattleState s){
-		ArrayList<Combatant> team=s.blueTeam.contains(this)?s.redTeam:s.blueTeam;
+		ArrayList<Combatant> team=s.blueteam.contains(this)?s.redteam:s.blueteam;
 		for(Combatant c:team)
 			if(c.flank(this,s)) return true;
 		return false;
@@ -622,7 +622,7 @@ public class Combatant implements Serializable,Cloneable{
 		var seen=new HashSet<Point>();
 		var perception=perceive(s.period);
 		var range=view(s.period);
-		var map=Javelin.app.fight.map.map;
+		var map=Fight.current.map.map;
 		if(range==Integer.MAX_VALUE) range=Math.max(map.length,map[0].length);
 		var here=new Point(location[0],location[1]);
 		var fromx=Math.max(0,here.x-range);
@@ -664,9 +664,9 @@ public class Combatant implements Serializable,Cloneable{
 	 * @see Skills#perceive(Monster, boolean)
 	 */
 	public void detect(){
-		if(Fight.state.redTeam.contains(this)) return;
+		if(Fight.state.redteam.contains(this)) return;
 		int listen=perceive(true,true,true);
-		for(Combatant c:Fight.state.redTeam)
+		for(Combatant c:Fight.state.redteam)
 			if(listen>=c.taketen(Skill.STEALTH)+(Walker.distance(this,c)-1))
 				BattleScreen.active.mappanel.tiles[c.location[0]][c.location[1]].discovered=true;
 	}

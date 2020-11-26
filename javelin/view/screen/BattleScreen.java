@@ -191,11 +191,11 @@ public class BattleScreen extends Screen{
 				c.refresh();
 			Fight.state.next();
 			current=Fight.state.next;
-			Javelin.app.fight.startturn(Fight.state.next);
+			Fight.current.startturn(Fight.state.next);
 			Examine.lastlooked=null;
 			partialmove=0;
 			checkai();
-			if(Fight.state.redTeam.contains(current)||current.automatic){
+			if(Fight.state.redteam.contains(current)||current.automatic){
 				lastwascomputermove=current;
 				computermove();
 			}else{
@@ -206,8 +206,8 @@ public class BattleScreen extends Screen{
 			updatescreen();
 			block();
 		}finally{
-			Javelin.app.fight.endturn();
-			Javelin.app.fight.checkend();
+			Fight.current.endturn();
+			Fight.current.checkend();
 		}
 	}
 
@@ -271,7 +271,7 @@ public class BattleScreen extends Screen{
 	void checkai(){
 		if(lastaicheck==null||lastaicheck+1>Fight.state.next.ap) return;
 		lastaicheck=Fight.state.next.ap;
-		for(Combatant c:Fight.state.blueTeam)
+		for(Combatant c:Fight.state.blueteam)
 			if(!c.automatic&&!c.source.passive) return;
 		String prompt="All of your units are in automatic mode. Continue?\n"
 				+"Press r to reset all your units to manual mode.\n"
@@ -282,7 +282,7 @@ public class BattleScreen extends Screen{
 		messagepanel.repaint();
 		if(input=='n')
 			lastaicheck=null;
-		else if(input=='r') for(Combatant c:Fight.state.blueTeam)
+		else if(input=='r') for(Combatant c:Fight.state.blueteam)
 			c.automatic=false;
 	}
 
@@ -352,7 +352,7 @@ public class BattleScreen extends Screen{
 		if(lastwascomputermove==null) Javelin.redraw();
 		Javelin.Delay delay=state.delay;
 		if(enableoverrun&&delay==Javelin.Delay.WAIT
-				&&(s.redTeam.contains(s.next)||s.next.automatic)){
+				&&(s.redteam.contains(s.next)||s.next.automatic)){
 			delay=Javelin.Delay.NONE;
 			jointurns=true;
 		}
@@ -414,7 +414,7 @@ public class BattleScreen extends Screen{
 	 * anymore
 	 */
 	public Image gettile(int x,int y){
-		Map m=Javelin.app.fight.map;
+		Map m=Fight.current.map;
 		Square s=m.map[x][y];
 		if(s.blocked) return m.getblockedtile(x,y);
 		return m.floor;

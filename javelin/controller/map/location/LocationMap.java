@@ -74,6 +74,6 @@ public class LocationMap extends Map{
 
 	@Override
 	public List<Point> getspawn(List<Combatant> team){
-		return team==Fight.state.redTeam?spawnred:spawnblue;
+		return team==Fight.state.redteam?spawnred:spawnblue;
 	}
 }

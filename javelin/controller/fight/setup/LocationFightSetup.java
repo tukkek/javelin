@@ -18,14 +18,14 @@ public class LocationFightSetup extends BattleSetup{
 
 	@Override
 	protected void place(boolean strict){
-		clear(Fight.state.blueTeam);
-		clear(Fight.state.redTeam);
-		place(Fight.state.blueTeam,map.spawnblue);
+		clear(Fight.state.blueteam);
+		clear(Fight.state.redteam);
+		place(Fight.state.blueteam,map.spawnblue);
 		placeredteam();
 	}
 
 	public void placeredteam(){
-		place(Fight.state.redTeam,map.spawnred);
+		place(Fight.state.redteam,map.spawnred);
 	}
 
 	protected void clear(ArrayList<Combatant> team){

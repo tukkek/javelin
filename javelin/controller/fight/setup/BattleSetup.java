@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.exception.GaveUp;
@@ -45,7 +44,7 @@ public class BattleSetup{
 	/** Starts the setup steps. */
 	public void setup(){
 		rollinitiative();
-		var f=Javelin.app.fight;
+		var f=Fight.current;
 		generatemap(f,null);
 		for(pass=1;pass<=PLACEMENTSPASSES;pass++)
 			try{
@@ -112,8 +111,8 @@ public class BattleSetup{
 		for(var c:s.getcombatants())
 			c.setlocation(NOTPLACED);
 		var blueseed=RPG.chancein(2);
-		var a=RPG.shuffle(new LinkedList<>(blueseed?s.blueTeam:s.redTeam));
-		var b=RPG.shuffle(new LinkedList<>(blueseed?s.redTeam:s.blueTeam));
+		var a=RPG.shuffle(new LinkedList<>(blueseed?s.blueteam:s.redteam));
+		var b=RPG.shuffle(new LinkedList<>(blueseed?s.redteam:s.blueteam));
 		var placeda=new ArrayList<Combatant>();
 		var placedb=new ArrayList<Combatant>();
 		var seeda=a.pop();
@@ -183,7 +182,7 @@ public class BattleSetup{
 	}
 
 	boolean place(Combatant c,int x,int y){
-		var m=Javelin.app.fight.map;
+		var m=Fight.current.map;
 		if(m.map[x][y].blocked||Fight.state.getcombatant(x,y)!=null) return false;
 		c.location[0]=x;
 		c.location[1]=y;
@@ -191,7 +190,7 @@ public class BattleSetup{
 	}
 
 	public void place(List<Combatant> team,List<Point> startingarea){
-		var m=Javelin.app.fight.map;
+		var m=Fight.current.map;
 		teamplacement:for(var c:RPG.shuffle(team)){
 			for(var spawn:RPG.shuffle(new ArrayList<>(startingarea))){
 				var area=spawn.getadjacent();

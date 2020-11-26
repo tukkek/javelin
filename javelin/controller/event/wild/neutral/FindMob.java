@@ -51,7 +51,7 @@ public class FindMob extends SkillEvent{
 
 		@Override
 		public boolean onend(){
-			if(state.blueTeam.contains(ally))
+			if(state.blueteam.contains(ally))
 				Javelin.message(ally+" joins your team!",true);
 			else
 				Squad.active.remove(ally);

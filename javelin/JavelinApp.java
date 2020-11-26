@@ -38,6 +38,9 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
+	/** Lower-case operating system name. */
+	public static final String SYSTEM=System.getProperty("os.name").toLowerCase();
+
 	static final String CRASHMESSAGE="\n\nUnfortunately an error ocurred.\n"
 			+"Please send a screenshot of the next message or the log file (error.txt)\n"
 			+"to one of the channels below, to help it get fixed on future releases.\n\n"
@@ -52,19 +55,11 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
 			"You were eaten by a grue.","So again it has come to pass...",
 			"Mamma mia!",};
 
-	/** Lower-case operating system name. */
-	public static final String SYSTEM=System.getProperty("os.name").toLowerCase();
-
 	/** TODO change into actual context (separate from UI code). */
-	static public WorldScreen context;
+	public static WorldScreen context;
 
 	static String version="Version: ?";
 
-	/**
-	 * Controller for active battle. Should be <code>null</code> at any point a
-	 * battle is not occurring.
-	 */
-	public Fight fight;
 	/** Root window. */
 	public JFrame frame;
 
@@ -102,13 +97,13 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
 			}
 		}catch(final StartBattle e){
 			if(Debug.disablecombat) return;
-			fight=e.fight;
+			Fight.current=e.fight;
 			try{
 				e.battle();
 			}catch(final EndBattle end){
 				EndBattle.end();
 			}
-			Javelin.app.fight=null;
+			Fight.current=null;
 			Fight.state=null;
 		}
 	}

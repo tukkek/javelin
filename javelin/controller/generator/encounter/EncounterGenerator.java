@@ -80,7 +80,7 @@ public class EncounterGenerator{
 		for(int i=0;i<MAXTRIES;i++){
 			encounter=select(el,encounters);
 			if(encounter==null) continue;
-			var f=Javelin.app.fight;
+			var f=Fight.current;
 			if(f==null||f.validate(encounter)) return encounter;
 		}
 		return null;
@@ -140,8 +140,8 @@ public class EncounterGenerator{
 		int current=4;
 		if(Fight.state==null){
 			if(Squad.active!=null) current=Squad.active.members.size();
-		}else if(!Fight.state.blueTeam.isEmpty())
-			current=Fight.state.blueTeam.size();
+		}else if(!Fight.state.blueteam.isEmpty())
+			current=Fight.state.blueteam.size();
 		return MAXSIZEDIFFERENCE+current;
 	}
 

@@ -3,7 +3,7 @@ package javelin.model.world;
 import java.io.Serializable;
 import java.util.List;
 
-import javelin.Javelin;
+import javelin.controller.fight.Fight;
 import javelin.controller.scenario.Campaign;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Town;
@@ -127,7 +127,7 @@ public class Period
 
 	/** The current time of day in the game {@link World}. */
 	public static Period now(){
-		if(Javelin.app.fight!=null) return Javelin.app.fight.period;
+		if(Fight.current!=null) return Fight.current.period;
 		for(var p:ALL)
 			if(p.is()) return p;
 		throw new RuntimeException("Unknown hour: "+gethour());

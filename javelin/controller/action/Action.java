@@ -144,8 +144,8 @@ public abstract class Action implements Serializable,ActionDescription{
 		for(final ChanceNode cn:list)
 			System.err.println("Outcome error! "+cn.action+" "+cn.chance);
 		throw new RuntimeException("Couldn't determine outcome: "+roll
-				+debugteam(Fight.state.blueTeam,"player team")
-				+debugteam(Fight.state.redTeam,"ai team"));
+				+debugteam(Fight.state.blueteam,"player team")
+				+debugteam(Fight.state.redteam,"ai team"));
 	}
 
 	static String debugteam(ArrayList<Combatant> team,String label){

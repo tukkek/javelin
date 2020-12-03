@@ -78,7 +78,7 @@ public class StartBattle extends BattleEvent{
 			report+=Squad.active.wastegold(resourcesused);
 		InfoScreen s=new InfoScreen("");
 		s.print(report+"Press ENTER or s to continue...");
-		Character feedback=s.getInput();
+		Character feedback=s.getinput();
 		while(feedback!='\n'&&feedback!='s')
 			continue;
 		BattleScreen.active.center();

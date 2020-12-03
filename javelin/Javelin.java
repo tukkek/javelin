@@ -172,7 +172,6 @@ public class Javelin{
 	 *         day.
 	 */
 	public static String welcome(){
-		var period=Period.now();
 		String flavor;
 		if(Period.MORNING.is())
 			flavor="What dangers lie ahead..?";
@@ -332,26 +331,22 @@ public class Javelin{
 		return "nearly impossible";
 	}
 
-	/**
-	 * @param message Shows this in a fullscreen, requires enter to leave.
-	 */
+	/** @param message Shows this in a fullscreen, requires enter to leave. */
 	public static void show(String message){
-		InfoScreen s=new InfoScreen("");
+		var s=new InfoScreen("");
 		s.print(message);
-		while(s.getInput()!='\n'){
-			// wait for enter
-		}
+		while(s.getinput()!='\n')
+			continue;
 	}
 
+	/** As {@link #prompt(String)} but full-screen. */
 	public static char promptscreen(String prompt){
-		InfoScreen s=new InfoScreen("");
+		var s=new InfoScreen("");
 		s.print(prompt);
 		return InfoScreen.feedback();
 	}
 
-	/**
-	 * @return Textual representation of the givne {@link Option#price}.
-	 */
+	/** @return Textual representation of the givne {@link Option#price}. */
 	static public String format(double gold){
 		return COSTFORMAT.format(gold);
 	}

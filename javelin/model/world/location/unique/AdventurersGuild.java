@@ -53,7 +53,7 @@ public class AdventurersGuild extends UniqueLocation{
 		Character input='a';
 		while(input!='q'){
 			screen.print(show(students,mostpowerful,salary));
-			input=screen.getInput();
+			input=screen.getinput();
 			int index=indexof(input);
 			if(0<=index&&index<students.size()){
 				change(index);
@@ -192,7 +192,7 @@ public class AdventurersGuild extends UniqueLocation{
 		training+="\nPress ENTER to continue...";
 		InfoScreen screen=new InfoScreen(training);
 		Javelin.app.switchScreen(screen);
-		while(screen.getInput()!='\n')
+		while(screen.getinput()!='\n')
 			continue;
 	}
 

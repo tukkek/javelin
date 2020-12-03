@@ -9,7 +9,7 @@ public class Screen extends TPanel{
 		setBackground(QuestApp.INFOSCREENCOLOUR);
 	}
 
-	public Character getInput(){
+	public Character getinput(){
 		return InfoScreen.feedback();
 	}
 

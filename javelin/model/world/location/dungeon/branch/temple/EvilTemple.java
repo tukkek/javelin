@@ -31,16 +31,39 @@ import javelin.model.world.location.dungeon.feature.chest.ArtifactChest;
  * @author alex
  */
 public class EvilTemple extends Temple{
-	private static final String FLUFF="You have heard of this fort once before, upon a dark stormy night.\n"
+	private static final String FLUFF="You have heard of this fort once before, upon a starless night.\n"
 			+"You recognize the looming towers from that tale. It was related to you as the Fortress of Regrets.\n"
-			+"It is said that a once powerful king oversaw his domain from his throne here but bad tidings befell him.\n"
-			+"The once great castle became a prison, torture chamber and hall of twisted pleasures as the kingdom's honor slowly faded into oblivion.";
+			+"It is said that a powerful king oversaw his domain from his throne here but ill tidings befell his reign.\n"
+			+"The once-great castle became a prison, torture chamber and hall of twisted pleasures as the kingdom slowly faded into oblivion.";
 
 	static class Dark extends Mutator{
 		@Override
 		public void setup(Fight f){
 			super.setup(f);
 			f.period=Period.NIGHT;
+		}
+	}
+
+	static class MacabreForce extends DungeonHazard{
+		public MacabreForce(){
+			chancemodifier/=9;
+		}
+
+		@Override
+		public boolean trigger(){
+			Javelin.message("A macabre force draws upon you...",true);
+			Class<? extends Feature> targettype;
+			if(Squad.active.equipment.get(Skull.class)==null)
+				targettype=StairsUp.class;
+			else if(Dungeon.active.features.has(ArtifactChest.class))
+				targettype=ArtifactChest.class;
+			else
+				targettype=StairsDown.class;
+			var target=Dungeon.active.features.stream()
+					.filter(f->targettype.isInstance(f)).findAny().orElse(null);
+			if(target==null) return false;
+			Dungeon.active.squadlocation=target.getlocation();
+			return true;
 		}
 	}
 
@@ -70,28 +93,5 @@ public class EvilTemple extends Temple{
 	/** Constructor. */
 	public EvilTemple(){
 		super(Realm.EVIL,new EvilBranch(),FLUFF);
-	}
-
-	static class MacabreForce extends DungeonHazard{
-		public MacabreForce(){
-			chancemodifier/=9;
-		}
-
-		@Override
-		public boolean trigger(){
-			Javelin.message("A macabre force draws upon you...",true);
-			Class<? extends Feature> targettype;
-			if(Squad.active.equipment.get(Skull.class)==null)
-				targettype=StairsUp.class;
-			else if(Dungeon.active.features.has(ArtifactChest.class))
-				targettype=ArtifactChest.class;
-			else
-				targettype=StairsDown.class;
-			var target=Dungeon.active.features.stream()
-					.filter(f->targettype.isInstance(f)).findAny().orElse(null);
-			if(target==null) return false;
-			Dungeon.active.squadlocation=target.getlocation();
-			return true;
-		}
 	}
 }

@@ -174,14 +174,10 @@ public class EndBattle extends BattleEvent{
 	static void end(Combatants originalteam){
 		var s=Squad.active.members;
 		originalteam.retainAll(s);
-		Fight.state.fleeing.retainAll(s);
-		Fight.state.dead.retainAll(s);
-		Fight.state.blueteam.retainAll(s);
-		//		for(Combatant c:Fight.state.getcombatants())
-		//			if(c.summoned){
-		//				Fight.state.blueTeam.remove(c);
-		//				Fight.state.redTeam.remove(c);
-		//			}
+		var state=Fight.state;
+		state.fleeing.retainAll(s);
+		state.dead.retainAll(s);
+		state.blueteam.retainAll(s);
 		bury(originalteam);
 		updateoriginal(originalteam);
 		Squad.active.members=originalteam;

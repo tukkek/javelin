@@ -143,6 +143,7 @@ public abstract class Map{
 		return name.hashCode();
 	}
 
+	/** @return <code>true</code> if a valid coordinate. */
 	public boolean validate(int x,int y){
 		return 0<=x&&x<map.length&&0<=y&&y<map[0].length;
 	}
@@ -227,8 +228,6 @@ public abstract class Map{
 	}
 
 	/**
-	 * TODO test default implementation
-	 *
 	 * @param team {@link BattleState#blueteam} or {@link BattleState#redteam}.
 	 * @return Spawn points for the given team.
 	 */
@@ -241,7 +240,7 @@ public abstract class Map{
 			if(!byproximity.isEmpty()) return new ArrayList<>(byproximity);
 		}
 		var byvision=s.getcombatants().stream()
-				.flatMap(c->c.calculatevision(Fight.state).stream()).distinct()
+				.flatMap(c->c.calculatevision(s).stream()).distinct()
 				.filter(p->s.isempty(p.x,p.y)&&s.getsurroundings(p).isEmpty())
 				.collect(Collectors.toList());
 		if(!byvision.isEmpty()) return byvision;

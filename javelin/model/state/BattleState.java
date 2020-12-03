@@ -16,6 +16,7 @@ import javelin.controller.walker.state.ClearPath;
 import javelin.controller.walker.state.ObstructedPath;
 import javelin.model.TeamContainer;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Combatants;
 import javelin.model.world.Period;
 
 /**
@@ -25,8 +26,9 @@ import javelin.model.world.Period;
  * {@link Combatant} instances! You need to use {@link #clone(Combatant))}
  * afterwards to do so.
  *
- * @see #cloneifdifferent(Combatant, Combatant)
+ * TODO use {@link Combatants}
  *
+ * @see #cloneifdifferent(Combatant, Combatant)
  * @author alex
  */
 public class BattleState implements Node,TeamContainer{
@@ -84,8 +86,8 @@ public class BattleState implements Node,TeamContainer{
 		this.map=map;
 		this.period=period;
 		this.dead=(ArrayList<Combatant>)dead.clone();
-		this.blueteam=(ArrayList<Combatant>)blueTeam.clone();
-		this.redteam=(ArrayList<Combatant>)redTeam.clone();
+		blueteam=(ArrayList<Combatant>)blueTeam.clone();
+		redteam=(ArrayList<Combatant>)redTeam.clone();
 		this.meld=(ArrayList<MeldCrystal>)meld.clone();
 		next();
 	}
@@ -152,7 +154,7 @@ public class BattleState implements Node,TeamContainer{
 		return list;
 	}
 
-	/** @return All units surrounding the given {@link Combatant}. */
+	/** @return All units surrounding the given point. */
 	public List<Combatant> getsurroundings(Point p){
 		var surroundings=p.getadjacent();
 		return getcombatants().stream()

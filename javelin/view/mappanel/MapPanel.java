@@ -13,7 +13,6 @@ import javelin.Javelin;
 import javelin.controller.db.Preferences;
 import javelin.view.Images;
 import javelin.view.mappanel.overlay.Overlay;
-import javelin.view.screen.BattleScreen;
 
 /**
  * Game map view, either in or out of battle.
@@ -150,11 +149,10 @@ public abstract class MapPanel extends Panel{
 	 * @param y Coordinate to center on.
 	 * @param redraw <code>true</code> to {@link Javelin#redraw()}.
 	 */
-	public void zoom(int factor,int x,int y,boolean redraw){
+	public void zoom(int factor,int x,int y){
 		Tile.cache.clear();
 		tilesize+=factor*4;
 		updatetilesize();
-		if(redraw) BattleScreen.delayedredraw();
 		center(x,y,true);
 		Preferences.setoption(configurationkey,tilesize);
 	}

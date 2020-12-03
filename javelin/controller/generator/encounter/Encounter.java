@@ -8,6 +8,7 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.unit.Alignment;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
+import javelin.model.unit.Monster;
 
 /**
  * A group of monsters to be fought against.
@@ -15,9 +16,13 @@ import javelin.model.unit.Combatants;
  * @author alex
  */
 public class Encounter{
+	/** An arbitrary number to help balance {@link Encounter} size. */
+	public static final int BIG=9;
+
 	/** Units encountered. */
-	public final List<Combatant> group;
-	public final int el;
+	public List<Combatant> group;
+	/** Encounter level as per OGL rules. */
+	public int el;
 
 	/** Constructor. */
 	public Encounter(List<Combatant> groupp){
@@ -30,12 +35,19 @@ public class Encounter{
 		this(new ArrayList<>(List.of(c)));
 	}
 
+	/** Constructor for a given amount of {@link Monster} units. */
+	public Encounter(Monster m,int amount){
+		this(new Combatants(amount));
+		for(var j=1;j<=amount;j++)
+			group.add(new Combatant(m,true));
+	}
+
 	/**
 	 * @return Copy of {@link #group}.
 	 */
 	public Combatants generate(){
-		final Combatants encounter=new Combatants(group.size());
-		for(final Combatant m:group)
+		var encounter=new Combatants(group.size());
+		for(var m:group)
 			encounter.add(new Combatant(m.source,true));
 		return encounter;
 	}

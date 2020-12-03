@@ -135,7 +135,6 @@ public class Arena extends UniqueLocation{
 				public Combatants generate(Fight f){
 					return EncounterGenerator.generatebyindex(waveel,encounters);
 				}
-
 			});
 		}
 

@@ -18,52 +18,6 @@ public class Outpost extends Fortification{
 	public static final int VISIONRANGE=3;
 	private static final String DESCRIPTION="Outpost";
 
-	// public static class BuildOutpost extends Build {
-	// public BuildOutpost() {
-	// super("Build outpost", 5, null, Rank.HAMLET);
-	// }
-	//
-	// @Override
-	// public Location getgoal() {
-	// return new Outpost();
-	// }
-	//
-	// @Override
-	// public boolean validate(District d) {
-	// if (!super.validate(d)) {
-	// return false;
-	// }
-	// if (site != null) {
-	// return true;
-	// }
-	// if (site == null && d.getlocationtype(Outpost.class)
-	// .size() >= d.town.getrank().rank) {
-	// return false;
-	// }
-	// return super.validate(d) && getsitelocation() != null;
-	// }
-	//
-	// @Override
-	// protected Point getsitelocation() {
-	// District d = town.getdistrict();
-	// ArrayList<Point> free = d.getfreespaces();
-	// for (Point p : free) {
-	// if (town.distance(p.x, p.y) == d.getradius()) {
-	// return p;
-	// }
-	// }
-	// return null;
-	// }
-	//
-	// @Override
-	// protected void done(Location goal) {
-	// super.done(goal);
-	// if (!town.ishostile()) {
-	// Outpost.discover(goal.x, goal.y, Outpost.VISIONRANGE);
-	// }
-	// }
-	// }
-
 	/** Constructor. */
 	public Outpost(){
 		super(DESCRIPTION,DESCRIPTION,1,5);

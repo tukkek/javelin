@@ -41,7 +41,8 @@ public class StartBattle extends BattleEvent{
 		preparebattle(foes);
 		fight.setup.setup();
 		Fight.state.next();
-		fight.ready();
+		for(var m:fight.mutators)
+			m.ready(fight);
 		final int elred=ChallengeCalculator.calculateel(Fight.state.redteam);
 		final int elblue=ChallengeCalculator.calculateel(Fight.state.blueteam);
 		int diffifculty=elred-elblue;

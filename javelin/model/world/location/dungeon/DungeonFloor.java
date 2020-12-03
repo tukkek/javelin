@@ -316,11 +316,6 @@ public class DungeonFloor implements Serializable{
 
 	/** @param nfeatures Target quantity of {@link Feature}s to place. */
 	protected void generatefeatures(int nfeatures,DungeonZoner zoner){
-		var t=gettable(CommonFeatureTable.class);
-		var c=t.getchances();
-		dungeon.branches.stream().flatMap(b->b.features.stream()).forEach(f->{
-			t.add(f,c);
-		});
 		while(nfeatures>0){
 			generatefeature().place(this,zoner.getpoint());
 			nfeatures-=1;

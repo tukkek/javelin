@@ -22,8 +22,7 @@ public class KitTemplate extends Template{
 
 	@Override
 	public int apply(Combatant c,Dungeon d){
-		var kits=Kit.getpreferred(c.source,true);
-		var k=RPG.pick(kits);
+		var k=RPG.pick(Kit.getpreferred(c.source,true));
 		var cr=c.source.cr;
 		var target=cr*2;
 		if(d!=null) target=Math.min(target,cr+d.level/2);

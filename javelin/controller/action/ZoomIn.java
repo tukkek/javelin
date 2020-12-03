@@ -23,6 +23,6 @@ public class ZoomIn extends Action{
 	}
 
 	public static void zoom(Point p){
-		BattleScreen.active.mappanel.zoom(+1,p.x,p.y,true);
+		BattleScreen.active.mappanel.zoom(+1,p.x,p.y);
 	}
 }

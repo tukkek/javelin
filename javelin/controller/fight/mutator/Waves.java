@@ -21,7 +21,7 @@ import javelin.view.screen.BattleScreen;
  * A {@link Fight} mode that is composed of distinct waves, with each coming
  * after the previous one is cleared. Currently assumes the EL total is the same
  * for separate waves as one big {@link Encounter} which is the rules
- * by-the-book (see: resources used per encounter table) but seems like it
+ * by-the-book (see: resources used per encounter table) - but seems like it
  * should be EL-1, at least.
  *
  * @see TestHaunt
@@ -32,13 +32,10 @@ public class Waves extends FightMode{
 	public static final int MINIMUM=1;
 	/** Most amount of waves. */
 	public static final int MAXIMUM=4;
-
-	static final int ATTEMPTS=10_000;
-
 	/** EL modifier by number of waves. */
 	public static final Map<Integer,Integer> ELMODIFIER=new TreeMap<>();
-	/** Shown when a new wave appears. */
-	protected String message="A new wave of enemies appears!";
+
+	static final int ATTEMPTS=10_000;
 
 	static{
 		ELMODIFIER.put(MINIMUM,0);
@@ -47,6 +44,8 @@ public class Waves extends FightMode{
 		ELMODIFIER.put(MAXIMUM,-4);
 	}
 
+	/** Shown when a new wave appears. */
+	protected String message="A new wave of enemies appears!";
 	/** Total waves. */
 	protected int waves=RPG.r(MINIMUM,MAXIMUM);
 	/** Current wave (1 for first). */
@@ -75,10 +74,9 @@ public class Waves extends FightMode{
 	 */
 	protected void add(Combatants wave,List<Combatant> team,List<Point> spawn,
 			Fight f){
-		var s=Fight.state;
-		s.next();
+		Fight.state.next();
 		for(var c:wave)
-			c.rollinitiative(s.next.ap);
+			c.rollinitiative(Fight.state.next.ap);
 		team.addAll(wave);
 		f.setup.place(wave,spawn);
 	}
@@ -103,7 +101,7 @@ public class Waves extends FightMode{
 		checkend(f);
 	}
 
-	/** Generates a wave from a given monster pool. */
+	/** Generates a wave from {@link Encounter}s. */
 	public static Combatants generate(int el,EncounterIndex index) throws GaveUp{
 		if(index.isEmpty()) throw new GaveUp();
 		var foes=EncounterGenerator.generatebyindex(el,List.of(index));

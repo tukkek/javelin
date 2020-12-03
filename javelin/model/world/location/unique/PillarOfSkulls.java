@@ -226,18 +226,6 @@ public class PillarOfSkulls extends UniqueLocation{
 		return null;
 	}
 
-	//	/**
-	//	 * @param m Given a monster...
-	//	 * @return recruits into {@link Squad#active} and
-	//	 *         {@link PillarOfSkulls#spend(double)} XP if {@link canrecruit}.
-	//	 */
-	//	public static boolean recruit(Monster m){
-	//		if(!canrecruit(m.cr*100)) return false;
-	//		PillarOfSkulls.spend(m.cr);
-	//		Squad.active.recruit(m);
-	//		return true;
-	//	}
-
 	/**
 	 * @param price Price in XP (100XP = 1CR).
 	 * @return <code>true</code> if currently active {@link Squad} can afford this

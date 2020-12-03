@@ -1,7 +1,7 @@
 package javelin.model.unit;
 
 /**
- * Utility class for {@link Monster#size}-relate values.
+ * Utility class for {@link Monster#size}-related values.
  *
  * @author alex
  */

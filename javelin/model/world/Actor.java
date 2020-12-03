@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.Debug;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
@@ -75,7 +74,6 @@ public abstract class Actor implements Serializable{
 	public void place(){
 		if(x==-1) generate(false);
 		if(World.scenario.allowallactors||allowedinscenario) registerinstance();
-		if(Javelin.DEBUG&&!World.validatecoordinate(x,y)) Debug.breakpoint();
 	}
 
 	/** Move actor to the given coordinates. */

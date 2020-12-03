@@ -8,8 +8,7 @@ import javelin.model.world.location.dungeon.branch.Branch;
 import javelin.model.world.location.dungeon.feature.Throne;
 
 /**
- * Found atop a {@link Hill}. 1 portal per level takes you immediately outside.
- * All types of monsters can be found here.
+ * Found atop a {@link Hill}.
  *
  * TODO would be pretty cool if the magic temple had all doors replaced with
  * walls and only {@link Portal}s could be used for exploration between rooms.
@@ -17,9 +16,9 @@ import javelin.model.world.location.dungeon.feature.Throne;
  * @author alex
  */
 public class MagicTemple extends Temple{
-	private static final String FLUFF="The air inside the castle feels laden with static.\n"
+	static final String FLUFF="The air inside the castle feels laden with static.\n"
 			+"As you descend through the unsealed magic barrier your eyes begin to adjust to the light.\n"
-			+"There are a few stones along the walls, they give off a faint octarine glow.\n"
+			+"There are a few stones along the entry walls and they give off a faint octarine glow.\n"
 			+"You walk along a grand mural written in an ancient language but alas you cannot decipher it.";
 
 	static class MagicBranch extends Branch{

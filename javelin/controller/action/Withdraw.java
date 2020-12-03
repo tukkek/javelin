@@ -3,7 +3,6 @@ package javelin.controller.action;
 import javelin.controller.action.ai.Flee;
 import javelin.controller.fight.Fight;
 import javelin.model.unit.Combatant;
-import javelin.view.screen.BattleScreen;
 
 /**
  * Fless from battle at any time if not engaged.
@@ -20,7 +19,7 @@ public class Withdraw extends Action{
 
 	@Override
 	public boolean perform(Combatant active){
-		Fight.current.withdraw(active,BattleScreen.active);
+		Fight.current.withdraw(active);
 		return true;
 	}
 }

@@ -47,9 +47,6 @@ public class StateManager{
 	static final File SAVEFILE=new File(SAVEFOLDER,
 			World.scenario.getsaveprefix()+".save");
 	static final int MINUTE=60*1000;
-	static final String LOADERROR="Your save file could not be loaded.\n"
-			+"It has been deleted so you can start a new game instead.\n"
-			+"If this is happening constantly please consider letting us know.\n\n";
 
 	/**
 	 * Always called on normal exit. Saves a backup.
@@ -154,11 +151,9 @@ public class StateManager{
 			stream.close();
 			filestream.close();
 			return true;
-		}catch(final Throwable error){
-			if(!Javelin.DEBUG){
-				var e=new RuntimeException(LOADERROR,error);
+		}catch(final Throwable e){
+			if(!Javelin.DEBUG)
 				Javelin.app.uncaughtException(Thread.currentThread(),e);
-			}
 			StateManager.clear();
 			System.exit(20140406);
 			return false;

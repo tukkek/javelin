@@ -16,8 +16,8 @@ import javelin.view.screen.BattleScreen;
  * Represents custom {@link Fight} mechanics that can be used in certain
  * {@link Location}s, {@link Dungeon} {@link Branch}es...
  *
- * Having these as their own units allows them to be set up dynamically,
- * mix-and-match... which is much more valuable in general but specially for
+ * Having these as their own code units allows them to be set up dynamically,
+ * mix-and-match... which is much more valuable in general but especially for
  * procedural generation and replayability.
  *
  * @author alex
@@ -36,7 +36,7 @@ public abstract class Mutator implements Serializable{
 
 	/**
 	 * Called after {@ling BattleState#blueTeam} and {@ling BattleState#redTeam}
-	 * team are set but before they are placed, allowing for temporary
+	 * teams are set but before they are placed, allowing for temporary
 	 * {@link Combatant}s to be included.
 	 */
 	public void prepare(Fight f){
@@ -48,23 +48,26 @@ public abstract class Mutator implements Serializable{
 		return;
 	}
 
-	/** @throws EndBattle */
+	/**
+	 * Opportunity to change state before a {@link Fight} ends. Should not throw
+	 * {@link EndBattle} by itself.
+	 */
 	public void checkend(Fight f){
 		return;
 	}
 
 	/** After any unit ends its {@link Action}. */
-	public void endturn(Fight fight){
+	public void endturn(Fight f){
 		return;
 	}
 
 	/** Called when a fight ends but before clean-ups. */
-	public void end(Fight fight){
+	public void end(Fight f){
 		return;
 	}
 
 	/** Called upon an unit's death. */
-	public void die(Combatant c,BattleState s,Fight fight){
+	public void die(Combatant c,BattleState s,Fight f){
 		return;
 	}
 }

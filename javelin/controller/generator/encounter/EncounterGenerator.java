@@ -79,9 +79,7 @@ public class EncounterGenerator{
 		Combatants encounter=null;
 		for(int i=0;i<MAXTRIES;i++){
 			encounter=select(el,encounters);
-			if(encounter==null) continue;
-			var f=Fight.current;
-			if(f==null||f.validate(encounter)) return encounter;
+			if(encounter!=null) return encounter;
 		}
 		return null;
 	}
@@ -155,6 +153,7 @@ public class EncounterGenerator{
 		return possibilities.isEmpty()?null:RPG.pick(possibilities).generate();
 	}
 
+	/** As {@link #generate(int, Terrain)} but for one terrain. */
 	public static Combatants generate(int el,Terrain t){
 		return generate(el,List.of(t));
 	}

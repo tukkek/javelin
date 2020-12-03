@@ -9,7 +9,6 @@ import javelin.controller.fight.mutator.Mutator;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.Water;
 import javelin.model.Realm;
-import javelin.model.unit.Monster;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
@@ -17,11 +16,8 @@ import javelin.model.world.location.dungeon.branch.Branch;
 import javelin.model.world.location.dungeon.feature.Fountain;
 
 /**
- * Found next to {@link Water}. {@link Fight#weather} Always
+ * Found next to {@link Water}. {@link Fight#weather} always
  * {@link Weather#STORM}.
- *
- * It is placed on any {@link Terrain#NONWATER} tile next to water but
- * {@link Monster} pool is exclusively aquatic.
  *
  * TODO would be pretty cool to have "breath underwater" shrines that only take
  * you a certain number of tiles forward, forcing you to go back to shrines and
@@ -33,10 +29,10 @@ import javelin.model.world.location.dungeon.feature.Fountain;
  * @author alex
  */
 public class WaterTemple extends Temple{
-	private static final String FLUFF="As you march towards the coastal construction you marvel at the sight of the waves crashing below you.\n"
+	static final String FLUFF="As you march towards the coastal construction you marvel at the sight of the waves crashing far below you.\n"
 			+"You recall a bard's song telling about how one day the entire earth would be swallowed by the rising oceans.\n"
-			+"The air is moist and salty. You watch the motion of the nearby body of water as it dances back and forth patiently.\n"
-			+"You hear a distant sound, unsure if it was a gull's cry, the wind hitting the wall besides you or the invitation of a hidden mermaid.";
+			+"The air is moist and salty. You watch the motion of the nearby body of water as the waves dance back and forth patiently.\n"
+			+"You hear a distant sound, unsure if it was a gull's cry, the wind hitting the wall besides you or an invitation from a hidden mermaid.";
 
 	/** @see Location */
 	public static class WaterTempleEntrance extends TempleEntrance{

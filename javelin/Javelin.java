@@ -331,7 +331,7 @@ public class Javelin{
 		return "nearly impossible";
 	}
 
-	/** @param message Shows this in a fullscreen, requires enter to leave. */
+	/** @param message Shows this in a fullscreen, requires Enter to leave. */
 	public static void show(String message){
 		var s=new InfoScreen("");
 		s.print(message);

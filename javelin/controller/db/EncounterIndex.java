@@ -11,7 +11,6 @@ import javelin.controller.collection.CountingSet;
 import javelin.controller.exception.UnbalancedTeams;
 import javelin.controller.generator.NpcGenerator;
 import javelin.controller.generator.encounter.Encounter;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 
@@ -26,18 +25,11 @@ public class EncounterIndex extends TreeMap<Integer,List<Encounter>>{
 		super();
 	}
 
-	/**
-	 * Generates an index from a Monster pool, including NPCs and mixed
-	 * encounters.
-	 */
+	/** Constructor from {@link Monster}s, with NPCs and mixed encounters. */
 	public EncounterIndex(List<Monster> pool){
 		for(var m:pool){
-			for(var i=1;i<=9;i++){
-				var group=new Combatants(i);
-				for(var j=0;j<i;j++)
-					group.add(new Combatant(m,true));
-				put(new Encounter(group));
-			}
+			for(var i=1;i<=Encounter.BIG;i++)
+				put(new Encounter(m,i));
 			var from=Math.round(m.cr)+1;
 			var to=Math.max(20,from+10);
 			IntStream.rangeClosed(from,to)
@@ -51,17 +43,17 @@ public class EncounterIndex extends TreeMap<Integer,List<Encounter>>{
 				var a=all.get(i).group;
 				var b=all.get(j).group;
 				var size=a.size()+b.size();
-				if(size>9) continue;
+				if(size>Encounter.BIG) continue;
 				var mixed=new Combatants(size);
 				mixed.addAll(a);
 				mixed.addAll(b);
 				try{
 					ChallengeCalculator.calculateelsafe(mixed);
-					if(new CountingSet(mixed).getcount().size()>1)
-						put(new Encounter(mixed));
 				}catch(UnbalancedTeams e){
 					continue;
 				}
+				if(new CountingSet(mixed).getcount().size()>1)
+					put(new Encounter(mixed));
 			}
 	}
 

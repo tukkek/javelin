@@ -25,8 +25,8 @@ public class RandomDungeonEncounter extends RandomEncounter{
 
 	/** {@link Dungeon} constructor. */
 	public RandomDungeonEncounter(DungeonFloor f){
-		mutators.add(new Meld());
 		set(Terrain.UNDERGROUND);
+		mutators.add(new Meld());
 		encounter=RPG.pick(f.encounters);
 	}
 
@@ -39,7 +39,7 @@ public class RandomDungeonEncounter extends RandomEncounter{
 	@Override
 	public ArrayList<Combatant> generate(){
 		/*TODO once there is a better strategical skip for encounters, this won't be
-		 * encessary anymore.*/
+		 * necessary anymore.*/
 		if(Difficulty.calculate(Squad.active.members,
 				encounter)<=Difficulty.VERYEASY)
 			return null;

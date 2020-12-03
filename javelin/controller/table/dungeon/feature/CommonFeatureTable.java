@@ -18,11 +18,15 @@ import javelin.model.world.location.dungeon.feature.Passage;
  */
 public class CommonFeatureTable extends Table implements DungeonFeatureTable{
 	/** Constructor. */
-	public CommonFeatureTable(DungeonFloor f){
+	public CommonFeatureTable(DungeonFloor floor){
 		add(Passage.class,1);
 		add(Brazier.class,1);
 		add(LoreNote.class,2);
 		add(Campfire.class,getchances());
+		var c=getchances();
+		floor.dungeon.branches.stream().flatMap(b->b.features.stream()).forEach(f->{
+			add(f,c);
+		});
 	}
 
 	/**

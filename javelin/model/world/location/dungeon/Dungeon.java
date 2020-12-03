@@ -52,7 +52,7 @@ import javelin.view.screen.BattleScreen;
 public class Dungeon implements Serializable{
 	/**
 	 * This is a trade-off between having the most variety in {@link Encounter}s
-	 * with how long that process takes to complete in {@link WorldGenerator}.
+	 * with how long that process takes to complete for {@link WorldGenerator}.
 	 * This is only one of the optimization steps taken when it comes to applying
 	 * {@link Template}s to encounters and it's only barely fast enough.
 	 */
@@ -93,7 +93,7 @@ public class Dungeon implements Serializable{
 	public String fluff=null;
 	/** Usually {@link Terrain#UNDERGROUND}. */
 	public List<Terrain> terrains=new ArrayList<>(List.of(Terrain.UNDERGROUND));
-	/** Usually either zero or two, with {@link Temple}s being the exception. */
+	/** Usually either zero or two, except {@link Temple}s with one. */
 	public List<Branch> branches=new ArrayList<>(2);
 
 	String name;
@@ -175,7 +175,7 @@ public class Dungeon implements Serializable{
 			if(total>=TEMPLATEENCOUNTERS) return List.of(modified);
 		}
 		//if TEMPLATEENCOUNTERS is done away with, remove this:
-		indexes=new ArrayList<>(indexes.size()+1);
+		indexes=new ArrayList<>(indexes);
 		indexes.add(modified);
 		return indexes;
 	}
@@ -200,7 +200,7 @@ public class Dungeon implements Serializable{
 	/**
 	 * If there are {@link #branches}, pick between them and the base image for
 	 * each tile, meaning there are 9 tileset variations (per
-	 * {@link DungeonTier})! Simple but pretty effective.
+	 * {@link DungeonTier})! Simple but pretty effective!
 	 */
 	protected void generateappearance(){
 		var nbranches=branches.size();

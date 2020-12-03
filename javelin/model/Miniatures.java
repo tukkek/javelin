@@ -91,7 +91,7 @@ public class Miniatures{
 		}
 
 		@Override
-		public void withdraw(Combatant combatant,BattleScreen screen){
+		public void withdraw(Combatant combatant){
 			if(Javelin.prompt("Do you want to concede this match?\n"
 					+"Press ENTER to confirm or any other key to cancel...")!='\n'){
 				BattleScreen.active.messagepanel.clear();

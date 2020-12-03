@@ -43,7 +43,7 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
 
 	static final String CRASHMESSAGE="\n\nUnfortunately an error ocurred.\n"
 			+"Please send a screenshot of the next message or the log file (error.txt)\n"
-			+"to one of the channels below, to help it get fixed on future releases.\n\n"
+			+"to one of the channels below, to help get it fixed on future releases.\n\n"
 			+"Post to reddit -- http://www.reddit.com/r/javelinrl\n"
 			+"Leave a comment on the blog -- http://javelinrl.wordpress.com\n"
 			+"Or write an e-mail -- javelinrl@gmail.com\n\n"
@@ -156,7 +156,7 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
 
 	@Override
 	public void uncaughtException(Thread thread,Throwable e){
-		if(Thread.currentThread()!=thread) return;
+		if(Thread.currentThread()!=thread) return; //no sub-thread dialogs
 		var quote=CRASHQUOTES[RPG.r(CRASHQUOTES.length)];
 		JOptionPane.showMessageDialog(Javelin.app,quote+CRASHMESSAGE);
 		if(!version.endsWith("\n")) version+="\n";
@@ -165,19 +165,18 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
 		var properties=List.of("os.name","os.version","os.arch").stream()
 				.map(p->System.getProperty(p)).collect(Collectors.joining(" "));
 		properties=String.format("System: %s\n",properties);
-		var error=version+properties+"\n"+printstacktrace(e);
-		var t=e;
+		var message=version+properties+"\n"+printstacktrace(e);
 		var errors=new HashSet<Throwable>(2);
-		while(t.getCause()!=null&&errors.add(t)){
-			t=t.getCause();
-			error+=System.lineSeparator()+printstacktrace(t);
+		while(e.getCause()!=null&&errors.add(e)){
+			e=e.getCause();
+			message+=System.lineSeparator()+printstacktrace(e);
 		}
 		try{
-			Preferences.write(error,"error.txt");
+			Preferences.write(message,"error.txt");
 		}catch(IOException e1){
 			// ignore
 		}
-		JOptionPane.showMessageDialog(Javelin.app,error);
-		System.exit(1);
+		JOptionPane.showMessageDialog(Javelin.app,message);
+		System.exit(20201202);
 	}
 }

@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.controller.challenge.Difficulty;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
 import javelin.controller.generator.NpcGenerator;
@@ -47,6 +46,22 @@ public class Boss extends FightMode{
 		this.terrains=terrains;
 	}
 
+	/** @return Any units that can be bosses. */
+	protected List<Monster> listbosses(List<Terrain> terrains){
+		var terrainnames=terrains.stream().map(t->t.name)
+				.collect(Collectors.toSet());
+		return Monster.ALL.stream()
+				.filter(
+						m->m.getterrains().stream().anyMatch(t->terrainnames.contains(t)))
+				.collect(Collectors.toList());
+	}
+
+	/** @return Any units that can be fodder. */
+	protected List<Encounter> listminions(List<Terrain> terrains){
+		return terrains.stream().flatMap(t->t.getencounters().values().stream())
+				.flatMap(i->i.stream()).collect(Collectors.toList());
+	}
+
 	@Override
 	public void setup(Fight f){
 		super.setup(f);
@@ -74,22 +89,6 @@ public class Boss extends FightMode{
 			}
 	}
 
-	/** @return Any units that can be bosses. */
-	protected List<Monster> listbosses(List<Terrain> terrains){
-		var terrainnames=terrains.stream().map(t->t.name)
-				.collect(Collectors.toSet());
-		return Monster.ALL.stream()
-				.filter(
-						m->m.getterrains().stream().anyMatch(t->terrainnames.contains(t)))
-				.collect(Collectors.toList());
-	}
-
-	/** @return Any units that can be fodder. */
-	protected List<Encounter> listminions(List<Terrain> terrains){
-		return terrains.stream().flatMap(t->t.getencounters().values().stream())
-				.flatMap(i->i.stream()).collect(Collectors.toList());
-	}
-
 	@Override
 	public Combatants generate(Fight f) throws GaveUp{
 		var foes=new Combatants(2);
@@ -101,7 +100,7 @@ public class Boss extends FightMode{
 		foes.addAll(bosses);
 		if(!minions.isEmpty()) while(ChallengeCalculator.calculateel(foes)<el){
 			foes.addAll(RPG.pick(minions).generate());
-			if(foes.size()>9){
+			if(foes.size()>Encounter.BIG){
 				var w=foes.getweakest();
 				foes.remove(w);
 				w=NpcGenerator.generatenpc(w.source,el*4/5);
@@ -111,25 +110,4 @@ public class Boss extends FightMode{
 		if(Javelin.DEBUG&&foes.isEmpty()) throw new InvalidParameterException();
 		return foes;
 	}
-
-	/** Console-output helper to check valid EL range. */
-	public static void test(){
-		for(var el=3;el<=20+Difficulty.DEADLY;el++)
-			for(var t:Terrain.NONWATER)
-				try{
-					var f=new Boss(el,List.of(t));
-					f.setup(null);
-					var foes=f.generate(null);
-					System.out.println("Success: "+t+" "+el+" ("+Javelin.group(foes)
-							+") el "+ChallengeCalculator.calculateel(foes));
-				}catch(InvalidParameterException|GaveUp e){
-					System.out.println("Failure: "+t+" "+el);
-					return;
-				}
-	}
-
-	//	/** @return Uses the Boss Fight mechanic to just generate a {@link Fight}. */
-	//	public static Combatants generateencounter(int el,List<Terrain> terrains){
-	//		return new Boss(el,terrains).generate(null);
-	//	}
 }

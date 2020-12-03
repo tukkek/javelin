@@ -133,7 +133,7 @@ public class BattleScreen extends Screen{
 		partialmove=0;
 		var p=getsquadlocation();
 		mappanel.scroll.setSize(mappanel.getBounds().getSize());
-		mappanel.zoom(0,p.x,p.y,false);
+		mappanel.zoom(0,p.x,p.y);
 		mappanel.center(p.x,p.y,true);
 		mappanel.scroll.setVisible(true);
 	}
@@ -158,30 +158,8 @@ public class BattleScreen extends Screen{
 	 */
 	public void mainloop(){
 		callback=null;
-		delayedredraw();
 		while(true)
 			turn();
-	}
-
-	/**
-	 * On at least some systems, there's a double-vision issue with
-	 * {@link BattleScreen} drawing. This redraws after one second to try to fix
-	 * it.
-	 *
-	 * https://www.reddit.com/r/javelinrl/comments/catb13/17b18_windows_display_bug/
-	 */
-	static public void delayedredraw(){
-		//		if(!JavelinApp.SYSTEM.contains("windows")) return;
-		//		if(BattleScreen.active==null
-		//				||BattleScreen.active.getClass()!=BattleScreen.class)
-		//			return;
-		//		try{
-		//			Thread.sleep(1000);
-		//		}catch(InterruptedException e){
-		//			//continue
-		//		}
-		//		System.out.println("Windows redraw (double vision fix)...");
-		//		Javelin.redraw();
 	}
 
 	/** Routine for human interaction. */
@@ -191,7 +169,6 @@ public class BattleScreen extends Screen{
 				c.refresh();
 			Fight.state.next();
 			current=Fight.state.next;
-			Fight.current.startturn(Fight.state.next);
 			Examine.lastlooked=null;
 			partialmove=0;
 			checkai();
@@ -206,8 +183,10 @@ public class BattleScreen extends Screen{
 			updatescreen();
 			block();
 		}finally{
-			Fight.current.endturn();
-			Fight.current.checkend();
+			var f=Fight.current;
+			for(var m:f.mutators)
+				m.endturn(f);
+			f.checkend();
 		}
 	}
 

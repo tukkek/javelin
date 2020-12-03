@@ -7,14 +7,13 @@ import java.util.stream.Collectors;
 import javelin.Javelin;
 import javelin.controller.fight.Fight;
 import javelin.controller.map.Map;
-import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 
 /**
- * Friendly {@link Fight} are not to-the-death but rather to an arbitrary
+ * Friendly {@link Fight}s are not to-the-death but rather to an arbitrary
  * {@link Combatant#getstatus()}. If an unit dies, the death occrus as normal
  * but they are generally removed from the {@link Map} before that occurs. As
- * such, it's usually not possible to lose the game during a friendly battle.
+ * such, it's very unlikely to lose the game during a friendly battle.
  *
  * @author alex
  */
@@ -27,10 +26,6 @@ public class Friendly extends Mutator{
 	/** Constructor. */
 	public Friendly(int removeat){
 		this.removeat=removeat;
-	}
-
-	void cleanwounded(ArrayList<Combatant> team,BattleState s,Fight f){
-
 	}
 
 	@Override
@@ -49,8 +44,8 @@ public class Friendly extends Mutator{
 	}
 
 	@Override
-	public void end(Fight fight){
-		super.end(fight);
+	public void end(Fight f){
+		super.end(f);
 		var s=Fight.state;
 		var survivors=s.dead.stream().filter(d->d.hp>Combatant.DEADATHP)
 				.collect(Collectors.toList());

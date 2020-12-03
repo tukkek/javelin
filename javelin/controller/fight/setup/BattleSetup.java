@@ -181,23 +181,17 @@ public class BattleSetup{
 		return p;
 	}
 
-	boolean place(Combatant c,int x,int y){
-		var m=Fight.current.map;
-		if(m.map[x][y].blocked||Fight.state.getcombatant(x,y)!=null) return false;
-		c.location[0]=x;
-		c.location[1]=y;
-		return true;
-	}
-
-	public void place(List<Combatant> team,List<Point> startingarea){
+	/** Place units, using the given points as hints. */
+	public void place(List<Combatant> team,List<Point> spawn){
 		var m=Fight.current.map;
 		teamplacement:for(var c:RPG.shuffle(team)){
-			for(var spawn:RPG.shuffle(new ArrayList<>(startingarea))){
-				var area=spawn.getadjacent();
-				area.add(spawn);
+			for(var s:RPG.shuffle(new ArrayList<>(spawn))){
+				var area=s.getadjacent();
+				area.add(s);
 				for(var p:RPG.shuffle(area))
-					if(m.validate(p.x,p.y)&&place(c,p.x,p.y)){
-						startingarea.add(p);
+					if(Fight.state.isempty(p.x,p.y)){
+						c.setlocation(p);
+						spawn.add(p);
 						continue teamplacement;
 					}
 			}

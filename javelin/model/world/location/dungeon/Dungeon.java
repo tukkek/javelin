@@ -123,12 +123,12 @@ public class Dungeon implements Serializable{
 	 */
 	synchronized String baptize(String suffix){
 		var names=World.getseed().dungeonnames;
-		suffix=" "+suffix.toLowerCase();
 		if(names.isEmpty()){
 			if(Javelin.DEBUG)
 				throw new NoSuchElementException("Out of dungeon names!");
 			return "Nameless "+suffix;
 		}
+		suffix=" "+suffix.toLowerCase();
 		var name=names.pop();
 		name=name.substring(name.lastIndexOf(" ")+1,name.length());
 		name+=name.charAt(name.length()-1)=='s'?"'":"'s";

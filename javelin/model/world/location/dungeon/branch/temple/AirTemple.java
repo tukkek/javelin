@@ -65,8 +65,8 @@ public class AirTemple extends Temple{
 	}
 
 	static class AirBranch extends Branch{
-		protected AirBranch(){//TODO boring tiles +
-			super("floordungeon","walldungeon");
+		protected AirBranch(){
+			super("floortemplegood","walltempleair");
 			terrains.add(Terrain.MOUNTAINS);
 			hazard=new Wind();
 		}

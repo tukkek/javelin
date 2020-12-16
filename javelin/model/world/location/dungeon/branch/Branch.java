@@ -31,15 +31,9 @@ public class Branch implements Serializable{
 	public List<Class<? extends Feature>> features=new ArrayList<>(
 			List.of(Campfire.class));
 	/** Theme-appropriate {@link Dungeon} mechanic. */
-	public DungeonHazard hazard=null;
+	public List<DungeonHazard> hazards=new ArrayList<>(1);
 	/** Will optimially be applied to all {@link RandomDungeonEncounter}s. */
 	public List<Template> templates=new ArrayList<>(0);
-	/** @see DungeonImages#FLOOR */
-	public String floor=null;
-	/** @see DungeonImages#WALL */
-	public String wall=null;
-	/** @see Dungeon#doorbackground */
-	public boolean doorbackground=false;
 	/** Favored treasure types. */
 	public List<Class<? extends Chest>> treasure=new ArrayList<>(1);
 	/** To be used as {@link Monster} pools. */
@@ -48,6 +42,12 @@ public class Branch implements Serializable{
 	public List<MapTemplate> tiles=new ArrayList<>(0);
 	/** Special {@link Fight} mechanics. */
 	public List<Mutator> mutators=new ArrayList<>(1);
+	/** @see DungeonImages#FLOOR */
+	public String floor=null;
+	/** @see DungeonImages#WALL */
+	public String wall=null;
+	/** @see Dungeon#doorbackground */
+	public boolean doorbackground=false;
 
 	/** Constructor. */
 	protected Branch(String floor,String wall){
@@ -76,5 +76,11 @@ public class Branch implements Serializable{
 	@Override
 	public int hashCode(){
 		return getClass().hashCode();
+	}
+
+	@Override
+	public String toString(){
+		//TODO
+		return getClass().getSimpleName();
 	}
 }

@@ -458,8 +458,8 @@ public class DungeonFloor implements Serializable{
 	 * @return <code>true</code> if a hazard has happened.
 	 */
 	public boolean triggerhazard(){
-		var hazards=dungeon.branches.stream().map(b->b.hazard).filter(h->h!=null)
-				.collect(Collectors.toList());
+		var hazards=dungeon.branches.stream().flatMap(b->b.hazards.stream())
+				.filter(h->h!=null).collect(Collectors.toList());
 		for(var h:hazards){
 			var steps=Math.round(stepsperencounter*hazards.size()/h.chancemodifier);
 			if(RPG.chancein((int)steps)) return h.trigger();

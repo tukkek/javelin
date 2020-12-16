@@ -142,7 +142,7 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
 		WorldGenerator.build();
 		World.scenario.ready();
 		if(Javelin.DEBUG){
-			new ContentSummary().produce();
+			new ContentSummary().generate();
 			Debug.oncampaignstart();
 			StateManager.save(true);
 		}

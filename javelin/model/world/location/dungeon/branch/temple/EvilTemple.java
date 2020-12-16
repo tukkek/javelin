@@ -74,7 +74,7 @@ public class EvilTemple extends Temple{
 		protected EvilBranch(){
 			super("floortempleevil","walltempleevil");
 			doorbackground=false;
-			hazard=new MacabreForce();
+			hazards.add(new MacabreForce());
 			terrains.add(Terrain.MARSH);
 			mutators.add(new Dark());
 		}

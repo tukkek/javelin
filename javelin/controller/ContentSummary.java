@@ -1,7 +1,8 @@
 package javelin.controller;
 
-import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -46,6 +47,7 @@ import javelin.model.world.location.haunt.Haunt;
 import javelin.model.world.location.town.labor.LaborDeck;
 import javelin.model.world.location.town.quest.Quest;
 import javelin.model.world.location.unique.UniqueLocation;
+import javelin.test.TestBranch;
 
 /**
  * Procuces a summary log of {@link Upgrade}s, {@link Item}s and general
@@ -73,14 +75,14 @@ public class ContentSummary{
 	 */
 	static final boolean SHOWPRECIOUS=true;
 
-	FileWriter out;
+	PrintStream out;
 
-	void print(String line) throws IOException{
-		out.write(line+"\n");
+	void print(String line){
+		out.println(line);
 	}
 
-	void print() throws IOException{
-		print("");
+	void print(){
+		out.println();
 	}
 
 	@SuppressWarnings("unused")
@@ -112,7 +114,7 @@ public class ContentSummary{
 		}
 	}
 
-	void printkits() throws IOException{
+	void printkits(){
 		var kits=new ArrayList<>(Kit.KITS);
 		kits.sort((a,b)->a.name.compareTo(b.name));
 		for(var k:kits){
@@ -129,12 +131,13 @@ public class ContentSummary{
 	}
 
 	/** stats */
-	public void produce(){
-		if(!Javelin.DEBUG) return;
+	public void generate(){
 		try{
-			out=new FileWriter("content.log");
+			var f=new File("content.log");
+			out=new PrintStream(f);
 			printmisc();
 			print();
+			new TestBranch(out).test();
 			printitems();
 			printkits();
 			out.close();
@@ -150,7 +153,7 @@ public class ContentSummary{
 		return summon;
 	}
 
-	void printmisc() throws IOException{
+	void printmisc(){
 		print(Monster.ALL.size()+" monsters");
 		var itemtypes="";
 		for(var type:ITEMTYPES){
@@ -193,7 +196,7 @@ public class ContentSummary{
 				BranchTable.BRANCHES.size()));
 	}
 
-	void printmaps() throws IOException{
+	void printmaps(){
 		var total=Arrays.stream(Terrain.ALL)
 				.collect(Collectors.summingInt(t->t.getmaps().size()));
 		var byterrain=Arrays.stream(Terrain.ALL)

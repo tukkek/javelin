@@ -71,7 +71,7 @@ public class AirTemple extends Temple{
 		protected AirBranch(){
 			super("floortemplegood","walltempleair");
 			terrains.add(Terrain.MOUNTAINS);
-			hazard=new Wind();
+			hazards.add(new Wind());
 		}
 	}
 

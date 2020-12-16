@@ -13,6 +13,9 @@ import javelin.model.world.location.dungeon.feature.FruitTree;
  * @author alex
  */
 public class EarthTemple extends Temple{
+	/** Branch singleton. */
+	public static final Branch BRANCH=new EarthBranch();
+
 	static final String FLUFF="After trekking the woods for hours you reach an area that looks rather unique.\n"
 			+"You're not sure whether the stronger coloration of the flora around you or the way the shadows seems to twist is making you more unnerved.\n"
 			+"A slimy little frog looks at you from atop a big boulder, unaware of your quest.\n"

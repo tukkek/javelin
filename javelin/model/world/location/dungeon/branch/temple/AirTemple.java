@@ -21,6 +21,9 @@ import javelin.old.RPG;
  * @author alex
  */
 public class AirTemple extends Temple{
+	/** Branch singleton. */
+	public static final Branch BRANCH=new AirBranch();
+
 	static final String FLUFF="You are at the very peak of this mountain range, way above the cloud cover.\n"
 			+"The cold wind makes your limbs tremble and your heart lust for warmer surroundings.\n"
 			+"At last you manage to overcome the stone entryway that dives deep into the summit's core.\n"

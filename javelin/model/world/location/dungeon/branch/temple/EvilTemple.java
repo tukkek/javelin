@@ -31,6 +31,9 @@ import javelin.model.world.location.dungeon.feature.chest.ArtifactChest;
  * @author alex
  */
 public class EvilTemple extends Temple{
+	/** Branch singleton. */
+	public static final Branch BRANCH=new EvilBranch();
+
 	private static final String FLUFF="You have heard of this fort once before, upon a starless night.\n"
 			+"You recognize the looming towers from that tale. It was related to you as the Fortress of Regrets.\n"
 			+"It is said that a powerful king oversaw his domain from his throne here but ill tidings befell his reign.\n"

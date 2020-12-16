@@ -67,4 +67,14 @@ public class Branch implements Serializable{
 	public void define(Dungeon d){
 		return;
 	}
+
+	@Override
+	public boolean equals(Object o){
+		return getClass().equals(o.getClass());
+	}
+
+	@Override
+	public int hashCode(){
+		return getClass().hashCode();
+	}
 }

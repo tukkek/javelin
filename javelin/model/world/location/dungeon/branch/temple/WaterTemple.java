@@ -29,6 +29,9 @@ import javelin.model.world.location.dungeon.feature.Fountain;
  * @author alex
  */
 public class WaterTemple extends Temple{
+	/** Branch singleton. */
+	public static final Branch BRANCH=new WaterBranch();
+
 	static final String FLUFF="As you march towards the coastal construction you marvel at the sight of the waves crashing far below you.\n"
 			+"You recall a bard's song telling about how one day the entire earth would be swallowed by the rising oceans.\n"
 			+"The air is moist and salty. You watch the motion of the nearby body of water as the waves dance back and forth patiently.\n"
@@ -74,6 +77,7 @@ public class WaterTemple extends Temple{
 			doorbackground=false;
 			features.add(Fountain.class);
 			mutators.add(new Flooded());
+			terrains.add(Terrain.WATER);
 		}
 	}
 

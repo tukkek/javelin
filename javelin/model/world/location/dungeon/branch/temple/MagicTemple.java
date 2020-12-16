@@ -16,6 +16,9 @@ import javelin.model.world.location.dungeon.feature.Throne;
  * @author alex
  */
 public class MagicTemple extends Temple{
+	/** Branch singleton. */
+	public static final Branch BRANCH=new MagicBranch();
+
 	static final String FLUFF="The air inside the castle feels laden with static.\n"
 			+"As you descend through the unsealed magic barrier your eyes begin to adjust to the light.\n"
 			+"There are a few stones along the entry walls and they give off a faint octarine glow.\n"

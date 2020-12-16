@@ -15,6 +15,7 @@ import javelin.Javelin;
 import javelin.controller.event.urban.UrbanEvents;
 import javelin.controller.event.wild.WildEvents;
 import javelin.controller.kit.Kit;
+import javelin.controller.table.dungeon.BranchTable;
 import javelin.controller.table.dungeon.feature.DecorationTable;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
@@ -188,6 +189,8 @@ public class ContentSummary{
 		print(Mandate.printsummary());
 		print(String.format("%s decoration categories, %s total images",
 				DecorationTable.CATEGORIES.size(),DecorationTable.count()));
+		print(String.format("%s dungeon and portal branch affixes",
+				BranchTable.BRANCHES.size()));
 	}
 
 	void printmaps() throws IOException{

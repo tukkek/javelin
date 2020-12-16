@@ -21,6 +21,9 @@ import javelin.model.world.location.dungeon.feature.Spirit;
  * @author alex
  */
 public class GoodTemple extends Temple{
+	/** Branch singleton. */
+	public static final Branch BRANCH=new GoodBranch();
+
 	private static final String FLUFF="The bizarre and tall complex seems to be carved entirely out of ivory and white stones.\n"
 			+"Despite being in no place of particular importance, the common animals in the area seem to avoid it.\n"
 			+"In fact, the eerie silence around the entire place makes you wonder for a moment whether this is all only a fleeting dream.\n"

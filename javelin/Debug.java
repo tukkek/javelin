@@ -143,12 +143,8 @@ public class Debug{
 
 		static void teleport(Class<? extends Actor> type){
 			if(Dungeon.active!=null) return;
-			Actor to=null;
-			for(Actor a:World.getactors())
-				if(type.isInstance(a)){
-					to=a;
-					break;
-				}
+			var to=World.getactors().stream().filter(a->type.isInstance(a)).findAny()
+					.orElseThrow();
 			Squad.active.remove();
 			Squad.active.setlocation(to.x,to.y);
 			Squad.active.displace();

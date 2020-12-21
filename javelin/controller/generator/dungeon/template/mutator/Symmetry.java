@@ -1,6 +1,6 @@
 package javelin.controller.generator.dungeon.template.mutator;
 
-import javelin.controller.generator.dungeon.template.MapTemplate;
+import javelin.controller.generator.dungeon.template.FloorTile;
 import javelin.old.RPG;
 
 public class Symmetry extends Mutator{
@@ -9,7 +9,7 @@ public class Symmetry extends Mutator{
 	}
 
 	@Override
-	public void apply(MapTemplate t){
+	public void apply(FloorTile t){
 		boolean horizontal=false;
 		boolean vertical=false;
 		while(!horizontal&&!vertical){
@@ -29,7 +29,7 @@ public class Symmetry extends Mutator{
 		else if(vertical) apply(t,false);
 	}
 
-	void apply(MapTemplate t,boolean horizontal){
+	void apply(FloorTile t,boolean horizontal){
 		int axis=(horizontal?t.width:t.height)-1;
 		boolean reverse=RPG.chancein(2);
 		for(int cursor=0;cursor<axis-cursor+1;cursor++){
@@ -47,12 +47,12 @@ public class Symmetry extends Mutator{
 		}
 	}
 
-	void copyvertical(MapTemplate t,int from,int to){
+	void copyvertical(FloorTile t,int from,int to){
 		for(int x=0;x<t.width;x++)
 			t.tiles[x][to]=t.tiles[x][from];
 	}
 
-	void copyhorizontal(MapTemplate t,int from,int to){
+	void copyhorizontal(FloorTile t,int from,int to){
 		for(int y=0;y<t.height;y++)
 			t.tiles[to][y]=t.tiles[from][y];
 	}

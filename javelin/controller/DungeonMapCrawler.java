@@ -2,7 +2,7 @@ package javelin.controller;
 
 import java.util.HashSet;
 
-import javelin.controller.generator.dungeon.template.MapTemplate;
+import javelin.controller.generator.dungeon.template.FloorTile;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.door.Door;
@@ -62,7 +62,7 @@ public class DungeonMapCrawler{
 	 * @return <code>true</code> to continue traversing from this point onwards.
 	 */
 	public boolean proceed(Point p,Feature f){
-		return dungeon.map[p.x][p.y]!=MapTemplate.WALL&&!(f instanceof Door);
+		return dungeon.map[p.x][p.y]!=FloorTile.WALL&&!(f instanceof Door);
 	}
 
 	void crawl(Point p,int depth){

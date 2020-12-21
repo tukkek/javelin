@@ -1,6 +1,6 @@
 package javelin.controller.generator.dungeon.template.mutator;
 
-import javelin.controller.generator.dungeon.template.MapTemplate;
+import javelin.controller.generator.dungeon.template.FloorTile;
 
 public class Hallway extends Mutator{
 
@@ -9,7 +9,7 @@ public class Hallway extends Mutator{
 	}
 
 	@Override
-	public void apply(MapTemplate t){
+	public void apply(FloorTile t){
 		Grow.grow(t,t.width>t.height,10);
 		t.doors+=8;
 	}

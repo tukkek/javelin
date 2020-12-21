@@ -1,5 +1,6 @@
 package javelin.controller.generator.dungeon.template;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,6 +28,7 @@ import javelin.controller.generator.dungeon.template.mutator.Rotate;
 import javelin.controller.generator.dungeon.template.mutator.Symmetry;
 import javelin.controller.generator.dungeon.template.mutator.VerticalMirror;
 import javelin.controller.generator.dungeon.template.mutator.Wall;
+import javelin.controller.table.dungeon.FloorTileTable;
 import javelin.controller.table.dungeon.RoomSizeTable;
 import javelin.old.RPG;
 
@@ -35,17 +37,17 @@ import javelin.old.RPG;
  *
  * @author alex
  */
-public abstract class MapTemplate implements Cloneable,DungeonArea{
+public abstract class FloorTile implements Cloneable,DungeonArea,Serializable{
 	public static final Character FLOOR='.';
 	public static final Character WALL='█';
 	public static final Character DECORATION='!';
 	public static final Character DOOR='□';
 
 	/** Procedurally generated templates only. */
-	public static final MapTemplate[] GENERATED=new MapTemplate[]{new Irregular(),
-			new Rectangle(),new Linear()};
-	public static final MapTemplate[] CORRIDORS=new MapTemplate[]{
-			new StraightCorridor(),new WindingCorridor()};
+	public static final List<FloorTile> GENERATED=List.of(new Irregular(),
+			new Rectangle(),new Linear());
+	public static final List<FloorTile> CORRIDORS=List
+			.of(new StraightCorridor(),new WindingCorridor());
 
 	static final ArrayList<Mutator> MUTATORS=new ArrayList<>(
 			Arrays.asList(new Mutator[]{Rotate.INSTANCE,HorizontalMirror.INSTANCE,
@@ -89,13 +91,12 @@ public abstract class MapTemplate implements Cloneable,DungeonArea{
 	public abstract void generate();
 
 	public void modify(){
-		if(DungeonGenerator.DEBUGMUTATOR!=null){
-			DungeonGenerator.DEBUGMUTATOR.apply(this);
+		if(FloorTileTable.DEBUGMUTATOR!=null){
+			FloorTileTable.DEBUGMUTATOR.apply(this);
 			return;
 		}
-		double chance=mutate/FREEMUTATORS;
-		Collections.shuffle(MUTATORS);
-		for(Mutator m:MUTATORS){
+		var chance=mutate/FREEMUTATORS;
+		for(var m:RPG.shuffle(MUTATORS)){
 			if(corridor&&!m.allowcorridor) continue;
 			if(RPG.random()<(m.chance==null?chance:m.chance)) m.apply(this);
 		}
@@ -132,9 +133,9 @@ public abstract class MapTemplate implements Cloneable,DungeonArea{
 		return found;
 	}
 
-	public MapTemplate create(){
+	public FloorTile create(){
 		try{
-			MapTemplate c=null;
+			FloorTile c=null;
 			while(c==null||!c.validate()){
 				c=clone();
 				c.tiles=null;
@@ -226,9 +227,9 @@ public abstract class MapTemplate implements Cloneable,DungeonArea{
 	}
 
 	@Override
-	protected MapTemplate clone(){
+	protected FloorTile clone(){
 		try{
-			return (MapTemplate)super.clone();
+			return (FloorTile)super.clone();
 		}catch(CloneNotSupportedException e){
 			throw new RuntimeException(e);
 		}
@@ -264,7 +265,7 @@ public abstract class MapTemplate implements Cloneable,DungeonArea{
 	}
 
 	public List<Point> getdoors(){
-		return find(MapTemplate.DOOR);
+		return find(FloorTile.DOOR);
 	}
 
 	public Point getdoor(Direction d){

@@ -133,4 +133,10 @@ public class RPG{
 	public static <K> K pick(Set<K> set){
 		return pick(new ArrayList<>(set));
 	}
+
+	/** @return x elements from list (will pad to list size). */
+	public static <K> List<K> pick(List<K> l,int amount){
+		if(amount==0) return Collections.EMPTY_LIST;
+		return shuffle(new ArrayList<>(l)).subList(0,Math.min(amount,l.size()));
+	}
 }

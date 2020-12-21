@@ -6,7 +6,7 @@ import java.util.HashSet;
 import javelin.controller.Point;
 import javelin.controller.action.world.WorldMove;
 import javelin.controller.fight.Fight;
-import javelin.controller.generator.dungeon.template.MapTemplate;
+import javelin.controller.generator.dungeon.template.FloorTile;
 import javelin.controller.walker.Walker;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
@@ -53,7 +53,7 @@ public class DungeonScreen extends WorldScreen{
 
 	@Override
 	public boolean allowmove(int x,int y){
-		return floor.map[x][y]!=MapTemplate.WALL;
+		return floor.map[x][y]!=FloorTile.WALL;
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class DungeonScreen extends WorldScreen{
 			if(p.x!=target.x) p.x+=p.x>target.x?-1:+1;
 			if(p.y!=target.y) p.y+=p.y>target.y?-1:+1;
 			if(p.equals(target)) break;
-			if(floor.map[p.x][p.y]==MapTemplate.WALL
+			if(floor.map[p.x][p.y]==FloorTile.WALL
 					||floor.features.get(p.x,p.y) instanceof Door)
 				return false;
 		}

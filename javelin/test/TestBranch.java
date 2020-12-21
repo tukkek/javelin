@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javelin.controller.ContentSummary;
-import javelin.controller.generator.dungeon.template.MapTemplate;
+import javelin.controller.generator.dungeon.template.FloorTile;
 import javelin.controller.table.dungeon.BranchTable;
 import javelin.controller.template.Template;
 import javelin.controller.terrain.Terrain;
@@ -23,7 +23,7 @@ import javelin.model.world.location.dungeon.branch.Branch;
  * Branches are designed to be starting points to developing more game content
  * as well, so this tool enables branches to be created with minimum effort at
  * first and then be slowly filled in to their full extent, benefitting other
- * aspects of the game ({@link MapTemplate}s, {@link Template}s and more)...
+ * aspects of the game ({@link FloorTile}s, {@link Template}s and more)...
  *
  * @see ContentSummary
  * @author alex

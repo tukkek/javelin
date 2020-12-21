@@ -1,7 +1,7 @@
 package javelin.controller.generator.dungeon.template.mutator;
 
 import javelin.controller.Point;
-import javelin.controller.generator.dungeon.template.MapTemplate;
+import javelin.controller.generator.dungeon.template.FloorTile;
 
 public class SolidWall extends Wall{
 	@Override
@@ -10,7 +10,7 @@ public class SolidWall extends Wall{
 	}
 
 	@Override
-	public boolean validatestep(MapTemplate t,Point step){
-		return super.validatestep(t,step)&&t.countadjacent(MapTemplate.FLOOR,step)>1;
+	public boolean validatestep(FloorTile t,Point step){
+		return super.validatestep(t,step)&&t.countadjacent(FloorTile.FLOOR,step)>1;
 	}
 }

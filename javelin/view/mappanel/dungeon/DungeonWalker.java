@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.util.LinkedList;
 
 import javelin.controller.Point;
-import javelin.controller.generator.dungeon.template.MapTemplate;
+import javelin.controller.generator.dungeon.template.FloorTile;
 import javelin.controller.walker.overlay.OverlayStep;
 import javelin.controller.walker.overlay.OverlayWalker;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -40,7 +40,7 @@ public class DungeonWalker extends OverlayWalker{
 	@Override
 	public boolean validate(Point step,LinkedList<Point> previous){
 		DungeonStep p=(DungeonStep)step;
-		if(Dungeon.active.map[p.x][p.y]==MapTemplate.WALL) return false;
+		if(Dungeon.active.map[p.x][p.y]==FloorTile.WALL) return false;
 		if(p.encounterchance>1) return false;
 		if(p.equals(to)) return !Dungeon.active.squadlocation.equals(step);
 		if(!BattleScreen.active.mappanel.tiles[p.x][p.y].discovered) return false;

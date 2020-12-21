@@ -3,7 +3,7 @@ package javelin.controller.generator.dungeon;
 import java.util.ArrayList;
 
 import javelin.controller.Point;
-import javelin.controller.generator.dungeon.template.MapTemplate;
+import javelin.controller.generator.dungeon.template.FloorTile;
 import javelin.old.RPG;
 
 public abstract class Direction{
@@ -17,7 +17,7 @@ public abstract class Direction{
 		}
 
 		@Override
-		public Point connect(Point cursor,MapTemplate from,MapTemplate to,Point fromdoor,
+		public Point connect(Point cursor,FloorTile from,FloorTile to,Point fromdoor,
 				Point todoor){
 			cursor.x+=fromdoor.x-todoor.x;
 			cursor.y+=from.height;
@@ -34,7 +34,7 @@ public abstract class Direction{
 		}
 
 		@Override
-		public Point connect(Point cursor,MapTemplate from,MapTemplate to,Point fromdoor,
+		public Point connect(Point cursor,FloorTile from,FloorTile to,Point fromdoor,
 				Point todoor){
 			cursor.x+=fromdoor.x-todoor.x;
 			cursor.y-=to.height;
@@ -51,7 +51,7 @@ public abstract class Direction{
 		}
 
 		@Override
-		public Point connect(Point cursor,MapTemplate from,MapTemplate to,Point fromdoor,
+		public Point connect(Point cursor,FloorTile from,FloorTile to,Point fromdoor,
 				Point todoor){
 			cursor.x+=from.width;
 			cursor.y+=fromdoor.y-todoor.y;
@@ -68,7 +68,7 @@ public abstract class Direction{
 		}
 
 		@Override
-		public Point connect(Point cursor,MapTemplate from,MapTemplate to,Point fromdoor,
+		public Point connect(Point cursor,FloorTile from,FloorTile to,Point fromdoor,
 				Point todoor){
 			cursor.x-=to.width;
 			cursor.y+=fromdoor.y-todoor.y;
@@ -107,7 +107,7 @@ public abstract class Direction{
 		return EAST;
 	}
 
-	public abstract Point connect(Point cursor,MapTemplate from,MapTemplate to,
+	public abstract Point connect(Point cursor,FloorTile from,FloorTile to,
 			Point fromdoor,Point todoor);
 
 	public Point takestep(){

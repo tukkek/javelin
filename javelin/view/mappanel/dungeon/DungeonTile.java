@@ -4,7 +4,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.util.List;
 
-import javelin.controller.generator.dungeon.template.MapTemplate;
+import javelin.controller.generator.dungeon.template.FloorTile;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonImages;
@@ -39,7 +39,7 @@ public class DungeonTile extends Tile{
 			if(f!=null) featureimage=f.getimage();
 		}
 		draw(g,floorimage);
-		if(floor.map[x][y]==MapTemplate.WALL||f instanceof Door&&d.doorbackground)
+		if(floor.map[x][y]==FloorTile.WALL||f instanceof Door&&d.doorbackground)
 			draw(g,wallimage);
 		if(f!=null&&f.draw) draw(g,featureimage);
 		if(floor.squadlocation.x==x&&floor.squadlocation.y==y)

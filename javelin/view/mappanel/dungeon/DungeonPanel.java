@@ -3,7 +3,7 @@ package javelin.view.mappanel.dungeon;
 import java.util.HashSet;
 
 import javelin.controller.db.Preferences;
-import javelin.controller.generator.dungeon.template.MapTemplate;
+import javelin.controller.generator.dungeon.template.FloorTile;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.view.mappanel.MapPanel;
@@ -57,7 +57,7 @@ public class DungeonPanel extends MapPanel{
 				if(!(p.x<=t.x*tilesize&&(t.x+1)*tilesize<=p.x+s.width)
 						||!(p.y<=t.y*tilesize&&(t.y+1)*tilesize<=p.y+s.height))
 					continue;
-				if(Dungeon.active.map[t.x][t.y]==MapTemplate.WALL
+				if(Dungeon.active.map[t.x][t.y]==FloorTile.WALL
 						&&Dungeon.active.features.get(t.x,t.y)==null&&!skip.add(t))
 					continue;
 				t.repaint();

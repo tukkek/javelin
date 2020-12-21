@@ -1,8 +1,8 @@
 package javelin.controller.generator.dungeon.template.generated;
 
-import javelin.controller.generator.dungeon.template.MapTemplate;
+import javelin.controller.generator.dungeon.template.FloorTile;
 
-public class Rectangle extends MapTemplate{
+public class Rectangle extends FloorTile{
 	public Rectangle(){
 		mutate=1;
 	}

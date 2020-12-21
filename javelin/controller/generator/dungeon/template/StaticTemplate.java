@@ -18,7 +18,7 @@ import java.util.HashMap;
 import javelin.controller.exception.GaveUp;
 import javelin.old.RPG;
 
-public class StaticTemplate extends MapTemplate{
+public class StaticTemplate extends FloorTile{
 	public static final boolean DEBUG=false;
 	public static final StaticTemplate FACTORY=new StaticTemplate();
 
@@ -173,7 +173,7 @@ public class StaticTemplate extends MapTemplate{
 	}
 
 	@Override
-	public MapTemplate create(){
+	public FloorTile create(){
 		return factory?RPG.pick(STATIC).create():super.create();
 	}
 }

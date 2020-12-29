@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Point;
-import javelin.controller.generator.dungeon.template.MapTemplate;
+import javelin.controller.generator.dungeon.template.FloorTile;
 import javelin.controller.terrain.Mountains;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
@@ -59,17 +59,16 @@ public class AirTemple extends Temple{
 					}
 					if(d.features.get(x,y)!=null) continue;
 					var step=new Point(x,y);
-					if(!steps.contains(step)&&d.map[step.x][step.y]!=MapTemplate.WALL)
+					if(!steps.contains(step)&&d.map[step.x][step.y]!=FloorTile.WALL)
 						possibilities.add(step);
 				}
 			return possibilities.isEmpty()?null:RPG.pick(possibilities);
 		}
-
 	}
 
 	static class AirBranch extends Branch{
 		protected AirBranch(){
-			super("floortemplegood","walltempleair");
+			super("Windy","of air","floortemplegood","walltempleair");
 			terrains.add(Terrain.MOUNTAINS);
 			hazards.add(new Wind());
 		}

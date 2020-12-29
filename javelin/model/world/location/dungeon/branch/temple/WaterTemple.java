@@ -73,7 +73,7 @@ public class WaterTemple extends Temple{
 
 	static class WaterBranch extends Branch{
 		protected WaterBranch(){
-			super("floordungeon","walltemplewater");
+			super("Flooded","of water","floordungeon","walltemplewater");
 			doorbackground=false;
 			features.add(Fountain.class);
 			mutators.add(new Flooded());

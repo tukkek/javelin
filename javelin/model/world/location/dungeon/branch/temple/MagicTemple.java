@@ -4,6 +4,7 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.terrain.Hill;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
+import javelin.model.world.location.dungeon.Portal;
 import javelin.model.world.location.dungeon.branch.Branch;
 import javelin.model.world.location.dungeon.feature.Throne;
 
@@ -26,7 +27,7 @@ public class MagicTemple extends Temple{
 
 	static class MagicBranch extends Branch{
 		protected MagicBranch(){
-			super("floortemplemagic","walltemplemagic");
+			super("Enchanted","of magic","floortemplemagic","walltemplemagic");
 			features.add(Throne.class);
 			terrains.add(Terrain.HILL);
 		}

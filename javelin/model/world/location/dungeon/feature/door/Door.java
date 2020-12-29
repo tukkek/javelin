@@ -8,7 +8,7 @@ import javelin.Debug;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.exception.battle.StartBattle;
-import javelin.controller.generator.dungeon.template.MapTemplate;
+import javelin.controller.generator.dungeon.template.FloorTile;
 import javelin.controller.table.dungeon.door.HiddenDoor;
 import javelin.controller.table.dungeon.door.LockedDoor;
 import javelin.controller.table.dungeon.door.StuckDoor;
@@ -217,13 +217,13 @@ public class Door extends Feature{
 	@Override
 	public void place(DungeonFloor d,Point p){
 		super.place(d,p);
-		if(hidden) d.map[x][y]=MapTemplate.WALL;
+		if(hidden) d.map[x][y]=FloorTile.WALL;
 	}
 
 	@Override
 	public boolean discover(Combatant searching,int searchroll){
 		if(draw||searchroll<searchdc) return false;
-		Dungeon.active.map[x][y]=MapTemplate.FLOOR;
+		Dungeon.active.map[x][y]=FloorTile.FLOOR;
 		draw=true;
 		hidden=false;
 		Javelin.redraw();
@@ -239,6 +239,6 @@ public class Door extends Feature{
 	@Override
 	public void remove(){
 		super.remove();
-		Dungeon.active.map[x][y]=MapTemplate.FLOOR; //make sure path is clear
+		Dungeon.active.map[x][y]=FloorTile.FLOOR; //make sure path is clear
 	}
 }

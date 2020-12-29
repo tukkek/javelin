@@ -31,7 +31,7 @@ public class GoodTemple extends Temple{
 
 	static class GoodBranch extends Branch{
 		protected GoodBranch(){
-			super("floortemplegood","walldungeon");
+			super("Holy","of good","floortemplegood","walldungeon");
 			features.add(Spirit.class);
 			terrains.add(Terrain.PLAIN);
 		}

@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Point;
-import javelin.controller.generator.dungeon.template.MapTemplate;
+import javelin.controller.generator.dungeon.template.FloorTile;
 import javelin.controller.walker.Walker;
 import javelin.controller.walker.pathing.DirectPath;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -36,7 +36,7 @@ public class Brazier extends Feature{
 
 		@Override
 		public boolean validate(Point p,LinkedList<Point> previous){
-			return Dungeon.active.map[p.x][p.y]!=MapTemplate.WALL;
+			return Dungeon.active.map[p.x][p.y]!=FloorTile.WALL;
 		}
 	}
 
@@ -71,7 +71,7 @@ public class Brazier extends Feature{
 	public boolean activate(){
 		var revealed=crawl();
 		for(var r:new ArrayList<>(revealed))
-			if(Dungeon.active.map[r.x][r.y]!=MapTemplate.WALL)
+			if(Dungeon.active.map[r.x][r.y]!=FloorTile.WALL)
 				revealed.addAll(r.getadjacent());
 		for(var r:revealed)
 			reveal(r);

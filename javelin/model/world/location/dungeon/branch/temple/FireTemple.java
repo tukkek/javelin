@@ -24,7 +24,7 @@ public class FireTemple extends Temple{
 
 	static class FireBranch extends Branch{
 		FireBranch(){
-			super("floortemplefire","walltemplefire");
+			super("Burning","of fire","floortemplefire","walltemplefire");
 			features.add(Brazier.class);
 			terrains.add(Terrain.DESERT);
 			doorbackground=false;

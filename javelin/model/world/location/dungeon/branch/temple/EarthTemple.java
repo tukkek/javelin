@@ -24,7 +24,7 @@ public class EarthTemple extends Temple{
 	static class EarthBranch extends Branch{
 		/** Constructor. */
 		EarthBranch(){
-			super("floordirt","walltempleearth");
+			super("Stone","of earth","floordirt","walltempleearth");
 			features.add(FruitTree.class);
 			terrains.add(Terrain.FOREST);
 		}

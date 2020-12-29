@@ -124,4 +124,9 @@ public abstract class Temple extends Dungeon{
 				?new ArtifactChest(RPG.pick(realm.artifacts))
 				:super.generatespecialchest(f);
 	}
+
+	@Override
+	protected synchronized String baptize(String suffix){
+		return name;
+	}
 }

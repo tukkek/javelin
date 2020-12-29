@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import javelin.controller.Point;
-import javelin.controller.generator.dungeon.template.MapTemplate;
+import javelin.controller.generator.dungeon.template.FloorTile;
 import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.old.RPG;
 
@@ -27,7 +27,7 @@ public class DungeonZoner{
 	 * @author alex
 	 */
 	public class Zone{
-		/** All of the {@link MapTemplate#FLOOR} tiles of this zone. */
+		/** All of the {@link FloorTile#FLOOR} tiles of this zone. */
 		public HashSet<Point> area=new HashSet<>();
 		/**
 		 * All of {@link Door}s of this zone. A door might be represented in
@@ -53,7 +53,7 @@ public class DungeonZoner{
 				doors.add((Door)feature);
 				return;
 			}
-			if(dungeon.map[p.x][p.y]==MapTemplate.WALL) return;
+			if(dungeon.map[p.x][p.y]==FloorTile.WALL) return;
 			area.add(p);
 			for(var step:getadjacent()){
 				step.x+=p.x;
@@ -70,7 +70,7 @@ public class DungeonZoner{
 					step.x+=point.x;
 					step.y+=point.y;
 					if(step.validate(0,0,dungeon.size,dungeon.size)
-							&&dungeon.map[step.x][step.y]!=MapTemplate.WALL
+							&&dungeon.map[step.x][step.y]!=FloorTile.WALL
 							&&!zones.stream().anyMatch(z->z.area.contains(step)))
 						newzones.add(new Zone(step,depth+1));
 				}

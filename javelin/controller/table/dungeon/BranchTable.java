@@ -4,6 +4,7 @@
 package javelin.controller.table.dungeon;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,5 +74,13 @@ public class BranchTable extends Table{
 	@Override
 	public Branch roll(){
 		return (Branch)super.roll();
+	}
+
+	/** @return Two different branches. */
+	public List<Branch> rollaffixes(){
+		var affixes=new HashSet<Branch>();
+		while(affixes.size()<2)
+			affixes.add(roll());
+		return new ArrayList<>(affixes);
 	}
 }

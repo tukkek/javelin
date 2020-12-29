@@ -60,4 +60,9 @@ public class DeepDungeon extends Dungeon{
 	protected DungeonFloor createfloor(int level){
 		return new DeepDungeonFloor(level,this);
 	}
+
+	@Override
+	protected synchronized String baptize(String suffix){
+		return name;
+	}
 }

@@ -18,7 +18,7 @@ import javelin.controller.db.EncounterIndex;
 import javelin.controller.fight.RandomDungeonEncounter;
 import javelin.controller.fight.RandomEncounter;
 import javelin.controller.generator.dungeon.DungeonGenerator;
-import javelin.controller.generator.dungeon.template.MapTemplate;
+import javelin.controller.generator.dungeon.template.FloorTile;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.table.Table;
@@ -82,7 +82,7 @@ public class DungeonFloor implements Serializable{
 	public Point squadlocation=null;
 	/** Tiles already revealed. */
 	public HashSet<Point> discovered=new HashSet<>();
-	/** @see MapTemplate */
+	/** @see FloorTile */
 	public char[][] map=null;
 	/**
 	 * {@link #map} size (width and height).
@@ -205,7 +205,7 @@ public class DungeonFloor implements Serializable{
 	void generatedoors(){
 		for(int x=0;x<size;x++)
 			for(int y=0;y<size;y++)
-				if(map[x][y]==MapTemplate.DOOR
+				if(map[x][y]==FloorTile.DOOR
 						&&gettable(DoorExists.class).rollboolean()){
 					var d=Door.generate(this,new Point(x,y));
 					if(d!=null) d.place(this,d.getlocation());
@@ -230,7 +230,7 @@ public class DungeonFloor implements Serializable{
 		int floortiles=0;
 		for(int x=0;x<size;x++)
 			for(int y=0;y<size;y++)
-				if(map[x][y]==MapTemplate.FLOOR) floortiles+=1;
+				if(map[x][y]==FloorTile.FLOOR) floortiles+=1;
 		return floortiles;
 	}
 
@@ -305,7 +305,7 @@ public class DungeonFloor implements Serializable{
 		new StairsUp(squadlocation,this).place(this,squadlocation);
 		for(int x=squadlocation.x-1;x<=squadlocation.x+1;x++)
 			for(int y=squadlocation.y-1;y<=squadlocation.y+1;y++)
-				map[x][y]=MapTemplate.FLOOR;
+				map[x][y]=FloorTile.FLOOR;
 		if(!isdeepest()) new StairsDown(this).place(this,zoner.getpoint());
 	}
 
@@ -413,10 +413,10 @@ public class DungeonFloor implements Serializable{
 	}
 
 	/**
-	 * @return <code>true</code> if a {@link MapTemplate#WALL} or {@link Feature}.
+	 * @return <code>true</code> if a {@link FloorTile#WALL} or {@link Feature}.
 	 */
 	public boolean isoccupied(Point p){
-		if(map[p.x][p.y]==MapTemplate.WALL) return true;
+		if(map[p.x][p.y]==FloorTile.WALL) return true;
 		for(Feature f:features)
 			if(f.x==p.x&&f.y==p.y) return true;
 		return false;

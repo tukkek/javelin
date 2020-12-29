@@ -2,6 +2,7 @@ package javelin.model.world.location.dungeon;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javelin.controller.Point;
 import javelin.controller.challenge.Difficulty;
@@ -9,7 +10,7 @@ import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.db.EncounterIndex;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomDungeonEncounter;
-import javelin.controller.generator.dungeon.template.MapTemplate;
+import javelin.controller.generator.dungeon.template.FloorTile;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.item.Tier;
@@ -87,28 +88,27 @@ public class Wilderness extends Dungeon{
 				else
 					top.squadlocation.y=RPG.chancein(2)?0:height-1;
 				var empty=top.squadlocation.getadjacent().stream().filter(
-						p->p.validate(0,0,width,height)&&map[p.x][p.y]==MapTemplate.FLOOR);
+						p->p.validate(0,0,width,height)&&map[p.x][p.y]==FloorTile.FLOOR);
 				if(empty.count()<3) top.squadlocation=null;
 			}
-			map[top.squadlocation.x][top.squadlocation.y]=MapTemplate.FLOOR;
+			map[top.squadlocation.x][top.squadlocation.y]=FloorTile.FLOOR;
 			new Exit(top.squadlocation).place(this,top.squadlocation);
 		}
 
 		@Override
 		protected char[][] map(){
-			var fightmap=RPG.pick(terrains.get(0).getmaps());
-			fightmap.generate();
-			var width=fightmap.map.length;
-			int height=fightmap.map[0].length;
+			var m=RPG.pick(dungeon.terrains).getmaps().pick();
+			m.generate();
+			var width=m.map.length;
+			int height=m.map[0].length;
 			var map=new char[width][height];
 			for(var x=0;x<width;x++)
 				for(var y=0;y<height;y++)
-					map[x][y]=fightmap.map[x][y].blocked?MapTemplate.WALL
-							:MapTemplate.FLOOR;
+					map[x][y]=m.map[x][y].blocked?FloorTile.WALL:FloorTile.FLOOR;
 			generateentrance(map);
-			dungeon.images.put(DungeonImages.FLOOR,Images.NAMES.get(fightmap.floor));
-			dungeon.images.put(DungeonImages.WALL,Images.NAMES.get(fightmap.wall));
-			dungeon.name=dungeon.baptize(fightmap.name);
+			dungeon.images.put(DungeonImages.FLOOR,Images.NAMES.get(m.floor));
+			dungeon.images.put(DungeonImages.WALL,Images.NAMES.get(m.wall));
+			dungeon.name=m.name;
 			return map;
 		}
 
@@ -151,21 +151,29 @@ public class Wilderness extends Dungeon{
 		}
 	}
 
-	/** Constructor. */
-	public Wilderness(){
-		super(DESCRIPTION,-1,1);
+	/** Subclass constructor. */
+	protected Wilderness(int level){
+		super(DESCRIPTION,level,1);
 		vision*=2;
+	}
+
+	private static int getlevel(){
 		var tier=0;
 		while(RPG.chancein(2)&&tier<Tier.TIERS.size()-1)
 			tier+=1;
 		var t=Tier.TIERS.get(tier);
-		level=RPG.r(t.minlevel,t.maxlevel);
+		return RPG.r(t.minlevel,t.maxlevel);
+	}
+
+	/** Public constructor. */
+	public Wilderness(){
+		this(getlevel());
 	}
 
 	@Override
 	public void generate(){
 		var e=entrance.getlocation();
-		var t=World.seed.map[e.x][e.y];
+		var t=World.getseed().map[e.x][e.y];
 		terrains.clear();
 		terrains.add(t);
 		super.generate();
@@ -194,5 +202,17 @@ public class Wilderness extends Dungeon{
 		e.map.wall=Images.get(images.get(DungeonImages.WALL));
 		e.map.wallfloor=e.map.floor;
 		return e;
+	}
+
+	/** @return All {@link DungeonEntrance}s to a wildernessa. */
+	public static List<DungeonEntrance> getwildernesses(){
+		return World.getactors().stream().filter(a->a instanceof DungeonEntrance)
+				.map(a->(DungeonEntrance)a).filter(e->e.dungeon instanceof Wilderness)
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	protected void generateappearance(){
+		// don't, as would mix avatar/dungeon/ and avatar/terrain/ folders
 	}
 }

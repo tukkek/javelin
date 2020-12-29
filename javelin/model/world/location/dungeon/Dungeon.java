@@ -96,7 +96,8 @@ public class Dungeon implements Serializable{
 	/** Usually either zero or two, except {@link Temple}s with one. */
 	public List<Branch> branches=new ArrayList<>(2);
 
-	String name;
+	/** Dungeon name. */
+	protected String name;
 
 	/**
 	 * Top-level floor constructor.
@@ -106,7 +107,7 @@ public class Dungeon implements Serializable{
 	public Dungeon(String name,int level,int nfloors){
 		this.level=level;
 		var t=gettier();
-		this.name=name==null?baptize(t.name):name;
+		this.name=name;
 		images=new DungeonImages(t);
 		for(var i=0;i<nfloors;i++)
 			floors.add(createfloor(level+i));
@@ -121,18 +122,23 @@ public class Dungeon implements Serializable{
 	 * @return Chooses and removes a name from {@link World#dungeonnames}.
 	 * @throws NoSuchElementException If out of names.
 	 */
-	synchronized String baptize(String suffix){
+	synchronized protected String baptize(String base){
+		if(!branches.isEmpty()){
+			var prefix=branches.get(0).prefix;
+			base=base.toLowerCase();
+			var suffix=branches.get(1).suffix.toLowerCase();
+			return String.format("%s %s %s",prefix,base,suffix);
+		}
 		var names=World.getseed().dungeonnames;
 		if(names.isEmpty()){
 			if(Javelin.DEBUG)
 				throw new NoSuchElementException("Out of dungeon names!");
-			return "Nameless "+suffix;
+			return "Nameless "+base;
 		}
-		suffix=" "+suffix.toLowerCase();
 		var name=names.pop();
 		name=name.substring(name.lastIndexOf(" ")+1,name.length());
 		name+=name.charAt(name.length()-1)=='s'?"'":"'s";
-		return name+suffix;
+		return name+" "+base.toLowerCase();
 	}
 
 	/** @see Lore */
@@ -195,6 +201,8 @@ public class Dungeon implements Serializable{
 		generateappearance();
 		for(var b:branches)
 			b.define(this);
+		name=baptize(name);
+		if(entrance!=null) entrance.set(this);
 	}
 
 	/**

@@ -2,6 +2,7 @@ package javelin.model.world.location.dungeon;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
@@ -26,13 +27,18 @@ public class DungeonEntrance extends Location{
 	/** Constructor. */
 	public DungeonEntrance(Dungeon d){
 		super(null);
-		dungeon=d;
 		link=false;
 		discard=false;
 		impermeable=true;
 		allowedinscenario=false;
 		allowentry=false;
 		unique=true;
+		if(d!=null) set(d);
+	}
+
+	/** Attaches dungeon and vice-versa. */
+	public void set(Dungeon d){
+		dungeon=d;
 		description=d.name;
 		d.entrance=this;
 	}
@@ -67,7 +73,7 @@ public class DungeonEntrance extends Location{
 	public String describe(){
 		var squadel=ChallengeCalculator.calculateel(Squad.active.members);
 		var difficulty=Difficulty.describe(dungeon.level-squadel);
-		return description+" ("+difficulty+").";
+		return this+" ("+difficulty+").";
 	}
 
 	@Override
@@ -92,5 +98,14 @@ public class DungeonEntrance extends Location{
 		for(var t:Temple.gettemples())
 			dungeons.add(t);
 		return dungeons;
+	}
+
+	/**
+	 * @return {@link Dungeon}s, {@link Temple}s, {@link Wilderness}es,
+	 *         {@link Portal}s....
+	 */
+	static public List<DungeonEntrance> getall(){
+		return World.getactors().stream().filter(a->a instanceof DungeonEntrance)
+				.map(a->(DungeonEntrance)a).collect(Collectors.toList());
 	}
 }

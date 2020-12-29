@@ -26,6 +26,7 @@ import javelin.model.world.location.ResourceSite;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonEntrance;
 import javelin.model.world.location.dungeon.DungeonTier;
+import javelin.model.world.location.dungeon.Portal;
 import javelin.model.world.location.dungeon.Wilderness;
 import javelin.model.world.location.dungeon.branch.temple.Temple;
 import javelin.model.world.location.haunt.AbandonedManor;
@@ -168,15 +169,18 @@ public class LocationGenerator implements Serializable{
 			}
 		for(var level=Tier.LOW.minlevel;level<=Tier.HIGH.maxlevel;level++){
 			var nfloors=1;
-			var maxdepth=DungeonTier.TIERS.indexOf(DungeonTier.get(level))+1;
+			var t=DungeonTier.get(level);
+			var maxdepth=DungeonTier.TIERS.indexOf(t)+1;
 			while(nfloors<maxdepth&&RPG.chancein(2))
 				nfloors+=1;
-			locations.add(new DungeonEntrance(new Dungeon(null,level,nfloors)));
+			locations.add(new DungeonEntrance(new Dungeon(t.name,level,nfloors)));
 		}
-		for(var i=0;i<Tier.HIGH.maxlevel;i++)
+		for(var i=0;i<15;i++)
 			locations.add(new DungeonEntrance(new Wilderness()));
-		for(Location l:RPG.shuffle(locations))
+		for(var l:RPG.shuffle(locations))
 			l.place();
+		for(var i=0;i<5;)
+			if(Portal.create()!=null) i+=1;
 	}
 
 	static void generatestartingarea(World w,Town t){

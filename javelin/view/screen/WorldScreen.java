@@ -36,6 +36,7 @@ import javelin.model.world.location.Fortification;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Features;
+import javelin.model.world.location.dungeon.Portal;
 import javelin.model.world.location.town.Town;
 import javelin.old.Interface;
 import javelin.old.RPG;
@@ -229,6 +230,7 @@ public class WorldScreen extends BattleScreen{
 			WorldScreen.lastday+=1;
 			Season.change(day);
 			Weather.weather();
+			Portal.turn();
 			World.seed.featuregenerator.spawn(1f/SPAWNPERIOD,false);
 			s.endday();
 			var actors=World.getactors();

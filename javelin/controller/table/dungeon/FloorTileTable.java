@@ -33,21 +33,23 @@ public class FloorTileTable extends Table{
 
 	List<FloorTile> selectrooms(List<FloorTile> branch){
 		if(Javelin.DEBUG&&DEBUGROOM!=null) return List.of(DEBUGROOM);
-		branch=branch.stream().filter(t->!t.corridor).collect(Collectors.toList());
-		if(!branch.isEmpty()) return branch;
-		int nrooms=RPG.randomize(3,1,FloorTile.GENERATED.size());
-		return RPG.pick(FloorTile.GENERATED,nrooms);
+		int nrooms=RPG.randomize(4,1,FloorTile.GENERATED.size());
+		var rooms=RPG.pick(FloorTile.GENERATED,nrooms);
+		rooms.addAll(
+				branch.stream().filter(t->!t.corridor).collect(Collectors.toList()));
+		return rooms;
 	}
 
 	List<FloorTile> selectcorridors(List<FloorTile> branch,List<FloorTile> rooms){
 		if(Javelin.DEBUG&&DEBUGCORRIDOR!=null) return List.of(DEBUGCORRIDOR);
-		branch=branch.stream().filter(t->t.corridor).collect(Collectors.toList());
-		if(!branch.isEmpty()) return branch;
 		int ncorridors=0;
 		var maxcorridors=Math.max(rooms.size(),FloorTile.CORRIDORS.size());
 		while(RPG.chancein(2)&&ncorridors<maxcorridors)
 			ncorridors+=1;
-		return RPG.pick(FloorTile.CORRIDORS,ncorridors);
+		var corridors=RPG.pick(FloorTile.CORRIDORS,ncorridors);
+		corridors.addAll(
+				branch.stream().filter(t->t.corridor).collect(Collectors.toList()));
+		return corridors;
 	}
 
 	/** @return Selected templates. */

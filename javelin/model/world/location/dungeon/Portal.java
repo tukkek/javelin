@@ -12,27 +12,32 @@ import javelin.model.item.Tier;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.World;
+import javelin.model.world.location.dungeon.branch.Branch;
 import javelin.old.RPG;
 import javelin.view.screen.WorldScreen;
 
-/** {@link World} portal to a {@link Wilderness} plane. */
+/**
+ * {@link World} portal to a {@link Branch}ed {@link Wilderness} plane. Players
+ * are dropped on a random position and can find one of (usually) multiple exits
+ * to leave - making exploration not only a mechanic but a pressing concern.
+ */
 public class Portal extends DungeonEntrance{
 	static final int SPAWN=7;
 
-	/**
-	 * TODO would be interesting if portals dropped you in a random accessible
-	 * spot rather than the entrance, making it more dangerous and so the player
-	 * has to find the exit. This could, however, prove to be much more deadly.
-	 *
-	 * A sort of "road" could be created between the exit and other branches for
-	 * the player to stumble upon as he explores, rather than just walk around
-	 * aimlessly huggning the edge hoping for an exit.
-	 */
 	static class Plane extends Wilderness{
 		public Plane(Terrain t){
 			super(Tier.EPIC.getrandomel(false));
 			name="Plane";
 			branches.addAll(new BranchTable(List.of(t)).rollaffixes());
+			entrances=RPG.randomize(2,1,Integer.MAX_VALUE);
+		}
+
+		@Override
+		protected DungeonFloor chooseentrance(){
+			var f=super.chooseentrance();
+			var area=new DungeonZoner(f,f.squadlocation).zones.get(0).area;
+			f.squadlocation=RPG.pick(area);
+			return f;
 		}
 	}
 

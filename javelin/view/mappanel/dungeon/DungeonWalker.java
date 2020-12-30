@@ -7,10 +7,9 @@ import javelin.controller.Point;
 import javelin.controller.generator.dungeon.template.FloorTile;
 import javelin.controller.walker.overlay.OverlayStep;
 import javelin.controller.walker.overlay.OverlayWalker;
-import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.trap.MechanicalTrap;
-import javelin.view.screen.BattleScreen;
 
 public class DungeonWalker extends OverlayWalker{
 	class DungeonStep extends OverlayStep{
@@ -21,8 +20,17 @@ public class DungeonWalker extends OverlayWalker{
 		}
 	}
 
-	public DungeonWalker(Point from,Point to){
+	/**
+	 * If <code>true</code> (default), only {@link DungeonFloor#discovered} tiles
+	 * are allowed.
+	 */
+	public boolean discoveredonly=true;
+
+	DungeonFloor floor;
+
+	public DungeonWalker(Point from,Point to,DungeonFloor f){
 		super(from,to);
+		floor=f;
 	}
 
 	@Override
@@ -30,7 +38,7 @@ public class DungeonWalker extends OverlayWalker{
 		DungeonStep step=new DungeonStep(p);
 		float chance=previous.isEmpty()?0
 				:((DungeonStep)previous.getLast()).encounterchance;
-		chance+=1f/Dungeon.active.stepsperencounter;//
+		chance+=1f/floor.stepsperencounter;//
 		step.encounterchance=chance;
 		step.text=Math.round((chance>1?1:chance)*100)+"%";
 		step.color=chance>=.5?Color.RED:Color.GREEN;
@@ -40,16 +48,16 @@ public class DungeonWalker extends OverlayWalker{
 	@Override
 	public boolean validate(Point step,LinkedList<Point> previous){
 		DungeonStep p=(DungeonStep)step;
-		if(Dungeon.active.map[p.x][p.y]==FloorTile.WALL) return false;
+		if(floor.map[p.x][p.y]==FloorTile.WALL) return false;
 		if(p.encounterchance>1) return false;
-		if(p.equals(to)) return !Dungeon.active.squadlocation.equals(step);
-		if(!BattleScreen.active.mappanel.tiles[p.x][p.y].discovered) return false;
-		final Feature f=Dungeon.active.features.get(p.x, p.y);
+		if(p.equals(to)) return !floor.squadlocation.equals(step);
+		if(discoveredonly&&!floor.discovered.contains(p)) return false;
+		final Feature f=floor.features.get(p.x,p.y);
 		return f==null||f instanceof MechanicalTrap;
 	}
 
 	@Override
 	public Point resetlocation(){ // TODO
-		return Dungeon.active==null?null:Dungeon.active.squadlocation;
+		return floor==null?null:floor.squadlocation;
 	}
 }

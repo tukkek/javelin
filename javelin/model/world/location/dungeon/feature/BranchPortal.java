@@ -18,7 +18,7 @@ public class BranchPortal extends Feature{
 			+"Press ENTER to confirm or any other key to cancel...";
 	static final String UNKNOWN="an unknown branch";
 	/**
-	 * Ideally would be 2 but thats too costly for {@link WorldGenerator} for
+	 * Ideally would be 2 but that's too costly for {@link WorldGenerator} for
 	 * development purposes. 3 is MUCH faster and not a terrible compromise.
 	 */
 	static final int NEWFLOORCHANCE=3;

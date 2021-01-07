@@ -148,6 +148,7 @@ public class DungeonFloor implements Serializable{
 	public void generate(List<EncounterIndex> index){
 		if(map!=null) return;
 		var p=getparent();
+		if(p==null) p=dungeon.exit;
 		tables=p==null?new Tables():p.tables.clone();
 		map=map();
 		size=map.length;
@@ -173,8 +174,13 @@ public class DungeonFloor implements Serializable{
 	 * @see #map
 	 */
 	protected char[][] map(){
-		var tier=gettier();
-		var generator=DungeonGenerator.generate(tier.minrooms,tier.maxrooms,this);
+		var t=gettier();
+		if(dungeon.exit!=null){
+			t=dungeon.exit.dungeon.gettier();
+			var smaller=DungeonTier.TIERS.indexOf(t)-1;
+			t=DungeonTier.TIERS.get(Math.max(0,smaller));
+		}
+		var generator=DungeonGenerator.generate(t.minrooms,t.maxrooms,this);
 		nrooms=generator.map.rooms.size();
 		return generator.grid;
 	}

@@ -36,14 +36,14 @@ public class InfiniteList<T> implements Serializable{
 	}
 
 	/** Removes and returns a given amount of items from the current pool. */
-	public ArrayList<T> pop(int amount){
+	synchronized public ArrayList<T> pop(int amount){
 		ArrayList<T> list=new ArrayList<>(amount);
 		for(int i=0;i<amount;i++)
 			list.add(pop());
 		return list;
 	}
 
-	void refill(){
+	synchronized void refill(){
 		if(isempty()){
 			if(shuffle) Collections.shuffle(content);
 			current.addAll(content);
@@ -51,23 +51,23 @@ public class InfiniteList<T> implements Serializable{
 	}
 
 	/** @return <code>true</code> if the current pool is empty. */
-	public boolean isempty(){
+	synchronized public boolean isempty(){
 		return current.isEmpty();
 	}
 
 	/** @return First item, removed from the current pool. */
-	public T pop(){
+	synchronized public T pop(){
 		refill();
 		return current.pop();
 	}
 
 	/** @param list Items are added to the content pool. */
-	public void addcontent(Collection<T> list){
+	synchronized public void addcontent(Collection<T> list){
 		content.addAll(list);
 	}
 
 	/** * @param choice Item is removed from the content pool. */
-	public void removecontent(T choice){
+	synchronized public void removecontent(T choice){
 		content.remove(choice);
 	}
 

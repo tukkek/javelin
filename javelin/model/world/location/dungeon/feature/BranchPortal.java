@@ -4,6 +4,7 @@
 package javelin.model.world.location.dungeon.feature;
 
 import javelin.Javelin;
+import javelin.controller.generator.WorldGenerator;
 import javelin.controller.table.dungeon.BranchTable;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
@@ -16,6 +17,11 @@ public class BranchPortal extends Feature{
 	static final String PROMPT="Do you want to enter this portal to: %s?\n"
 			+"Press ENTER to confirm or any other key to cancel...";
 	static final String UNKNOWN="an unknown branch";
+	/**
+	 * Ideally would be 2 but thats too costly for {@link WorldGenerator} for
+	 * development purposes. 3 is MUCH faster and not a terrible compromise.
+	 */
+	static final int NEWFLOORCHANCE=3;
 
 	/** A {@link Branch}ed dungeon. */
 	public Dungeon destination;
@@ -27,7 +33,7 @@ public class BranchPortal extends Feature{
 		var maxfloors=f.dungeon.floors.size()-1;
 		if(maxfloors<1) maxfloors=1;
 		var floors=1;
-		while(floors<maxfloors&&RPG.chancein(2))
+		while(floors<maxfloors&&RPG.chancein(NEWFLOORCHANCE))
 			floors+=1;
 		destination=new Dungeon("Branch",f.level+1,floors);
 		destination.branches.addAll(f.gettable(BranchTable.class).rollaffixes());

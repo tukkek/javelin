@@ -192,16 +192,18 @@ public class Wilderness extends Dungeon{
 		@Override
 		protected void populate(){
 			var nfeatures=RPG.randomize(5,0,Integer.MAX_VALUE);
+			var z=new DungeonZoner(this,squadlocation);
 			for(var i=0;i<nfeatures;i++)
-				generatefeature().place(this,getunnocupied());
+				generatefeature().place(this,z.getpoint());
 			generatepaths();
 			var pool=RewardCalculator.getgold(level);
 			var ncrates=RPG.randomize(3,0,Integer.MAX_VALUE);
 			for(var i=0;i<ncrates;i++){
 				int gold=RPG.randomize(pool/ncrates,1,Integer.MAX_VALUE);
 				var c=new Crate(gold,this);
-				c.place(this,getunnocupied());
+				c.place(this,z.getpoint());
 			}
+			generatebranches(z);
 		}
 	}
 

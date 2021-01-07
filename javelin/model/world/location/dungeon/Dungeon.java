@@ -95,9 +95,13 @@ public class Dungeon implements Serializable{
 	public List<Terrain> terrains=new ArrayList<>(List.of(Terrain.UNDERGROUND));
 	/** Usually either zero or two, except {@link Temple}s with one. */
 	public List<Branch> branches=new ArrayList<>(2);
+	/** Exit out of a {@link Branch}. */
+	public DungeonFloor exit=null;
 
 	/** Dungeon name. */
 	protected String name;
+	/** {@link RPG#chancein(int)} chance to {@link Branch}. */
+	protected int branchchance=4;
 
 	/**
 	 * Top-level floor constructor.
@@ -221,6 +225,8 @@ public class Dungeon implements Serializable{
 			images.put(DungeonImages.WALL,b.floor);
 			doorbackground=b.doorbackground;
 		}
+		if(images.get(DungeonImages.FLOOR)==images.get(DungeonImages.WALL))
+			generateappearance();
 	}
 
 	/**

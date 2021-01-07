@@ -23,6 +23,7 @@ import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonEntrance;
+import javelin.model.world.location.dungeon.feature.BranchPortal;
 import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
 import javelin.view.screen.InfoScreen;
@@ -52,7 +53,7 @@ public class WorldGenerator extends Thread{
 			Terrain.FOREST,Terrain.MOUNTAINS};
 	static final int REFRESH=100;
 	static final String PROGRESSHEADER="Building world, using %S thread(s)...";
-	static final String GENERATINGDUNGEONS="Generating dungeons: %s%%.";
+	static final String PROGRESS="%s: %s%%...";
 	static final int NTHREADS=Math.max(1,Preferences.maxthreads);
 	static final List<WorldGenerator> WORLDTHREADS=new ArrayList<>(NTHREADS);
 	static final boolean DEBUG=false;
@@ -211,13 +212,28 @@ public class WorldGenerator extends Thread{
 		}
 	}
 
-	static void generatedungeons(InfoScreen s){
-		s.print(String.format(GENERATINGDUNGEONS,0));
+	static void addbranches(Dungeon d,List<Dungeon> dungeons){
+		for(var f:d.floors){
+			var portals=f.features.getall(BranchPortal.class);
+			for(var p:portals){
+				dungeons.add(p.destination);
+				addbranches(p.destination,dungeons);
+			}
+		}
+	}
+
+	static boolean generatedungeons(String label,ProgressScreen s){
+		s.print(String.format(PROGRESS,label,0));
 		var dungeons=World.getactors().stream()
 				.filter(a->a instanceof DungeonEntrance)
-				.map(a->((DungeonEntrance)a).dungeon)
+				.map(a->((DungeonEntrance)a).dungeon).collect(Collectors.toList());
+		dungeons=new ArrayList<>(dungeons);
+		for(var d:new ArrayList<>(dungeons))
+			addbranches(d,dungeons);
+		dungeons=dungeons.stream().filter(d->d.floors.getFirst().features.isEmpty())
 				.sorted((a,b)->Integer.compare(a.floors.size(),b.floors.size()))
 				.collect(Collectors.toList());
+		if(dungeons.isEmpty()) return false;
 		var pool=Executors.newFixedThreadPool(NTHREADS);
 		var ndungeons=dungeons.size();
 		var tasks=new ArrayList<Future<?>>(ndungeons);
@@ -227,10 +243,12 @@ public class WorldGenerator extends Thread{
 			try{
 				tasks.get(i).get();
 				var progress=100.0*(i+1)/ndungeons;
-				s.print(String.format(GENERATINGDUNGEONS,Math.round(progress)));
+				s.print(String.format(PROGRESS,label,Math.round(progress)));
 			}catch(Exception e){
 				throw new RuntimeException(e);
 			}
+		s.fix();
+		return true;
 	}
 
 	static void startthread() throws ReflectiveOperationException{
@@ -252,6 +270,9 @@ public class WorldGenerator extends Thread{
 		var s=new ProgressScreen(header);
 		generateworld(s);
 		s.fix();
-		generatedungeons(s);
+		generatedungeons("Generating dungeons",s);
+		generatedungeons("Generating branches",s);
+		while(generatedungeons("Generating more branches",s))
+			continue;
 	}
 }

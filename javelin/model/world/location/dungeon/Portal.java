@@ -30,6 +30,7 @@ public class Portal extends DungeonEntrance{
 			name="Plane";
 			branches.addAll(new BranchTable(List.of(t)).rollaffixes());
 			entrances=RPG.randomize(2,1,Integer.MAX_VALUE);
+			branchchance=2;
 		}
 
 		@Override
@@ -86,10 +87,19 @@ public class Portal extends DungeonEntrance{
 		if(RPG.chancein(SPAWN)) remove();
 	}
 
+	/**
+	 * TODO have different DCs for knowing one or two affixes?
+	 *
+	 * @return <code>true</code> if the party has enough {@link Skill#KNOWLEDGE}
+	 *         to know where this portal leads to.
+	 */
+	static public boolean discover(int dc){
+		return Squad.active.getbest(Skill.KNOWLEDGE).taketen(Skill.KNOWLEDGE)>=dc;
+	}
+
 	@Override
 	public boolean interact(){
-		if(!discovered) discovered=Squad.active.getbest(Skill.KNOWLEDGE)
-				.taketen(Skill.KNOWLEDGE)>=10+dungeon.level;
+		if(!discovered) discovered=discover(10+dungeon.level);
 		return super.interact();
 	}
 

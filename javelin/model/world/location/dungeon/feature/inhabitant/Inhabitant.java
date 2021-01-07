@@ -72,7 +72,7 @@ public abstract class Inhabitant extends Feature{
 	 * candidate.
 	 *
 	 * @return An intelligent {@link Monster}, which is valid even if
-	 *         {@link #dungeon} is a {@link TempleFloor}. If it can't find one in
+	 *         {@link #destination} is a {@link TempleFloor}. If it can't find one in
 	 *         {@link DungeonFloor#encounters}, generates one instead.
 	 */
 	public Combatant select(DungeonFloor f){

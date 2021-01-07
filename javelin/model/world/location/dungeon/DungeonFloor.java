@@ -37,6 +37,7 @@ import javelin.model.item.key.door.Key;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
+import javelin.model.world.location.dungeon.feature.BranchPortal;
 import javelin.model.world.location.dungeon.feature.Campfire;
 import javelin.model.world.location.dungeon.feature.Decoration;
 import javelin.model.world.location.dungeon.feature.Feature;
@@ -205,8 +206,7 @@ public class DungeonFloor implements Serializable{
 	void generatedoors(){
 		for(int x=0;x<size;x++)
 			for(int y=0;y<size;y++)
-				if(map[x][y]==FloorTile.DOOR
-						&&gettable(DoorExists.class).rollboolean()){
+				if(map[x][y]==FloorTile.DOOR&&gettable(DoorExists.class).rollboolean()){
 					var d=Door.generate(this,new Point(x,y));
 					if(d!=null) d.place(this,d.getlocation());
 				}
@@ -254,6 +254,12 @@ public class DungeonFloor implements Serializable{
 		return d;
 	}
 
+	/** Generates {@link BranchPortal}s. */
+	protected void generatebranches(DungeonZoner z){
+		while(RPG.chancein(dungeon.branchchance))
+			new BranchPortal(this).place(this,z.getpoint());
+	}
+
 	/** Place {@link Features}s and defines {@link #squadlocation}. */
 	protected void populate(){
 		/*if placed too close to the edge, the carving in #createstairs() will make it look weird as the edge will look empty without walls */
@@ -271,6 +277,7 @@ public class DungeonFloor implements Serializable{
 			pool+=RewardCalculator.getgold(t.cr);
 		generatechests(ntreasure,pool,zoner,d);
 		generatefeatures(getfeaturequantity(nrooms,dungeon.ratiofeatures),zoner);
+		generatebranches(zoner);
 	}
 
 	void generatekeys(DungeonZoner zoner){
@@ -424,6 +431,14 @@ public class DungeonFloor implements Serializable{
 
 	/** Exit and destroy this dungeon. */
 	public void leave(){
+		var e=dungeon.exit;
+		if(e!=null){
+			var p=e.features.getall(BranchPortal.class).stream()
+					.filter(f->f.destination==dungeon).findAny().orElseThrow();
+			e.squadlocation=p.getlocation();
+			e.enter();
+			return;
+		}
 		WorldMove.abort=true;
 		JavelinApp.context=new WorldScreen(true);
 		BattleScreen.active=JavelinApp.context;

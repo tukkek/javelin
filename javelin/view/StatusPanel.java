@@ -10,9 +10,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import javelin.controller.action.Examine;
 import javelin.controller.collection.CountingSet;
-import javelin.controller.fight.Fight;
+import javelin.controller.content.action.Examine;
+import javelin.controller.content.fight.Fight;
 import javelin.model.item.Item;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;

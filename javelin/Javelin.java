@@ -20,11 +20,11 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
 import javelin.controller.collection.CountingSet;
+import javelin.controller.content.upgrade.classes.ClassLevelUpgrade;
 import javelin.controller.db.Preferences;
 import javelin.controller.db.StateManager;
 import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.db.reader.fields.Organization;
-import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.item.Item;
 import javelin.model.item.gear.Gear;
 import javelin.model.unit.Combatant;

@@ -1,7 +1,7 @@
 package javelin.view.mappanel.battle.action;
 
-import javelin.controller.action.ai.attack.AttackResolver;
-import javelin.controller.action.ai.attack.MeleeAttack;
+import javelin.controller.content.action.ai.attack.AttackResolver;
+import javelin.controller.content.action.ai.attack.MeleeAttack;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.view.mappanel.Tile;

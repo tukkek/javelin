@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.controller.Point;
-import javelin.controller.map.location.LocationMap;
-import javelin.controller.terrain.Terrain;
+import javelin.controller.content.map.location.LocationMap;
+import javelin.controller.content.terrain.Terrain;
 import javelin.model.state.Square;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Monster.MonsterType;

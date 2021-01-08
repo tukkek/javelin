@@ -3,8 +3,8 @@ package javelin.model.unit.abilities.spell.conjuration.teleportation;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.action.world.inventory.UseItems;
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.content.action.world.inventory.UseItems;
 import javelin.controller.exception.RepeatTurn;
 import javelin.model.item.Item;
 import javelin.model.item.consumable.Scroll;

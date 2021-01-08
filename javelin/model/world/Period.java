@@ -3,8 +3,8 @@ package javelin.model.world;
 import java.io.Serializable;
 import java.util.List;
 
-import javelin.controller.fight.Fight;
-import javelin.controller.scenario.Campaign;
+import javelin.controller.content.fight.Fight;
+import javelin.controller.content.scenario.Campaign;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.basic.Growth;

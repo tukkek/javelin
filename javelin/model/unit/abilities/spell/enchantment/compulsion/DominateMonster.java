@@ -3,9 +3,9 @@ package javelin.model.unit.abilities.spell.enchantment.compulsion;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.controller.action.Action;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.content.action.Action;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;

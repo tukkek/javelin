@@ -6,9 +6,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.content.kit.Kit;
+import javelin.controller.content.upgrade.Upgrade;
 import javelin.controller.generator.NpcGenerator;
-import javelin.controller.kit.Kit;
-import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.world.World;

@@ -3,7 +3,7 @@ package javelin.model.diplomacy.mandate;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.controller.terrain.Terrain;
+import javelin.controller.content.terrain.Terrain;
 import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;

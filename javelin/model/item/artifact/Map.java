@@ -3,7 +3,7 @@ package javelin.model.item.artifact;
 import java.util.ArrayList;
 
 import javelin.Javelin;
-import javelin.controller.terrain.Terrain;
+import javelin.controller.content.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;

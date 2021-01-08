@@ -2,7 +2,7 @@ package javelin.model.unit.abilities;
 
 import java.io.Serializable;
 
-import javelin.controller.upgrade.Upgrade;
+import javelin.controller.content.upgrade.Upgrade;
 import javelin.model.Cloneable;
 import javelin.model.unit.Combatant;
 

@@ -3,8 +3,8 @@ package javelin.model.world.location.dungeon.feature;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.action.world.WorldMove;
 import javelin.controller.ai.ChanceNode;
+import javelin.controller.content.action.world.WorldMove;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;

@@ -2,7 +2,7 @@ package javelin.model.world.location.dungeon.feature;
 
 import javelin.Javelin;
 import javelin.controller.Point;
-import javelin.controller.action.world.WorldMove;
+import javelin.controller.content.action.world.WorldMove;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
 

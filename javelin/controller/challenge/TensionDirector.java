@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javelin.controller.content.fight.Fight;
+import javelin.controller.content.terrain.Terrain;
 import javelin.controller.exception.GaveUp;
-import javelin.controller.fight.Fight;
 import javelin.controller.generator.encounter.EncounterGenerator;
-import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.haunt.Haunt;
 import javelin.old.RPG;

@@ -1,7 +1,7 @@
 package javelin.model.unit.skill;
 
-import javelin.controller.action.Movement;
-import javelin.controller.action.maneuver.DefensiveAttack;
+import javelin.controller.content.action.Movement;
+import javelin.controller.content.action.maneuver.DefensiveAttack;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.condition.Defending;
 import javelin.model.unit.feat.skill.Acrobatic;

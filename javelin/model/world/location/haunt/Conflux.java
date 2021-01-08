@@ -10,8 +10,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javelin.controller.Point;
-import javelin.controller.map.location.LocationMap;
-import javelin.controller.terrain.Terrain;
+import javelin.controller.content.map.location.LocationMap;
+import javelin.controller.content.terrain.Terrain;
 import javelin.controller.walker.Walker;
 import javelin.controller.walker.pathing.DirectPath;
 import javelin.model.state.Square;

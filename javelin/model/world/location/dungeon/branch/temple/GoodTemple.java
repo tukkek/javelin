@@ -2,8 +2,8 @@ package javelin.model.world.location.dungeon.branch.temple;
 
 import java.util.List;
 
-import javelin.controller.terrain.Plains;
-import javelin.controller.terrain.Terrain;
+import javelin.controller.content.terrain.Plains;
+import javelin.controller.content.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;

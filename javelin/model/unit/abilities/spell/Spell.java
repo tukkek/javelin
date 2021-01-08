@@ -9,12 +9,12 @@ import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.Point;
-import javelin.controller.action.Action;
-import javelin.controller.action.CastSpell;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.factor.CrFactor;
-import javelin.controller.kit.Kit;
-import javelin.controller.upgrade.Upgrade;
+import javelin.controller.content.action.Action;
+import javelin.controller.content.action.CastSpell;
+import javelin.controller.content.kit.Kit;
+import javelin.controller.content.upgrade.Upgrade;
 import javelin.model.Healing;
 import javelin.model.item.Item;
 import javelin.model.item.consumable.Scroll;

@@ -1,7 +1,7 @@
 package javelin.model.unit.skill;
 
-import javelin.controller.action.ActionCost;
 import javelin.controller.ai.BattleAi;
+import javelin.controller.content.action.ActionCost;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.condition.Condition;

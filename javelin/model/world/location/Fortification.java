@@ -5,10 +5,10 @@ import java.util.List;
 
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
-import javelin.controller.fight.RandomEncounter;
+import javelin.controller.content.fight.RandomEncounter;
+import javelin.controller.content.scenario.Scenario;
+import javelin.controller.content.terrain.Terrain;
 import javelin.controller.generator.encounter.EncounterGenerator;
-import javelin.controller.scenario.Scenario;
-import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Knowledge;

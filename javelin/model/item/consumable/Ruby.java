@@ -3,11 +3,11 @@ package javelin.model.item.consumable;
 import java.util.ArrayList;
 
 import javelin.Javelin;
-import javelin.controller.action.world.inventory.UseItems;
-import javelin.controller.fight.Fight;
+import javelin.controller.content.action.world.inventory.UseItems;
+import javelin.controller.content.fight.Fight;
+import javelin.controller.content.terrain.Terrain;
+import javelin.controller.content.wish.Wish.WishScreen;
 import javelin.controller.generator.encounter.EncounterGenerator;
-import javelin.controller.terrain.Terrain;
-import javelin.controller.wish.Wish.WishScreen;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;

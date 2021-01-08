@@ -1,6 +1,6 @@
 package javelin.controller.challenge.factor;
 
-import javelin.controller.upgrade.classes.ClassLevelUpgrade;
+import javelin.controller.content.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.Monster;
 
 /**

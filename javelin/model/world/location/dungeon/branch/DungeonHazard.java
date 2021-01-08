@@ -2,7 +2,7 @@ package javelin.model.world.location.dungeon.branch;
 
 import java.io.Serializable;
 
-import javelin.controller.fight.RandomDungeonEncounter;
+import javelin.controller.content.fight.RandomDungeonEncounter;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.view.screen.DungeonScreen;
 

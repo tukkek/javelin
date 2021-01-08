@@ -1,6 +1,6 @@
 package javelin.model.unit.condition;
 
-import javelin.controller.fight.Fight;
+import javelin.controller.content.fight.Fight;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;

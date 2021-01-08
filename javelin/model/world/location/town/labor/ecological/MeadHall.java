@@ -1,6 +1,6 @@
 package javelin.model.world.location.town.labor.ecological;
 
-import javelin.controller.kit.Barbarian;
+import javelin.controller.content.kit.Barbarian;
 import javelin.model.world.location.Academy;
 import javelin.model.world.location.Guild;
 import javelin.model.world.location.town.Rank;

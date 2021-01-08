@@ -3,7 +3,7 @@ package javelin.controller.walker.state;
 import java.util.LinkedList;
 
 import javelin.controller.Point;
-import javelin.controller.action.Charge;
+import javelin.controller.content.action.Charge;
 import javelin.model.state.BattleState;
 import javelin.model.state.MeldCrystal;
 

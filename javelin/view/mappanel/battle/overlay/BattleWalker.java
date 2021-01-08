@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.util.LinkedList;
 
 import javelin.controller.Point;
-import javelin.controller.action.Movement;
-import javelin.controller.fight.Fight;
+import javelin.controller.content.action.Movement;
+import javelin.controller.content.fight.Fight;
 import javelin.controller.walker.overlay.OverlayStep;
 import javelin.controller.walker.overlay.OverlayWalker;
 import javelin.model.state.BattleState;

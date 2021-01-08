@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.Point;
-import javelin.controller.terrain.Terrain;
+import javelin.controller.content.terrain.Terrain;
 import javelin.model.transport.Airship;
 import javelin.model.transport.FlyingNimbus;
 import javelin.model.transport.Transport;

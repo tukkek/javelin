@@ -3,7 +3,7 @@ package javelin.model.unit.condition;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import javelin.controller.fight.Fight;
+import javelin.controller.content.fight.Fight;
 import javelin.model.Cloneable;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;

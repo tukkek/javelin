@@ -5,7 +5,7 @@ package javelin.controller.ai;
 
 import java.util.List;
 
-import javelin.controller.action.Action;
+import javelin.controller.content.action.Action;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 

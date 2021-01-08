@@ -4,8 +4,8 @@ import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.Weather;
-import javelin.controller.map.DndMap;
-import javelin.controller.map.Map;
+import javelin.controller.content.map.DndMap;
+import javelin.controller.content.map.Map;
 import javelin.model.state.Square;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonImages;

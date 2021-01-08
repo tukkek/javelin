@@ -8,8 +8,8 @@ import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
 import javelin.controller.Point;
-import javelin.controller.fight.Fight;
-import javelin.controller.map.Map;
+import javelin.controller.content.fight.Fight;
+import javelin.controller.content.map.Map;
 import javelin.model.state.MeldCrystal;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;

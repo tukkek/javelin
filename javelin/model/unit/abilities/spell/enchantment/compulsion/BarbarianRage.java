@@ -3,7 +3,7 @@ package javelin.model.unit.abilities.spell.enchantment.compulsion;
 import java.util.List;
 
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.controller.kit.Barbarian;
+import javelin.controller.content.kit.Barbarian;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;

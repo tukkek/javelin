@@ -6,13 +6,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javelin.controller.fight.Fight;
-import javelin.controller.fight.RandomDungeonEncounter;
-import javelin.controller.fight.mutator.Mutator;
+import javelin.controller.content.fight.Fight;
+import javelin.controller.content.fight.RandomDungeonEncounter;
+import javelin.controller.content.fight.mutator.Mutator;
+import javelin.controller.content.template.Template;
+import javelin.controller.content.terrain.Terrain;
 import javelin.controller.generator.dungeon.template.FloorTile;
 import javelin.controller.table.dungeon.feature.CommonFeatureTable;
-import javelin.controller.template.Template;
-import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.world.location.dungeon.Dungeon;

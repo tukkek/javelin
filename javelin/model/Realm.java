@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.io.Serializable;
 import java.util.List;
 
-import javelin.controller.terrain.Terrain;
-import javelin.controller.terrain.Underground;
+import javelin.controller.content.terrain.Terrain;
+import javelin.controller.content.terrain.Underground;
 import javelin.model.item.artifact.Amulet;
 import javelin.model.item.artifact.Ankh;
 import javelin.model.item.artifact.Artifact;

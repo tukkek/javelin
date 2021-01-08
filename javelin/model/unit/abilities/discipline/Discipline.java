@@ -2,12 +2,12 @@ package javelin.model.unit.abilities.discipline;
 
 import java.util.HashMap;
 
-import javelin.controller.action.maneuver.ExecuteManeuver;
+import javelin.controller.content.action.maneuver.ExecuteManeuver;
+import javelin.controller.content.kit.Kit;
+import javelin.controller.content.upgrade.FeatUpgrade;
+import javelin.controller.content.upgrade.ability.RaiseAbility;
+import javelin.controller.content.upgrade.classes.Warrior;
 import javelin.controller.generator.feature.LocationGenerator;
-import javelin.controller.kit.Kit;
-import javelin.controller.upgrade.FeatUpgrade;
-import javelin.controller.upgrade.ability.RaiseAbility;
-import javelin.controller.upgrade.classes.Warrior;
 import javelin.model.unit.feat.MartialTraining;
 import javelin.model.unit.feat.attack.expertise.CombatExpertise;
 import javelin.model.unit.skill.Knowledge;

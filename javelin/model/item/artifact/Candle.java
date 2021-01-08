@@ -1,7 +1,7 @@
 package javelin.model.item.artifact;
 
 import javelin.Javelin;
-import javelin.controller.action.target.Target;
+import javelin.controller.content.action.target.Target;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 

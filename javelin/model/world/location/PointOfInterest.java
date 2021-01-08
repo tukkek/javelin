@@ -4,11 +4,11 @@ import java.awt.Image;
 import java.util.List;
 
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.controller.event.EventCard;
-import javelin.controller.event.wild.WildEvent;
-import javelin.controller.event.wild.WildEvents;
-import javelin.controller.fight.Fight;
-import javelin.controller.terrain.hazard.Hazard;
+import javelin.controller.content.event.EventCard;
+import javelin.controller.content.event.wild.WildEvent;
+import javelin.controller.content.event.wild.WildEvents;
+import javelin.controller.content.fight.Fight;
+import javelin.controller.content.terrain.hazard.Hazard;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;

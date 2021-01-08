@@ -11,10 +11,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.controller.ContentSummary;
 import javelin.controller.Point;
 import javelin.controller.challenge.RewardCalculator;
-import javelin.controller.terrain.Terrain;
+import javelin.controller.content.ContentSummary;
+import javelin.controller.content.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.unit.Combatant;

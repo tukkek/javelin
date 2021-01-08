@@ -1,7 +1,7 @@
 package javelin.model.world.location.dungeon.feature.trap;
 
 import javelin.Javelin;
-import javelin.controller.action.world.WorldMove;
+import javelin.controller.content.action.world.WorldMove;
 import javelin.controller.table.dungeon.feature.TrapVisibilityTable;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;

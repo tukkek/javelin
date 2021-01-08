@@ -3,8 +3,8 @@ package javelin.model.world.location.town.labor.ecological;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import javelin.controller.kit.Druid;
-import javelin.controller.upgrade.Upgrade;
+import javelin.controller.content.kit.Druid;
+import javelin.controller.content.upgrade.Upgrade;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Monster.MonsterType;
 import javelin.model.unit.abilities.spell.conjuration.Summon;

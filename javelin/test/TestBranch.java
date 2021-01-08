@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javelin.controller.ContentSummary;
+import javelin.controller.content.ContentSummary;
+import javelin.controller.content.template.Template;
+import javelin.controller.content.terrain.Terrain;
 import javelin.controller.generator.dungeon.template.FloorTile;
 import javelin.controller.table.dungeon.BranchTable;
-import javelin.controller.template.Template;
-import javelin.controller.terrain.Terrain;
 import javelin.model.world.location.dungeon.branch.Branch;
 
 /**

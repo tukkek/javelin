@@ -11,10 +11,10 @@ import java.util.List;
 import java.util.Set;
 
 import javelin.controller.Point;
+import javelin.controller.content.scenario.Scenario;
+import javelin.controller.content.terrain.Terrain;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.generator.WorldGenerator;
-import javelin.controller.scenario.Scenario;
-import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.Tier;
 import javelin.model.world.Actor;

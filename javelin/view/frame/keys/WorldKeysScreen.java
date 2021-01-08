@@ -2,9 +2,9 @@ package javelin.view.frame.keys;
 
 import java.util.ArrayList;
 
-import javelin.controller.action.ActionDescription;
-import javelin.controller.action.world.WorldAction;
-import javelin.controller.action.world.meta.help.Guide;
+import javelin.controller.content.action.ActionDescription;
+import javelin.controller.content.action.world.WorldAction;
+import javelin.controller.content.action.world.meta.help.Guide;
 import javelin.view.KeysScreen;
 
 /**

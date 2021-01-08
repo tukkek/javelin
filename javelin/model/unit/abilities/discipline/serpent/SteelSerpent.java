@@ -1,6 +1,6 @@
 package javelin.model.unit.abilities.discipline.serpent;
 
-import javelin.controller.upgrade.ability.RaiseWisdom;
+import javelin.controller.content.upgrade.ability.RaiseWisdom;
 import javelin.model.unit.abilities.discipline.Discipline;
 import javelin.model.unit.abilities.discipline.Maneuver;
 import javelin.model.unit.skill.Skill;

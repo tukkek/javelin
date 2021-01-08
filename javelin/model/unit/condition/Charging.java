@@ -1,6 +1,6 @@
 package javelin.model.unit.condition;
 
-import javelin.controller.action.Charge;
+import javelin.controller.content.action.Charge;
 import javelin.model.unit.Combatant;
 
 /**

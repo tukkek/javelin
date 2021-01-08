@@ -3,7 +3,7 @@ package javelin.model.item.artifact;
 import java.util.ArrayList;
 
 import javelin.Javelin;
-import javelin.controller.fight.Fight;
+import javelin.controller.content.fight.Fight;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.old.RPG;

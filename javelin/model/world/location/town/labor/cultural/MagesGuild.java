@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.stream.Collectors;
 
-import javelin.controller.kit.Kit;
-import javelin.controller.kit.wizard.Wizard;
-import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.classes.Aristocrat;
+import javelin.controller.content.kit.Kit;
+import javelin.controller.content.kit.wizard.Wizard;
+import javelin.controller.content.upgrade.Upgrade;
+import javelin.controller.content.upgrade.classes.Aristocrat;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.location.Academy;
 import javelin.model.world.location.town.Rank;

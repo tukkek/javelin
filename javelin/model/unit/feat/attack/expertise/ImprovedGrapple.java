@@ -1,6 +1,6 @@
 package javelin.model.unit.feat.attack.expertise;
 
-import javelin.controller.action.maneuver.ExpertiseAction;
+import javelin.controller.content.action.maneuver.ExpertiseAction;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.discipline.expertise.CombatExpertiseManeuver;
 import javelin.model.unit.abilities.discipline.expertise.GrappleManeuver;

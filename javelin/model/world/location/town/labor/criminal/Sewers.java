@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.content.terrain.Terrain;
 import javelin.controller.exception.battle.StartBattle;
-import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.Fortification;
 import javelin.model.world.location.Location;

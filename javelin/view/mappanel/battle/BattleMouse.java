@@ -5,8 +5,8 @@ import java.awt.event.MouseWheelEvent;
 
 import javelin.Javelin;
 import javelin.controller.Point;
-import javelin.controller.action.Examine;
-import javelin.controller.fight.Fight;
+import javelin.controller.content.action.Examine;
+import javelin.controller.content.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.old.Interface;

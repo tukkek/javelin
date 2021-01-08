@@ -3,8 +3,8 @@ package javelin.model.world.location.haunt;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javelin.controller.map.location.LocationMap;
-import javelin.controller.terrain.Terrain;
+import javelin.controller.content.map.location.LocationMap;
+import javelin.controller.content.terrain.Terrain;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Monster.MonsterType;
 import javelin.view.Images;

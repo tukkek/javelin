@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 
 import javelin.controller.Point;
-import javelin.controller.terrain.Terrain;
+import javelin.controller.content.terrain.Terrain;
 import javelin.controller.walker.overlay.OverlayStep;
 import javelin.controller.walker.overlay.OverlayWalker;
 import javelin.model.unit.Squad;

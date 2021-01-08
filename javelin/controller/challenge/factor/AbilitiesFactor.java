@@ -3,7 +3,7 @@
  */
 package javelin.controller.challenge.factor;
 
-import javelin.controller.quality.resistance.MindImmunity;
+import javelin.controller.content.quality.resistance.MindImmunity;
 import javelin.model.unit.Monster;
 
 /**

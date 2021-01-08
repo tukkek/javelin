@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.content.fight.Fight;
+import javelin.controller.content.terrain.Terrain;
+import javelin.controller.content.terrain.Water;
 import javelin.controller.db.EncounterIndex;
 import javelin.controller.db.reader.fields.Organization;
-import javelin.controller.fight.Fight;
-import javelin.controller.terrain.Terrain;
-import javelin.controller.terrain.Water;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;

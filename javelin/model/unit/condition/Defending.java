@@ -1,6 +1,6 @@
 package javelin.model.unit.condition;
 
-import javelin.controller.action.Defend;
+import javelin.controller.content.action.Defend;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.skill.Skill;
 

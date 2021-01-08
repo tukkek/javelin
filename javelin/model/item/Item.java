@@ -10,9 +10,9 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.controller.action.UseItem;
-import javelin.controller.action.world.inventory.EquipGear;
-import javelin.controller.action.world.inventory.UseItems;
+import javelin.controller.content.action.UseItem;
+import javelin.controller.content.action.world.inventory.EquipGear;
+import javelin.controller.content.action.world.inventory.UseItems;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.model.Healing;
 import javelin.model.item.artifact.Artifact;

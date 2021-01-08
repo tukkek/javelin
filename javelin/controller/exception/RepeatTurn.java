@@ -1,6 +1,6 @@
 package javelin.controller.exception;
 
-import javelin.controller.action.Action;
+import javelin.controller.content.action.Action;
 import javelin.model.unit.Combatant;
 
 /**

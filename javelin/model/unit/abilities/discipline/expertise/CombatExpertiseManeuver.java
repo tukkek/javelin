@@ -2,9 +2,9 @@ package javelin.model.unit.abilities.discipline.expertise;
 
 import java.util.List;
 
-import javelin.controller.action.Action;
-import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ChanceNode;
+import javelin.controller.content.action.Action;
+import javelin.controller.content.action.ai.AiAction;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.discipline.Discipline;

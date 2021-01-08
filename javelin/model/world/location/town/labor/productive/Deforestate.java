@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import javelin.controller.Point;
-import javelin.controller.terrain.Terrain;
+import javelin.controller.content.terrain.Terrain;
 import javelin.model.world.World;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;

@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Stack;
 
 import javelin.Javelin;
-import javelin.controller.action.Action;
-import javelin.controller.action.ActionMapping;
-import javelin.controller.action.ai.AiAction;
-import javelin.controller.action.ai.Flee;
+import javelin.controller.content.action.Action;
+import javelin.controller.content.action.ActionMapping;
+import javelin.controller.content.action.ai.AiAction;
+import javelin.controller.content.action.ai.Flee;
 import javelin.controller.exception.StopThinking;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;

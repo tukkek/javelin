@@ -1,7 +1,7 @@
 package javelin.model.world.location.dungeon.branch.temple;
 
-import javelin.controller.terrain.Forest;
-import javelin.controller.terrain.Terrain;
+import javelin.controller.content.terrain.Forest;
+import javelin.controller.content.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.world.location.dungeon.branch.Branch;
 import javelin.model.world.location.dungeon.feature.FruitTree;

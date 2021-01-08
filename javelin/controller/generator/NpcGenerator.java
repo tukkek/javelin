@@ -6,13 +6,13 @@ import java.util.TreeSet;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.content.kit.Kit;
+import javelin.controller.content.terrain.Terrain;
+import javelin.controller.content.upgrade.Upgrade;
+import javelin.controller.content.upgrade.classes.Commoner;
 import javelin.controller.db.EncounterIndex;
 import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.generator.encounter.Encounter;
-import javelin.controller.kit.Kit;
-import javelin.controller.terrain.Terrain;
-import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.classes.Commoner;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.old.RPG;

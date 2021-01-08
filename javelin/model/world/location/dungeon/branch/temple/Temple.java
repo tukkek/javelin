@@ -5,10 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.content.template.KitTemplate;
+import javelin.controller.content.terrain.Terrain;
+import javelin.controller.content.wish.Win;
 import javelin.controller.generator.feature.LocationGenerator;
-import javelin.controller.template.KitTemplate;
-import javelin.controller.terrain.Terrain;
-import javelin.controller.wish.Win;
 import javelin.model.Realm;
 import javelin.model.item.Tier;
 import javelin.model.item.artifact.Artifact;

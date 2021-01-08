@@ -3,9 +3,9 @@ package javelin.model.unit.feat;
 import java.io.Serializable;
 
 import javelin.controller.challenge.factor.FeatsFactor;
+import javelin.controller.content.upgrade.FeatUpgrade;
+import javelin.controller.content.upgrade.Upgrade;
 import javelin.controller.db.reader.MonsterReader;
-import javelin.controller.upgrade.FeatUpgrade;
-import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.Spell;

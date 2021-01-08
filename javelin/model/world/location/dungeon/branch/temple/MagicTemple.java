@@ -1,8 +1,8 @@
 package javelin.model.world.location.dungeon.branch.temple;
 
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.controller.terrain.Hill;
-import javelin.controller.terrain.Terrain;
+import javelin.controller.content.terrain.Hill;
+import javelin.controller.content.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.world.location.dungeon.Portal;
 import javelin.model.world.location.dungeon.branch.Branch;

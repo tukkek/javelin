@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.ContentSummary;
+import javelin.controller.content.ContentSummary;
 import javelin.model.diplomacy.mandate.influence.ImproveRelationship;
 import javelin.model.diplomacy.mandate.influence.Insult;
 import javelin.model.diplomacy.mandate.meta.Redraw;

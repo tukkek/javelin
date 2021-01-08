@@ -2,7 +2,7 @@ package javelin.model.world.location.town.labor.criminal;
 
 import java.util.HashSet;
 
-import javelin.controller.kit.Rogue;
+import javelin.controller.content.kit.Rogue;
 import javelin.model.world.location.Academy;
 import javelin.model.world.location.Guild;
 import javelin.model.world.location.town.Rank;

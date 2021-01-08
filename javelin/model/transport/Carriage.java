@@ -1,6 +1,6 @@
 package javelin.model.transport;
 
-import javelin.controller.terrain.hazard.Break;
+import javelin.controller.content.terrain.hazard.Break;
 
 /**
  * Pushed by horse.

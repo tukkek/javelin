@@ -1,7 +1,7 @@
 package javelin.model.unit.abilities.discipline.expertise;
 
-import javelin.controller.action.Action;
-import javelin.controller.action.maneuver.Grapple;
+import javelin.controller.content.action.Action;
+import javelin.controller.content.action.maneuver.Grapple;
 
 public class GrappleManeuver extends CombatExpertiseManeuver{
 

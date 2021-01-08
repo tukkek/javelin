@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Debug;
-import javelin.controller.action.world.meta.help.Guide;
+import javelin.controller.content.action.world.meta.help.Guide;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.view.screen.Option;

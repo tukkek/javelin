@@ -7,10 +7,10 @@ import java.util.stream.Stream;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.content.kit.Kit;
+import javelin.controller.content.kit.wizard.Conjurer;
+import javelin.controller.content.upgrade.Upgrade;
 import javelin.controller.db.reader.MonsterReader;
-import javelin.controller.kit.Kit;
-import javelin.controller.kit.wizard.Conjurer;
-import javelin.controller.upgrade.Upgrade;
 import javelin.model.state.BattleState;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;

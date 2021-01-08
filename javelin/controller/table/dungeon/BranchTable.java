@@ -8,10 +8,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javelin.controller.content.terrain.Desert;
+import javelin.controller.content.terrain.Forest;
+import javelin.controller.content.terrain.Terrain;
 import javelin.controller.table.Table;
-import javelin.controller.terrain.Desert;
-import javelin.controller.terrain.Forest;
-import javelin.controller.terrain.Terrain;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;

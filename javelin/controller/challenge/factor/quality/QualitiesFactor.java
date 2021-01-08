@@ -3,7 +3,7 @@ package javelin.controller.challenge.factor.quality;
 import java.util.HashSet;
 
 import javelin.controller.challenge.factor.CrFactor;
-import javelin.controller.quality.Quality;
+import javelin.controller.content.quality.Quality;
 import javelin.model.unit.Monster;
 
 /**

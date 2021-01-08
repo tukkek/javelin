@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 import javax.swing.JScrollPane;
 
-import javelin.controller.action.ActionDescription;
+import javelin.controller.content.action.ActionDescription;
 import javelin.controller.db.Preferences;
 import javelin.controller.db.StateManager;
 import javelin.view.frame.Frame;

@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.controller.action.world.WorldMove;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
-import javelin.controller.kit.Kit;
-import javelin.controller.upgrade.Upgrade;
+import javelin.controller.content.action.world.WorldMove;
+import javelin.controller.content.kit.Kit;
+import javelin.controller.content.upgrade.Upgrade;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;

@@ -1,6 +1,6 @@
 package javelin.view.mappanel.battle.action;
 
-import javelin.controller.action.Fire;
+import javelin.controller.content.action.Fire;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
 import javelin.model.unit.Combatant;

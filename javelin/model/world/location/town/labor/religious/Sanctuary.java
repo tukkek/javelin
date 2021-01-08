@@ -4,10 +4,10 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.controller.kit.Cleric;
-import javelin.controller.kit.Paladin;
-import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.classes.ClassLevelUpgrade;
+import javelin.controller.content.kit.Cleric;
+import javelin.controller.content.kit.Paladin;
+import javelin.controller.content.upgrade.Upgrade;
+import javelin.controller.content.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.world.location.Academy;
 import javelin.model.world.location.Guild;
 import javelin.model.world.location.Location;

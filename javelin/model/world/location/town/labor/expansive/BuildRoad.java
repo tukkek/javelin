@@ -7,7 +7,7 @@ import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.comparator.DistanceComparator;
-import javelin.controller.terrain.Terrain;
+import javelin.controller.content.terrain.Terrain;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;

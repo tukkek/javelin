@@ -3,10 +3,10 @@ package javelin.model.world.location.dungeon.branch.temple;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.fight.Fight;
-import javelin.controller.fight.mutator.Mutator;
-import javelin.controller.terrain.Marsh;
-import javelin.controller.terrain.Terrain;
+import javelin.controller.content.fight.Fight;
+import javelin.controller.content.fight.mutator.Mutator;
+import javelin.controller.content.terrain.Marsh;
+import javelin.controller.content.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.artifact.Skull;
 import javelin.model.unit.Combatant;

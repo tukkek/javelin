@@ -12,14 +12,14 @@ import java.util.stream.Collectors;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import javelin.controller.ContentSummary;
 import javelin.controller.TextReader;
 import javelin.controller.ai.ThreadManager;
+import javelin.controller.content.ContentSummary;
+import javelin.controller.content.fight.Fight;
 import javelin.controller.db.Preferences;
 import javelin.controller.db.StateManager;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.exception.battle.StartBattle;
-import javelin.controller.fight.Fight;
 import javelin.controller.generator.WorldGenerator;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;

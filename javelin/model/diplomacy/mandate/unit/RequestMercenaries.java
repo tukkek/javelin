@@ -1,8 +1,8 @@
 package javelin.model.diplomacy.mandate.unit;
 
+import javelin.controller.content.terrain.Terrain;
 import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.generator.encounter.Encounter;
-import javelin.controller.terrain.Terrain;
 import javelin.model.diplomacy.mandate.Mandate;
 import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.world.location.town.District;

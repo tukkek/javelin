@@ -3,7 +3,7 @@ package javelin.controller;
 import java.util.ArrayList;
 
 import javelin.Debug;
-import javelin.controller.fight.Fight;
+import javelin.controller.content.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.state.Square;
 import javelin.model.world.Season;

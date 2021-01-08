@@ -1,6 +1,6 @@
 package javelin.model.world.location.town.labor.military;
 
-import javelin.controller.kit.Monk;
+import javelin.controller.content.kit.Monk;
 import javelin.model.world.location.Academy;
 import javelin.model.world.location.Guild;
 import javelin.model.world.location.town.Rank;

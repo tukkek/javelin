@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.content.kit.Barbarian;
+import javelin.controller.content.kit.Fighter;
+import javelin.controller.content.kit.Kit;
+import javelin.controller.content.kit.Rogue;
+import javelin.controller.content.terrain.Terrain;
 import javelin.controller.exception.battle.StartBattle;
-import javelin.controller.kit.Barbarian;
-import javelin.controller.kit.Fighter;
-import javelin.controller.kit.Kit;
-import javelin.controller.kit.Rogue;
-import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.world.Incursion;

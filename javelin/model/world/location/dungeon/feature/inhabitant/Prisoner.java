@@ -2,8 +2,8 @@ package javelin.model.world.location.dungeon.feature.inhabitant;
 
 import javelin.Javelin;
 import javelin.controller.challenge.Difficulty;
+import javelin.controller.content.fight.RandomDungeonEncounter;
 import javelin.controller.exception.battle.StartBattle;
-import javelin.controller.fight.RandomDungeonEncounter;
 import javelin.model.item.key.door.MasterKey;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;

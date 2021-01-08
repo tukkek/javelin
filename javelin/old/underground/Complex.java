@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import javelin.controller.Point;
-import javelin.controller.map.DndMap;
-import javelin.controller.map.Map;
+import javelin.controller.content.map.DndMap;
+import javelin.controller.content.map.Map;
 import javelin.old.RPG;
 import javelin.view.Images;
 

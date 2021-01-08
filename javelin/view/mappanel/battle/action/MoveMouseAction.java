@@ -3,7 +3,7 @@ package javelin.view.mappanel.battle.action;
 import javelin.Javelin;
 import javelin.Javelin.Delay;
 import javelin.controller.Point;
-import javelin.controller.fight.Fight;
+import javelin.controller.content.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.state.MeldCrystal;
 import javelin.model.unit.Combatant;

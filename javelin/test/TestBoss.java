@@ -6,9 +6,9 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
+import javelin.controller.content.fight.mutator.Boss;
+import javelin.controller.content.terrain.Terrain;
 import javelin.controller.exception.GaveUp;
-import javelin.controller.fight.mutator.Boss;
-import javelin.controller.terrain.Terrain;
 
 /** @see Boss */
 public class TestBoss{

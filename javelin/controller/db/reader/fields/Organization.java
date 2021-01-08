@@ -7,12 +7,12 @@ import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.content.terrain.Terrain;
 import javelin.controller.db.EncounterIndex;
 import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.generator.NpcGenerator;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.generator.encounter.EncounterPossibilities;
-import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 

@@ -2,7 +2,7 @@ package javelin.model.world.location.town.labor.cultural;
 
 import java.util.HashSet;
 
-import javelin.controller.kit.Bard;
+import javelin.controller.content.kit.Bard;
 import javelin.model.world.location.Academy;
 import javelin.model.world.location.Guild;
 import javelin.model.world.location.town.Rank;

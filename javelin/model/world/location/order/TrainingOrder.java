@@ -2,7 +2,7 @@ package javelin.model.world.location.order;
 
 import java.util.ArrayList;
 
-import javelin.controller.upgrade.Upgrade;
+import javelin.controller.content.upgrade.Upgrade;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;

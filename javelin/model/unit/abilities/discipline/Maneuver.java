@@ -3,10 +3,10 @@ package javelin.model.unit.abilities.discipline;
 import java.io.Serializable;
 import java.util.List;
 
-import javelin.controller.action.Action;
-import javelin.controller.action.ai.AiAction;
-import javelin.controller.action.maneuver.ExecuteManeuver;
 import javelin.controller.ai.ChanceNode;
+import javelin.controller.content.action.Action;
+import javelin.controller.content.action.ai.AiAction;
+import javelin.controller.content.action.maneuver.ExecuteManeuver;
 import javelin.model.Cloneable;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;

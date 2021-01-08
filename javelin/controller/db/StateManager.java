@@ -16,11 +16,11 @@ import javax.swing.JOptionPane;
 
 import javelin.Javelin;
 import javelin.controller.Weather;
-import javelin.controller.action.world.meta.OpenJournal;
-import javelin.controller.event.EventDealer;
-import javelin.controller.event.urban.UrbanEvents;
-import javelin.controller.event.wild.WildEvents;
-import javelin.controller.wish.Ressurect;
+import javelin.controller.content.action.world.meta.OpenJournal;
+import javelin.controller.content.event.EventDealer;
+import javelin.controller.content.event.urban.UrbanEvents;
+import javelin.controller.content.event.wild.WildEvents;
+import javelin.controller.content.wish.Ressurect;
 import javelin.model.Miniatures;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;

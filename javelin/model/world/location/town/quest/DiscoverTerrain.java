@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import javelin.controller.Point;
-import javelin.controller.terrain.Terrain;
+import javelin.controller.content.terrain.Terrain;
 import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Trait;

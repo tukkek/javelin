@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.TreeMap;
 
-import javelin.controller.action.ai.AiAction;
+import javelin.controller.content.action.ai.AiAction;
 import javelin.controller.exception.StopThinking;
 import javelin.model.state.BattleState;
 import javelin.old.RPG;

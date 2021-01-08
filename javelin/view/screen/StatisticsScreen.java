@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.action.ActionCost;
-import javelin.controller.fight.Fight;
-import javelin.controller.quality.Quality;
-import javelin.controller.upgrade.classes.ClassLevelUpgrade;
+import javelin.controller.content.action.ActionCost;
+import javelin.controller.content.fight.Fight;
+import javelin.controller.content.quality.Quality;
+import javelin.controller.content.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Size;

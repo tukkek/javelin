@@ -2,10 +2,10 @@ package javelin.view.frame.keys;
 
 import java.util.ArrayList;
 
-import javelin.controller.action.Action;
-import javelin.controller.action.ActionAdapter;
-import javelin.controller.action.ActionDescription;
-import javelin.controller.action.ActionMapping;
+import javelin.controller.content.action.Action;
+import javelin.controller.content.action.ActionAdapter;
+import javelin.controller.content.action.ActionDescription;
+import javelin.controller.content.action.ActionMapping;
 import javelin.view.KeysScreen;
 
 /**

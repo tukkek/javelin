@@ -3,7 +3,7 @@ package javelin.view.screen.upgrading;
 import java.util.ArrayList;
 
 import javelin.Javelin;
-import javelin.controller.upgrade.Upgrade;
+import javelin.controller.content.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.Academy;

@@ -4,10 +4,10 @@ import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.Weather;
-import javelin.controller.fight.Fight;
-import javelin.controller.fight.mutator.Mutator;
-import javelin.controller.terrain.Terrain;
-import javelin.controller.terrain.Water;
+import javelin.controller.content.fight.Fight;
+import javelin.controller.content.fight.mutator.Mutator;
+import javelin.controller.content.terrain.Terrain;
+import javelin.controller.content.terrain.Water;
 import javelin.model.Realm;
 import javelin.model.world.Actor;
 import javelin.model.world.World;

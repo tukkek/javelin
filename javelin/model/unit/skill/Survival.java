@@ -1,6 +1,6 @@
 package javelin.model.unit.skill;
 
-import javelin.controller.terrain.Terrain;
+import javelin.controller.content.terrain.Terrain;
 
 /**
  * A skill measuring the ability to have the {@link Terrain} around you help -

@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import javelin.controller.content.upgrade.Upgrade;
 import javelin.controller.db.reader.MonsterReader;
-import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.feat.Feat;

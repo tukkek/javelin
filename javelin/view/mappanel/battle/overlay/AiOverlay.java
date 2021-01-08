@@ -4,7 +4,7 @@ import java.awt.Image;
 import java.util.Collection;
 
 import javelin.controller.Point;
-import javelin.controller.action.ai.AiAction;
+import javelin.controller.content.action.ai.AiAction;
 import javelin.model.unit.Combatant;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.overlay.Overlay;

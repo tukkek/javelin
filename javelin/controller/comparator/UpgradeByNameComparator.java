@@ -2,7 +2,7 @@ package javelin.controller.comparator;
 
 import java.util.Comparator;
 
-import javelin.controller.upgrade.Upgrade;
+import javelin.controller.content.upgrade.Upgrade;
 
 public class UpgradeByNameComparator implements Comparator<Upgrade>{
 	public static final Comparator<Upgrade> INSTANCE=new UpgradeByNameComparator();

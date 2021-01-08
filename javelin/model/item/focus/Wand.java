@@ -4,7 +4,7 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
 import javelin.Javelin;
-import javelin.controller.action.CastSpell;
+import javelin.controller.content.action.CastSpell;
 import javelin.model.item.Item;
 import javelin.model.item.Recharger;
 import javelin.model.unit.Combatant;

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.action.ActionCost;
 import javelin.controller.ai.ChanceNode;
+import javelin.controller.content.action.ActionCost;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.old.messagepanel.MessagePanel;

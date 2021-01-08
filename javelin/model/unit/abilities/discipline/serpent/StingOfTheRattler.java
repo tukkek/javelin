@@ -1,6 +1,6 @@
 package javelin.model.unit.abilities.discipline.serpent;
 
-import javelin.controller.action.ActionCost;
+import javelin.controller.content.action.ActionCost;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.discipline.Strike;

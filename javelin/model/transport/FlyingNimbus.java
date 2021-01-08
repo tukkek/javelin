@@ -1,7 +1,7 @@
 package javelin.model.transport;
 
-import javelin.controller.map.terrain.water.DeepWaters;
-import javelin.controller.terrain.Terrain;
+import javelin.controller.content.map.terrain.water.DeepWaters;
+import javelin.controller.content.terrain.Terrain;
 import javelin.model.item.artifact.Flute;
 import javelin.model.unit.Squad;
 import javelin.model.world.Period;

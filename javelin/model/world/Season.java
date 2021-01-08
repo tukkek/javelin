@@ -2,7 +2,7 @@ package javelin.model.world;
 
 import javelin.Javelin;
 import javelin.controller.Weather;
-import javelin.controller.terrain.Terrain;
+import javelin.controller.content.terrain.Terrain;
 import javelin.model.unit.Squad;
 import javelin.old.RPG;
 

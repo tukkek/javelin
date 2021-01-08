@@ -4,7 +4,7 @@ import java.awt.event.MouseEvent;
 
 import javelin.Javelin;
 import javelin.controller.Point;
-import javelin.controller.action.world.WorldMove;
+import javelin.controller.content.action.world.WorldMove;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;

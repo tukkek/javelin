@@ -6,7 +6,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.Weather;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.controller.terrain.Terrain;
+import javelin.controller.content.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
 

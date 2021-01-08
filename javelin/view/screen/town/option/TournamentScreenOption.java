@@ -5,7 +5,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
-import javelin.controller.fight.tournament.Exhibition;
+import javelin.controller.content.fight.tournament.Exhibition;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.Option;

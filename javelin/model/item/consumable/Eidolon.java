@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.ContentSummary;
-import javelin.controller.fight.Fight;
+import javelin.controller.content.ContentSummary;
+import javelin.controller.content.fight.Fight;
 import javelin.model.item.Item;
 import javelin.model.item.Recharger;
 import javelin.model.unit.Combatant;

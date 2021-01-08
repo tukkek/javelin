@@ -5,7 +5,7 @@ import javelin.model.unit.abilities.TouchAttack;
 
 /**
  * @see TouchAttack
- * @see javelin.controller.action.TouchAttack
+ * @see javelin.controller.content.action.TouchAttack
  * @see Monster#touch
  * @author alex
  */

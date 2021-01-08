@@ -3,12 +3,12 @@ package javelin.controller.ai.cache;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.AiThread;
 import javelin.controller.ai.AlphaBetaSearch;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.ai.Node;
+import javelin.controller.content.action.ai.AiAction;
 import javelin.controller.db.Preferences;
 
 /**

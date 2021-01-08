@@ -1,9 +1,9 @@
 package javelin.test;
 
 import javelin.Debug;
+import javelin.controller.content.fight.mutator.Boss;
+import javelin.controller.content.fight.mutator.Waves;
 import javelin.controller.exception.GaveUp;
-import javelin.controller.fight.mutator.Boss;
-import javelin.controller.fight.mutator.Waves;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.generator.feature.LocationGenerator;
 import javelin.model.item.Tier;

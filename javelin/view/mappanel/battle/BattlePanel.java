@@ -5,9 +5,9 @@ import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 
 import javelin.controller.Point;
+import javelin.controller.content.fight.Fight;
+import javelin.controller.content.fight.mutator.Meld;
 import javelin.controller.db.Preferences;
-import javelin.controller.fight.Fight;
-import javelin.controller.fight.mutator.Meld;
 import javelin.model.state.BattleState;
 import javelin.model.state.MeldCrystal;
 import javelin.model.unit.Combatant;

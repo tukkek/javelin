@@ -1,6 +1,6 @@
 package javelin.model.item.gear;
 
-import javelin.controller.upgrade.Upgrade;
+import javelin.controller.content.upgrade.Upgrade;
 import javelin.model.item.Item;
 import javelin.model.unit.Body;
 import javelin.model.unit.Combatant;

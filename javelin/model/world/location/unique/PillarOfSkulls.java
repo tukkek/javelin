@@ -12,7 +12,7 @@ import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
-import javelin.controller.terrain.Terrain;
+import javelin.controller.content.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.item.gear.Gear;
 import javelin.model.unit.Combatant;

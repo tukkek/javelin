@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.controller.action.CastSpell;
+import javelin.controller.content.action.CastSpell;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.model.item.Item;
 import javelin.model.item.Recharger;

@@ -4,7 +4,7 @@ import java.awt.Image;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.action.world.Park;
+import javelin.controller.content.action.world.Park;
 import javelin.controller.exception.RepeatTurn;
 import javelin.model.transport.Transport;
 import javelin.model.unit.Combatant;

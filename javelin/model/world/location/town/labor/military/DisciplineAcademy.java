@@ -7,7 +7,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.Calendar;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.controller.upgrade.FeatUpgrade;
+import javelin.controller.content.upgrade.FeatUpgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.discipline.Discipline;

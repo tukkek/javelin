@@ -1,7 +1,7 @@
 package javelin.controller.db.reader.fields;
 
+import javelin.controller.content.quality.Quality;
 import javelin.controller.db.reader.MonsterReader;
-import javelin.controller.quality.Quality;
 
 /**
  * @see FieldReader

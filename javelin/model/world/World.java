@@ -9,11 +9,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javelin.controller.Point;
+import javelin.controller.content.scenario.Campaign;
+import javelin.controller.content.scenario.Scenario;
+import javelin.controller.content.terrain.Terrain;
 import javelin.controller.generator.WorldGenerator;
 import javelin.controller.generator.feature.LocationGenerator;
-import javelin.controller.scenario.Campaign;
-import javelin.controller.scenario.Scenario;
-import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.labor.expansive.BuildHighway;

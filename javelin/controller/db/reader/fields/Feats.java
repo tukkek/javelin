@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import javelin.controller.challenge.factor.FeatsFactor;
+import javelin.controller.content.kit.Kit;
+import javelin.controller.content.upgrade.FeatUpgrade;
 import javelin.controller.db.reader.MonsterReader;
-import javelin.controller.kit.Kit;
-import javelin.controller.upgrade.FeatUpgrade;
 import javelin.model.unit.feat.Feat;
 
 /**

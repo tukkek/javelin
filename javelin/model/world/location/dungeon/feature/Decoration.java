@@ -5,7 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.action.world.WorldMove;
+import javelin.controller.content.action.world.WorldMove;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;

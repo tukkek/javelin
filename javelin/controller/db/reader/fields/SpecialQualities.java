@@ -2,8 +2,8 @@ package javelin.controller.db.reader.fields;
 
 import java.util.ArrayList;
 
+import javelin.controller.content.quality.Quality;
 import javelin.controller.db.reader.MonsterReader;
-import javelin.controller.quality.Quality;
 
 /**
  * Reads the <SpecialQualites> XML tag, using several {@link Quality} instances

@@ -249,4 +249,10 @@ public abstract class Map{
 				.filter(p->s.isempty(p.x,p.y)&&s.getsurroundings(p).isEmpty()).limit(3)
 				.collect(Collectors.toList());
 	}
+
+	/** @return All non-{@link Square#blocked} points. */
+	protected List<Point> getallempty(){
+		return Point.getrange(0,0,map.length,map[0].length).stream()
+				.filter(p->!map[p.x][p.y].blocked).collect(Collectors.toList());
+	}
 }

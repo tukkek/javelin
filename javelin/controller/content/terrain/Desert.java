@@ -8,6 +8,7 @@ import javelin.controller.Weather;
 import javelin.controller.content.map.Maps;
 import javelin.controller.content.map.terrain.desert.Rocks;
 import javelin.controller.content.map.terrain.desert.RockyDesert;
+import javelin.controller.content.map.terrain.desert.Ruins;
 import javelin.controller.content.map.terrain.desert.SandyDesert;
 import javelin.controller.content.map.terrain.desert.Tundra;
 import javelin.controller.content.terrain.hazard.Break;
@@ -51,6 +52,7 @@ public class Desert extends Terrain{
 		m.add(new RockyDesert());
 		m.add(new SandyDesert());
 		m.add(new Rocks());
+		m.add(new Ruins());
 		return m;
 	}
 

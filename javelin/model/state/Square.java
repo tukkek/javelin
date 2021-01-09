@@ -20,6 +20,7 @@ public class Square{
 		return " ";
 	}
 
+	/** Clears {@link #blocked}, {@link #obstructed} and {@link #flooded}. */
 	public void clear(){
 		blocked=false;
 		obstructed=false;

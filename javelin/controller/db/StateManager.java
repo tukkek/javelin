@@ -11,6 +11,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Optional;
 
 import javax.swing.JOptionPane;
 
@@ -42,11 +43,46 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class StateManager{
-	static final String SAVEFOLDER=System.getProperty("user.dir");
-	static final File BACKUPFOLDER=new File(SAVEFOLDER,"backup");
-	static final File SAVEFILE=new File(SAVEFOLDER,
-			World.scenario.getsaveprefix()+".save");
-	static final int MINUTE=60*1000;
+	static class SaveThread extends Thread{
+		File to;
+
+		SaveThread(File to){
+			this.to=to;
+		}
+
+		@Override
+		public void run(){
+			try(ObjectOutputStream writer=new ObjectOutputStream(
+					new FileOutputStream(to))){
+				if(WorldScreen.current!=null) WorldScreen.current.savediscovered();
+				writer.writeBoolean(abandoned);
+				writer.writeObject(World.seed);
+				writer.writeObject(Dungeon.active);
+				writer.writeObject(Incursion.currentel);
+				writer.writeObject(Weather.current);
+				writer.writeObject(Ressurect.dead);
+				writer.writeObject(Season.current);
+				writer.writeObject(Season.endsat);
+				writer.writeObject(OpenJournal.content);
+				writer.writeObject(WildEvents.instance);
+				writer.writeObject(UrbanEvents.instance);
+				writer.writeObject(Miniatures.miniatures);
+				writer.flush();
+				writer.close();
+			}catch(final IOException e){
+				throw new RuntimeException(e);
+			}
+			if(to==SAVEFILE) backup(false);
+		}
+
+		void hold(){
+			try{
+				join();
+			}catch(InterruptedException e){
+				throw new RuntimeException(e);
+			}
+		}
+	}
 
 	/**
 	 * Always called on normal exit. Saves a backup.
@@ -65,8 +101,8 @@ public class StateManager{
 					return;
 				w.dispose();
 				if(BattleScreen.active!=null&&BattleScreen.active==WorldScreen.current){
-					save(true);
-					backup(true);
+					save(true).ifPresent(t->t.hold());
+					backup(true).ifPresent(t->t.hold());
 				}
 				System.exit(0);
 			}catch(RuntimeException exception){
@@ -77,41 +113,27 @@ public class StateManager{
 		}
 	};
 
+	static final String SAVEFOLDER=System.getProperty("user.dir");
+	static final File BACKUPFOLDER=new File(SAVEFOLDER,"backup");
+	static final File SAVEFILE=new File(SAVEFOLDER,
+			World.scenario.getsaveprefix()+".save");
+	static final int MINUTE=60*1000;
 	public static boolean abandoned=false;
 	public static boolean nofile=false;
 
 	static long lastsave=System.currentTimeMillis();
 	static long lastbackup=System.currentTimeMillis();
 
-	static synchronized void save(boolean force,File to){
+	static synchronized Optional<SaveThread> save(boolean force,File to){
 		long now=System.currentTimeMillis();
 		if(!force){
-			if(now-lastsave<Preferences.saveinterval*MINUTE) return;
-			if(Squad.active==null) return;
+			if(now-lastsave<Preferences.saveinterval*MINUTE) return Optional.empty();
+			if(Squad.active==null) return Optional.empty();
 		}
 		lastsave=now;
-		try{
-			ObjectOutputStream writer=new ObjectOutputStream(
-					new FileOutputStream(to));
-			if(WorldScreen.current!=null) WorldScreen.current.savediscovered();
-			writer.writeBoolean(abandoned);
-			writer.writeObject(World.seed);
-			writer.writeObject(Dungeon.active);
-			writer.writeObject(Incursion.currentel);
-			writer.writeObject(Weather.current);
-			writer.writeObject(Ressurect.dead);
-			writer.writeObject(Season.current);
-			writer.writeObject(Season.endsat);
-			writer.writeObject(OpenJournal.content);
-			writer.writeObject(WildEvents.instance);
-			writer.writeObject(UrbanEvents.instance);
-			writer.writeObject(Miniatures.miniatures);
-			writer.flush();
-			writer.close();
-		}catch(final IOException e){
-			throw new RuntimeException(e);
-		}
-		if(to==SAVEFILE) backup(false);
+		var t=new SaveThread(to);
+		t.start();
+		return Optional.of(t);
 	}
 
 	/**
@@ -152,20 +174,19 @@ public class StateManager{
 			filestream.close();
 			return true;
 		}catch(final Throwable e){
-			if(!Javelin.DEBUG)
-				Javelin.app.uncaughtException(Thread.currentThread(),e);
 			StateManager.clear();
-			System.exit(20140406);
+			Javelin.app.uncaughtException(Thread.currentThread(),e);
+			//			System.exit(20140406);
 			return false;
 		}
 	}
 
-	static void backup(boolean force){
-		if(Preferences.backupinterval==0) return;
+	static Optional<SaveThread> backup(boolean force){
+		if(Preferences.backupinterval==0) return Optional.empty();
 		var now=Calendar.getInstance();
 		if(!force
 				&&now.getTimeInMillis()-lastbackup<Preferences.backupinterval*MINUTE)
-			return;
+			return null;
 		lastbackup=now.getTimeInMillis();
 		var timestamp="";
 		timestamp+=now.get(Calendar.YEAR)+"-";
@@ -177,7 +198,7 @@ public class StateManager{
 		var prefix=World.scenario.getsaveprefix();
 		BACKUPFOLDER.mkdir();
 		var backup=new File(BACKUPFOLDER,prefix+"-"+timestamp+".save");
-		save(true,backup);
+		return save(true,backup);
 	}
 
 	static String format(int i){
@@ -190,7 +211,7 @@ public class StateManager{
 	 */
 	public static void clear(){
 		abandoned=true;
-		save(true);
+		save(true).ifPresent(t->t.hold());
 	}
 
 	/**
@@ -202,8 +223,9 @@ public class StateManager{
 	 *
 	 * @param force If <code>false</code> will only save according to
 	 *          {@link Preferences#saveinterval}.
+	 * @return The saving operation or <code>null</code>.
 	 */
-	public static void save(boolean force){
-		save(force,SAVEFILE);
+	public static Optional<SaveThread> save(boolean force){
+		return save(force,SAVEFILE);
 	}
 }

@@ -34,7 +34,7 @@ public class Key extends Item{
 	@Override
 	public String toString(){
 		var s=super.toString();
-		if(dungeon!=null) s+=" ("+dungeon+", level "+dungeon.getfloor()+")";
+		if(dungeon!=null) s+=", "+dungeon;
 		return s;
 	}
 }

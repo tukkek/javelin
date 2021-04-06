@@ -184,7 +184,9 @@ public class LocationGenerator implements Serializable{
 	}
 
 	static void generatestartingarea(World w,Town t){
-		for(var l:RPG.shuffle(new ArrayList<>(List.of(new Lodge(),new BasicShop(),
+		var lodge=new Lodge();
+		lodge.impermeable=true;
+		for(var l:RPG.shuffle(new ArrayList<>(List.of(lodge,new BasicShop(),
 				new BasicAcademy(),new MiniatureParlor()))))
 			spawnnear(t,l,w,1,2,true);
 		var p=t.getlocation();

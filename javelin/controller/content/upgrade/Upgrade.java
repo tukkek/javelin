@@ -93,7 +93,7 @@ public abstract class Upgrade implements Serializable{
 			e.remove(c);
 		var applied=apply(c);
 		for(var e:equipment)
-			e.usepeacefully(c);
+			e.equip(c);
 		if(applied&&spendxp){
 			var newcr=ChallengeCalculator.calculaterawcr(c.source)[1];
 			c.xp=c.xp.subtract(new BigDecimal(newcr-oldcr));

@@ -21,7 +21,7 @@ public class Bookcase extends Chest{
 
 	@Override
 	protected boolean allow(Item i){
-		return i.is(Scroll.class)!=null||i.is(Rune.class)!=null;
+		return i.is(Scroll.class)!=null;
 	}
 
 	@Override

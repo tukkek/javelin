@@ -1,9 +1,0 @@
-In Dungeon World mode, the main challenges are dungeons of varying sizes and difficulty. Exploring and conquering each dungeon will allow you to gain rewards and experience, while the outside world will provide you with means of resting, acquiring gear, recruiting allies and upgrading your heroes.
-
-Each normal dungeon contains one special chest. Temples will contain rubies and also special keys that will allow you to unlock new areas in the world map.
-
-Once you take a dungeon's special chest and leave, that dungeon will disappear from the map. Temples do not disappear, so you can always go back to retake a key in case you lose it. Hint: you may choose not to take rubies right away, if you want to keep exploring a dungeon.
-
-Your final objective is to disband all the most difficult dungeons in the game world by taking away their rubies. Note that you do not have to disband every single dungeon but just the deepest ones, the Keeps!
-
-Town management is disabled in this mode (all city projects are generated when the game first starts).

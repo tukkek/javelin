@@ -15,6 +15,8 @@ import javelin.controller.TextReader;
 import javelin.view.frame.Frame;
 
 public class TextWindow extends Frame{
+	static final File FOLDER=new File("doc","guides");
+
 	String text;
 
 	public TextWindow(String title,String text){
@@ -41,9 +43,10 @@ public class TextWindow extends Frame{
 		return parent;
 	}
 
+	/** @param name Filename under the "doc/guides" folders; */
 	static public TextWindow open(String name){
-		String filename=name.replaceAll(" ","").toLowerCase()+".txt";
-		String text=TextReader.read(new File("doc",filename));
+		var filename=name.replaceAll(" ","").toLowerCase()+".txt";
+		var text=TextReader.read(new File(FOLDER,filename));
 		return new TextWindow(name,text);
 	}
 }

@@ -9,10 +9,12 @@ import javelin.model.world.location.dungeon.feature.chest.ArmorDisplay;
 import javelin.model.world.location.dungeon.feature.chest.ArtDisplay;
 import javelin.model.world.location.dungeon.feature.chest.Bookcase;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
+import javelin.model.world.location.dungeon.feature.chest.Crate;
 import javelin.model.world.location.dungeon.feature.chest.DeadAdventurer;
 import javelin.model.world.location.dungeon.feature.chest.DeadMage;
 import javelin.model.world.location.dungeon.feature.chest.GemDisplay;
 import javelin.model.world.location.dungeon.feature.chest.RuneStand;
+import javelin.model.world.location.dungeon.feature.chest.SpecialChest;
 import javelin.model.world.location.dungeon.feature.chest.VestDisplay;
 import javelin.old.RPG;
 
@@ -22,9 +24,16 @@ import javelin.old.RPG;
  * @author alex
  */
 public class ChestTable extends Table{
-	static final List<Class<? extends Chest>> TYPES=new ArrayList<>(List.of(
-			ArmorDisplay.class,ArtDisplay.class,DeadAdventurer.class,Bookcase.class,
-			DeadMage.class,GemDisplay.class,VestDisplay.class,RuneStand.class));
+	/**
+	 * Types of dungeon chest.
+	 * 
+	 * @see Crate
+	 * @see SpecialChest
+	 */
+	public static final List<Class<? extends Chest>> TYPES=new ArrayList<>(
+			List.of(ArmorDisplay.class,ArtDisplay.class,DeadAdventurer.class,
+					Bookcase.class,DeadMage.class,GemDisplay.class,VestDisplay.class,
+					RuneStand.class));
 
 	/** Constructor. */
 	public ChestTable(DungeonFloor f){

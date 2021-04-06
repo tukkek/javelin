@@ -22,8 +22,7 @@ public class Abandon extends WorldAction{
 		String prompt="Are you sure you want to permanently abandon the current game?\n"
 				+"Press c to confirm or any other key to cancel...";
 		if(Javelin.prompt(prompt)=='c'){
-			StateManager.abandoned=true;
-			StateManager.save(true);
+			StateManager.clear();
 			System.exit(0);
 		}
 	}

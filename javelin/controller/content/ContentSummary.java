@@ -19,6 +19,7 @@ import javelin.controller.content.kit.Kit;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.content.upgrade.Upgrade;
 import javelin.controller.table.dungeon.BranchTable;
+import javelin.controller.table.dungeon.ChestTable;
 import javelin.controller.table.dungeon.feature.DecorationTable;
 import javelin.model.diplomacy.mandate.Mandate;
 import javelin.model.item.Item;
@@ -190,8 +191,10 @@ public class ContentSummary{
 		print(WildEvents.instance.printsummary("wilderness events"));
 		print(UrbanEvents.instance.printsummary("Urban events"));
 		print(Mandate.printsummary());
-		print(String.format("%s decoration categories, %s total images",
-				DecorationTable.CATEGORIES.size(),DecorationTable.count()));
+		print(String.format(
+				"%s dungeon chest types, %s decoration categories, %s total images",
+				ChestTable.TYPES.size(),DecorationTable.CATEGORIES.size(),
+				DecorationTable.count()));
 		print(String.format("%s dungeon and portal branch affixes",
 				BranchTable.BRANCHES.size()));
 	}

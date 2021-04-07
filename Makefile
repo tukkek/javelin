@@ -6,7 +6,7 @@ JLINK=jlink
 define jlink
 	echo "Building Javelin for $(1)..."
 	$(JLINK) --module-path .:build/jdk/$(1)/jmods --add-modules javelin --output "build/output/$(1)/javelin/java"
-	cp -r build/launcher/$(1)/* doc avatars maps monsters.xml preferences.properties README.txt audio build/output/$(1)/javelin
+	cp -r build/static/$(1)/* doc avatars maps monsters.xml preferences.properties README.txt audio build/output/$(1)/javelin
 	cp /tmp/VERSION.txt build/output/$(1)/javelin/doc/VERSION.txt
 	cd build/output/$(1)/;zip -v "../javelin-$(1).zip" . -r > /dev/null
 	rm -rf "build/output/$(1)"

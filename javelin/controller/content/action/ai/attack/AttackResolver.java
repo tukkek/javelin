@@ -9,9 +9,9 @@ import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.Javelin.Delay;
+import javelin.controller.Audio;
 import javelin.controller.ai.AiThread;
 import javelin.controller.ai.ChanceNode;
-import javelin.controller.audio.Audio;
 import javelin.controller.content.action.Action;
 import javelin.controller.content.action.ActionCost;
 import javelin.model.state.BattleState;

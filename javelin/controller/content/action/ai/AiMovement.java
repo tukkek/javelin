@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Random;
 
 import javelin.Javelin;
+import javelin.controller.Audio;
 import javelin.controller.Point;
 import javelin.controller.ai.AiThread;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.ai.ChanceNode;
-import javelin.controller.audio.Audio;
 import javelin.controller.content.action.Action;
 import javelin.controller.content.action.ActionCost;
 import javelin.controller.content.fight.Fight;

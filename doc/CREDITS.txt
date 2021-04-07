@@ -61,6 +61,9 @@ gamesbyangelina
 Hyptosis and Zabin
 * 2d tiles and sprites https://opengameart.org/content/lots-of-free-2d-tiles-and-sprites-by-hyptosis
 
+Simon "staz" Zolin
+* fast media player https://github.com/stsaz/fmedia
+
 Special thanks
 * 11132113
 * Greg

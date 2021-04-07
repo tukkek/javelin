@@ -1,8 +1,8 @@
 package javelin.controller.content.action;
 
 import javelin.Javelin;
+import javelin.controller.Audio;
 import javelin.controller.Point;
-import javelin.controller.audio.Audio;
 import javelin.controller.content.action.ai.AiMovement;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.exception.RepeatTurn;

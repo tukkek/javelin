@@ -1,7 +1,7 @@
 package javelin.controller.ai;
 
 import javelin.Javelin;
-import javelin.controller.audio.Audio;
+import javelin.controller.Audio;
 import javelin.view.mappanel.overlay.Overlay;
 
 /**

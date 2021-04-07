@@ -1,18 +1,10 @@
-package javelin.controller.audio;
+package javelin.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 
 import javelin.Javelin;
-import javelin.controller.db.Preferences;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
@@ -33,8 +25,8 @@ public class Audio{
 	 * Cannot easily support cross-platform MP3 and OGG with any up-to-date.
 	 * Tritonus doesn't seem to work with Linux 64b. TODO JaveFX
 	 */
-	static final List<String> EXTENSIONS=List.of(".wav");
-	static final Map<String,Clip> CACHE=new HashMap<>();
+	static final List<String> EXTENSIONS=List.of(".ogg");
+	static final String PLAYER="fmedia";
 
 	class NoAudio extends IOException{
 		public NoAudio(Throwable cause){
@@ -48,7 +40,6 @@ public class Audio{
 
 	String action;
 	Monster monster;
-	Clip clip=null;
 
 	/** Constructor. */
 	public Audio(String action,Monster m){
@@ -74,42 +65,11 @@ public class Audio{
 		throw new NoAudio("Cannot find audio for "+this);
 	}
 
-	void load(){
-		File f=null;
-		try{
-			var key=action+monster.name;
-			clip=CACHE.get(key);
-			if(clip==null){
-				f=lookup();
-				try(var stream=AudioSystem.getAudioInputStream(f)){
-					clip=AudioSystem.getClip();
-					clip.open(stream);
-				}
-				CACHE.put(key,clip);
-			}
-		}catch(UnsupportedAudioFileException|LineUnavailableException
-				|IOException e){
-			if(DEBUG) throw new RuntimeException(f==null?"null file":f.getPath(),e);
-		}
-	}
-
-	/** Loads (possibly from cache) and playes this audio. */
+	/** Plays the audio. */
 	public void play(){
-		if(Preferences.player!=null){
-			playexternal();
-			return;
-		}
-		load();
-		if(clip!=null){
-			clip.setFramePosition(0);
-			clip.start();
-		}
-	}
-
-	void playexternal(){
 		try{
 			var path=lookup().getCanonicalPath();
-			Runtime.getRuntime().exec(Preferences.player+" "+path);
+			Runtime.getRuntime().exec(new String[]{PLAYER,path});
 		}catch(Exception e){
 			if(DEBUG) throw new RuntimeException(e);
 		}

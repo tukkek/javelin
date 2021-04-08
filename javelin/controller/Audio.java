@@ -25,7 +25,7 @@ public class Audio{
 	 * Cannot easily support cross-platform MP3 and OGG with any up-to-date.
 	 * Tritonus doesn't seem to work with Linux 64b. TODO JaveFX
 	 */
-	static final List<String> EXTENSIONS=List.of(".ogg");
+	static final List<String> EXTENSIONS=List.of(".wav");
 	static final String PLAYER="fmedia";
 
 	class NoAudio extends IOException{

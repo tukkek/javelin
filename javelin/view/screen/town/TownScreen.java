@@ -177,7 +177,7 @@ public class TownScreen extends PurchaseScreen{
 			reputation=0;
 		else if(reputation>1) reputation=1;
 		info.add(String.format(REPUTATION,d.describestatus().toLowerCase(),
-				Math.round(100*-reputation)));
+				Math.round(100*reputation)));
 		return String.join("\n\n",info);
 	}
 

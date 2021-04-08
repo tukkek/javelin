@@ -164,7 +164,7 @@ public abstract class Spell extends Upgrade
 		int hitdice=c.source.hd.count();
 		if(!checkcasterlevel(hitdice,c)||c.spells.count()>=hitdice) // design parameters
 			return false;
-		Spell s=c.spells.get(getClass());
+		var s=c.spells.get(this);
 		if(s==null){
 			s=clone();
 			s.name=s.name.replaceAll("Spell: ","");
@@ -187,7 +187,7 @@ public abstract class Spell extends Upgrade
 	}
 
 	private int count(Combatant source){
-		Spell s=source.spells.get(getClass());
+		Spell s=source.spells.get(this);
 		return s==null?0:s.perday;
 	}
 

@@ -21,7 +21,7 @@ public class TemporarySpell extends Condition{
 
 	@Override
 	public void start(Combatant c){
-		var spell=c.spells.get(this.spell.getClass());
+		var spell=c.spells.get(this.spell);
 		if(spell==null){
 			spell=this.spell.clone();
 			c.spells.add(spell);
@@ -31,7 +31,7 @@ public class TemporarySpell extends Condition{
 
 	@Override
 	public void end(Combatant c){
-		var spell=c.spells.get(this.spell.getClass());
+		var spell=c.spells.get(this.spell);
 		remove(c,spell);
 	}
 
@@ -46,7 +46,7 @@ public class TemporarySpell extends Condition{
 	@Override
 	protected boolean expire(int time,Combatant c){
 		if(super.expire(time,c)) return true;
-		var spell=c.spells.get(this.spell.getClass());
+		var spell=c.spells.get(this.spell);
 		return spell!=null&&spell.exhausted();
 	}
 }

@@ -171,6 +171,11 @@ public class Summon extends Spell{
 		return super.equals(obj)&&monstername.equals(((Summon)obj).monstername);
 	}
 
+	@Override
+	public int hashCode(){
+		return name.hashCode();
+	}
+
 	/**
 	 * Since there's one {@link Summon} per {@link Monster} in the game, this
 	 * method helps summoning kits to offer a sensible amount of spell choices.

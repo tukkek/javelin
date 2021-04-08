@@ -10,12 +10,14 @@ import javelin.model.unit.Combatant;
  */
 public class Spells extends CloneableList<Spell>{
 	/**
+	 * Convenience method, prefer using {@link #get(Spell)}.
+	 *
 	 * @param type Given a spell class...
 	 * @return the instance of such spell or <code>null</code> if none is found.
 	 */
 	public <K extends Spell> K get(Class<K> type){
-		for(var spell:this)
-			if(type.isInstance(spell)) return (K)spell;
+		for(var s:this)
+			if(type.isInstance(s)) return (K)s;
 		return null;
 	}
 
@@ -29,5 +31,16 @@ public class Spells extends CloneableList<Spell>{
 		for(Spell s:this)
 			sum+=s.perday;
 		return sum;
+	}
+
+	/**
+	 * @return A Spell that {@link #equals(Object)} the given one or
+	 *         <code>null</code> if none was found.
+	 */
+	@SuppressWarnings("unchecked")
+	public <K extends Spell> K get(K spell){
+		for(var s:this)
+			if(s.equals(spell)) return (K)s;
+		return null;
 	}
 }

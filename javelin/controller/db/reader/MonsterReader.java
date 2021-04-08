@@ -222,7 +222,7 @@ public class MonsterReader extends DefaultHandler{
 				s=Spell.BYNAME.get(spellname);
 				if(s==null) throw new RuntimeException("Uknown spell: "+spellname);
 			}
-			var existing=monster.spells.get(s.getClass());
+			var existing=monster.spells.get(s);
 			if(existing!=null)
 				s=existing;
 			else{

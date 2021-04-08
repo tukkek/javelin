@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.db.Preferences;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
@@ -26,7 +27,6 @@ public class Audio{
 	 * Tritonus doesn't seem to work with Linux 64b. TODO JaveFX
 	 */
 	static final List<String> EXTENSIONS=List.of(".wav");
-	static final String PLAYER="fmedia";
 
 	class NoAudio extends IOException{
 		public NoAudio(Throwable cause){
@@ -69,7 +69,7 @@ public class Audio{
 	public void play(){
 		try{
 			var path=lookup().getCanonicalPath();
-			Runtime.getRuntime().exec(new String[]{PLAYER,path});
+			Runtime.getRuntime().exec(new String[]{Preferences.player,path});
 		}catch(Exception e){
 			if(DEBUG) throw new RuntimeException(e);
 		}

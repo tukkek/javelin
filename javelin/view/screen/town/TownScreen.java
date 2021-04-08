@@ -27,6 +27,7 @@ public class TownScreen extends PurchaseScreen{
 	static final boolean DEBUGMANAGEMENT=false;
 	static final Option RENAME=new Option("Rename town",0,'r');
 	static final Option TREATISE=new Option("Claim treaty",0,'t');
+	static final String REPUTATION="Reputation: %s (%s%%).";
 
 	class Manage extends ScreenOption{
 		public Manage(Town town){
@@ -156,6 +157,7 @@ public class TownScreen extends PurchaseScreen{
 	@Override
 	public String printinfo(){
 		var info=new ArrayList<String>(0);
+		var d=town.diplomacy;
 		if(!town.quests.isEmpty()){
 			var quests="Active quests:\n";
 			quests+=town.quests.stream().sorted((a,b)->a.daysleft-b.daysleft)
@@ -164,16 +166,18 @@ public class TownScreen extends PurchaseScreen{
 					.collect(Collectors.joining("\n"));
 			info.add(quests);
 		}
-		var r=town.diplomacy;
-		if(!r.treaties.isEmpty()){
-			var treaties="Available treaties (reputation: %s):\n";
-			var reputation=town.diplomacy.describestatus().toLowerCase();
-			treaties=String.format(treaties,reputation);
-			treaties+=r.treaties.parallelStream().map(m->"- "+m)
+		if(!d.treaties.isEmpty()){
+			var treaties="Available treaties:\n";
+			treaties+=d.treaties.parallelStream().map(m->"- "+m)
 					.collect(Collectors.joining("\n"));
-			treaties+="\n\nReputation: "+r.describestatus().toLowerCase()+".";
 			info.add(treaties);
 		}
+		var reputation=d.getstatus();
+		if(reputation<0)
+			reputation=0;
+		else if(reputation>1) reputation=1;
+		info.add(String.format(REPUTATION,d.describestatus().toLowerCase(),
+				Math.round(100*-reputation)));
 		return String.join("\n\n",info);
 	}
 

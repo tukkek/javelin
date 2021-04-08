@@ -35,8 +35,8 @@ import javelin.old.RPG;
  */
 public class Diplomacy implements Serializable{
 	/**
-	 * On reaching 100, enables a diplomatic action. Surplus is lost and should
-	 * never be reduced, only increased.
+	 * Currency for acquiring{@link Mandate} rewards once it reaches a value equal
+	 * or greater than {@link Town#population}.
 	 */
 	public int reputation=0;
 	/** Possible diplomatic actions. */
@@ -52,8 +52,8 @@ public class Diplomacy implements Serializable{
 	public boolean showalignment=false;
 
 	/** Generates a fresh set of relationships, when a campaign starts. */
-	public Diplomacy(Town town){
-		this.town=town;
+	public Diplomacy(Town t){
+		town=t;
 	}
 
 	/** To be called once per day per instance. */

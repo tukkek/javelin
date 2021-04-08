@@ -1,8 +1,16 @@
-Each town has a certain area around it called a district. This space is used for building supporting structures around a town, which are listed below. Moving inside the district is usually safe. The actual size of a town's district is determined by that town's population and other factors and you can see it by hovering the mouse over the town in question.
+Each town has a certain area around it called a district. This space is used for building supporting structures, which are listed below. Moving inside the district is usually safe, with the size of the district being determined by that Town's population - it can be seen by hovering the mouse over the town's icon on the world map.
 
-Once a structure starts building, it will be placed in the district's area as a construction site but won't be useful until enough work is put into it, which you can follow on the town management screen. If a building is located inside the districts of two towns at once, it will usually benefit both of them where applicable.
+Traits are fundamental for defining the culture and society of a Town - they start without any but can acquire multiple of them as they grow. Traits affect what types of projects the town can work on, what types of quests and treaties are available and possibly the types of events that will occur inside the district as the game progresses.
 
-Note that some of the labor options described below are not actual structures (like Grow and Produce settler) and hence have no "construction site" associated with them.
+Each town will generate quests and treaties over time, influenced by its cultural traits. Quests will grant immediate rewards upon completion and also boost long-term reputation within that district, which you can eventually rise enough to redeem a treaty - which are rewards ranging from gold, to items, to new members for your party...
+
+Towns are always working on one or more projects. Some of those labors are internal (such as Growth or Traits) but many are construction works which will unlock locations that can be interacted with. How many, what types of projects and how fast they are completed depend on the population and size of the town in question and its traits.
+
+Once a structure starts building, it will be placed within the district's area as a construction site but won't be useful until enough work is put into it, which you can keep track of on the town's management screen. If a building is located inside the districts of two towns at once, it will usually benefit both of them, where applicable.
+
+You can direct what projects a Town will be working on, under the town management screen but that's entirely optional. If left without orders, an automated governor will choose what labors to work on next, letting the player focus on exploration and combat instead.
+
+If a town is captured by enemies, it will become hostile. It will still continue to work on projects independently but players won't be able to access quests, treaties or the management screen until they liberate that district. Hostile towns will also periodically generate incursions that will roam the world and capture other locations.
 
 ALL DISTRICTS
 

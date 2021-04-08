@@ -299,7 +299,7 @@ public abstract class Quest implements Serializable{
 
 	int modifyreputation(){
 		var gain=town.population/town.getrank().rank;
-		return gain+RPG.randomize(gain);
+		return RPG.randomize(gain,0,Integer.MAX_VALUE);
 	}
 
 	/**

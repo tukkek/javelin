@@ -161,29 +161,25 @@ public abstract class Spell extends Upgrade
 	@Override
 	public boolean apply(Combatant c){
 		if(components>0) return false;
-		int hitdice=c.source.hd.count();
-		if(!checkcasterlevel(hitdice,c)||c.spells.count()>=hitdice) // design parameters
+		var hd=c.source.hd.count();
+		var maxlevel=Math.max(hd,Skill.SPELLCRAFT.getbonus(c)/2);
+		if(casterlevel>maxlevel) //design parameter
+			return false;
+		if(c.spells.size()>=hd) //design parameter
 			return false;
 		var s=c.spells.get(this);
 		if(s==null){
 			s=clone();
 			s.name=s.name.replaceAll("Spell: ","");
 			c.spells.add(s);
-		}else if(s.perday==5)
+		}else if(s.perday>=5)
+			return false;
+		else if(casterlevel==maxlevel) //design parameter
 			return false;
 		else
 			s.perday+=1;
 		c.source.spellcr+=s.cr;
 		return true;
-	}
-
-	private boolean checkcasterlevel(int hitdice,Combatant c){
-		return hitdice>=casterlevel
-				||c.taketen(Skill.SPELLCRAFT)>=10+getspelllevel();
-	}
-
-	private int getspelllevel(){
-		return (casterlevel+1)/2;
 	}
 
 	private int count(Combatant source){

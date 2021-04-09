@@ -1,14 +1,16 @@
-Some units naturally know a certain set of spells or a random amount of spells. Others can learn spells by visiting a Mages Guild or similar location.
+Some units naturally know a certain set of spells or a random amount of spells - others can learn spells from multiple sources, including mage guilds in towns.
 
-Rules
-* To learn each spell you need to have a certain minimum amount of class levels ("caster level").
-* Every hero starts at class level 1 and receives an extra class level when upgrading in a class.
-* You can learn and cast as many spells per day as you have class levels. After a period of rest you can cast these again.
-* Most spells cannot be cast while engaged in close combat, while more offensive ones generally can. High enough Concentration will bypass that for all spells.
+Learning spells
+* To learn a certain spell, you need a minimum amount of "caster levels" - which is the sum of a creature's natural hit dice and acquired class levels.
+* You can learn as many individual spells as you have caster levels. Each spell has a daily use limit that is reset upon resting.
+* If a spell is of the highest possible level you can learn, it can only be cast once per day. Other spells can be learned multiple times, up to 5 uses per day.
+* These guidelines apply only to spells learned through study and training. Any types of items that allow you to cast spells work under different rules.
+* The spellcraft skill allows you to learn more powerful spells earlier than normal. How early depends on each unit, but usually each 2 ranks unlock a new spell level.
 
 Qualifiers
-* Touch spells can only be targeted at those immediately adjacent to the spellcaster or the spellcaster himself.
-* Safe spells are those that can be cast even while engaged in close combat.
+* Most spells cannot be cast while engaged in close combat, while more offensive ones generally can. Having high enough Concentration will bypass that for all spells.
+* Safe spells are those that can always be cast even while engaged in close combat.
+* Touch spells can only be targeted at those immediately adjacent to the spellcaster or at the spellcaster himself.
 
 The schools of magic
 * Abjuration: protective spells.

@@ -76,10 +76,7 @@ public abstract class Haunt extends Fortification{
 		HauntScreen(){
 			super("Select your mercenaries:",null);
 			var r=recruit;
-			if(r!=null){
-				var rubies=Tier.get(r.source.cr).getordinal()+1;
-				recruitment=new Option("Recruit: "+r,rubies);
-			}
+			if(r!=null) recruitment=new Option("Recruit: "+r,getjoinfee(r.source));
 		}
 
 		@Override
@@ -382,5 +379,12 @@ public abstract class Haunt extends Fortification{
 	public Combatants testwaves() throws GaveUp{
 		generatemonsters(targetel+Waves.ELMODIFIER.get(4));
 		return generatemonsters(targetel+Waves.ELMODIFIER.get(1));
+	}
+
+	/**
+	 * @return {@link Ruby} amount for a {@link Monster} to join a {@link Squad}.
+	 */
+	public static int getjoinfee(Monster m){
+		return Math.max(1,Math.round(m.cr));
 	}
 }

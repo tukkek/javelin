@@ -4,6 +4,7 @@
 package javelin.model.world.location.dungeon.feature;
 
 import javelin.Javelin;
+import javelin.controller.content.action.world.WorldMove;
 import javelin.controller.generator.WorldGenerator;
 import javelin.controller.table.dungeon.BranchTable;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -46,6 +47,7 @@ public class BranchPortal extends Feature{
 		var p=String.format(PROMPT,Portal.discover(dc)?destination:UNKNOWN);
 		if(Javelin.prompt(p)!='\n') return false;
 		destination.floors.get(0).enter();
+		WorldMove.abort=true;
 		return true;
 	}
 }

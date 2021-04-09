@@ -7,8 +7,6 @@ import javelin.controller.Weather;
 import javelin.controller.content.map.DndMap;
 import javelin.controller.content.map.Map;
 import javelin.model.state.Square;
-import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.old.RPG;
 import javelin.view.Images;
 
@@ -28,15 +26,8 @@ public class Caves extends Map{
 	public Caves(String namep){
 		super(namep,SIZE,SIZE);
 		maxflooding=Weather.CLEAR;
-		var d=Dungeon.active;
-		if(d!=null){
-			var i=d.dungeon.images;
-			floor=Images.get(List.of("dungeon",i.get(DungeonImages.FLOOR)));
-			wall=Images.get(List.of("dungeon",i.get(DungeonImages.WALL)));
-		}else{
-			floor=Images.get(List.of("terrain","dungeonfloor"));
-			wall=Images.get(List.of("terrain","dungeonwall"));
-		}
+		floor=Images.get(List.of("terrain","dungeonfloor"));
+		wall=Images.get(List.of("terrain","dungeonwall"));
 		obstacle=rock;
 		flying=false;
 	}

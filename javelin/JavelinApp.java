@@ -95,12 +95,13 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
 				Javelin.redraw();
 				JavelinApp.context.turn();
 			}
-		}catch(final StartBattle e){
+		}catch(StartBattle e){
+			StateManager.save(true);
 			if(Debug.disablecombat) return;
 			Fight.current=e.fight;
 			try{
 				e.battle();
-			}catch(final EndBattle end){
+			}catch(EndBattle end){
 				EndBattle.end();
 			}
 			Fight.current=null;

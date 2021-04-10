@@ -36,14 +36,41 @@ import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 
 /**
- * Saves and loads game progress to a file.
+ * Saves game and backups using an independent {@link Thread}. The current save
+ * strategy is:
  *
- * TODO would be nice to have a backup save every half an hour or so...?
+ * 1. Will always force a save when entering battle. At this point the player
+ * won't be interacting with the {@link World}, which means data won't be
+ * modified while a save is in progress. This is the ideal scenario as it's
+ * seamless to the player and happens in a background thread.
+ *
+ * 2. Will always check before a player acts in the {@link World} if the
+ * auto-save timer has expired and if so, will trigger a save. This should be
+ * rare, as the default auto-save interval is 10 minutes and forced saves while
+ * the player is doing battle (#1) will naturally reset the timer as they occur.
+ *
+ * 3. In the rare case that a save happens outside of battle, the game will show
+ * a message and {@link SaveThread#hold()} until the save is completed. While
+ * relatively fast, this is annoying but should happen only rarely. Players are
+ * always free to change the auto-save interval (or disable it entirely) to suit
+ * their personal preferences as well.
+ *
+ * 4. Backup saves are made according to the configured interval (30 minutes by
+ * default) and are triggered automatically as part of any save action
+ * immediately after the main save is completed.
+ *
+ * 5. A save is always forced upon closing the game window - then a backup save
+ * as well (unless backups are disabled entirely).
  *
  * @author alex
  */
 public class StateManager{
-	static class SaveThread extends Thread{
+	/**
+	 * Parallel save.
+	 *
+	 * @author alex
+	 */
+	public static class SaveThread extends Thread{
 		File to;
 
 		SaveThread(File to){
@@ -52,8 +79,7 @@ public class StateManager{
 
 		@Override
 		public void run(){
-			try(ObjectOutputStream writer=new ObjectOutputStream(
-					new FileOutputStream(to))){
+			try(var writer=new ObjectOutputStream(new FileOutputStream(to))){
 				if(WorldScreen.current!=null) WorldScreen.current.savediscovered();
 				writer.writeBoolean(abandoned);
 				writer.writeObject(World.seed);
@@ -69,13 +95,15 @@ public class StateManager{
 				writer.writeObject(Miniatures.miniatures);
 				writer.flush();
 				writer.close();
+				writing=false;
+				if(to==SAVEFILE) backup(false).ifPresent(b->b.hold());
 			}catch(final IOException e){
 				throw new RuntimeException(e);
 			}
-			if(to==SAVEFILE) backup(false);
 		}
 
-		void hold(){
+		/** {@link #join()} and throws errors as {@link RuntimeException}. */
+		public void hold(){
 			try{
 				join();
 			}catch(InterruptedException e){
@@ -123,13 +151,16 @@ public class StateManager{
 
 	static long lastsave=System.currentTimeMillis();
 	static long lastbackup=System.currentTimeMillis();
+	static boolean writing=false;
 
-	static synchronized Optional<SaveThread> save(boolean force,File to){
+	static Optional<SaveThread> save(boolean force,File to){
 		long now=System.currentTimeMillis();
 		if(!force){
 			if(now-lastsave<Preferences.saveinterval*MINUTE) return Optional.empty();
 			if(Squad.active==null) return Optional.empty();
 		}
+		if(writing) return Optional.empty();
+		writing=true;
 		lastsave=now;
 		var t=new SaveThread(to);
 		t.start();
@@ -184,10 +215,10 @@ public class StateManager{
 	static Optional<SaveThread> backup(boolean force){
 		if(Preferences.backupinterval==0) return Optional.empty();
 		var now=Calendar.getInstance();
-		if(!force
-				&&now.getTimeInMillis()-lastbackup<Preferences.backupinterval*MINUTE)
-			return null;
-		lastbackup=now.getTimeInMillis();
+		var time=now.getTimeInMillis();
+		if(!force&&time-lastbackup<Preferences.backupinterval*MINUTE)
+			return Optional.empty();
+		lastbackup=time;
 		var timestamp="";
 		timestamp+=now.get(Calendar.YEAR)+"-";
 		timestamp+=format(now.get(Calendar.MONTH)+1)+"-";

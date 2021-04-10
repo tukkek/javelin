@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import javelin.Debug;
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.Weather;
@@ -170,6 +171,14 @@ public class WorldScreen extends BattleScreen{
 		throw new RepeatTurn();
 	}
 
+	void save(){
+		StateManager.save(false).ifPresent(s->{
+			Javelin.message("Saving game...",Delay.NONE);
+			messagepanel.repaint();
+			s.hold();
+		});
+	}
+
 	@Override
 	public void turn(){
 		if(WorldScreen.welcome)
@@ -179,10 +188,12 @@ public class WorldScreen extends BattleScreen{
 			System.exit(0);
 		}else
 			Javelin.lose();
-		StateManager.save(false);
 		endturn();
 		if(World.getall(Squad.class).isEmpty()) return;
-		if(Squad.active!=null) act();
+		if(Squad.active!=null){
+			save();
+			act();
+		}
 		messagepanel.clear();
 	}
 

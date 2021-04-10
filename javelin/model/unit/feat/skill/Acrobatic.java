@@ -8,7 +8,7 @@ public class Acrobatic extends Feat{
 	public static final Feat SINGLETON=new Acrobatic();
 	public static final int BONUS=+4;
 
-	Acrobatic(){
+	public Acrobatic(){
 		super("Acrobatic");
 	}
 

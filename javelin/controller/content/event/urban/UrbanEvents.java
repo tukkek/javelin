@@ -6,10 +6,6 @@ import java.util.List;
 
 import javelin.controller.content.event.EventCard;
 import javelin.controller.content.event.EventDealer;
-import javelin.controller.content.event.urban.diplomatic.Badmouth;
-import javelin.controller.content.event.urban.diplomatic.DegradeRelationship;
-import javelin.controller.content.event.urban.diplomatic.ImproveRelationship;
-import javelin.controller.content.event.urban.diplomatic.Praise;
 import javelin.controller.content.event.urban.encounter.Guards;
 import javelin.controller.content.event.urban.encounter.Robbers;
 import javelin.controller.content.event.urban.negative.Fire;
@@ -53,15 +49,13 @@ public class UrbanEvents extends EventDealer{
 	public static Town generating;
 
 	private UrbanEvents(){
-		positive.addcontent(
-				List.of(NothingHappens.class,ImproveRelationship.class,Praise.class,
-						CollectiveEffort.class,FoodSurplus.class,GainResource.class));
+		positive.addcontent(List.of(NothingHappens.class,CollectiveEffort.class,
+				FoodSurplus.class,GainResource.class));
 		neutral.addcontent(
 				List.of(NothingHappens.class,HostTournament.class,Migration.class));
-		negative.addcontent(
-				List.of(NothingHappens.class,DegradeRelationship.class,Guards.class,
-						Badmouth.class,Riot.class,Fire.class,Sabotage.class,Revolt.class,
-						Flood.class,FoodShortage.class,Robbers.class,LoseResource.class));
+		negative.addcontent(List.of(NothingHappens.class,Guards.class,Riot.class,
+				Fire.class,Sabotage.class,Revolt.class,Flood.class,FoodShortage.class,
+				Robbers.class,LoseResource.class));
 	}
 
 	@Override

@@ -1,4 +1,5 @@
 Acid spray: touch attack, deals 8d8 damage (reflex save DC 17 for half).
+Acrobatic: +4 bonus to Acrobatics skill rolls.
 Alertness: +3 to perceive checks or +5 if you already have 10 or more ranks.
 Breath weapon: special area attack, press b during battle to activate.
 Classes: raises hit dice, base attack bonus and saving throws.

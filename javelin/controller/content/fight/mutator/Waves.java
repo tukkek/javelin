@@ -13,8 +13,10 @@ import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
+import javelin.model.world.location.haunt.Haunt;
 import javelin.old.RPG;
 import javelin.test.TestHaunt;
+import javelin.test.TestWaves;
 import javelin.view.screen.BattleScreen;
 
 /**
@@ -25,6 +27,7 @@ import javelin.view.screen.BattleScreen;
  * should be EL-1, at least.
  *
  * @see TestHaunt
+ * @see TestWaves
  * @author alex
  */
 public class Waves extends FightMode{
@@ -101,12 +104,24 @@ public class Waves extends FightMode{
 		checkend(f);
 	}
 
-	/** Generates a wave from {@link Encounter}s. */
+	/**
+	 * Generates a wave from {@link Encounter}s. Even with
+	 * {@link Haunt#getminimumel()}, it still may be hard to generate a particular
+	 * EL from a pool, so we iteratively look for the next-best thing before
+	 * giving up, favoring lower ELs before higher ELs.
+	 */
 	public static Combatants generate(int el,EncounterIndex index) throws GaveUp{
 		if(index.isEmpty()) throw new GaveUp();
-		var foes=EncounterGenerator.generatebyindex(el,List.of(index));
-		if(foes==null) throw new GaveUp();
-		return foes;
+		var indexes=List.of(index);
+		var foes=EncounterGenerator.generatebyindex(el,indexes);
+		if(foes!=null) return foes;
+		for(var delta=1;delta<=20;delta++){
+			foes=EncounterGenerator.generatebyindex(el-delta,indexes);
+			if(foes!=null) return foes;
+			foes=EncounterGenerator.generatebyindex(el+delta,indexes);
+			if(foes!=null) return foes;
+		}
+		throw new GaveUp();
 	}
 
 	/** @return Generates at most {@link #MAXIMUM} waves and returns all units. */

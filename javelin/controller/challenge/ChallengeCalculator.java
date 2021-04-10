@@ -234,10 +234,8 @@ public class ChallengeCalculator{
 	}
 
 	public static int crtoel(final float cr){
-		ArrayList<Float> crs=new ArrayList<>(1);
-		crs.add(cr);
 		try{
-			return calculateelfromcrs(crs,false);
+			return calculateelfromcrs(List.of(cr),false);
 		}catch(UnbalancedTeams e){
 			throw new RuntimeException("Shouldn't happen #crtoel",e);
 		}

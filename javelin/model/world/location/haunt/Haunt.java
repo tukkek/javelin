@@ -48,6 +48,7 @@ import javelin.view.screen.town.SelectScreen;
  * @author alex
  */
 public abstract class Haunt extends Fortification{
+
 	/**
 	 * Would be great to scale infinitely but for now setting parameters is
 	 * paramount.
@@ -55,6 +56,10 @@ public abstract class Haunt extends Fortification{
 	 * @see TestHaunt
 	 */
 	public static final int MAXEL=Tier.EPIC.maxlevel+Difficulty.DEADLY;
+	/**
+	 * TODO https://github.com/tukkek/javelin/issues/293#issuecomment-817077101
+	 */
+	static final int MINIMUMTIER=Tier.MID.getordinal();
 
 	static Set<Monster> defeated=new HashSet<>(0);
 	static Hashtable<Class<? extends Haunt>,EncounterIndex> INDEXCACHE=new Hashtable<>();
@@ -188,7 +193,7 @@ public abstract class Haunt extends Fortification{
 	}
 
 	/** Every unit that can be generated here. */
-	protected List<Monster> pool;
+	public List<Monster> pool;
 
 	List<Monster> hires=new ArrayList<>();
 	Class<? extends LocationMap> map;
@@ -205,7 +210,7 @@ public abstract class Haunt extends Fortification{
 		allowentry=false;
 		this.map=map;
 		this.pool=pool;
-		var tieri=0;
+		var tieri=MINIMUMTIER;
 		while(RPG.chancein(2)&&tieri<Tier.TIERS.size()-1)
 			tieri+=1;
 		var t=Tier.TIERS.get(tieri);

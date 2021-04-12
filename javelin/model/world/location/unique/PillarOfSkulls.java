@@ -16,6 +16,7 @@ import javelin.controller.content.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.item.gear.Gear;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.condition.Heroic;
@@ -90,9 +91,9 @@ public class PillarOfSkulls extends UniqueLocation{
 		}
 
 		boolean offeritem(){
-			ArrayList<Item> items=new ArrayList<>();
-			ArrayList<Combatant> owners=new ArrayList<>();
-			ArrayList<String> choices=new ArrayList<>();
+			var items=new ArrayList<Item>();
+			var owners=new ArrayList<Combatant>();
+			var choices=new ArrayList<String>();
 			gatheritems(items,owners,choices);
 			if(items.isEmpty()){
 				print(text+"\nCome back with an item to offer!");
@@ -100,25 +101,28 @@ public class PillarOfSkulls extends UniqueLocation{
 			}
 			int choice=Javelin.choose("Sacrifice which item?",choices,true,false);
 			if(choice==-1) return false;
-			Item i=items.get(choice);
-			Combatant owner=owners.get(choice);
+			var i=items.get(choice);
+			var o=owners.get(choice);
 			if(i instanceof Gear){
-				Gear a=(Gear)i;
-				if(owner.equipped.contains(a)) a.remove(owner);
+				var g=(Gear)i;
+				if(o.equipped.contains(g)) g.remove(o);
 			}
-			Squad.active.equipment.get(owner).remove(i);
-			ArrayList<Combatant> mock=new ArrayList<>();
-			float targetcr=ChallengeCalculator.goldtocr(i.price);
-			while(mock.isEmpty()){
-				List<Monster> tier=Monster.BYCR.get(targetcr);
-				if(tier==null){
-					targetcr-=1;
-					if(targetcr<Monster.BYCR.firstKey()) return false;
-					continue;
+			Squad.active.equipment.get(o).remove(i);
+			var mock=new Combatants();
+			var lowestcr=Monster.BYCR.firstKey();
+			for(var cr=ChallengeCalculator.goldtocr(i.price);cr>=lowestcr;cr--){
+				var tier=Monster.BYCR.get(Float.valueOf(cr));
+				if(tier!=null){
+					mock.add(new Combatant(RPG.pick(tier),false));
+					break;
 				}
-				mock.add(new Combatant(RPG.pick(tier),false));
 			}
-			RewardCalculator.rewardxp(Squad.active.members,mock,1);
+			if(mock.isEmpty()){
+				print(text+"\nIt seems unimpressed with your offering...");
+				return false;
+			}
+			var xp=RewardCalculator.rewardxp(Squad.active.members,mock,1);
+			Javelin.message(xp,true);
 			return true;
 		}
 

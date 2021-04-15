@@ -60,7 +60,17 @@ public abstract class Tile{
 	}
 
 	public void repaint(){
-		paint(BattleScreen.active.mappanel.getdrawgraphics());
+		try{
+			paint(BattleScreen.active.mappanel.getdrawgraphics());
+		}catch(NullPointerException e){
+			var debug="Screen: "+BattleScreen.active;
+			if(BattleScreen.active!=null){
+				debug+="\nPanel: "+BattleScreen.active.mappanel;
+				if(BattleScreen.active.mappanel!=null)
+					debug+="\nGraphics: "+BattleScreen.active.mappanel.getdrawgraphics();
+			}
+			throw new RuntimeException(debug,e);
+		}
 	}
 
 	/**

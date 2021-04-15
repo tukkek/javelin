@@ -26,7 +26,7 @@ public class Slot implements Serializable{
 	/** gloves or gauntlets */
 	public static final Slot HANDS=new Slot("hands");
 	/** one ring on each hand */
-	public static final Slot FINGERS=new Slot("ring"){
+	public static final Slot FINGERS=new Slot("fingers"){
 		@Override
 		protected boolean conflicts(Slot slot){
 			return false;

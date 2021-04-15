@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import javelin.model.item.Item;
 import javelin.model.item.gear.Gear;
-import javelin.model.item.gear.rune.RuneGear;
 import javelin.view.screen.InfoScreen;
 
 /**
@@ -32,7 +31,7 @@ public class EquipGear extends UseItems{
 
 	@Override
 	boolean use(InfoScreen infoscreen,Item i){
-		var g=(RuneGear)i;
+		var g=(Gear)i;
 		return g.equip(findowner(g));
 	}
 }

@@ -13,7 +13,6 @@ public class Feint extends ExpertiseAction{
 	public static final Action INSTANCE=new Feint();
 
 	public class Feigned extends Condition{
-
 		public Feigned(float expireatp,Combatant c){
 			super("feigned",null,expireatp,Effect.NEGATIVE);
 		}

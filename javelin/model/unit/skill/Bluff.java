@@ -49,8 +49,9 @@ public class Bluff extends Skill{
 
 		@Override
 		public String toString(){
-			String times=acpenalty==1?"":" x"+acpenalty;
-			return description+times;
+			var s=description;
+			if(acpenalty>1) s+=" x"+acpenalty;
+			return s;
 		}
 	}
 

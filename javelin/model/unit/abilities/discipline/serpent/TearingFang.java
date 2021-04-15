@@ -29,8 +29,7 @@ public class TearingFang extends Boost{
 
 		@Override
 		public void start(Combatant c){
-			c.source=c.source.clone();
-			for(Attack a:c.source.getattacks()){
+			for(var a:c.source.getattacks()){
 				a.damage[2]+=EXTRADAMAGE;
 				a.temporaryeffect=new Bleed();
 			}
@@ -38,8 +37,7 @@ public class TearingFang extends Boost{
 
 		@Override
 		public void end(Combatant c){
-			c.source=c.source.clone();
-			for(Attack a:c.source.getattacks()){
+			for(var a:c.source.getattacks()){
 				a.damage[2]-=EXTRADAMAGE;
 				a.temporaryeffect=null;
 			}

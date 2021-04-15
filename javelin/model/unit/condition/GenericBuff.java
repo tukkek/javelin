@@ -21,7 +21,6 @@ public abstract class GenericBuff extends Condition{
 
 	@Override
 	public void start(Combatant c){
-		c.source=c.source.clone();
 		raiseallattacks(c.source,bonus,0);
 		raisesaves(c.source,bonus);
 		c.acmodifier+=bonus;
@@ -29,7 +28,6 @@ public abstract class GenericBuff extends Condition{
 
 	@Override
 	public void end(Combatant c){
-		c.source=c.source.clone();
 		raiseallattacks(c.source,-bonus,0);
 		raisesaves(c.source,-bonus);
 		c.acmodifier-=bonus;

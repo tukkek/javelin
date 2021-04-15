@@ -714,10 +714,10 @@ public class Monster implements Cloneable,Serializable{
 	 *         {@link #ranged}.
 	 */
 	public ArrayList<Attack> getattacks(){
-		ArrayList<Attack> attacks=new ArrayList<>(melee.size()+ranged.size());
-		for(AttackSequence sequence:melee)
+		var attacks=new ArrayList<Attack>(melee.size()+ranged.size());
+		for(var sequence:melee)
 			attacks.addAll(sequence);
-		for(AttackSequence sequence:ranged)
+		for(var sequence:ranged)
 			attacks.addAll(sequence);
 		return attacks;
 	}

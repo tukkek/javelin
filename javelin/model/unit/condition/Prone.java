@@ -23,5 +23,4 @@ public class Prone extends Condition{
 		// gets up (move action)
 		c.ap+=.5f;
 	}
-
 }

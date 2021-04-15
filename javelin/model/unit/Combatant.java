@@ -515,6 +515,7 @@ public class Combatant implements Serializable,Cloneable{
 	 */
 	public void addcondition(Condition c){
 		if(source.passive||!c.validate(this)) return;
+		source=source.clone();
 		var previous=hascondition(c.getClass());
 		conditions.add(c);
 		if(previous==null||previous.stack)
@@ -549,7 +550,7 @@ public class Combatant implements Serializable,Cloneable{
 	 *          will look for an equal object.
 	 */
 	public void removecondition(Condition c){
-		boolean removed=false;
+		var removed=false;
 		for(int i=0;i<conditions.size();i++)
 			if(c==conditions.get(i)){
 				conditions.remove(i);
@@ -557,12 +558,16 @@ public class Combatant implements Serializable,Cloneable{
 				break;
 			}
 		if(!removed) conditions.remove(c);
-		if(c.stack||!conditions.contains(c)) c.end(this);
+		if(c.stack||!conditions.contains(c)){
+			source=source.clone();
+			c.end(this);
+		}
 	}
 
 	public void finishconditions(BattleState s,BattleScreen screen){
-		for(Condition co:conditions){
-			co.finish(s);
+		source=source.clone();
+		for(var c:conditions){
+			c.finish(s);
 			screen.block();
 		}
 	}

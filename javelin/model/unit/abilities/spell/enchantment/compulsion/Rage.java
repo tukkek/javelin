@@ -21,8 +21,7 @@ public class Rage extends Spell{
 
 		@Override
 		public void start(Combatant c){
-			Monster m=c.source.clone();
-			c.source=m;
+			var m=c.source;
 			m.changestrengthmodifier(+1);
 			m.changeconstitutionmodifier(c,+1);
 			m.addwill(+1);
@@ -31,8 +30,7 @@ public class Rage extends Spell{
 
 		@Override
 		public void end(Combatant c){
-			Monster m=c.source.clone();
-			c.source=m;
+			var m=c.source;
 			m.changestrengthmodifier(-1);
 			m.changeconstitutionmodifier(c,-1);
 			m.addwill(-1);

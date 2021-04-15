@@ -34,7 +34,7 @@ public class NeutralizePoison extends Touch{
 
 		@Override
 		public void start(Combatant c){
-			Poisoned p=c.hascondition(Poisoned.class);
+			var p=c.hascondition(Poisoned.class);
 			if(p!=null){
 				p.neutralized=true;
 				c.removecondition(p);

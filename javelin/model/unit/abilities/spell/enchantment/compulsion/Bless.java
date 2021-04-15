@@ -24,13 +24,11 @@ public class Bless extends Spell{
 
 		@Override
 		public void start(Combatant c){
-			c.source=c.source.clone();
 			Condition.raiseallattacks(c.source,bonus,0);
 		}
 
 		@Override
 		public void end(Combatant c){
-			c.source=c.source.clone();
 			Condition.raiseallattacks(c.source,-bonus,0);
 		}
 	}

@@ -21,18 +21,17 @@ public class TemporarySpell extends Condition{
 
 	@Override
 	public void start(Combatant c){
-		var spell=c.spells.get(this.spell);
-		if(spell==null){
-			spell=this.spell.clone();
-			c.spells.add(spell);
+		var s=c.spells.get(this.spell);
+		if(s==null){
+			s=this.spell.clone();
+			c.spells.add(s);
 		}else
-			spell.perday+=1;
+			s.perday+=1;
 	}
 
 	@Override
 	public void end(Combatant c){
-		var spell=c.spells.get(this.spell);
-		remove(c,spell);
+		remove(c,c.spells.get(this.spell));
 	}
 
 	void remove(Combatant c,Spell s){

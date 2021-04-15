@@ -21,13 +21,11 @@ public class Displacement extends Touch{
 
 		@Override
 		public void start(Combatant c){
-			c.source=c.source.clone();
 			c.source.misschance+=.5;
 		}
 
 		@Override
 		public void end(Combatant c){
-			c.source=c.source.clone();
 			c.source.misschance-=.5;
 		}
 	}

@@ -20,7 +20,6 @@ public class Shaken extends Condition{
 
 	@Override
 	public void start(Combatant c){
-		c.source=c.source.clone();
 		penalizeattacks(-2,c.source.melee);
 		penalizeattacks(-2,c.source.ranged);
 		c.source.fort-=2;
@@ -36,7 +35,6 @@ public class Shaken extends Condition{
 
 	@Override
 	public void end(Combatant c){
-		c.source=c.source.clone();
 		penalizeattacks(+2,c.source.melee);
 		penalizeattacks(+2,c.source.ranged);
 		c.source.fort+=2;

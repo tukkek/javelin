@@ -21,5 +21,4 @@ public class Breathless extends Condition{
 	@Override
 	public void end(Combatant c){
 	}
-
 }

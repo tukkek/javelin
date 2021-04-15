@@ -14,8 +14,8 @@ import javelin.model.world.location.dungeon.DungeonFloor;
  * http://www.d20srd.org/srd/spells/longstrider.htm
  *
  * Only castable in battle but will live up to 1 hour if inside a
- * {@link DungeonFloor}. Can't cast outside because it will seem useless for now.
- * TODO allow leveling up spells
+ * {@link DungeonFloor}. Can't cast outside because it will seem useless for
+ * now. TODO allow leveling up spells
  *
  * @author alex
  */
@@ -27,13 +27,11 @@ public class Longstrider extends Spell{
 
 		@Override
 		public void start(Combatant c){
-			c.source=c.source.clone();
 			c.source.walk+=10;
 		}
 
 		@Override
 		public void end(Combatant c){
-			c.source=c.source.clone();
 			c.source.walk-=10;
 		}
 	}

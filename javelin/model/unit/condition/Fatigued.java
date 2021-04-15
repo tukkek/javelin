@@ -27,7 +27,6 @@ public class Fatigued extends Condition{
 
 	@Override
 	public void start(Combatant c){
-		c.source=c.source.clone();
 		c.source.changestrengthmodifier(-1);
 		c.source.changeconstitutionmodifier(c,-1);
 	}

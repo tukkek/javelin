@@ -17,7 +17,7 @@ public class Exhausted extends Fatigued{
 
 	@Override
 	public void start(Combatant c){
-		Condition fatigue=c.hascondition(Fatigued.class);
+		var fatigue=c.hascondition(Fatigued.class);
 		if(fatigue!=null) c.removecondition(fatigue);
 		c.source=c.source.clone();
 		javelin.model.unit.Monster m=c.source;
@@ -32,7 +32,7 @@ public class Exhausted extends Fatigued{
 
 	@Override
 	public void end(Combatant c){
-		javelin.model.unit.Monster m=c.source;
+		var m=c.source;
 		m.burrow=Math.max(m.burrow,originalspeeds[0]);
 		m.fly=Math.max(m.fly,originalspeeds[1]);
 		m.swim=Math.max(m.swim,originalspeeds[2]);

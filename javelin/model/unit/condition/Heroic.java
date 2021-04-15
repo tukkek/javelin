@@ -1,7 +1,6 @@
 package javelin.model.unit.condition;
 
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.enchantment.compulsion.Heroism;
 
@@ -21,16 +20,14 @@ public class Heroic extends Condition{
 
 	@Override
 	public void start(final Combatant c){
-		final Monster m=c.source;
-		c.source=m.clone();
+		var m=c.source;
 		raiseallattacks(m,+2,+0);
 		raisesaves(m,+2);
 	}
 
 	@Override
 	public void end(final Combatant c){
-		final Monster m=c.source;
-		c.source=m.clone();
+		var m=c.source;
 		raiseallattacks(m,-2,-0);
 		m.fort-=2;
 		m.ref-=2;

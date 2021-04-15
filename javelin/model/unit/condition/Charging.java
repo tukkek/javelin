@@ -23,5 +23,4 @@ public class Charging extends Condition{
 	public void end(Combatant c){
 		c.acmodifier+=2;
 	}
-
 }

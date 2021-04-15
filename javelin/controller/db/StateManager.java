@@ -78,7 +78,7 @@ public class StateManager{
 		}
 
 		@Override
-		public void run(){
+		public synchronized void run(){
 			try(var writer=new ObjectOutputStream(new FileOutputStream(to))){
 				if(WorldScreen.current!=null) WorldScreen.current.savediscovered();
 				writer.writeBoolean(abandoned);
@@ -95,7 +95,6 @@ public class StateManager{
 				writer.writeObject(Miniatures.miniatures);
 				writer.flush();
 				writer.close();
-				writing=false;
 				if(to==SAVEFILE) backup(false).ifPresent(b->b.hold());
 			}catch(final IOException e){
 				throw new RuntimeException(e);
@@ -151,7 +150,6 @@ public class StateManager{
 
 	static long lastsave=System.currentTimeMillis();
 	static long lastbackup=System.currentTimeMillis();
-	static boolean writing=false;
 
 	static Optional<SaveThread> save(boolean force,File to){
 		long now=System.currentTimeMillis();
@@ -159,8 +157,6 @@ public class StateManager{
 			if(now-lastsave<Preferences.saveinterval*MINUTE) return Optional.empty();
 			if(Squad.active==null) return Optional.empty();
 		}
-		if(writing) return Optional.empty();
-		writing=true;
 		lastsave=now;
 		var t=new SaveThread(to);
 		t.start();

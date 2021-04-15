@@ -49,6 +49,7 @@ import javelin.model.world.location.town.governor.MonsterGovernor;
 import javelin.model.world.location.town.labor.basic.Lodge;
 import javelin.model.world.location.town.labor.basic.starting.BasicAcademy;
 import javelin.model.world.location.town.labor.basic.starting.BasicShop;
+import javelin.model.world.location.town.labor.expansive.Hub;
 import javelin.model.world.location.unique.AdventurersGuild;
 import javelin.model.world.location.unique.Arena;
 import javelin.model.world.location.unique.DeepDungeon;
@@ -185,8 +186,8 @@ public class LocationGenerator implements Serializable{
 	static void generatestartingarea(World w,Town t){
 		var lodge=new Lodge();
 		lodge.impermeable=true;
-		for(var l:RPG.shuffle(
-				new ArrayList<>(List.of(lodge,new BasicShop(),new BasicAcademy()))))
+		for(var l:RPG.shuffle(new ArrayList<>(
+				List.of(lodge,new BasicShop(),new BasicAcademy(),new Hub()))))
 			spawnnear(t,l,w,1,2,true);
 		var p=t.getlocation();
 		var recruits=RPG.shuffle(Terrain.get(p.x,p.y).getmonsters());

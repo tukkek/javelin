@@ -25,6 +25,7 @@ public class Diviner extends Wizard{
 
 	@Override
 	protected void extend(){
+		super.extend();
 		extension.add(new LocateObject());
 		extension.add(new PryingEyes());
 		extension.add(new DiscernLocation());

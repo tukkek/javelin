@@ -24,6 +24,7 @@ public class Evoker extends Wizard{
 
 	@Override
 	protected void extend(){
+		super.extend();
 		extension.add(new ScorchingRay());
 		extension.add(new MagicMissile());
 		extension.add(new PolarRay());

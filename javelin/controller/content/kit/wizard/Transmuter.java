@@ -27,6 +27,7 @@ public class Transmuter extends Wizard{
 
 	@Override
 	protected void extend(){
+		super.extend();
 		extension.add(new BearsEndurance());
 		extension.add(new BullsStrength());
 		extension.add(new CatsGrace());

@@ -25,6 +25,7 @@ public class Enchanter extends Wizard{
 
 	@Override
 	protected void extend(){
+		super.extend();
 		//compulsion magic
 		extension.add(new Heroism());// enchantment
 		extension.add(new HoldMonster());

@@ -34,6 +34,7 @@ public class Necromancer extends Wizard{
 
 	@Override
 	protected void extend(){
+		super.extend();
 		extension.add(new SlayLiving());
 		extension.add(new VampiricTouch());
 		extension.add(new Doom());
@@ -52,7 +53,7 @@ public class Necromancer extends Wizard{
 		var undead=Summon.SUMMONS.stream()
 				.filter(s->Monster.get(s.monstername).type.equals(MonsterType.UNDEAD))
 				.collect(Collectors.toList());
-		extension.addAll(Summon.select(undead, 1));
+		extension.addAll(Summon.select(undead,1));
 		super.finish();
 	}
 }

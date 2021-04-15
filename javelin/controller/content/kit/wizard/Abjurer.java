@@ -35,6 +35,7 @@ public class Abjurer extends Wizard{
 
 	@Override
 	protected void extend(){
+		super.extend();
 		extension.add(new Blink());
 		extension.add(new Barkskin());
 		extension.add(new ResistEnergy());

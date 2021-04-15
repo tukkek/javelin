@@ -24,6 +24,7 @@ public class Illusionist extends Wizard{
 
 	@Override
 	protected void extend(){
+		super.extend();
 		//TODO this is currently only boilerplate! See above.
 		extension.add(new Displacement()); // TODO currently registered as Abjuration
 		extension.add(MindImmunity.UPGRADE);

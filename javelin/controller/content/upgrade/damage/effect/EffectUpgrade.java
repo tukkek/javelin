@@ -6,8 +6,6 @@ import javelin.controller.content.kit.Kit;
 import javelin.controller.content.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
-import javelin.model.unit.attack.Attack;
-import javelin.model.unit.attack.AttackSequence;
 
 /**
  * Adds an effect to all melee attacks. A {@link Kit} should ever only have one
@@ -16,7 +14,7 @@ import javelin.model.unit.attack.AttackSequence;
  * @author alex
  */
 public class EffectUpgrade extends Upgrade{
-	private Spell effect;
+	Spell effect;
 
 	/**
 	 * @param name Upgrade name.
@@ -27,34 +25,30 @@ public class EffectUpgrade extends Upgrade{
 		this.effect=effect;
 	}
 
+	/** Uses spell name as upgrade name. */
 	public EffectUpgrade(DamageEffect e){
 		this(e.name,e.spell.clone());
 	}
 
 	@Override
 	public String inform(Combatant c){
-		HashSet<String> effects=new HashSet<>();
-		for(AttackSequence as:c.source.melee)
-			for(Attack a:as){
-				Spell effect=a.geteffect();
-				if(effect!=null) effects.add(effect.name);
-			}
-		String output="";
-		for(String effect:effects)
-			output+=effect.toLowerCase()+", ";
-		return "Current damage effects: "
-				+(output.isEmpty()?"none":output.substring(0,output.length()-2));
+		var effects=new HashSet<String>();
+		for(var a:c.source.getattacks()){
+			var e=a.geteffect();
+			if(e!=null) effects.add(e.name);
+		}
+		if(effects.isEmpty()) return "";
+		return "Replaces "+String.join(", ",effects);
 	}
 
 	@Override
 	protected boolean apply(Combatant c){
 		var upgraded=false;
-		for(AttackSequence as:c.source.melee)
-			for(Attack a:as)
-				if(!effect.equals(a.geteffect())){
-					a.seteffect(effect);
-					upgraded=true;
-				}
+		for(var a:c.source.getattacks())
+			if(!effect.equals(a.geteffect())){
+				a.seteffect(effect);
+				upgraded=true;
+			}
 		return upgraded;
 	}
 }

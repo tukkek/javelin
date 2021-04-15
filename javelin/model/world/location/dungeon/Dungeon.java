@@ -222,7 +222,7 @@ public class Dungeon implements Serializable{
 		var wall=RPG.r(0,nbranches);
 		if(wall<nbranches){
 			var b=branches.get(wall);
-			images.put(DungeonImages.WALL,b.floor);
+			images.put(DungeonImages.WALL,b.wall);
 			doorbackground=b.doorbackground;
 		}
 		if(images.get(DungeonImages.FLOOR)==images.get(DungeonImages.WALL))

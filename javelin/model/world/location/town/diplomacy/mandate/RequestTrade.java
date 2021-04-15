@@ -1,11 +1,11 @@
-package javelin.model.diplomacy.mandate;
+package javelin.model.world.location.town.diplomacy.mandate;
 
 import java.util.ArrayList;
 
 import javelin.Javelin;
-import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.world.location.ResourceSite.Resource;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.diplomacy.Diplomacy;
 import javelin.old.RPG;
 
 /**

@@ -6,13 +6,13 @@ import java.util.stream.Collectors;
 import javelin.controller.content.event.urban.UrbanEvent;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.generator.encounter.EncounterGenerator;
-import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.diplomacy.Diplomacy;
 import javelin.old.RPG;
 
 /**

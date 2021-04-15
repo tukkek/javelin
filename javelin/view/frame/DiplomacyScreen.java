@@ -17,8 +17,8 @@ import javax.swing.border.BevelBorder;
 
 import javelin.Javelin;
 import javelin.controller.challenge.Difficulty;
-import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.diplomacy.Diplomacy;
 
 /**
  * Originally the main interface for the {@link Diplomacy} system, now it's just

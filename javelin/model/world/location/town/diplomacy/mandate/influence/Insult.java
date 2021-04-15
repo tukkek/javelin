@@ -1,7 +1,7 @@
-package javelin.model.diplomacy.mandate.influence;
+package javelin.model.world.location.town.diplomacy.mandate.influence;
 
-import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.diplomacy.Diplomacy;
 
 /**
  * Degrades a {@link Relationship} with a faction, with the possiblity of

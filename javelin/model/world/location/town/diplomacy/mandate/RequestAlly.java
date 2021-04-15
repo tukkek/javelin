@@ -1,15 +1,15 @@
-package javelin.model.diplomacy.mandate;
+package javelin.model.world.location.town.diplomacy.mandate;
 
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.content.terrain.Terrain;
-import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.diplomacy.Diplomacy;
 import javelin.old.RPG;
 
 /**
@@ -20,6 +20,8 @@ import javelin.old.RPG;
  * @see #getsquad()
  */
 public class RequestAlly extends Mandate{
+	Monster ally;
+
 	/** Reflection constructor. */
 	public RequestAlly(Town t){
 		super(t);
@@ -39,17 +41,22 @@ public class RequestAlly extends Mandate{
 
 	@Override
 	public boolean validate(Diplomacy d){
-		return getsquad()!=null&&getally()!=null;
+		return ally!=null;
+	}
+
+	@Override
+	public void define(){
+		ally=getally();
+		super.define();
 	}
 
 	@Override
 	public String getname(){
-		return "Request unit from "+target;
+		return "Request unit from "+target+" ("+ally+")";
 	}
 
 	@Override
 	public void act(Diplomacy d){
-		var ally=getally();
 		getsquad().recruit(ally);
 		Javelin.message(ally+" joins your ranks!",true);
 	}

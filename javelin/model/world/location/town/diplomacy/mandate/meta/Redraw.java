@@ -1,8 +1,8 @@
-package javelin.model.diplomacy.mandate.meta;
+package javelin.model.world.location.town.diplomacy.mandate.meta;
 
-import javelin.model.diplomacy.mandate.Mandate;
-import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.diplomacy.Diplomacy;
+import javelin.model.world.location.town.diplomacy.mandate.Mandate;
 
 /**
  * Clears {@link Diplomacy#treaties}.

@@ -1,12 +1,12 @@
-package javelin.model.town.diplomacy;
+package javelin.model.world.location.town.diplomacy;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
-import javelin.model.diplomacy.mandate.Mandate;
-import javelin.model.diplomacy.mandate.RevealAlignment;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.diplomacy.mandate.Mandate;
+import javelin.model.world.location.town.diplomacy.mandate.RevealAlignment;
 import javelin.model.world.location.town.quest.Quest;
 import javelin.old.RPG;
 

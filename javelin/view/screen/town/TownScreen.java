@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.model.diplomacy.mandate.Mandate;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.diplomacy.mandate.Mandate;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.Option;
 import javelin.view.screen.town.option.ScreenOption;

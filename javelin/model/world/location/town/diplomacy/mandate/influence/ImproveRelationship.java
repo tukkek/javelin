@@ -1,12 +1,12 @@
-package javelin.model.diplomacy.mandate.influence;
+package javelin.model.world.location.town.diplomacy.mandate.influence;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.model.diplomacy.mandate.Mandate;
-import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.diplomacy.Diplomacy;
+import javelin.model.world.location.town.diplomacy.mandate.Mandate;
 import javelin.old.RPG;
 
 /**

@@ -1,4 +1,4 @@
-package javelin.model.diplomacy.mandate;
+package javelin.model.world.location.town.diplomacy.mandate;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -6,14 +6,14 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.content.ContentSummary;
-import javelin.model.diplomacy.mandate.influence.ImproveRelationship;
-import javelin.model.diplomacy.mandate.influence.Insult;
-import javelin.model.diplomacy.mandate.meta.Redraw;
-import javelin.model.diplomacy.mandate.unit.RequestMercenaries;
-import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.diplomacy.Diplomacy;
+import javelin.model.world.location.town.diplomacy.mandate.influence.ImproveRelationship;
+import javelin.model.world.location.town.diplomacy.mandate.influence.Insult;
+import javelin.model.world.location.town.diplomacy.mandate.meta.Redraw;
+import javelin.model.world.location.town.diplomacy.mandate.unit.RequestMercenaries;
 import javelin.old.RPG;
 
 /**
@@ -22,17 +22,17 @@ import javelin.old.RPG;
  * @author alex
  */
 public abstract class Mandate implements Serializable,Comparable<Mandate>{
+	/**
+	 * If {@link Javelin#DEBUG} and not-<code>null</code>, will prioritize this
+	 * card type over others.
+	 */
+	static final Class<? extends Mandate> DEBUG=null;
 	/** All types of mandates. */
 	static final List<Class<? extends Mandate>> MANDATES=new ArrayList<>(
 			List.of(Redraw.class,RequestGold.class,RequestMercenaries.class,
 					RevealAlignment.class,ImproveRelationship.class,Insult.class,
 					RequestTrade.class,RequestMap.class,RequestAlly.class,
 					RequestLocation.class));
-	/**
-	 * If {@link Javelin#DEBUG} and not-<code>null</code>, will prioritize this
-	 * card type over others.
-	 */
-	static final Class<? extends Mandate> DEBUG=null;
 
 	/**
 	 * Used for equality as well.
@@ -103,16 +103,12 @@ public abstract class Mandate implements Serializable,Comparable<Mandate>{
 			var relationships=Town.getdiscovered();
 			var discovered=new ArrayList<>(relationships);
 			var deck=RPG.shuffle(MANDATES);
-			if(Javelin.DEBUG&&DEBUG!=null){
-				deck=new ArrayList<>(deck);
-				deck.remove(DEBUG);
-				deck.add(0,DEBUG);
-			}
+			if(Javelin.DEBUG&&DEBUG!=null) deck=List.of(DEBUG);
 			for(var type:deck)
 				for(var town:RPG.shuffle(discovered)){
 					var card=type.getConstructor(Town.class).newInstance(town);
-					if(!card.validate(d)) continue;
 					card.define();
+					if(!card.validate(d)) continue;
 					if(d.treaties.add(card)) return card;
 				}
 			return null;

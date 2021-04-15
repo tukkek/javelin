@@ -1,13 +1,13 @@
-package javelin.model.diplomacy.mandate;
+package javelin.model.world.location.town.diplomacy.mandate;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import javelin.controller.Point;
-import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.world.World;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.diplomacy.Diplomacy;
 import javelin.view.screen.WorldScreen;
 
 /**

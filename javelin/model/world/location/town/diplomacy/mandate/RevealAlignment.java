@@ -1,9 +1,9 @@
-package javelin.model.diplomacy.mandate;
+package javelin.model.world.location.town.diplomacy.mandate;
 
 import javelin.Javelin;
-import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.unit.Alignment;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.diplomacy.Diplomacy;
 
 /**
  * Reveals a {@link Town}'s {@link Alignment#ethics}.

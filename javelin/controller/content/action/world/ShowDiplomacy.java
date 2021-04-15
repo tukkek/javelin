@@ -1,6 +1,6 @@
 package javelin.controller.content.action.world;
 
-import javelin.model.town.diplomacy.Diplomacy;
+import javelin.model.world.location.town.diplomacy.Diplomacy;
 import javelin.view.frame.DiplomacyScreen;
 import javelin.view.screen.WorldScreen;
 

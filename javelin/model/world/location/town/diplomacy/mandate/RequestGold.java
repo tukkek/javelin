@@ -1,11 +1,11 @@
-package javelin.model.diplomacy.mandate;
+package javelin.model.world.location.town.diplomacy.mandate;
 
 import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
-import javelin.model.town.diplomacy.Diplomacy;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.diplomacy.Diplomacy;
 
 /**
  * Adds gold to a {@link Squad} standing in the respective {@link District}.

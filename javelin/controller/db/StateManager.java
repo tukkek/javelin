@@ -149,7 +149,7 @@ public class StateManager{
 	static long lastsave=System.currentTimeMillis();
 	static long lastbackup=System.currentTimeMillis();
 
-	static Optional<SaveThread> save(boolean force,File to){
+	static synchronized Optional<SaveThread> save(boolean force,File to){
 		long now=System.currentTimeMillis();
 		if(!force){
 			if(now-lastsave<Preferences.saveinterval*MINUTE) return Optional.empty();

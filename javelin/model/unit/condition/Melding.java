@@ -23,6 +23,8 @@ public class Melding extends Condition{
 
 	@Override
 	public void end(Combatant c){
-		// expires with battle
+		c.acmodifier-=2;
+		for(var a:c.source.getattacks())
+			a.bonus-=2;
 	}
 }

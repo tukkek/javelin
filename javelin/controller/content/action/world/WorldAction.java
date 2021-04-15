@@ -45,7 +45,7 @@ public abstract class WorldAction implements ActionDescription{
 			new ShowDiplomacy(), //D
 			new Infiltrate(), //I
 			new ConfigureWorldKeys(), // K
-			new ShowMiniatures(), // M
+			//			new ShowMiniatures(), // M
 			new Retire(), // R
 			new ZoomWorldIn(), // +
 			new ZoomWorldOut(), // +

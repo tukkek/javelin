@@ -22,9 +22,7 @@ import javelin.controller.content.event.EventDealer;
 import javelin.controller.content.event.urban.UrbanEvents;
 import javelin.controller.content.event.wild.WildEvents;
 import javelin.controller.content.wish.Ressurect;
-import javelin.model.Miniatures;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
@@ -92,7 +90,7 @@ public class StateManager{
 				writer.writeObject(OpenJournal.content);
 				writer.writeObject(WildEvents.instance);
 				writer.writeObject(UrbanEvents.instance);
-				writer.writeObject(Miniatures.miniatures);
+				//				writer.writeObject(Miniatures.miniatures);
 				writer.flush();
 				writer.close();
 				if(to==SAVEFILE) backup(false).ifPresent(b->b.hold());
@@ -196,7 +194,7 @@ public class StateManager{
 			OpenJournal.content=(String)stream.readObject();
 			WildEvents.instance=(EventDealer)stream.readObject();
 			UrbanEvents.instance=(UrbanEvents)stream.readObject();
-			Miniatures.miniatures=(ArrayList<Monster>)stream.readObject();
+			//			Miniatures.miniatures=(ArrayList<Monster>)stream.readObject();
 			stream.close();
 			filestream.close();
 			return true;

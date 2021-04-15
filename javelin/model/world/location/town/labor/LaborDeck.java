@@ -20,7 +20,6 @@ import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.basic.Cancel;
 import javelin.model.world.location.town.labor.basic.Growth;
 import javelin.model.world.location.town.labor.basic.Lodge.BuildLodge;
-import javelin.model.world.location.town.labor.basic.MiniatureParlor.BuildMiniatureParlor;
 import javelin.model.world.location.town.labor.basic.Redraw;
 import javelin.model.world.location.town.labor.basic.Shop.BuildShop;
 import javelin.model.world.location.town.labor.criminal.Sewers.BuildSewers;
@@ -60,7 +59,7 @@ public class LaborDeck extends ArrayList<Labor>{
 
 	static final Labor[] BASE=new Labor[]{
 			/*new BuildDwelling(),*/new BuildLodge(),new Cancel(),new Growth(),
-			new Redraw(),new BuildShop(),new BuildMiniatureParlor(),new BuildMine()};
+			new Redraw(),new BuildShop(),new BuildMine()};
 	static final Labor[] CRIMINAL=new Labor[]{new BuildNinjaDojo(),
 			new BuildSewers(),new BuildSlums(),new BuildThievesGuild(),
 			BlackDragoon.INSTANCE.buildguild()};

@@ -9,11 +9,14 @@ import javelin.controller.content.terrain.Terrain;
 import javelin.controller.content.terrain.Water;
 import javelin.controller.db.EncounterIndex;
 import javelin.controller.db.reader.fields.Organization;
+import javelin.controller.exception.GaveUp;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
+import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.Period;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.haunt.Haunt;
 import javelin.old.RPG;
 
 /**
@@ -33,6 +36,39 @@ public class EncounterGenerator{
 
 	static int minel=Integer.MIN_VALUE;
 	static int maxel=Integer.MAX_VALUE;
+
+	/**
+	 * A helper class to abstract where the @link Monster} pool is coming from and
+	 * generate {@link Combatants} accordingly. This is helpful because
+	 * {@link Terrain} pools are vast and can generate any type of encounter level
+	 * easily while {@link EncounterIndex}es are usually more limited and thus
+	 * more slowly scan all available encounter pools.
+	 *
+	 * @author alex
+	 */
+	public static class MonsterPool{
+		List<Terrain> terrains=new ArrayList<>(0);
+		EncounterIndex index=null;
+
+		/** Constructor. */
+		public MonsterPool(Terrain t){
+			terrains.add(t);
+		}
+
+		/** Constructor. */
+		public MonsterPool(List<Monster> pool){
+			index=new EncounterIndex(pool);
+		}
+
+		/**
+		 * Calls either {@link EncounterGenerator#generate(int, EncounterIndex)} or
+		 * {@link EncounterGenerator#generate(int, List)} based on constructor data.
+		 */
+		public Combatants generate(int el) throws GaveUp{
+			return index==null?EncounterGenerator.generate(el,terrains)
+					:EncounterGenerator.generate(el,index);
+		}
+	}
 
 	/**
 	 * TODO ideally at some point here would use {@link Terrain#ALL} but currently
@@ -156,5 +192,25 @@ public class EncounterGenerator{
 	/** As {@link #generate(int, Terrain)} but for one terrain. */
 	public static Combatants generate(int el,Terrain t){
 		return generate(el,List.of(t));
+	}
+
+	/**
+	 * Generates an encounter given an EL. Even with {@link Haunt#getminimumel()},
+	 * it still may be hard to generate a particular EL from a pool, so we
+	 * iteratively look for the next-best thing before giving up, favoring lower
+	 * ELs before higher ELs.
+	 */
+	public static Combatants generate(int el,EncounterIndex index) throws GaveUp{
+		if(index.isEmpty()) throw new GaveUp();
+		var indexes=List.of(index);
+		var foes=generatebyindex(el,indexes);
+		if(foes!=null) return foes;
+		for(var delta=1;delta<=20;delta++){
+			foes=generatebyindex(el-delta,indexes);
+			if(foes!=null) return foes;
+			foes=generatebyindex(el+delta,indexes);
+			if(foes!=null) return foes;
+		}
+		throw new GaveUp();
 	}
 }

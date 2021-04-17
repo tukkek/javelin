@@ -422,6 +422,7 @@ public class Javelin{
 		Character input=null;
 		while(input==null||!allowed.contains(input))
 			input=prompt(prompt);
+		BattleScreen.active.messagepanel.clear();
 		return input;
 	}
 

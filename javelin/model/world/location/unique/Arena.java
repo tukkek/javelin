@@ -13,7 +13,7 @@ import javelin.controller.comparator.CombatantsByNameAndMercenary;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.content.fight.LocationFight;
 import javelin.controller.content.fight.mutator.Friendly;
-import javelin.controller.content.fight.mutator.Waves;
+import javelin.controller.content.fight.mutator.mode.Waves;
 import javelin.controller.content.map.location.LocationMap;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.exception.battle.StartBattle;
@@ -126,7 +126,7 @@ public class Arena extends UniqueLocation{
 						a.mercenary=true;
 					}
 					var b=Fight.state.blueteam;
-					add(allies,b,((ArenaMap)map).minionspawn,ArenaFight.this);
+					add(allies,b,((ArenaMap)map).minionspawn);
 					waveel=ChallengeCalculator.calculateel(b)+Waves.ELMODIFIER.get(waves);
 					super.draw(f);
 				}

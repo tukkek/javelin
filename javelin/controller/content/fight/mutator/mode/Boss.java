@@ -1,4 +1,4 @@
-package javelin.controller.content.fight.mutator;
+package javelin.controller.content.fight.mutator.mode;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;

@@ -1,19 +1,16 @@
-package javelin.controller.content.fight.mutator;
+package javelin.controller.content.fight.mutator.mode;
 
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import javelin.Javelin;
-import javelin.controller.Point;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.db.EncounterIndex;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.generator.encounter.EncounterGenerator;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
-import javelin.model.world.location.haunt.Haunt;
 import javelin.old.RPG;
 import javelin.test.TestHaunt;
 import javelin.test.TestWaves;
@@ -69,21 +66,6 @@ public class Waves extends FightMode{
 		return new Combatants(f.getfoes(waveel));
 	}
 
-	/**
-	 * @param wave Add these units...
-	 * @param team to this team...
-	 * @param spawn and place each of them at one of these points.
-	 * @param f Current fight.
-	 */
-	protected void add(Combatants wave,List<Combatant> team,List<Point> spawn,
-			Fight f){
-		Fight.state.next();
-		for(var c:wave)
-			c.rollinitiative(Fight.state.next.ap);
-		team.addAll(wave);
-		f.setup.place(wave,spawn);
-	}
-
 	@Override
 	public void checkend(Fight f){
 		var red=Fight.state.redteam;
@@ -92,7 +74,7 @@ public class Waves extends FightMode{
 		if(wave>waves) return;
 		var wave=generate(f);
 		if(wave==null) return;
-		add(wave,red,f.map.getspawn(red),f);
+		f.add(wave,red);
 		var p=RPG.pick(wave).getlocation();
 		BattleScreen.active.center(p.x,p.y);
 		Javelin.redraw();
@@ -104,26 +86,6 @@ public class Waves extends FightMode{
 		checkend(f);
 	}
 
-	/**
-	 * Generates a wave from {@link Encounter}s. Even with
-	 * {@link Haunt#getminimumel()}, it still may be hard to generate a particular
-	 * EL from a pool, so we iteratively look for the next-best thing before
-	 * giving up, favoring lower ELs before higher ELs.
-	 */
-	public static Combatants generate(int el,EncounterIndex index) throws GaveUp{
-		if(index.isEmpty()) throw new GaveUp();
-		var indexes=List.of(index);
-		var foes=EncounterGenerator.generatebyindex(el,indexes);
-		if(foes!=null) return foes;
-		for(var delta=1;delta<=20;delta++){
-			foes=EncounterGenerator.generatebyindex(el-delta,indexes);
-			if(foes!=null) return foes;
-			foes=EncounterGenerator.generatebyindex(el+delta,indexes);
-			if(foes!=null) return foes;
-		}
-		throw new GaveUp();
-	}
-
 	/** @return Generates at most {@link #MAXIMUM} waves and returns all units. */
 	public static Combatants generatewaves(int elp,EncounterIndex index)
 			throws GaveUp{
@@ -131,7 +93,7 @@ public class Waves extends FightMode{
 		var waves=new Combatants();
 		int el=elp+ELMODIFIER.get(nwaves);
 		for(var i=0;i<nwaves;i++)
-			waves.addAll(generate(el,index));
+			waves.addAll(EncounterGenerator.generate(el,index));
 		return waves;
 	}
 }

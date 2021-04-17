@@ -14,14 +14,18 @@ import javelin.controller.challenge.Difficulty;
 import javelin.controller.comparator.MonstersByName;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.content.fight.LocationFight;
-import javelin.controller.content.fight.mutator.Boss;
-import javelin.controller.content.fight.mutator.Waves;
+import javelin.controller.content.fight.mutator.mode.Boss;
+import javelin.controller.content.fight.mutator.mode.Gauntlet;
+import javelin.controller.content.fight.mutator.mode.Waves;
 import javelin.controller.content.map.location.LocationMap;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.db.EncounterIndex;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.NpcGenerator;
 import javelin.controller.generator.encounter.Encounter;
+import javelin.controller.generator.encounter.EncounterGenerator;
+import javelin.controller.generator.encounter.EncounterGenerator.MonsterPool;
+import javelin.model.item.Item;
 import javelin.model.item.Tier;
 import javelin.model.item.consumable.Ruby;
 import javelin.model.unit.Combatant;
@@ -33,6 +37,7 @@ import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.Fortification;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.dungeon.branch.Branch;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.old.RPG;
 import javelin.test.TestHaunt;
@@ -176,10 +181,22 @@ public abstract class Haunt extends Fortification{
 		}
 	}
 
+	/**
+	 * TODO once haunts are {@link Branch}-based, use {@link Branch#treasure} for
+	 * item rewards and {@link Branch#prefix} for voice adjective.
+	 */
+	class HauntGauntlet extends Gauntlet{
+		public HauntGauntlet(){
+			super(targetel,new MonsterPool(pool),Item.ITEMS,"haunting");
+		}
+	}
+
 	class HauntFight extends LocationFight{
 		HauntFight(Location l,LocationMap m){
 			super(l,m);
-			mutators.add(RPG.pick(List.of(new HauntWaves(),new HauntBoss())));
+			var modes=List.of(new HauntWaves(),new HauntBoss(),new HauntGauntlet());
+			var mode=RPG.pick(modes);
+			mutators.add(mode);
 		}
 
 		@Override
@@ -357,7 +374,7 @@ public abstract class Haunt extends Fortification{
 			index=new EncounterIndex(pool);
 			INDEXCACHE.put(getClass(),index);
 		}
-		return Waves.generate(waveel,index);
+		return EncounterGenerator.generate(waveel,index);
 	}
 
 	@Override

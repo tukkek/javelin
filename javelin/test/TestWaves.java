@@ -1,9 +1,10 @@
 package javelin.test;
 
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.controller.content.fight.mutator.Waves;
+import javelin.controller.content.fight.mutator.mode.Waves;
 import javelin.controller.db.EncounterIndex;
 import javelin.controller.exception.GaveUp;
+import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.generator.feature.LocationGenerator;
 import javelin.model.world.location.haunt.Haunt;
 
@@ -26,7 +27,7 @@ public class TestWaves{
 					for(var w:Waves.ELMODIFIER.entrySet())
 						try{
 							var target=el+w.getValue();
-							var wave=Waves.generate(target,new EncounterIndex(s.pool));
+							var wave=EncounterGenerator.generate(target,new EncounterIndex(s.pool));
 							var actual=ChallengeCalculator.calculateel(wave);
 							if(target!=actual) System.out
 									.println("    wanted EL"+target+", generated EL"+actual);

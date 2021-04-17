@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javelin.Debug;
 import javelin.Javelin;
 import javelin.JavelinApp;
+import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
@@ -310,5 +311,31 @@ public abstract class Fight{
 		for(var m:mutators)
 			if(type.isInstance(m)) return (K)m;
 		return null;
+	}
+
+	/**
+	 * @param units Add these units...
+	 * @param team to this team... (if {@link BattleState#redteam} will also add
+	 *          to {@link #originalredteam so XP is awarded properly}
+	 * @param spawn and place each of them at one of these points.
+	 * @param f Current fight.
+	 */
+	public void add(Combatants units,List<Combatant> team,List<Point> spawn){
+		state.next();
+		for(var c:units)
+			c.rollinitiative(state.next.ap);
+		team.addAll(units);
+		if(team==state.redteam) originalredteam.addAll(units);
+		setup.place(units,spawn);
+	}
+
+	/**
+	 * Same as {@link #add(Combatants, List, List, Fight)} but uses default spawn
+	 * points.
+	 *
+	 * @see javelin.controller.content.map.Map#getspawn(List)
+	 */
+	public void add(Combatants units,List<Combatant> team){
+		add(units,team,map.getspawn(team));
 	}
 }

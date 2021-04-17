@@ -1,7 +1,8 @@
-package javelin.controller.content.fight.mutator;
+package javelin.controller.content.fight.mutator.mode;
 
 import javelin.Javelin;
 import javelin.controller.content.fight.Fight;
+import javelin.controller.content.fight.mutator.Mutator;
 import javelin.controller.exception.GaveUp;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatants;

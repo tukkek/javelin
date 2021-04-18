@@ -17,8 +17,10 @@ import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.Tier;
 import javelin.model.unit.Combatants;
+import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.Fountain;
 import javelin.old.RPG;
 
 /**
@@ -35,6 +37,8 @@ public class Gauntlet extends FightMode{
 			+"\"Can you withstand a tougher challenge or do you concede, mortal?\"\n"
 			+"Your current rewards are: %s.\n"
 			+"Press a to advance to the next round or c to concede...";
+	static final String HEALING="\"I will restore you to your full potential, so you have a chance of surviving, puny mortals!\",\n"
+			+"the voice says...\n";
 
 	List<Item> rewards=new ArrayList<>(0);
 	MonsterPool monsters;
@@ -92,8 +96,13 @@ public class Gauntlet extends FightMode{
 			var enemies=generate(f);
 			var rewards=Javelin.group(this.rewards).toLowerCase();
 			var prompt=String.format(PROMPT,voice,rewards);
-			if(Character.toLowerCase(Javelin.prompt(prompt,Set.of('a','c')))=='a')
-				f.add(enemies,s.redteam);
+			if(Character.toLowerCase(Javelin.prompt(prompt,Set.of('a','c')))!='a')
+				return;
+			f.add(enemies,s.redteam);
+			for(var c:s.blueteam)
+				if(Squad.active.members.contains(c)) Fountain.heal(c);
+			Javelin.redraw();
+			Javelin.message(HEALING,false);
 		}catch(GaveUp e){
 			return;
 		}

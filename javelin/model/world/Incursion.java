@@ -321,7 +321,7 @@ public class Incursion extends Actor{
 
 	@Override
 	public String describe(){
-		var enemies=Squad.active.spotenemies(squad,this);
+		var enemies=Squad.active.scout(squad,this);
 		String description=this.description+" ("+Difficulty.describe(squad)
 				+" fight)";
 		if(enemies.isEmpty())

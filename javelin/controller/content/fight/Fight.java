@@ -338,4 +338,22 @@ public abstract class Fight{
 	public void add(Combatants units,List<Combatant> team){
 		add(units,team,map.getspawn(team));
 	}
+
+	/**
+	 * Flees with all {@link BattleState#blueteam} {@link Combatant}s and
+	 * {@link EndBattle}.
+	 *
+	 * @param rescue If <code>true</code>, any fallen allies will also be returned
+	 *          to safety.
+	 */
+	public void flee(boolean rescue){
+		if(rescue){
+			var rescued=new Combatants(state.dead);
+			rescued.retainAll(originalblueteam);
+			state.fleeing.addAll(rescued);
+		}
+		state.fleeing.addAll(state.blueteam);
+		state.blueteam.clear();
+		throw new EndBattle();
+	}
 }

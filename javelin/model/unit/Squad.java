@@ -300,7 +300,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 	 * @return A list with the name of the given {@link Combatant}s, replaced with
 	 *         "?" when failed to {@link #perceive()} properly.
 	 */
-	public String spotenemies(List<Combatant> opponents,Actor target){
+	public String scout(List<Combatant> opponents,Actor target){
 		if(target!=null&&distanceinsteps(target.x,target.y)>1) return "";
 		int spot=perceive(true,true,true);
 		var spotted=opponents.stream().filter(c->spot>=c.taketen(Skill.STEALTH))
@@ -336,7 +336,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 		final String prompt="You have hidden from a "+Difficulty.describe(foes)
 				+" group of enemies!\n"
 				+"Press s to storm them or w to wait for them to go away...\n\n"
-				+"Enemies: "+Squad.active.spotenemies(foes,null)+".";
+				+"Enemies: "+scout(foes,null)+".";
 		while(input!='w'&&input!='s')
 			input=Javelin.prompt(prompt);
 		return input=='w';

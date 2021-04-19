@@ -77,9 +77,7 @@ public class Siege extends Fight{
 	 * removal.
 	 */
 	protected void afterlose(){
-		ArrayList<Combatant> alive=state.getcombatants();
-		for(Combatant c:new ArrayList<>(location.garrison))
-			if(!alive.contains(c)) location.garrison.remove(c);
+		location.garrison.removeAll(state.dead);
 	}
 
 	protected void afterwin(){

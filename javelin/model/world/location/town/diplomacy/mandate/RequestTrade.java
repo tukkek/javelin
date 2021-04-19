@@ -40,8 +40,8 @@ public class RequestTrade extends Mandate{
 
 	@Override
 	public String getname(){
-		return "Establish "+type.toString().toLowerCase()+" trade route from "
-				+target+" to "+destination;
+		var t=type==null?"null":type.toString().toLowerCase();//TODO workaround to prevent NPE
+		return "Establish "+t+" trade route from "+target+" to "+destination;
 	}
 
 	@Override

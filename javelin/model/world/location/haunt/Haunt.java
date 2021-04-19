@@ -14,19 +14,18 @@ import javelin.controller.challenge.Difficulty;
 import javelin.controller.comparator.MonstersByName;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.content.fight.LocationFight;
-import javelin.controller.content.fight.mutator.mode.Boss;
-import javelin.controller.content.fight.mutator.mode.Gauntlet;
-import javelin.controller.content.fight.mutator.mode.Horde;
+import javelin.controller.content.fight.mutator.mode.FightMode;
 import javelin.controller.content.fight.mutator.mode.Waves;
+import javelin.controller.content.fight.mutator.mode.haunt.HauntBoss;
+import javelin.controller.content.fight.mutator.mode.haunt.HauntGauntlet;
+import javelin.controller.content.fight.mutator.mode.haunt.HauntHorde;
+import javelin.controller.content.fight.mutator.mode.haunt.HauntWaves;
 import javelin.controller.content.map.location.LocationMap;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.db.EncounterIndex;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.NpcGenerator;
-import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.generator.encounter.EncounterGenerator;
-import javelin.controller.generator.encounter.EncounterGenerator.MonsterPool;
-import javelin.model.item.Item;
 import javelin.model.item.Tier;
 import javelin.model.item.consumable.Ruby;
 import javelin.model.unit.Combatant;
@@ -38,7 +37,6 @@ import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.Fortification;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.dungeon.branch.Branch;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.old.RPG;
 import javelin.test.TestHaunt;
@@ -143,68 +141,18 @@ public abstract class Haunt extends Fortification{
 		}
 	}
 
-	class HauntWaves extends Waves{
-		HauntWaves(){
-			super(targetel,null);
-		}
-
-		@Override
-		public Combatants generate(Fight f){
-			try{
-				return generatemonsters(waveel);
-			}catch(GaveUp e){
-				if(Javelin.DEBUG) throw new RuntimeException(e);
-				return new Combatants();
-			}
-		}
-	}
-
-	class HauntBoss extends Boss{
-		public HauntBoss(){
-			super(targetel,null);
-		}
-
-		@Override
-		protected List<Monster> listbosses(List<Terrain> terrains){
-			return pool;
-		}
-
-		@Override
-		protected List<Encounter> listminions(List<Terrain> terrains){
-			var minions=new ArrayList<Encounter>(pool.size()*4);
-			for(var m:pool){
-				var group=new Combatants(2);
-				for(var i=1;i<=8;i++)
-					group.add(new Combatant(m,true));
-				minions.add(new Encounter(group));
-			}
-			return minions;
-		}
-	}
-
-	/**
-	 * TODO once haunts are {@link Branch}-based, use {@link Branch#treasure} for
-	 * item rewards and {@link Branch#prefix} for voice adjective.
-	 */
-	class HauntGauntlet extends Gauntlet{
-		public HauntGauntlet(){
-			super(targetel,new MonsterPool(pool),Item.ITEMS,"haunting");
-		}
-	}
-
-	class HauntHorde extends Horde{
-		public HauntHorde(){
-			super(targetel,new MonsterPool(pool));
-		}
-	}
+	static final List<Class<? extends FightMode>> MODES=List.of(HauntWaves.class,
+			HauntBoss.class,HauntGauntlet.class,HauntHorde.class);
 
 	class HauntFight extends LocationFight{
+
 		HauntFight(Location l,LocationMap m){
 			super(l,m);
-			var modes=List.of(new HauntWaves(),new HauntBoss(),new HauntGauntlet(),
-					new HauntHorde());
-			var mode=RPG.pick(modes);
-			mutators.add(mode);
+			try{
+				mutators.add(mode.getConstructor(Haunt.class).newInstance(Haunt.this));
+			}catch(ReflectiveOperationException e){
+				throw new RuntimeException(e);
+			}
 		}
 
 		@Override
@@ -220,6 +168,7 @@ public abstract class Haunt extends Fortification{
 	/** Every unit that can be generated here. */
 	public List<Monster> pool;
 
+	Class<? extends FightMode> mode=RPG.pick(MODES);
 	List<Monster> hires=new ArrayList<>();
 	Class<? extends LocationMap> map;
 	Combatant recruit;
@@ -402,7 +351,7 @@ public abstract class Haunt extends Fortification{
 
 	/** @see TestHaunt */
 	public Combatants testboss() throws GaveUp{
-		return new HauntBoss().generate(null);
+		return new HauntBoss(this).generate(null);
 	}
 
 	/** @see TestHaunt */

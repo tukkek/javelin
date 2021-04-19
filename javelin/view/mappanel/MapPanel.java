@@ -33,6 +33,7 @@ public abstract class MapPanel extends Panel{
 	public Canvas canvas=new Canvas(){
 		@Override
 		public void paint(Graphics g){
+			//TODO maybe try removing this custom Canvas if #304 persists
 			super.paint(g);
 			for(Tile[] ts:tiles)
 				for(Tile t:ts)

@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.HashMap;
+import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.model.state.Square;
 import javelin.view.screen.BattleScreen;
@@ -60,16 +62,18 @@ public abstract class Tile{
 	}
 
 	public void repaint(){
+		BattleScreen s=null;
+		MapPanel p=null;
+		Graphics g=null;
 		try{
-			paint(BattleScreen.active.mappanel.getdrawgraphics());
+			s=BattleScreen.active;
+			p=s.mappanel;
+			g=p.getdrawgraphics();
+			paint(g);
 		}catch(NullPointerException e){
-			var debug="Screen: "+BattleScreen.active;
-			if(BattleScreen.active!=null){
-				debug+="\nPanel: "+BattleScreen.active.mappanel;
-				if(BattleScreen.active.mappanel!=null)
-					debug+="\nGraphics: "+BattleScreen.active.mappanel.getdrawgraphics();
-			}
-			throw new RuntimeException(debug,e);
+			if(!Javelin.DEBUG) return;
+			var debug=List.of("Screen: "+s,"Panel: "+p,"Graphics: "+g);
+			throw new RuntimeException(String.join("\n",debug),e);
 		}
 	}
 

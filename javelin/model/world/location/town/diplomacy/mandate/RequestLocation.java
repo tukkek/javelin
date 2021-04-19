@@ -6,8 +6,9 @@ import java.util.stream.Collectors;
 import javelin.Javelin;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
+import javelin.model.world.location.dungeon.branch.temple.Temple.TempleEntrance;
+import javelin.model.world.location.haunt.Haunt;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.diplomacy.Diplomacy;
 import javelin.old.RPG;
 
 /**
@@ -17,49 +18,43 @@ import javelin.old.RPG;
  * @see Actor#see()
  */
 public class RequestLocation extends Mandate{
+	Actor target=null;
+
 	/** Reflection constructor. */
 	public RequestLocation(Town t){
 		super(t);
 	}
 
-	boolean validate(Actor a){
-		var realm=target.realm;
-		if(realm==null||!realm.equals(a.realm)) return false;
-		var population=target.population;
-		var el=a.getel(population);
-		if(el==null||el>population) return false;
-		return !a.see();
-	}
-
-	List<Actor> gettargets(){
-		return World.getactors().stream().filter(a->validate(a))
+	Actor find(Class<? extends Actor> type){
+		var found=World.getactors().stream()
+				.filter(a->type.isInstance(a)&&!a.cansee())
 				.collect(Collectors.toList());
-	}
-
-	int getamount(){
-		return Math.min(gettargets().size(),target.getrank().rank);
+		return found.isEmpty()?null:RPG.pick(found);
 	}
 
 	@Override
-	public boolean validate(Diplomacy d){
-		return getamount()>0;
+	public void define(){
+		for(var type:List.of(Town.class,TempleEntrance.class,Haunt.class)){
+			target=find(type);
+			if(target!=null) break;
+		}
+		super.define();
+	}
+
+	@Override
+	public boolean validate(){
+		return target!=null&&!target.cansee();
 	}
 
 	@Override
 	public String getname(){
-		return "Reveal location(s) aligned with "+target;
+		return "Reveal location of "+target;
 	}
 
 	@Override
-	public void act(Diplomacy d){
-		var targets=RPG.shuffle(gettargets()).subList(0,getamount());
-		for(var a:targets)
-			a.reveal();
+	public void act(){
+		target.reveal();
 		Javelin.redraw();
-		var revealed="The locations of the following are revealed:\n"
-				+targets.stream().map(a->a.toString()).sorted()
-						.collect(Collectors.joining(", "))
-				+".";
-		Javelin.message(revealed,true);
+		Javelin.message("The location of "+target+" is revealed!",true);
 	}
 }

@@ -221,7 +221,10 @@ public class WorldScreen extends BattleScreen{
 	static public void discover(int x,int y){
 		if(!World.validatecoordinate(x,y)) return;
 		WorldScreen s=getcurrentscreen();
-		if(s!=null) s.gettiles()[x][y].discovered=true;
+		if(s!=null){
+			s.gettiles()[x][y].discovered=true;
+			World.seed.discovered.add(new Point(x,y));
+		}
 	}
 
 	/**

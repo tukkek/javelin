@@ -65,7 +65,6 @@ public class DiplomacyScreen extends Frame{
 		var rank=new JLabel(t.getrank().toString());
 		rank.setToolTipText(t.population+" population");
 		info.add(rank);
-		info.add(t.diplomacy.describealignment());
 		if(t.ishostile()){
 			var l=new JLabel("Hostile ("+Difficulty.describe(t.garrison)+")");
 			l.setForeground(Color.RED);

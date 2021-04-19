@@ -1,4 +1,4 @@
-package javelin.model.world.location.town.diplomacy.mandate;
+package javelin.model.world.location.town.diplomacy.mandate.ally;
 
 import java.util.stream.Collectors;
 
@@ -9,7 +9,7 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.diplomacy.Diplomacy;
+import javelin.model.world.location.town.diplomacy.mandate.Mandate;
 import javelin.old.RPG;
 
 /**
@@ -19,7 +19,7 @@ import javelin.old.RPG;
  * @author alex
  * @see #getsquad()
  */
-public class RequestAlly extends Mandate{
+public abstract class RequestAlly extends Mandate{
 	Monster ally;
 
 	/** Reflection constructor. */
@@ -27,37 +27,38 @@ public class RequestAlly extends Mandate{
 		super(t);
 	}
 
-	Monster getally(){
-		var l=target.getlocation();
+	@Override
+	public void define(){
+		var l=town.getlocation();
 		var all=Terrain.get(l.x,l.y).getmonsters();
-		for(var el=target.population;el>0;el--){
+		for(var el=town.population;el>0;el--){
 			final var cr=el;
-			var candidates=all.stream().filter(m->m.cr==cr)
+			var candidates=all.stream().filter(m->m.cr==cr&&filter(m))
 					.collect(Collectors.toList());
-			if(!candidates.isEmpty()) return RPG.pick(candidates);
+			if(!candidates.isEmpty()){
+				ally=RPG.pick(candidates);
+				break;
+			}
 		}
-		return null;
+		super.define();
 	}
 
+	/** @return <code>true</code> if unit is a valid recruit. */
+	protected abstract boolean filter(Monster m);
+
 	@Override
-	public boolean validate(Diplomacy d){
+	public boolean validate(){
 		return ally!=null;
 	}
 
 	@Override
-	public void define(){
-		ally=getally();
-		super.define();
-	}
-
-	@Override
 	public String getname(){
-		return "Request unit from "+target+" ("+ally+")";
+		return "Request unit ("+ally+")";
 	}
 
 	@Override
-	public void act(Diplomacy d){
-		getsquad().recruit(ally);
+	public void act(){
+		Squad.active.recruit(ally);
 		Javelin.message(ally+" joins your ranks!",true);
 	}
 }

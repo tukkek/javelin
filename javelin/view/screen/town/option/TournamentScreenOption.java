@@ -30,8 +30,8 @@ public class TournamentScreenOption extends ScreenOption{
 	/**
 	 * Prices the match at half the reward.
 	 */
-	public TournamentScreenOption(String name,Town town,char c){
-		super(name,town,c);
+	public TournamentScreenOption(String name,Town t,char c){
+		super(name,t,c);
 		price=RewardCalculator.receivegold(Squad.active.members)/2;
 	}
 

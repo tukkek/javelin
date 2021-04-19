@@ -2,18 +2,19 @@ package javelin.model.world.location.town.diplomacy.mandate;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javelin.Javelin;
 import javelin.controller.content.ContentSummary;
-import javelin.model.unit.Squad;
-import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.diplomacy.Diplomacy;
-import javelin.model.world.location.town.diplomacy.mandate.influence.ImproveRelationship;
-import javelin.model.world.location.town.diplomacy.mandate.influence.Insult;
-import javelin.model.world.location.town.diplomacy.mandate.meta.Redraw;
-import javelin.model.world.location.town.diplomacy.mandate.unit.RequestMercenaries;
+import javelin.model.world.location.town.diplomacy.mandate.ally.RequestChaoticAlly;
+import javelin.model.world.location.town.diplomacy.mandate.ally.RequestEvilAlly;
+import javelin.model.world.location.town.diplomacy.mandate.ally.RequestGoodAlly;
+import javelin.model.world.location.town.diplomacy.mandate.ally.RequestLawfulAlly;
+import javelin.model.world.location.town.labor.Trait;
 import javelin.old.RPG;
 
 /**
@@ -27,12 +28,20 @@ public abstract class Mandate implements Serializable,Comparable<Mandate>{
 	 * card type over others.
 	 */
 	static final Class<? extends Mandate> DEBUG=null;
-	/** All types of mandates. */
-	static final List<Class<? extends Mandate>> MANDATES=new ArrayList<>(
-			List.of(Redraw.class,RequestGold.class,RequestMercenaries.class,
-					RevealAlignment.class,ImproveRelationship.class,Insult.class,
-					RequestTrade.class,RequestMap.class,RequestAlly.class,
-					RequestLocation.class));
+	static final Map<String,List<Class<? extends Mandate>>> MANDATES=new HashMap<>();
+	static final String DEFAULT="default";
+
+	static{
+		MANDATES.put(DEFAULT,List.of(RequestRuby.class));
+		MANDATES.put(Trait.CRIMINAL,List.of(RequestEvilAlly.class));
+		MANDATES.put(Trait.EXPANSIVE,
+				List.of(RequestLocation.class,RequestTrade.class));
+		MANDATES.put(Trait.MAGICAL,List.of(RequestItem.class));
+		MANDATES.put(Trait.MERCANTILE,List.of(RequestGold.class));
+		MANDATES.put(Trait.MILITARY,List.of(RequestLawfulAlly.class));
+		MANDATES.put(Trait.NATURAL,List.of(RequestChaoticAlly.class));
+		MANDATES.put(Trait.RELIGIOUS,List.of(RequestGoodAlly.class));
+	}
 
 	/**
 	 * Used for equality as well.
@@ -40,12 +49,12 @@ public abstract class Mandate implements Serializable,Comparable<Mandate>{
 	 * @see #getname()
 	 */
 	public String name;
-	/** May be ignored by cards that have no target. */
-	protected Town target;
+	/** Town the mandate is being asked from. */
+	protected Town town;
 
 	/** Reflection constructor. */
 	public Mandate(Town t){
-		target=t;
+		town=t;
 	}
 
 	/**
@@ -60,7 +69,7 @@ public abstract class Mandate implements Serializable,Comparable<Mandate>{
 	 *         Mandate hand. If already on hand, will remove it.
 	 * @see #name
 	 */
-	public abstract boolean validate(Diplomacy d);
+	public abstract boolean validate();
 
 	@Override
 	public int hashCode(){
@@ -78,20 +87,11 @@ public abstract class Mandate implements Serializable,Comparable<Mandate>{
 	}
 
 	/** What to do once this card is played. */
-	public abstract void act(Diplomacy d);
+	public abstract void act();
 
 	/** Called once after a card is instantiated and validated. */
 	public void define(){
 		name=getname();
-	}
-
-	/**
-	 * @return A squad in the {@link #target}'s {@link District} or
-	 *         <code>null</code> if none present.
-	 */
-	protected Squad getsquad(){
-		var squads=target.getdistrict().getsquads();
-		return squads.isEmpty()?null:RPG.pick(squads);
 	}
 
 	/**
@@ -100,17 +100,18 @@ public abstract class Mandate implements Serializable,Comparable<Mandate>{
 	 */
 	public static Mandate generate(Diplomacy d){
 		try{
-			var relationships=Town.getdiscovered();
-			var discovered=new ArrayList<>(relationships);
-			var deck=RPG.shuffle(MANDATES);
-			if(Javelin.DEBUG&&DEBUG!=null) deck=List.of(DEBUG);
-			for(var type:deck)
-				for(var town:RPG.shuffle(discovered)){
-					var card=type.getConstructor(Town.class).newInstance(town);
-					card.define();
-					if(!card.validate(d)) continue;
-					if(d.treaties.add(card)) return card;
-				}
+			var deck=new ArrayList<>(MANDATES.get(DEFAULT));
+			for(var t:d.town.traits)
+				deck.addAll(MANDATES.get(t));
+			if(Javelin.DEBUG&&DEBUG!=null){
+				deck.clear();
+				deck.add(DEBUG);
+			}
+			for(var type:RPG.shuffle(deck)){
+				var card=type.getConstructor(Town.class).newInstance(d.town);
+				card.define();
+				if(card.validate()&&d.treaties.add(card)) return card;
+			}
 			return null;
 		}catch(ReflectiveOperationException e){
 			throw new RuntimeException(e);
@@ -119,7 +120,10 @@ public abstract class Mandate implements Serializable,Comparable<Mandate>{
 
 	/** @see ContentSummary */
 	public static String printsummary(){
-		return MANDATES.size()+" diplomatic actions";
+		var actions=0;
+		for(var v:MANDATES.values())
+			actions+=v.size();
+		return actions+" diplomatic actions";
 	}
 
 	@Override

@@ -51,7 +51,7 @@ public class ResourceSite extends Location{
 	 *
 	 * @author alex
 	 */
-	public static class Resource implements Serializable{
+	public static class Resource implements Serializable,Comparable<Resource>{
 		/** Name of this natural resource. */
 		public String name;
 		/** Type of terrain the relevant {@link ResourceSite} can be found on. */
@@ -81,6 +81,11 @@ public class ResourceSite extends Location{
 		@Override
 		public String toString(){
 			return name;
+		}
+
+		@Override
+		public int compareTo(Resource o){
+			return name.compareTo(o.name);
 		}
 	}
 

@@ -6,7 +6,6 @@ import java.util.TreeSet;
 
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.diplomacy.mandate.Mandate;
-import javelin.model.world.location.town.diplomacy.mandate.RevealAlignment;
 import javelin.model.world.location.town.quest.Quest;
 import javelin.old.RPG;
 
@@ -25,13 +24,10 @@ import javelin.old.RPG;
  * TODO with 2.0, when we have html documentation, include overview and card
  * documentation
  *
- * TODO "spontaneous change alignment" mandates
- *
  * @author alex
  * @see Town#ishostile()
  * @see Town#generatereputation()
  * @see Mandate#validate(Diplomacy)
- * @see RaiseHandSize
  */
 public class Diplomacy implements Serializable{
 	/**
@@ -43,13 +39,6 @@ public class Diplomacy implements Serializable{
 	public TreeSet<Mandate> treaties=new TreeSet<>();
 	/** Town these rewards are for. */
 	public Town town;
-	/**
-	 * Town alignment dictates how certain {@link Mandate}s behave, so unlocking
-	 * it is a privilege.
-	 *
-	 * @see RevealAlignment
-	 */
-	public boolean showalignment=false;
 
 	/** Generates a fresh set of relationships, when a campaign starts. */
 	public Diplomacy(Town t){
@@ -78,7 +67,7 @@ public class Diplomacy implements Serializable{
 	 */
 	public void validate(){
 		for(var card:new ArrayList<>(treaties))
-			if(!card.validate(this)){
+			if(!card.validate()){
 				treaties.remove(card);
 				town.events.add("Treaty no longer eligible: "+card+".");
 			}
@@ -103,14 +92,6 @@ public class Diplomacy implements Serializable{
 		return "Loyal";
 	}
 
-	/**
-	 * @return A description of {@link Town#alignment}, taking
-	 *         {@link #showalignment} and {@link #showmorals} into account.
-	 */
-	public String describealignment(){
-		return showalignment?town.alignment.toString():"Unknown alignment";
-	}
-
 	/** @return <code>true</code> if can claim a {@link Mandate}. */
 	public boolean claim(){
 		return getstatus()>=1&&!treaties.isEmpty();
@@ -119,7 +100,7 @@ public class Diplomacy implements Serializable{
 	/** @param m Pays for, plays and discards this. */
 	public void enact(Mandate m){
 		reputation-=town.population;
-		m.act(this);
+		m.act();
 		treaties.remove(m);
 	}
 }

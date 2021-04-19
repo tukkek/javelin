@@ -104,7 +104,6 @@ public class GovernorScreen extends SelectScreen{
 		else
 			info+=town.resources.stream().map(r->r.name.toLowerCase()).sorted()
 					.collect(Collectors.joining(", "))+".";
-		info+="\n  Alignment: "+t.diplomacy.describealignment().toLowerCase()+".";
 		info+="\n  Reputation: "+t.diplomacy.describestatus().toLowerCase()+".";
 		return info;
 	}

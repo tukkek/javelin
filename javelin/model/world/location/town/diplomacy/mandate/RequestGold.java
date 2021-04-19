@@ -5,7 +5,6 @@ import javelin.controller.challenge.RewardCalculator;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.diplomacy.Diplomacy;
 
 /**
  * Adds gold to a {@link Squad} standing in the respective {@link District}.
@@ -13,34 +12,34 @@ import javelin.model.world.location.town.diplomacy.Diplomacy;
  * @author alex
  */
 public class RequestGold extends Mandate{
+	int gold;
+
 	/** Reflection constructor. */
 	public RequestGold(Town t){
 		super(t);
 	}
 
-	int getgold(){
-		var p=target.population;
-		return Javelin.round(RewardCalculator.getgold(p-1,p+1));
+	@Override
+	public void define(){
+		var p=town.population;
+		gold=Javelin.round(RewardCalculator.getgold(p-1,p+1));
+		super.define();
 	}
 
 	@Override
-	public boolean validate(Diplomacy d){
-		return getgold()>0&&getsquad()!=null;
+	public boolean validate(){
+		return gold>0;
 	}
 
 	@Override
 	public String getname(){
-		return "Request gold from "+target;
+		return "Request gold ($"+Javelin.format(gold)+")";
 	}
 
 	@Override
-	public void act(Diplomacy d){
-		var gold=0;
-		while(gold==0)
-			gold=getgold();
-		getsquad().gold+=gold;
-		String result=target+" gives $"+Javelin.format(gold)
-				+" to a squad in their district!";
-		Javelin.message(result,true);
+	public void act(){
+		Squad.active.gold+=gold;
+		var m="Party receives $%s!";
+		Javelin.message(String.format(m,Javelin.format(gold)),true);
 	}
 }

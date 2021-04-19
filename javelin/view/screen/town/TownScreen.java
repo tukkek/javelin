@@ -23,8 +23,8 @@ import javelin.view.screen.town.option.TournamentScreenOption;
  * @author alex
  */
 public class TownScreen extends PurchaseScreen{
-	static final Option SETTLE=new Option("Settle worker",0,'s');
 	static final boolean DEBUGMANAGEMENT=false;
+	static final Option SETTLE=new Option("Settle worker",0,'s');
 	static final Option RENAME=new Option("Rename town",0,'r');
 	static final Option TREATISE=new Option("Claim treaty",0,'t');
 	static final String REPUTATION="Reputation: %s (%s%%).";
@@ -62,7 +62,7 @@ public class TownScreen extends PurchaseScreen{
 		List<Option> options;
 
 		public SelectTreaty(){
-			super("Select a treaty to implement:",TownScreen.this.town);
+			super("Select a treaty to claim:",TownScreen.this.town);
 			stayopen=false;
 			var treaties=town.diplomacy.treaties;
 			options=new ArrayList<>(treaties.size());
@@ -140,7 +140,7 @@ public class TownScreen extends PurchaseScreen{
 		list.add(SETTLE);
 		if(town.diplomacy.claim()) list.add(TREATISE);
 		if(town.ishosting())
-			list.add(new TournamentScreenOption("Enter tournament",town,'t'));
+			list.add(new TournamentScreenOption("Enter tournament",town,'e'));
 		return list;
 	}
 

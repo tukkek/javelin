@@ -19,7 +19,7 @@ import javelin.view.screen.town.SelectScreen;
 public class DungeonGenerator{
 	static final boolean DEBUGROOMS=true;
 	static final int DEBUGSIZE=1;
-	static final int MAXATTEMPTS=10000/4;
+	static final int MAXATTEMPTS=10000/5;
 
 	/**
 	 * TODO temporary: will need to be refactored when more than one level can be

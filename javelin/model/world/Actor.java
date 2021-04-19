@@ -358,4 +358,12 @@ public abstract class Actor implements Serializable{
 		}
 		throw new RestartWorldGeneration();
 	}
+
+	/**
+	 * @return <code>true</code> if this actor has been discovered and can be seen
+	 *         on the {@link WorldScreen}.
+	 */
+	public boolean cansee(){
+		return World.seed.discovered.contains(getlocation());
+	}
 }

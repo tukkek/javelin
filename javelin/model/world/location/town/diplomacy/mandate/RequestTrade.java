@@ -1,11 +1,11 @@
 package javelin.model.world.location.town.diplomacy.mandate;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.model.world.location.ResourceSite.Resource;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.diplomacy.Diplomacy;
 import javelin.old.RPG;
 
 /**
@@ -14,44 +14,57 @@ import javelin.old.RPG;
  * @author alex
  */
 public class RequestTrade extends Mandate{
-	Town destination;
+	Town with;
 	Resource type;
 
 	/** Reflection constructor. */
 	public RequestTrade(Town t){
 		super(t);
-		var candidates=RPG.shuffle(new ArrayList<>(Town.getdiscovered()));
-		candidates.remove(t);
-		for(var c:candidates)
-			if(!c.ishostile()) for(var type:t.resources)
-				if(!c.resources.contains(type)){
-					destination=c;
-					this.type=type;
-					return;
-				}
+	}
+
+	Resource trade(Town from,Town to){
+		var incoming=new ArrayList<>(from.resources);
+		incoming.removeAll(to.resources);
+		incoming.sort(null);
+		return incoming.isEmpty()?null:incoming.get(0);
+	}
+
+	Resource trade(Town t){
+		var resource=trade(t,town);
+		if(resource!=null) return resource;
+		return trade(town,t);
+	}
+
+	boolean validate(Town t){
+		return t!=town&&t.cansee()&&!t.ishostile()&&trade(t)!=null;
 	}
 
 	@Override
-	public boolean validate(Diplomacy d){
-		return target.diplomacy.getstatus()>=0&&destination!=null&&type!=null
-				&&target.resources.contains(type)
-				&&!destination.resources.contains(type);
+	public void define(){
+		var towns=Town.getdiscovered().stream().filter(t->validate(t))
+				.collect(Collectors.toList());
+		if(towns.isEmpty()) return;
+		with=RPG.pick(towns);
+		type=trade(with);
+		super.define();
 	}
 
 	@Override
 	public String getname(){
-		var t=type==null?"null":type.toString().toLowerCase();//TODO workaround to prevent NPE
-		return "Establish "+t+" trade route from "+target+" to "+destination;
+		return "Establish "+type.toString().toLowerCase()+" trade route with "+with;
 	}
 
 	@Override
-	public void act(Diplomacy d){
-		destination.resources.add(type);
-		String message="Trade route established, "+target+" gets "
-				+type.toString().toLowerCase()+"!";
-		destination.diplomacy.reputation+=d.town.population;
-		var status=destination.diplomacy.describestatus().toLowerCase();
-		message+="\nNew relationship status with "+target+": "+status+".";
-		Javelin.message(message,true);
+	public boolean validate(){
+		return type!=null&&validate(with)&&trade(with)==type;
+	}
+
+	@Override
+	public void act(){
+		town.resources.add(type);
+		with.resources.add(type);
+		var m="Trade route for %s established between %s and %s!";
+		var t=type.toString().toLowerCase();
+		Javelin.message(String.format(m,t,town,with),true);
 	}
 }

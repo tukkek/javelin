@@ -87,8 +87,8 @@ public class DefensiveAttack extends ExpertiseAction{
 		combatant.addcondition(new DefensiveStance(combatant.ap+.1f,combatant,
 				defensiveamount(combatant)));
 		Attack attack=combatant.source.melee.get(0).get(0);
-		target.damage(attack.getaveragedamage(),battleState,
-				attack.energy?target.source.energyresistance:target.source.dr);
+		target.damage(attack.getaveragedamage(),attack.energy?target.source.energyresistance:target.source.dr,
+				battleState);
 		return new ChanceNode(battleState,chance,
 				"Defensive attack hits!\n"+target+" is "+target.getstatus()+".",
 				Javelin.Delay.BLOCK);

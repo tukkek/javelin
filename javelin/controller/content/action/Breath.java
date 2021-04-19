@@ -217,7 +217,7 @@ public class Breath extends Action implements AiAction{
 	static void damage(Combatant target,final int damage,final BattleState s,
 			StringBuilder affected){
 		if(damage>0){
-			target.damage(damage,s,target.source.energyresistance);
+			target.damage(damage,target.source.energyresistance,s);
 			affected.append(" is "+target.getstatus()+", ");
 		}else
 			affected.append(' ');

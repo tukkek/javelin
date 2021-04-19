@@ -292,7 +292,7 @@ public class Combatant implements Serializable,Cloneable{
 	 * energy resistance universal and all damage reduction impenetrable this is a
 	 * measure to avoid monsters from becoming invincible.
 	 */
-	public void damage(int damagep,BattleState s,int reduce){
+	public void damage(int damagep,int reduce,BattleState s){
 		if(reduce==Integer.MAX_VALUE) return;
 		int damage=damagep-reduce;
 		if(damage<1) damage=1;
@@ -771,7 +771,7 @@ public class Combatant implements Serializable,Cloneable{
 	}
 
 	/**
-	 * Simpler version of {@link #damage(int, BattleState, int)}. Just takes the
+	 * Simpler version of {@link #damage(int, int, BattleState)}. Just takes the
 	 * given amount from {@link #hp} while making sure it stays positive.
 	 *
 	 * @param reduction Usually {@link Monster#dr} or

@@ -30,10 +30,10 @@ public class SlayLiving extends Touch{
 	public String cast(final Combatant caster,final Combatant target,
 			final boolean saved,final BattleState s,ChanceNode cn){
 		if(saved){
-			target.damage(Math.round(3*3.5f+9),s,target.source.energyresistance);
+			target.damage(Math.round(3*3.5f+9),target.source.energyresistance,s);
 			return target+" resists, is now "+target.getstatus()+".";
 		}
-		target.damage(target.hp+10,s,0);
+		target.damage(target.hp+10,0,s);
 		return target+" is killed!";
 	}
 

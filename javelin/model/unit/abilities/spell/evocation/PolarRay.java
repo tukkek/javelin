@@ -25,7 +25,7 @@ public class PolarRay extends Ray{
 	@Override
 	public String cast(Combatant caster,Combatant target,boolean saved,
 			BattleState s,ChanceNode cn){
-		target.damage(RPG.average(15,6),s,target.source.energyresistance);
+		target.damage(RPG.average(15,6),target.source.energyresistance,s);
 		return target+" is "+target.getstatus()+"!";
 	}
 }

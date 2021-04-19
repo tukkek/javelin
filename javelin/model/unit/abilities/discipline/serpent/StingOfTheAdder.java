@@ -39,7 +39,7 @@ public class StingOfTheAdder extends Strike{
 
 	@Override
 	public void prehit(Combatant current,Combatant target,Attack a,BattleState s){
-		target.damage(DAMAGE,s,0);
+		target.damage(DAMAGE,0,s);
 		final boolean save=save(target.source.getfortitude(),14,current);
 		final int wisdomdamage=save?WISDOMDAMAGE/2:WISDOMDAMAGE;
 		target.addcondition(new WisdomDamage(wisdomdamage,target));

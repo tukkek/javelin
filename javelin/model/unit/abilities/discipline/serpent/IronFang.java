@@ -49,7 +49,7 @@ public class IronFang extends Strike{
 
 	@Override
 	public void prehit(Combatant active,Combatant target,Attack a,BattleState s){
-		target.damage(BONUSDAMAGE,s,0);
+		target.damage(BONUSDAMAGE,0,s);
 	}
 
 	void modifypoisondc(Attack a,int dcbonus){

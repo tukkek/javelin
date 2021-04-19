@@ -88,8 +88,8 @@ public class Grapple extends ExpertiseAction{
 			BattleState s){
 		Constrict c=current.source.constrict;
 		if(c==null) return "";
-		target.damage(c.damage*duration,s,
-				c.energy?target.source.energyresistance:target.source.dr);
+		target.damage(c.damage*duration,c.energy?target.source.energyresistance:target.source.dr,
+				s);
 		return "\n"+target+" is "+target.getstatus()+".";
 	}
 

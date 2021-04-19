@@ -52,7 +52,7 @@ public class VampiricTouch extends Touch{
 		var steal=21;
 		var max=target.hp+10;
 		if(steal>max) steal=max;
-		target.damage(steal,s,target.source.energyresistance);
+		target.damage(steal,target.source.energyresistance,s);
 		var originalhp=caster.hp;
 		caster.heal(steal,true);
 		var c=new Vampiric(Float.MAX_VALUE,caster.hp-originalhp,this);

@@ -26,7 +26,7 @@ public class FlameStrike extends Spell{
 	public String cast(Combatant caster,Combatant target,boolean saved,
 			BattleState s,ChanceNode cn){
 		for(Combatant c:getradius(target,2,this,s))
-			s.clone(c).damage(casterlevel*6/2,s,c.source.energyresistance);
+			s.clone(c).damage(casterlevel*6/2,c.source.energyresistance,s);
 		return "A roaring column of fire descends around "+target+"!";
 	}
 

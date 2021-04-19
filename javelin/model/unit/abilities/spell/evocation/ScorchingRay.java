@@ -24,7 +24,7 @@ public class ScorchingRay extends Ray{
 	@Override
 	public String cast(Combatant caster,Combatant target,boolean saved,
 			BattleState s,ChanceNode cn){
-		target.damage(4*6/2,s,target.source.energyresistance);
+		target.damage(4*6/2,target.source.energyresistance,s);
 		if(cn!=null) cn.overlay=new AiOverlay(target);
 		return target+" is "+target.getstatus()+".";
 	}

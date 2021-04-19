@@ -35,7 +35,7 @@ public class InflictModerateWounds extends Touch{
 			damage=damage/2;
 			info+=target+" resisted!\n";
 		}
-		target.damage(damage,s,target.source.energyresistance);
+		target.damage(damage,target.source.energyresistance,s);
 		cn.overlay=new AiOverlay(target);
 		return info+target+" is now "+target.getstatus()+".";
 	}

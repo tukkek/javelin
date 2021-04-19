@@ -33,7 +33,7 @@ public class SoundBurst extends Spell{
 			BattleState s,ChanceNode cn){
 		for(Combatant c:getradius(caster,2,this,s)){
 			c=s.clone(c);
-			c.damage(RPG.average(1,8),s,0);
+			c.damage(RPG.average(1,8),0,s);
 			if(getsavetarget(c.source.getfortitude(),caster)>10)
 				c.addcondition(new Stunned(c,this));
 		}

@@ -248,7 +248,7 @@ public class AttackResolver{
 		var apply=maneuver!=null&&o!=Outcome.GRAZE;
 		if(apply) maneuver.prehit(c,target,a,s);
 		var resistance=a.energy?target.source.energyresistance:target.source.dr;
-		target.damage(Math.max(1,damage),s,resistance);
+		target.damage(Math.max(1,damage),resistance,s);
 		var e=a.geteffect();
 		if(e!=null&&!target.source.passive&&target.hp>0){
 			var save=AiThread.getrandom().nextFloat()<=e.getsavechance(c,target);

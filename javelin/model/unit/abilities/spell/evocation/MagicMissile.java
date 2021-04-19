@@ -24,7 +24,7 @@ public class MagicMissile extends Spell{
 	@Override
 	public String cast(Combatant caster,Combatant target,boolean saved,
 			BattleState s,ChanceNode cn){
-		target.damage(1*4/2+1,s,0);
+		target.damage(1*4/2+1,0,s);
 		if(cn!=null) cn.overlay=new AiOverlay(target);
 		return target+" is "+target.getstatus()+"!";
 	}

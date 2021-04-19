@@ -16,6 +16,7 @@ import javelin.controller.content.fight.Fight;
 import javelin.controller.content.fight.LocationFight;
 import javelin.controller.content.fight.mutator.mode.Boss;
 import javelin.controller.content.fight.mutator.mode.Gauntlet;
+import javelin.controller.content.fight.mutator.mode.Horde;
 import javelin.controller.content.fight.mutator.mode.Waves;
 import javelin.controller.content.map.location.LocationMap;
 import javelin.controller.content.terrain.Terrain;
@@ -191,10 +192,17 @@ public abstract class Haunt extends Fortification{
 		}
 	}
 
+	class HauntHorde extends Horde{
+		public HauntHorde(){
+			super(targetel,new MonsterPool(pool));
+		}
+	}
+
 	class HauntFight extends LocationFight{
 		HauntFight(Location l,LocationMap m){
 			super(l,m);
-			var modes=List.of(new HauntWaves(),new HauntBoss(),new HauntGauntlet());
+			var modes=List.of(new HauntWaves(),new HauntBoss(),new HauntGauntlet(),
+					new HauntHorde());
 			var mode=RPG.pick(modes);
 			mutators.add(mode);
 		}

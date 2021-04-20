@@ -202,12 +202,13 @@ public abstract class UpgradingScreen extends SelectScreen{
 		return Math.round(xp*50);
 	}
 
-	private BigDecimal buy(final UpgradeOption o,Combatant c,boolean listing){
-		float originalcr=ChallengeCalculator.calculaterawcr(c.source)[1];
-		final Combatant clone=c.clone().clonesource();
+	BigDecimal buy(UpgradeOption o,Combatant c,boolean listing){
+		var originalcr=ChallengeCalculator.calculaterawcr(c.source)[1];
+		var clone=c.clone().clonesource();
 		if(!upgrade(o,clone)) return null;
-		BigDecimal cost=new BigDecimal(
-				ChallengeCalculator.calculaterawcr(clone.source)[1]-originalcr);
+		var cr=ChallengeCalculator.calculaterawcr(clone.source)[1];
+		var cost=new BigDecimal(cr-originalcr);
+		if(cost.floatValue()<=0) cost=new BigDecimal(.05);
 		if(!listing){
 			int goldpieces=price(cost.floatValue());
 			if(goldpieces>getgold()){

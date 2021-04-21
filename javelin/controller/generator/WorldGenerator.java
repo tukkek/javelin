@@ -248,6 +248,7 @@ public class WorldGenerator extends Thread{
 				throw new RuntimeException(e);
 			}
 		s.fix();
+		pool.shutdown();
 		return true;
 	}
 

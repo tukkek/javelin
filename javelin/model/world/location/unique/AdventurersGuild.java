@@ -2,6 +2,7 @@ package javelin.model.world.location.unique;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javelin.Javelin;
@@ -138,7 +139,7 @@ public class AdventurersGuild extends UniqueLocation{
 			Kit kit=selection.get(i);
 			if(kit==null) continue;
 			Combatant student=students.get(i);
-			train(student,new ArrayList<>(kit.basic),1);
+			train(student,kit.basic,1);
 		}
 	}
 
@@ -151,13 +152,13 @@ public class AdventurersGuild extends UniqueLocation{
 	 *          from {@link Combatant#xp}.
 	 * @return <code>true</code> if at least one {@link Upgrade} has been applied.
 	 */
-	static public boolean train(Combatant student,List<Upgrade> upgrades,
+	static public boolean train(Combatant student,Collection<Upgrade> upgrades,
 			float xp){
 		var learned=new ArrayList<Upgrade>();
 		while(xp>0){
 			Upgrade applied=null;
 			Float cost=null;
-			for(var upgrade:RPG.shuffle(upgrades)){
+			for(var upgrade:RPG.shuffle(new ArrayList<>(upgrades))){
 				cost=upgrade.getcost(student);
 				if(cost!=null&&0<cost&&cost<=xp){
 					applied=upgrade;

@@ -19,6 +19,7 @@ import javelin.model.Realm;
 import javelin.model.item.Tier;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
+import javelin.model.world.location.Crucible;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.PointOfInterest;
@@ -158,7 +159,7 @@ public class LocationGenerator implements Serializable{
 		return a;
 	}
 
-	void generatestaticlocations(){
+	void generatestaticlocations(Town starting){
 		var locations=new ArrayList<Location>();
 		locations.add(new PillarOfSkulls());
 		for(var h:RPG.shuffle(HAUNTS))
@@ -181,6 +182,10 @@ public class LocationGenerator implements Serializable{
 			l.place();
 		for(var i=0;i<5;)
 			if(Portal.create()!=null) i+=1;
+		var crucibles=Crucible.generate();
+		crucibles.sort((a,b)->Double.compare(a.distance(starting.x,starting.y),
+				b.distance(starting.x,starting.y)));
+		crucibles.get(0).reveal();
 	}
 
 	static void generatestartingarea(World w,Town t){
@@ -242,7 +247,7 @@ public class LocationGenerator implements Serializable{
 		setup();
 		Temple.generatetemples();
 		generatestartingarea(w,starting);
-		generatestaticlocations();
+		generatestaticlocations(starting);
 		for(Class<? extends Actor> feature:generators.keySet())
 			generators.get(feature).seed(feature);
 		int target=World.scenario.startingfeatures-Location.count();

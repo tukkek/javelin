@@ -70,4 +70,9 @@ public abstract class Mutator implements Serializable{
 	public void die(Combatant c,BattleState s,Fight f){
 		return;
 	}
+
+	/** Called after the battle {@link #end(Fight)}, results are shown, etc. */
+	public void after(Fight f){
+		return;
+	}
 }

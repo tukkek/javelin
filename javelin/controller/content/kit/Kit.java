@@ -307,15 +307,19 @@ public abstract class Kit implements Serializable{
 		validate();
 	}
 
-	public boolean upgrade(Combatant c){
+	public boolean upgrade(Combatant c,boolean spendxp){
 		for(var u:RPG.shuffle(new ArrayList<>(getupgrades()))){
-			if(!u.upgrade(c)) continue;
+			if(!u.upgrade(c,spendxp)) continue;
 			c.postupgradeautomatic();
 			ChallengeCalculator.calculatecr(c.source);
 			c.source.elite=true;
 			return true;
 		}
 		return false;
+	}
+
+	public boolean upgrade(Combatant c){
+		return upgrade(c,false);
 	}
 
 	/**

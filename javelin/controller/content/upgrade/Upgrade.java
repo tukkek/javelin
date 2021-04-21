@@ -104,6 +104,7 @@ public abstract class Upgrade implements Serializable{
 	/**
 	 * @return As {@link #upgrade(Combatant, boolean)} but does not update
 	 *         {@link Combatant#xp}.
+	 * @see Combatant#upgrade(Upgrade)
 	 */
 	public boolean upgrade(Combatant c){
 		return upgrade(c,false);

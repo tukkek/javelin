@@ -143,6 +143,8 @@ public abstract class Fight{
 		for(var m:mutators)
 			m.end(this);
 		EndBattle.showcombatresult();
+		for(var m:mutators)
+			m.after(this);
 		return true;
 	}
 
@@ -354,6 +356,7 @@ public abstract class Fight{
 		}
 		state.fleeing.addAll(state.blueteam);
 		state.blueteam.clear();
+		victory=false;
 		throw new EndBattle();
 	}
 }

@@ -68,4 +68,12 @@ public class Combatants extends ArrayList<Combatant>
 		return stream().sorted((a,b)->Float.compare(a.source.cr,b.source.cr))
 				.findFirst().orElse(null);
 	}
+
+	/** Generates {@link Combatant}s. */
+	public static Combatants from(Collection<Monster> monsters){
+		var c=new Combatants(monsters.size());
+		for(var m:monsters)
+			c.add(new Combatant(m,true));
+		return c;
+	}
 }

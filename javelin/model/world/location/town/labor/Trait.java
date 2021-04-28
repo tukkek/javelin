@@ -12,29 +12,29 @@ import javelin.model.world.location.town.Town;
  * a Town can be mercantile (interested in commerce), natural
  * (ecologically-oriented), both or neither.
  *
- * Each Trait comes with its own {@link LaborDeck} of {@link Labor} projects. This is
- * the basis for the deck-building town-management game loop.
+ * Each Trait comes with its own {@link LaborDeck} of {@link Labor} projects.
+ * This is the basis for the deck-building town-management game loop.
  *
  * @author alex
  */
 public class Trait extends Labor{
 	/** Trait name. */
+	public static final String CRIMINAL="criminal";
+	/** Trait name. */
 	public static final String EXPANSIVE="expansive";
+	/** Trait name. */
+	public static final String MAGICAL="magical";
 	/** Trait name. */
 	public static final String MERCANTILE="mercantile";
 	/** Trait name. */
 	public static final String MILITARY="military";
 	/** Trait name. */
-	public static final String MAGICAL="magical";
-	/** Trait name. */
-	public static final String CRIMINAL="criminal";
+	public static final String NATURAL="natural";
 	/** Trait name. */
 	public static final String RELIGIOUS="religious";
-	/** Trait name. */
-	public static final String NATURAL="natural";
 	/** Ordered set of all {@link Trait} names. */
-	public static final TreeSet<String> ALL=new TreeSet<>(List.of(EXPANSIVE,
-			MERCANTILE,MILITARY,MAGICAL,CRIMINAL,RELIGIOUS,NATURAL));
+	public static final TreeSet<String> ALL=new TreeSet<>(List.of(CRIMINAL,
+			EXPANSIVE,MAGICAL,MERCANTILE,MILITARY,RELIGIOUS,NATURAL));
 
 	String traitname;
 

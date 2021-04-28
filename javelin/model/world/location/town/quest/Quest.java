@@ -138,7 +138,7 @@ public abstract class Quest implements Serializable{
 
 	/** Town this quest was generated for. */
 	public final Town town;
-	/** Encounter level. Default is {@link Town#population}. */
+	/** Encounter level, between 1 and {@link Town#population}. */
 	protected int el;
 	/** Quest becomes invalid once it reaches zero. */
 	public int daysleft;
@@ -179,7 +179,7 @@ public abstract class Quest implements Serializable{
 	 */
 	protected Quest(Town t){
 		town=t;
-		el=t.population;
+		el=Math.max(RPG.r(1,t.population),RPG.r(1,t.population));
 		daysleft=Javelin.round(RPG.r(7,100));
 		distance=town.getdistrict().getradius()*2;
 	}

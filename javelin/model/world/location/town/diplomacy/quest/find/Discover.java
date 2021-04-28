@@ -1,4 +1,4 @@
-package javelin.model.world.location.town.quest.find;
+package javelin.model.world.location.town.diplomacy.quest.find;
 
 import java.util.List;
 import java.util.stream.Collectors;

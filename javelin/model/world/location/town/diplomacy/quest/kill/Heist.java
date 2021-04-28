@@ -1,4 +1,4 @@
-package javelin.model.world.location.town.quest.kill;
+package javelin.model.world.location.town.diplomacy.quest.kill;
 
 import javelin.controller.content.action.Withdraw;
 import javelin.controller.content.fight.Fight;
@@ -6,8 +6,8 @@ import javelin.controller.content.kit.Kit;
 import javelin.controller.content.map.Map;
 import javelin.model.item.Item;
 import javelin.model.item.Tier;
+import javelin.model.world.location.town.diplomacy.quest.Quest;
 import javelin.model.world.location.town.labor.Trait;
-import javelin.model.world.location.town.quest.Quest;
 import javelin.old.RPG;
 
 /**

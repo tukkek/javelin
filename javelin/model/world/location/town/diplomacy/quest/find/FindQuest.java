@@ -1,9 +1,9 @@
-package javelin.model.world.location.town.quest.find;
+package javelin.model.world.location.town.diplomacy.quest.find;
 
 import javelin.model.item.Item;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.quest.Quest;
-import javelin.model.world.location.town.quest.fetch.FetchQuest;
+import javelin.model.world.location.town.diplomacy.quest.Quest;
+import javelin.model.world.location.town.diplomacy.quest.fetch.FetchQuest;
 
 /**
  * A loosely-aggregated type of {@link Quest#LONG}-{@link Quest#term} quest.

@@ -1,4 +1,4 @@
-package javelin.model.world.location.town.quest.kill;
+package javelin.model.world.location.town.diplomacy.quest.kill;
 
 import javelin.controller.content.template.Template;
 import javelin.model.world.location.town.labor.Trait;

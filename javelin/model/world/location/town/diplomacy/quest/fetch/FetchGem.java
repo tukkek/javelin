@@ -1,4 +1,4 @@
-package javelin.model.world.location.town.quest.fetch;
+package javelin.model.world.location.town.diplomacy.quest.fetch;
 
 import javelin.model.item.precious.Gem;
 import javelin.model.world.location.dungeon.Wilderness;

@@ -45,8 +45,8 @@ import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.haunt.Haunt;
 import javelin.model.world.location.town.diplomacy.mandate.Mandate;
+import javelin.model.world.location.town.diplomacy.quest.Quest;
 import javelin.model.world.location.town.labor.LaborDeck;
-import javelin.model.world.location.town.quest.Quest;
 import javelin.model.world.location.unique.UniqueLocation;
 import javelin.test.TestBranch;
 

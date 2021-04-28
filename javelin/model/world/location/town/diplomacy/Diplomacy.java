@@ -6,7 +6,7 @@ import java.util.TreeSet;
 
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.diplomacy.mandate.Mandate;
-import javelin.model.world.location.town.quest.Quest;
+import javelin.model.world.location.town.diplomacy.quest.Quest;
 import javelin.old.RPG;
 
 /**

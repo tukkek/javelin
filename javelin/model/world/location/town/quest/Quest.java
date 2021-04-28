@@ -25,9 +25,15 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.diplomacy.Diplomacy;
 import javelin.model.world.location.town.labor.Trait;
-import javelin.model.world.location.town.quest.basic.Discovery;
-import javelin.model.world.location.town.quest.basic.Fetch;
-import javelin.model.world.location.town.quest.basic.Kill;
+import javelin.model.world.location.town.quest.fetch.FetchArt;
+import javelin.model.world.location.town.quest.fetch.FetchGem;
+import javelin.model.world.location.town.quest.find.Connect;
+import javelin.model.world.location.town.quest.find.Discover.DiscoverHaunt;
+import javelin.model.world.location.town.quest.find.Discover.DiscoverTemple;
+import javelin.model.world.location.town.quest.find.Discover.DiscoverTown;
+import javelin.model.world.location.town.quest.kill.Clear;
+import javelin.model.world.location.town.quest.kill.Heist;
+import javelin.model.world.location.town.quest.kill.Raid;
 import javelin.old.RPG;
 import javelin.view.Images;
 import javelin.view.screen.WorldScreen;
@@ -44,18 +50,24 @@ import javelin.view.screen.WorldScreen;
 public abstract class Quest implements Serializable{
 	/** All available quest templates. */
 	public final static Map<String,List<Class<? extends Quest>>> QUESTS=new HashMap<>();
+	/** Short-term quests expire within a week on average (default). */
+	protected static final int SHORT=7;
+	/** Long-term quests expire within a month on average. */
+	protected static final int LONG=30;
 	static final Class<? extends Quest> DEBUG=null;
-	static final String BASIC="basic";
+	static final List<Class<? extends Quest>> ALL=new ArrayList<>(8);
 
 	static{
-		QUESTS.put(BASIC,List.of(Kill.class,Fetch.class,Discovery.class));
-		QUESTS.put(Trait.CRIMINAL,List.of(Pursue.class));
-		QUESTS.put(Trait.MAGICAL,List.of());
-		QUESTS.put(Trait.EXPANSIVE,List.of(DiscoverTown.class));
-		QUESTS.put(Trait.MERCANTILE,List.of());
-		QUESTS.put(Trait.MILITARY,List.of(War.class));
-		QUESTS.put(Trait.NATURAL,List.of(DiscoverTerrain.class));
-		QUESTS.put(Trait.RELIGIOUS,List.of(Pilgrimage.class));
+		QUESTS.put(Trait.CRIMINAL,List.of(Heist.class));
+		QUESTS.put(Trait.EXPANSIVE,
+				List.of(DiscoverTown.class,DiscoverTemple.class,DiscoverHaunt.class));
+		QUESTS.put(Trait.MAGICAL,List.of(Clear.class));
+		QUESTS.put(Trait.MERCANTILE,List.of(Connect.class));
+		QUESTS.put(Trait.MILITARY,List.of(Raid.class));
+		QUESTS.put(Trait.NATURAL,List.of(FetchGem.class));
+		QUESTS.put(Trait.RELIGIOUS,List.of(FetchArt.class));
+		for(var quests:QUESTS.values())
+			ALL.addAll(quests);
 	}
 
 	/**
@@ -151,6 +163,13 @@ public abstract class Quest implements Serializable{
 	 * Utility value for maximum distance quests should be from their Town.
 	 */
 	protected int distance;
+	/**
+	 * TODO use
+	 *
+	 * @see #SHORT
+	 * @see #LONG
+	 */
+	public int term=SHORT;
 
 	/**
 	 * For Reflection compatibility, all subclasses should respect this

@@ -1,23 +1,24 @@
-package javelin.model.world.location.town.quest.basic;
+package javelin.model.world.location.town.quest.find;
 
 import java.util.ArrayList;
 
 import javelin.model.world.location.ResourceSite;
 import javelin.model.world.location.ResourceSite.Resource;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.quest.Quest;
+import javelin.model.world.location.town.labor.Trait;
 import javelin.old.RPG;
 
 /**
- * Fetch a {@link Resource} for a {@link Town}.
+ * Connect a {@link Resource} type to a {@link Town}.
  *
+ * @see Trait#MERCANTILE
  * @author alex
  */
-public class Fetch extends Quest{
+public class Connect extends FindQuest{
 	Resource target=null;
 
 	/** Reflection-friendly constructor. */
-	public Fetch(Town t){
+	public Connect(Town t){
 		super(t);
 		var all=new ArrayList<>(ResourceSite.RESOURCES.values());
 		if(t.resources.size()==all.size()) return;

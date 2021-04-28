@@ -139,4 +139,20 @@ public class RPG{
 		if(amount==0) return Collections.EMPTY_LIST;
 		return shuffle(new ArrayList<>(l)).subList(0,Math.min(amount,l.size()));
 	}
+
+	/** @return Roll a x-sided dice y times and return the highest value. */
+	public int advantage(int sides,int rolls){
+		var result=Integer.MIN_VALUE;
+		for(var i=0;i<rolls;i++)
+			result=Math.max(result,r(1,sides));
+		return result;
+	}
+
+	/** @return Roll a x-sided dice y times and return the lowest value. */
+	public int disadvantage(int sides,int rolls){
+		var result=Integer.MAX_VALUE;
+		for(var i=0;i<rolls;i++)
+			result=Math.min(result,r(1,sides));
+		return result;
+	}
 }

@@ -9,6 +9,7 @@ import javelin.Debug;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.content.event.urban.UrbanEvents;
 import javelin.controller.exception.UnbalancedTeams;
 import javelin.model.Realm;
 import javelin.model.item.Item;
@@ -80,7 +81,7 @@ public class Campaign extends Scenario{
 		spawnrate=30*2;
 		quests=true;
 		diplomacy=true;
-		urbanevents=true;
+		urbanevents=UrbanEvents.ENABLED;
 	}
 
 	@Override

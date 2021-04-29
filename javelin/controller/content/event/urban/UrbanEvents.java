@@ -37,6 +37,9 @@ import javelin.old.RPG;
  * @see Town#ishostile()
  */
 public class UrbanEvents extends EventDealer{
+	/** If <code>false</code>, will not deal any. */
+	public static final boolean ENABLED=false;
+
 	/**
 	 * Singleton instance.
 	 *

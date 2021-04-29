@@ -82,7 +82,8 @@ public class LocationGenerator implements Serializable{
 	 */
 	void setup(){
 		generators.put(Outpost.class,new Frequency(.1f));
-		generators.put(PointOfInterest.class,new Frequency(2f));
+		if(PointOfInterest.ENABLED)
+			generators.put(PointOfInterest.class,new Frequency(2f));
 		var resources=new Frequency(.5f);
 		resources.seeds=Realm.REALMS.size()*2;
 		resources.max=resources.seeds;

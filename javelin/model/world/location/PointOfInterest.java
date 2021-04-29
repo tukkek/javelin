@@ -31,6 +31,8 @@ import javelin.view.Images;
  * @author alex
  */
 public class PointOfInterest extends Actor{
+	/** If <code>false</code>, will not spawn. */
+	public static final boolean ENABLED=false;
 	static final String DESCRIPTION="A point of interest";
 
 	WildEvent card=null;

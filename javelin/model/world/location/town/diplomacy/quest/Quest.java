@@ -25,15 +25,7 @@ import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.diplomacy.Diplomacy;
-import javelin.model.world.location.town.diplomacy.quest.fetch.FetchArt;
-import javelin.model.world.location.town.diplomacy.quest.fetch.FetchGem;
 import javelin.model.world.location.town.diplomacy.quest.find.Connect;
-import javelin.model.world.location.town.diplomacy.quest.find.Discover.DiscoverHaunt;
-import javelin.model.world.location.town.diplomacy.quest.find.Discover.DiscoverTemple;
-import javelin.model.world.location.town.diplomacy.quest.find.Discover.DiscoverTown;
-import javelin.model.world.location.town.diplomacy.quest.kill.Clear;
-import javelin.model.world.location.town.diplomacy.quest.kill.Heist;
-import javelin.model.world.location.town.diplomacy.quest.kill.Raid;
 import javelin.model.world.location.town.labor.Trait;
 import javelin.old.RPG;
 import javelin.view.Images;
@@ -70,17 +62,16 @@ public abstract class Quest implements Serializable{
 	static final String COMPLETE="You have completed a quest (%s)!\n"+"%s\n"+"%s"
 			+"Mood in %s is now: %s.";
 	static final List<Class<? extends Quest>> ALL=new ArrayList<>(8);
-	static final Class<? extends Quest> DEBUG=null;
+	static final Class<? extends Quest> DEBUG=Connect.class;
 
 	static{
-		QUESTS.put(Trait.CRIMINAL,List.of(Heist.class));
-		QUESTS.put(Trait.EXPANSIVE,
-				List.of(DiscoverTown.class,DiscoverTemple.class,DiscoverHaunt.class));
-		QUESTS.put(Trait.MAGICAL,List.of(Clear.class));
+		//TODO QUESTS.put(Trait.CRIMINAL,List.of(Heist.class));
+		//TODO QUESTS.put(Trait.EXPANSIVE,List.of(DiscoverTown.class,DiscoverTemple.class,DiscoverHaunt.class));
+		//TODO QUESTS.put(Trait.MAGICAL,List.of(Clear.class));
 		QUESTS.put(Trait.MERCANTILE,List.of(Connect.class));
-		QUESTS.put(Trait.MILITARY,List.of(Raid.class));
-		QUESTS.put(Trait.NATURAL,List.of(FetchGem.class));
-		QUESTS.put(Trait.RELIGIOUS,List.of(FetchArt.class));
+		//TODO QUESTS.put(Trait.MILITARY,List.of(Raid.class));
+		//TODO QUESTS.put(Trait.NATURAL,List.of(FetchGem.class));
+		//TODO QUESTS.put(Trait.RELIGIOUS,List.of(FetchArt.class));
 		for(var quests:QUESTS.values())
 			ALL.addAll(quests);
 	}

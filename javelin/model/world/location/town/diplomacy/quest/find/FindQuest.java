@@ -11,7 +11,7 @@ import javelin.model.world.location.town.diplomacy.quest.fetch.FetchQuest;
  *
  * @author alex
  */
-public class FindQuest extends Quest{
+public abstract class FindQuest extends Quest{
 	@Override
 	protected void define(Town t){
 		super.define(t);

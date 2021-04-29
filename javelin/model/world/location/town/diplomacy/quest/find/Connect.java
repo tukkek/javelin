@@ -1,6 +1,6 @@
 package javelin.model.world.location.town.diplomacy.quest.find;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
 import javelin.model.world.location.ResourceSite;
 import javelin.model.world.location.ResourceSite.Resource;
@@ -17,26 +17,18 @@ import javelin.old.RPG;
 public class Connect extends FindQuest{
 	Resource target=null;
 
-	/** Reflection-friendly constructor. */
-	public Connect(Town t){
-		super(t);
-		var all=new ArrayList<>(ResourceSite.RESOURCES.values());
-		if(t.resources.size()==all.size()) return;
-		for(var r:RPG.shuffle(all))
-			if(!t.resources.contains(r)){
-				target=r;
-				return;
-			}
+	@Override
+	protected void define(Town t){
+		super.define(t);
+		var candidates=new HashSet<>(ResourceSite.RESOURCES.values());
+		candidates.removeAll(t.resources);
+		if(!candidates.isEmpty()) target=RPG.pick(candidates);
+		name="Connect "+target.name.toLowerCase();
 	}
 
 	@Override
 	public boolean validate(){
 		return super.validate()&&target!=null;
-	}
-
-	@Override
-	protected String getname(){
-		return "Connect "+target.name.toLowerCase();
 	}
 
 	@Override

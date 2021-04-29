@@ -457,7 +457,7 @@ public class Town extends Location{
 
 	/** Called when a {@link Squad} is present in Town. */
 	public void enter(){
-		for(var q:quests)
+		for(var q:new ArrayList<>(quests))
 			q.claim();
 		diplomacy.validate();
 		report();

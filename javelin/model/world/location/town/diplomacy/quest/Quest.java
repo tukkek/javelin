@@ -26,6 +26,9 @@ import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.diplomacy.Diplomacy;
 import javelin.model.world.location.town.diplomacy.quest.find.Connect;
+import javelin.model.world.location.town.diplomacy.quest.find.Discover.DiscoverHaunt;
+import javelin.model.world.location.town.diplomacy.quest.find.Discover.DiscoverTemple;
+import javelin.model.world.location.town.diplomacy.quest.find.Discover.DiscoverTown;
 import javelin.model.world.location.town.labor.Trait;
 import javelin.old.RPG;
 import javelin.view.Images;
@@ -62,11 +65,12 @@ public abstract class Quest implements Serializable{
 	static final String COMPLETE="You have completed a quest (%s)!\n"+"%s\n"+"%s"
 			+"Mood in %s is now: %s.";
 	static final List<Class<? extends Quest>> ALL=new ArrayList<>(8);
-	static final Class<? extends Quest> DEBUG=Connect.class;
+	static final Class<? extends Quest> DEBUG=null;
 
 	static{
 		//TODO QUESTS.put(Trait.CRIMINAL,List.of(Heist.class));
-		//TODO QUESTS.put(Trait.EXPANSIVE,List.of(DiscoverTown.class,DiscoverTemple.class,DiscoverHaunt.class));
+		QUESTS.put(Trait.EXPANSIVE,
+				List.of(DiscoverTown.class,DiscoverTemple.class,DiscoverHaunt.class));
 		//TODO QUESTS.put(Trait.MAGICAL,List.of(Clear.class));
 		QUESTS.put(Trait.MERCANTILE,List.of(Connect.class));
 		//TODO QUESTS.put(Trait.MILITARY,List.of(Raid.class));
@@ -173,9 +177,7 @@ public abstract class Quest implements Serializable{
 
 	/** @return If <code>false</code>, cancel or skip this quest type. */
 	public boolean validate(){
-		if(Javelin.DEBUG&&name==null)
-			throw new RuntimeException("Quest without name: "+getClass());
-		return true;
+		return name!=null;
 	}
 
 	/** TODO would be cool to have trait-based rewards */
@@ -231,7 +233,8 @@ public abstract class Quest implements Serializable{
 			quests.add(DEBUG);
 		else{
 			for(var trait:t.traits)
-				quests.addAll(QUESTS.get(trait));
+				if(QUESTS.get(trait)!=null) //TODO only needed until redesign is done
+					quests.addAll(QUESTS.get(trait));
 			RPG.shuffle(quests);
 			quests.addAll(RPG.shuffle(ALL));
 		}
@@ -299,22 +302,26 @@ public abstract class Quest implements Serializable{
 		else if(!validate()||expire&&RPG.chancein(duration)) cancel();
 	}
 
-	/** Completes the quest succesfully. */
-	public void claim(){
-		update(false);
-		if(!completed) return;
-		var d=town.diplomacy;
-		var p=town.population;
-		d.reputation+=RPG.randomize(p/town.getrank().rank,0,p);
+	/** @return Message show to player during successful {@link #claim()}. */
+	protected String message(){
 		var xp=RewardCalculator.rewardxp(Squad.active.members,el,1);
 		var reward=describereward();
 		if(!reward.isEmpty())
 			reward="You are rewarded for your efforts with: "+reward+"!\n";
-		var reputation=d.describestatus().toLowerCase();
-		var m=String.format(COMPLETE,name,xp,reward,town,reputation);
-		Javelin.message(m,true);
+		var reputation=town.diplomacy.describestatus().toLowerCase();
+		return String.format(COMPLETE,name,xp,reward,town,reputation);
+	}
+
+	/** Completes the quest succesfully. */
+	public void claim(){
+		update(false);
+		if(!completed) return;
+		var p=town.population;
+		town.diplomacy.reputation+=RPG.randomize(p/town.getrank().rank,0,p);
+		Javelin.message(message(),true);
 		if(gold>0) Squad.active.gold+=gold;
 		if(item!=null) item.grab();
 		town.diplomacy.quests.remove(this);
 	}
+
 }

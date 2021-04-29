@@ -22,8 +22,10 @@ public class Connect extends FindQuest{
 		super.define(t);
 		var candidates=new HashSet<>(ResourceSite.RESOURCES.values());
 		candidates.removeAll(t.resources);
-		if(!candidates.isEmpty()) target=RPG.pick(candidates);
-		name="Connect "+target.name.toLowerCase();
+		if(!candidates.isEmpty()){
+			target=RPG.pick(candidates);
+			name="Connect "+target.name.toLowerCase();
+		}
 	}
 
 	@Override

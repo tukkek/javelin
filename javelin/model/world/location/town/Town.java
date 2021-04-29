@@ -38,7 +38,6 @@ import javelin.model.world.location.Outpost;
 import javelin.model.world.location.ResourceSite.Resource;
 import javelin.model.world.location.town.diplomacy.Diplomacy;
 import javelin.model.world.location.town.diplomacy.mandate.Mandate;
-import javelin.model.world.location.town.diplomacy.quest.Quest;
 import javelin.model.world.location.town.governor.Governor;
 import javelin.model.world.location.town.governor.HumanGovernor;
 import javelin.model.world.location.town.governor.MonsterGovernor;
@@ -100,9 +99,6 @@ public class Town extends Location{
 
 	/** Remains the same even after capture. */
 	public Realm originalrealm;
-
-	/** Active quests. Updated daily. */
-	public List<Quest> quests=new ArrayList<>(1);
 
 	/**
 	 * All natural resources linked to this town.
@@ -213,7 +209,6 @@ public class Town extends Location{
 	public void turn(long time,WorldScreen screen){
 		if(ishosting()) exhibitions.remove(0);
 		work();
-		updatequests();
 		diplomacy.turn();
 		Caravan.spawn(this);
 	}
@@ -279,7 +274,7 @@ public class Town extends Location{
 		int damage=RPG.randomize(4)+attacker.getel()/2;
 		if(damage>0) population=Math.max(1,population-damage);
 		setgovernor(new MonsterGovernor(this));
-		quests.clear();
+		diplomacy.clear();
 	}
 
 	/** Cancels any projects and replaces the {@link Governor}. */
@@ -393,20 +388,6 @@ public class Town extends Location{
 		return governor;
 	}
 
-	/** Ticks a day off active quests and generates new ones. */
-	public void updatequests(){
-		if(!World.scenario.quests||ishostile()) return;
-		for(var q:new ArrayList<>(quests))
-			q.update(true);
-		if(quests.size()<getrank().rank&&RPG.chancein(7)){
-			var q=Quest.generate(this);
-			if(q!=null){
-				quests.add(q);
-				if(q.alert()) events.add("New quest available: "+q+".");
-			}
-		}
-	}
-
 	/**
 	 * Generates and process {@link UrbanEvents}, if any. It should be unlikely
 	 * but entirely possible that two towns have an event on the same day.
@@ -457,7 +438,7 @@ public class Town extends Location{
 
 	/** Called when a {@link Squad} is present in Town. */
 	public void enter(){
-		for(var q:new ArrayList<>(quests))
+		for(var q:new ArrayList<>(diplomacy.quests))
 			q.claim();
 		diplomacy.validate();
 		report();

@@ -2,8 +2,10 @@ package javelin.model.world.location.town.diplomacy;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeSet;
 
+import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.diplomacy.mandate.Mandate;
 import javelin.model.world.location.town.diplomacy.quest.Quest;
@@ -39,16 +41,29 @@ public class Diplomacy implements Serializable{
 	public TreeSet<Mandate> treaties=new TreeSet<>();
 	/** Town these rewards are for. */
 	public Town town;
+	/** Active quests. Updated daily. */
+	public List<Quest> quests=new ArrayList<>(1);
 
 	/** Generates a fresh set of relationships, when a campaign starts. */
 	public Diplomacy(Town t){
 		town=t;
 	}
 
-	/** To be called once per day per instance. */
-	public void turn(){
-		reputation-=town.population/400f;
-		validate();
+	/** Ticks a day off active quests and generates new ones. */
+	public void updatequests(){
+		if(!World.scenario.quests) return;
+		for(var q:new ArrayList<>(quests))
+			q.update(true);
+		if(quests.size()<town.getrank().rank&&RPG.chancein(7)){
+			var q=Quest.generate(town);
+			if(q!=null){
+				quests.add(q);
+				if(q.alert()) town.events.add("New quest available: "+q+".");
+			}
+		}
+	}
+
+	void updatemandates(){
 		if(!treaties.isEmpty()&&RPG.chancein(30)){
 			var m=RPG.pick(treaties);
 			treaties.remove(m);
@@ -58,6 +73,15 @@ public class Diplomacy implements Serializable{
 			var m=Mandate.generate(this);
 			if(m!=null) town.events.add("New treaty available: "+m+".");
 		}
+	}
+
+	/** To be called once per day per instance. */
+	public void turn(){
+		reputation-=town.population/400f;
+		validate();
+		if(town.ishostile()) return;
+		updatequests();
+		updatemandates();
 	}
 
 	/**
@@ -102,5 +126,11 @@ public class Diplomacy implements Serializable{
 		reputation-=town.population;
 		m.act();
 		treaties.remove(m);
+	}
+
+	/** Removes all active {@link Quest}s and {@link Mandate}s. */
+	public void clear(){
+		quests.clear();
+		treaties.clear();
 	}
 }

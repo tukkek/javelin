@@ -239,7 +239,7 @@ public abstract class Quest implements Serializable{
 			for(var quest:quests){
 				var q=quest.getConstructor().newInstance();
 				q.define(t);
-				if(q.validate()&&!t.quests.contains(q)) return q;
+				if(q.validate()&&!t.diplomacy.quests.contains(q)) return q;
 			}
 		}catch(ReflectiveOperationException e){
 			if(Javelin.DEBUG)
@@ -278,7 +278,7 @@ public abstract class Quest implements Serializable{
 	 * {@link Diplomacy#reputation}.
 	 */
 	public void cancel(){
-		town.quests.remove(this);
+		town.diplomacy.quests.remove(this);
 		town.diplomacy.reputation-=1;
 		if(alert()) town.events.add("Quest expired: "+name+".");
 	}
@@ -315,6 +315,6 @@ public abstract class Quest implements Serializable{
 		Javelin.message(m,true);
 		if(gold>0) Squad.active.gold+=gold;
 		if(item!=null) item.grab();
-		town.quests.remove(this);
+		town.diplomacy.quests.remove(this);
 	}
 }

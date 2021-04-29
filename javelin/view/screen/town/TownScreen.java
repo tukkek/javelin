@@ -158,15 +158,15 @@ public class TownScreen extends PurchaseScreen{
 	public String printinfo(){
 		var info=new ArrayList<String>(0);
 		var d=town.diplomacy;
-		if(!town.quests.isEmpty()){
-			var quests=new ArrayList<String>(2);
-			quests.add("Active quests:");
-			for(var q:town.quests){
+		if(!d.quests.isEmpty()){
+			var active=new ArrayList<String>(2);
+			active.add("Active quests:");
+			for(var q:d.quests){
 				var r=q.describereward().toLowerCase();
 				if(!r.isEmpty()) r=", reward: "+r;
-				quests.add("- "+q+r);
+				active.add("- "+q+r);
 			}
-			info.add(String.join("\n",quests));
+			info.add(String.join("\n",active));
 		}
 		if(!d.treaties.isEmpty()){
 			var treaties="Available treaties:\n";

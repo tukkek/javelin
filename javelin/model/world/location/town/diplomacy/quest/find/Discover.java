@@ -41,7 +41,7 @@ public abstract class Discover extends FindQuest{
 
 	@Override
 	public boolean validate(){
-		return !undiscovered.isEmpty();
+		return super.validate()&&!undiscovered.isEmpty();
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public abstract class Discover extends FindQuest{
 	}
 
 	@Override
-	protected boolean checkcomplete(){
+	protected boolean complete(){
 		for(var t:undiscovered)
 			if(WorldScreen.see(t.getlocation())&&t.exists()) return true;
 		return false;

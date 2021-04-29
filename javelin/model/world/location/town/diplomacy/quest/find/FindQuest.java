@@ -6,14 +6,15 @@ import javelin.model.world.location.town.diplomacy.quest.Quest;
 import javelin.model.world.location.town.diplomacy.quest.fetch.FetchQuest;
 
 /**
- * A loosely-aggregated type of {@link Quest#LONG}-{@link Quest#term} quest.
+ * A loosely-aggregated type of {@link Quest#LONG}-{@link Quest#duration} quest.
  * Similar to {@link FetchQuest}s but do not revolve around {@link Item}s.
  *
  * @author alex
  */
 public class FindQuest extends Quest{
-	protected FindQuest(Town t){
-		super(t);
-		term=LONG;
+	@Override
+	protected void define(Town t){
+		super.define(t);
+		duration=LONG;
 	}
 }

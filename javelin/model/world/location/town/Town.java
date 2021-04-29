@@ -397,12 +397,12 @@ public class Town extends Location{
 	public void updatequests(){
 		if(!World.scenario.quests||ishostile()) return;
 		for(var q:new ArrayList<>(quests))
-			q.daysleft-=1;
+			q.update(true);
 		if(quests.size()<getrank().rank&&RPG.chancein(7)){
 			var q=Quest.generate(this);
 			if(q!=null){
 				quests.add(q);
-				events.add("New quest available: "+q+".");
+				if(q.alert()) events.add("New quest available: "+q+".");
 			}
 		}
 	}
@@ -457,8 +457,8 @@ public class Town extends Location{
 
 	/** Called when a {@link Squad} is present in Town. */
 	public void enter(){
-		for(var q:new ArrayList<>(quests))
-			q.update();
+		for(var q:quests)
+			q.claim();
 		diplomacy.validate();
 		report();
 	}

@@ -160,10 +160,11 @@ public class TownScreen extends PurchaseScreen{
 		var d=town.diplomacy;
 		if(!town.quests.isEmpty()){
 			var quests="Active quests:\n";
-			quests+=town.quests.stream().sorted((a,b)->a.daysleft-b.daysleft)
-					.map(q->"- "+q+", "+q.getdeadline()+", reward: "
-							+q.describereward().toLowerCase())
-					.collect(Collectors.joining("\n"));
+			for(var q:town.quests){
+				var r=q.describereward().toLowerCase();
+				if(!r.isEmpty()) r=", reward: "+r;
+				quests+="- "+q+"\n";
+			}
 			info.add(quests);
 		}
 		if(!d.treaties.isEmpty()){

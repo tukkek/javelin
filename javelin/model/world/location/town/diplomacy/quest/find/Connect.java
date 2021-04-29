@@ -31,7 +31,7 @@ public class Connect extends FindQuest{
 
 	@Override
 	public boolean validate(){
-		return target!=null;
+		return super.validate()&&target!=null;
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class Connect extends FindQuest{
 	}
 
 	@Override
-	protected boolean checkcomplete(){
+	protected boolean complete(){
 		return town.resources.contains(target);
 	}
 }

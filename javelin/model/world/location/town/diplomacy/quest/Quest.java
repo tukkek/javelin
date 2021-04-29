@@ -7,21 +7,22 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.comparator.ItemsByPrice;
 import javelin.controller.content.ContentSummary;
 import javelin.controller.content.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
-import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.town.District;
+import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.diplomacy.Diplomacy;
 import javelin.model.world.location.town.diplomacy.quest.fetch.FetchArt;
@@ -39,12 +40,24 @@ import javelin.view.Images;
 import javelin.view.screen.WorldScreen;
 
 /**
- * A task that can be completed for money and reputation. Non-hostile towns will
- * have an active number of them equal to their Rank tier. Quests are timed and
- * most of them require you to come back in that time frame to collect your
- * reward.
+ * A task that can be completed for rewards and {@link Diplomacy#reputation}.
+ * Non-hostile towns will have an active number of them equal to their
+ * {@link Rank}.
  *
- * @see Diplomacy
+ * Design-wise, quests have a few gameplay objectives:
+ *
+ * 1. Provide lightweight but still unique gameplay not found elsewhere.
+ *
+ * 2. Nudge the player towards less obvious tasks they may overlook, with the
+ * allure of a reward - thus promoting variety.
+ *
+ * 3. An alternate way to level up characters - not fully pacifist or otherwise
+ * different to that degree but still...
+ *
+ * 4. Make the world feel alive, with things happening and opportunities coming
+ * and going regardless of what the player is choosing to do. Since strategy is
+ * continuous planning under evolcing circumstances, this is key to strategy.
+ *
  * @author alex
  */
 public abstract class Quest implements Serializable{
@@ -54,8 +67,10 @@ public abstract class Quest implements Serializable{
 	protected static final int SHORT=7;
 	/** Long-term quests expire within a month on average. */
 	protected static final int LONG=30;
-	static final Class<? extends Quest> DEBUG=null;
+	static final String COMPLETE="You have completed a quest (%s)!\n"+"%s\n"+"%s"
+			+"Mood in %s is now: %s.";
 	static final List<Class<? extends Quest>> ALL=new ArrayList<>(8);
+	static final Class<? extends Quest> DEBUG=null;
 
 	static{
 		QUESTS.put(Trait.CRIMINAL,List.of(Heist.class));
@@ -71,32 +86,28 @@ public abstract class Quest implements Serializable{
 	}
 
 	/**
-	 * Simple generic {@link World} actor to use with quests. Ideally subclasses
+	 * Simple, generic {@link World} actor to use with quests. Ideally subclasses
 	 * need only override {@link #interact()}.
 	 *
-	 * Sharing a same image, reduces cognitive overload and dependency on art
+	 * Sharing a same image, it reduces cognitive overload and dependency on art
 	 * assets while providing a simple, standard "this is related to a
 	 * {@link Town} quest and nothing more" visual feedback.
 	 *
-	 * Obviously, not all quests need to employ markers. Many, for example, target
-	 * existing {@link Location}s in the world map.
+	 * Obviously, not all quests need to employ markers (such as those that target
+	 * existing {@link Location}s).
 	 *
 	 * @author alex
 	 */
-	protected abstract class QuestMarker extends Actor{
-		String markername;
+	protected abstract class Marker extends Actor{
+		boolean inside;
 
 		/**
-		 * @param name Represented as "Quest marker (given name)."
-		 * @see #describe()
+		 * @param inside If <code>true</code>, place it inside the {@link District},
+		 *          otherwise outside, nearby.
 		 */
-		protected QuestMarker(String name){
-			markername=name;
-		}
-
-		@Override
-		public Boolean destroy(Incursion attacker){
-			return null;
+		protected Marker(boolean inside){
+			super();
+			this.inside=inside;
 		}
 
 		@Override
@@ -111,25 +122,30 @@ public abstract class Quest implements Serializable{
 
 		@Override
 		public String describe(){
-			return "Quest marker ("+markername+").";
+			return town+"quest ("+Quest.this.toString().toLowerCase()+").";
 		}
 
 		@Override
 		public Integer getel(Integer attackerel){
-			return 0;
+			return el;
 		}
 
 		@Override
 		public void place(){
 			if(x==-1){
-				var actors=World.getactors();
-				HashSet<Point> districts=Town.getdistricts();
-				while(x==-1||!World.validatecoordinate(x,y)
-						||Terrain.get(x,y).equals(Terrain.WATER)
-						||World.get(x,y,actors)!=null||districts.contains(getlocation())){
-					x=RPG.r(town.x-distance,town.x+distance);
-					y=RPG.r(town.y-distance,town.y+distance);
+				var positions=new HashSet<Point>();
+				var d=town.getdistrict();
+				if(inside)
+					positions.addAll(d.getfreespaces());
+				else{
+					int r=d.getradius()*2;
+					positions.addAll(Point.getrange(town.x-r,town.y-r,town.x+r,town.y+r));
+					positions.removeAll(d.getarea());
 				}
+				setlocation(RPG.pick(positions.stream()
+						.filter(p->World.validatecoordinate(p.x,p.y)
+								&&!Terrain.get(p.x,p.y).equals(Terrain.WATER))
+						.collect(Collectors.toList())));
 			}
 			super.place();
 			WorldScreen.discover(x,y);
@@ -137,108 +153,70 @@ public abstract class Quest implements Serializable{
 	}
 
 	/** Town this quest was generated for. */
-	public final Town town;
-	/** Encounter level, between 1 and {@link Town#population}. */
-	protected int el;
-	/** Quest becomes invalid once it reaches zero. */
-	public int daysleft;
+	public Town town;
 	/**
 	 * Name of the quest. Used as a locally-exclusive identifier per {@link Town}.
 	 */
 	public String name;
-
 	/**
 	 * Amount of gold to be awarded upon completion.
 	 *
 	 * @see #reward()
 	 */
-	public int gold;
+	public int gold=0;
 	/**
 	 * Item reward.
 	 *
 	 * @see #reward()
 	 */
 	public Item item;
+	/** When <code>true</code> will not expire the quest until redeemed. */
+	public boolean completed=false;
+	/** Encounter level, between 1 and {@link Town#population}. */
+	protected int el;
 	/**
-	 * Utility value for maximum distance quests should be from their Town.
-	 */
-	protected int distance;
-	/**
-	 * TODO use
-	 *
 	 * @see #SHORT
 	 * @see #LONG
 	 */
-	public int term=SHORT;
+	protected int duration=SHORT;
 
-	/**
-	 * For Reflection compatibility, all subclasses should respect this
-	 * constructor signature.
-	 *
-	 * @param t Town this quest is active in.
-	 */
-	protected Quest(Town t){
-		town=t;
-		el=Math.max(RPG.r(1,t.population),RPG.r(1,t.population));
-		daysleft=Javelin.round(RPG.r(7,100));
-		distance=town.getdistrict().getradius()*2;
+	/** @return If <code>false</code>, cancel or skip this quest type. */
+	public boolean validate(){
+		if(Javelin.DEBUG&&name==null)
+			throw new RuntimeException("Quest without name: "+getClass());
+		return true;
 	}
 
-	/** @return If <code>false</code>, don't use this object as a quest. */
-	public abstract boolean validate();
-
-	/** A chance to further define details after validation. */
-	protected void define(){
-		int target=Math.min(town.population,el);
-		var min=RewardCalculator.getgold(target-1);
-		var max=RewardCalculator.getgold(target+1);
-		gold=Math.max(1,Javelin.round(RPG.r(min,max)));
+	/** TODO would be cool to have trait-based rewards */
+	void reward(){
+		var min=RewardCalculator.getgold(el-1);
+		var max=RewardCalculator.getgold(el+1);
+		gold=Javelin.round(RPG.r(min,max));
 		var items=RewardCalculator.generateloot(gold,1,Item.ITEMS);
 		if(!items.isEmpty()){
 			gold=0;
+			items.sort(ItemsByPrice.SINGLETON.reversed());
 			item=items.get(0);
 			item.identified=true;
 		}
 	}
 
-	/**
-	 * @return <code>true</code> if this is still listed as active in its
-	 *         respective {@link Town}.
-	 */
-	public boolean isactive(){
-		return daysleft>0&&town.quests.contains(this);
+	/** A chance to further define details after validation. */
+	protected void define(Town t){
+		town=t;
+		el=Math.max(RPG.r(1,t.population),RPG.r(1,t.population));
+		reward();
 	}
 
 	/**
-	 * Note that a quest can be fulfilled but if {@link #daysleft} has expired,
-	 * players won't be able to complete it as it will have been removed from
-	 * {@link #town}.
-	 *
 	 * @return If <code>true</code>, the quest is considered completed and a
 	 *         {@link Squad} may claim the reward.
 	 */
-	protected abstract boolean checkcomplete();
-
-	/**
-	 * @return <code>true</code> if a quest is to be cancelled permanently. For
-	 *         example: a location needs to be captured but the location itself is
-	 *         removed by some external force.
-	 */
-	protected boolean cancel(){
-		return daysleft<=0;
-	}
-
-	/**
-	 * @return A descriptive, permanent name for this quest.
-	 *
-	 * @see #equals(Object)
-	 * @see #validate()
-	 */
-	protected abstract String getname();
+	protected abstract boolean complete();
 
 	@Override
-	public boolean equals(Object obj){
-		Quest q=obj instanceof Quest?(Quest)obj:null;
+	public boolean equals(Object o){
+		var q=o instanceof Quest?(Quest)o:null;
 		return q!=null&&q.name.equals(name);
 	}
 
@@ -257,22 +235,20 @@ public abstract class Quest implements Serializable{
 	 *         any.
 	 */
 	public static Quest generate(Town t){
-		Set<Class<? extends Quest>> quests;
+		var quests=new ArrayList<Class<? extends Quest>>();
 		if(Javelin.DEBUG&&DEBUG!=null)
-			quests=Set.of(DEBUG);
+			quests.add(DEBUG);
 		else{
-			quests=new HashSet<>(QUESTS.get(BASIC));
 			for(var trait:t.traits)
 				quests.addAll(QUESTS.get(trait));
+			RPG.shuffle(quests);
+			quests.addAll(RPG.shuffle(ALL));
 		}
 		try{
-			for(var quest:RPG.shuffle(new ArrayList<>(quests))){
-				var q=quest.getConstructor(Town.class).newInstance(t);
-				if(!q.validate()) continue;
-				q.name=q.getname();
-				if(t.quests.contains(q)) continue;
-				q.define();
-				return q;
+			for(var quest:quests){
+				var q=quest.getConstructor().newInstance();
+				q.define(t);
+				if(q.validate()&&!t.quests.contains(q)) return q;
 			}
 		}catch(ReflectiveOperationException e){
 			if(Javelin.DEBUG)
@@ -281,69 +257,72 @@ public abstract class Quest implements Serializable{
 		return null;
 	}
 
-	/** @return A player-friendly "expires in x [time unit]" notice. */
-	public String getdeadline(){
-		int amount;
-		String unit;
-		if(daysleft>=30){
-			amount=Math.round(daysleft/30);
-			unit=amount==1?"month":"months";
-		}else if(daysleft>=7){
-			amount=Math.round(daysleft/7);
-			unit=amount==1?"week":"weeks";
-		}else{
-			amount=daysleft;
-			unit=amount==1?"day":"days";
-		}
-		return "expires in "+amount+" "+unit;
-	}
-
 	/** @see ContentSummary */
 	public static String printsummary(){
 		var total=QUESTS.values().stream()
 				.collect(Collectors.summingInt(l->l.size()));
-		var traits=new ArrayList<>(QUESTS.keySet());
-		traits.remove(BASIC);
-		traits.sort(null);
-		traits.add(0,BASIC);
-		var detailed=traits.stream().map(t->QUESTS.get(t).size()+" "+t)
+		var traits=QUESTS.keySet().stream().map(t->QUESTS.get(t).size()+" "+t)
 				.collect(Collectors.joining(", "));
-		return total+" town quests ("+detailed+")";
+		return total+" town quests ("+traits+")";
 	}
 
 	/** @return Description of {@link #item} or {@link #gold}. */
 	public String describereward(){
-		return item==null?"$"+Javelin.format(gold):item.toString();
-	}
-
-	int modifyreputation(){
-		var gain=town.population/town.getrank().rank;
-		return RPG.randomize(gain,0,Integer.MAX_VALUE);
+		if(item!=null) return item.toString();
+		if(gold==0) return "";
+		return "$"+Javelin.format(gold);
 	}
 
 	/**
-	 * Checks if the quest is expired or invalid, whether the objective is
-	 * completed and then rewards the player. Removes itself from
-	 * {@link Town#quests} as necessary.
+	 * @return If <code>true</code>, notify player when quest is generated or on
+	 *         {@link #cancel()}. By default only <code>true</code> if
+	 *         {@link #duration} is {@link #LONG}.
 	 */
-	public void update(){
-		if(cancel()){
-			town.quests.remove(this);
-			town.diplomacy.reputation-=modifyreputation();
-			town.events.add("Quest expired: "+name+".");
-		}else if(checkcomplete()) complete();
+	public boolean alert(){
+		return duration==LONG;
+	}
+
+	/**
+	 * Removes this from {@link Town#quests} and lowers
+	 * {@link Diplomacy#reputation}.
+	 */
+	public void cancel(){
+		town.quests.remove(this);
+		town.diplomacy.reputation-=1;
+		if(alert()) town.events.add("Quest expired: "+name+".");
+	}
+
+	/**
+	 * Updates the quest state, possibly making it {@link #completed} or
+	 * {@link #cancel()}.
+	 *
+	 * @param expire If <code>true</code>, will also roll a daily chance to
+	 *          expire.
+	 * @see #duration
+	 */
+	public void update(boolean expire){
+		if(completed)
+			return;
+		else if(complete())
+			completed=true;
+		else if(!validate()||expire&&RPG.chancein(duration)) cancel();
 	}
 
 	/** Completes the quest succesfully. */
-	public void complete(){
-		town.diplomacy.reputation+=modifyreputation();
-		var m="You have completed a quest ("+name+")!\n";
-		m+=RewardCalculator.rewardxp(Squad.active.members,el,1)+"\n";
-		m+="You are rewarded for your efforts with: "+describereward()+"!\n";
-		var s=town.diplomacy.describestatus().toLowerCase();
-		m+="Mood in "+town+" is now: "+s+".";
+	public void claim(){
+		update(false);
+		if(!completed) return;
+		var d=town.diplomacy;
+		var p=town.population;
+		d.reputation+=RPG.randomize(p/town.getrank().rank,0,p);
+		var xp=RewardCalculator.rewardxp(Squad.active.members,el,1);
+		var reward=describereward();
+		if(!reward.isEmpty())
+			reward="You are rewarded for your efforts with: "+reward+"!\n";
+		var reputation=d.describestatus().toLowerCase();
+		var m=String.format(COMPLETE,name,xp,reward,town,reputation);
 		Javelin.message(m,true);
-		Squad.active.gold+=gold;
+		if(gold>0) Squad.active.gold+=gold;
 		if(item!=null) item.grab();
 		town.quests.remove(this);
 	}

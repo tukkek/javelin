@@ -11,7 +11,7 @@ import javelin.model.world.location.town.labor.Trait;
 import javelin.old.RPG;
 
 /**
- * A more involved and {@link Quest#LONG}-{@link Quest#term} type of kill quest.
+ * A more involved and {@link Quest#LONG}-{@link Quest#duration} type of kill quest.
  *
  * There are several marks on a manor-like {@link Map}, which can be scouted by
  * NPCs ahead of time - more competent ones are more expensive and will find

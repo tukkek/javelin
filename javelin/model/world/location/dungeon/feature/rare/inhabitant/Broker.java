@@ -1,4 +1,4 @@
-package javelin.model.world.location.dungeon.feature.inhabitant;
+package javelin.model.world.location.dungeon.feature.rare.inhabitant;
 
 import java.util.ArrayList;
 import java.util.Arrays;

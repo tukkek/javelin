@@ -4,7 +4,7 @@ import javelin.controller.content.terrain.Desert;
 import javelin.controller.content.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.world.location.dungeon.branch.Branch;
-import javelin.model.world.location.dungeon.feature.Brazier;
+import javelin.model.world.location.dungeon.feature.common.Brazier;
 
 /**
  * Found buried in the {@link Desert}. 1-3 pedestals light an area around the

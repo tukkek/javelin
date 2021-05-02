@@ -29,7 +29,7 @@ import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
-import javelin.model.world.location.dungeon.feature.Fountain;
+import javelin.model.world.location.dungeon.feature.rare.Fountain;
 import javelin.model.world.location.unique.AdventurersGuild;
 import javelin.old.RPG;
 import javelin.view.screen.WorldScreen;

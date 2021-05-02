@@ -1,4 +1,4 @@
-package javelin.model.world.location.dungeon.feature.inhabitant;
+package javelin.model.world.location.dungeon.feature.rare.inhabitant;
 
 import javelin.Javelin;
 import javelin.controller.challenge.Difficulty;

@@ -1,7 +1,7 @@
 /**
  *
  */
-package javelin.model.world.location.dungeon.feature;
+package javelin.model.world.location.dungeon.feature.common;
 
 import java.util.stream.Collectors;
 
@@ -13,6 +13,7 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonEntrance;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.Lore;
+import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.old.RPG;
 
 /**

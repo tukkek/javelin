@@ -13,7 +13,7 @@ import javelin.controller.Point;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.feature.Feature;
-import javelin.model.world.location.dungeon.feature.Spirit;
+import javelin.model.world.location.dungeon.feature.rare.Spirit;
 import javelin.old.RPG;
 import javelin.view.screen.DungeonScreen;
 

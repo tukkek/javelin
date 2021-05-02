@@ -20,7 +20,7 @@ import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.feature.Feature;
-import javelin.model.world.location.dungeon.feature.Fountain;
+import javelin.model.world.location.dungeon.feature.rare.Fountain;
 import javelin.old.RPG;
 
 /**

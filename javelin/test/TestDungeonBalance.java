@@ -9,10 +9,10 @@ import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.DungeonTier;
 import javelin.model.world.location.dungeon.Portal;
 import javelin.model.world.location.dungeon.branch.temple.WaterTemple.WaterTempleEntrance;
-import javelin.model.world.location.dungeon.feature.Campfire;
 import javelin.model.world.location.dungeon.feature.Feature;
-import javelin.model.world.location.dungeon.feature.Fountain;
-import javelin.model.world.location.dungeon.feature.Passage;
+import javelin.model.world.location.dungeon.feature.common.Campfire;
+import javelin.model.world.location.dungeon.feature.common.Passage;
+import javelin.model.world.location.dungeon.feature.rare.Fountain;
 
 /**
  * Tests balance-critical {@link Feature} generation in {@link DungeonFloor}s.

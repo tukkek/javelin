@@ -17,9 +17,9 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonImages;
-import javelin.model.world.location.dungeon.feature.Campfire;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
+import javelin.model.world.location.dungeon.feature.common.Campfire;
 
 /**
  * See https://github.com/tukkek/javelin/issues/254 .

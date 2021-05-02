@@ -1,7 +1,7 @@
 package javelin.controller.content.wish;
 
 import javelin.model.unit.Combatant;
-import javelin.model.world.location.dungeon.feature.Fountain;
+import javelin.model.world.location.dungeon.feature.rare.Fountain;
 
 /**
  * TODO allow details to be added to member selection

@@ -1,4 +1,4 @@
-package javelin.model.world.location.dungeon.feature;
+package javelin.model.world.location.dungeon.feature.rare;
 
 import java.util.ArrayList;
 
@@ -7,6 +7,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.branch.temple.EarthTemple;
+import javelin.model.world.location.dungeon.feature.Feature;
 
 /**
  * @see EarthTemple

@@ -1,4 +1,4 @@
-package javelin.model.world.location.dungeon.feature;
+package javelin.model.world.location.dungeon.feature.common;
 
 import java.util.List;
 
@@ -8,6 +8,9 @@ import javelin.controller.content.action.world.WorldMove;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
+import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.StairsDown;
+import javelin.model.world.location.dungeon.feature.StairsUp;
 import javelin.old.RPG;
 
 /**

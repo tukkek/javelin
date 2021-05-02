@@ -1,4 +1,4 @@
-package javelin.model.world.location.dungeon.feature;
+package javelin.model.world.location.dungeon.feature.rare;
 
 import java.awt.Image;
 import java.util.List;
@@ -10,6 +10,7 @@ import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.DungeonImages;
+import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.town.labor.religious.Shrine;
 import javelin.view.Images;
 

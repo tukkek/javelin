@@ -1,4 +1,4 @@
-package javelin.model.world.location.dungeon.feature;
+package javelin.model.world.location.dungeon.feature.rare;
 
 import java.util.stream.Collectors;
 
@@ -11,6 +11,7 @@ import javelin.model.item.gear.rune.RuneGear;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.DungeonFloor;
+import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.town.labor.basic.Shop;
 import javelin.old.RPG;
 import javelin.view.screen.WorldScreen;

@@ -1,4 +1,4 @@
-package javelin.model.world.location.dungeon.feature;
+package javelin.model.world.location.dungeon.feature.rare;
 
 import javelin.Javelin;
 import javelin.JavelinApp;
@@ -6,6 +6,7 @@ import javelin.controller.Point;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.branch.temple.GoodTemple;
+import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.old.RPG;
 import javelin.view.mappanel.dungeon.DungeonTile;
 import javelin.view.screen.BattleScreen;

@@ -13,7 +13,7 @@ import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.branch.Branch;
-import javelin.model.world.location.dungeon.feature.Fountain;
+import javelin.model.world.location.dungeon.feature.rare.Fountain;
 
 /**
  * Found next to {@link Water}. {@link Fight#weather} always

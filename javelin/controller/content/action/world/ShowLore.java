@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import javelin.model.world.location.dungeon.DungeonEntrance;
 import javelin.model.world.location.dungeon.Lore;
-import javelin.model.world.location.dungeon.feature.LoreNote;
+import javelin.model.world.location.dungeon.feature.common.LoreNote;
 import javelin.view.frame.text.TextScreen;
 import javelin.view.screen.WorldScreen;
 

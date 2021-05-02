@@ -1,4 +1,4 @@
-package javelin.model.world.location.dungeon.feature;
+package javelin.model.world.location.dungeon.feature.rare;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +14,7 @@ import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.DungeonFloor;
+import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.unique.AdventurersGuild;
 import javelin.old.RPG;
 

@@ -6,7 +6,7 @@ import javelin.controller.content.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.world.location.dungeon.Portal;
 import javelin.model.world.location.dungeon.branch.Branch;
-import javelin.model.world.location.dungeon.feature.Throne;
+import javelin.model.world.location.dungeon.feature.rare.Throne;
 
 /**
  * Found atop a {@link Hill}.

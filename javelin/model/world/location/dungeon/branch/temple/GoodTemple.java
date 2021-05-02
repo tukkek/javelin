@@ -10,7 +10,7 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Monster.MonsterType;
 import javelin.model.world.location.dungeon.branch.Branch;
 import javelin.model.world.location.dungeon.feature.Feature;
-import javelin.model.world.location.dungeon.feature.Spirit;
+import javelin.model.world.location.dungeon.feature.rare.Spirit;
 
 /**
  * Found resting in the {@link Plains}. Evil enemies never found here. 1-3 good

@@ -3,11 +3,11 @@ package javelin.controller.table.dungeon.feature;
 import javelin.controller.table.Table;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
-import javelin.model.world.location.dungeon.feature.Brazier;
-import javelin.model.world.location.dungeon.feature.Campfire;
 import javelin.model.world.location.dungeon.feature.Feature;
-import javelin.model.world.location.dungeon.feature.LoreNote;
-import javelin.model.world.location.dungeon.feature.Passage;
+import javelin.model.world.location.dungeon.feature.common.Brazier;
+import javelin.model.world.location.dungeon.feature.common.Campfire;
+import javelin.model.world.location.dungeon.feature.common.LoreNote;
+import javelin.model.world.location.dungeon.feature.common.Passage;
 
 /**
  * Generates a common {@link DungeonFloor} {@link Feature}. Unlike with the

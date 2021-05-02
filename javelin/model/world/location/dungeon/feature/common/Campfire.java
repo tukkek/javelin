@@ -1,10 +1,11 @@
-package javelin.model.world.location.dungeon.feature;
+package javelin.model.world.location.dungeon.feature.common;
 
 import javelin.Javelin;
 import javelin.controller.content.action.world.WorldMove;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
+import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.town.labor.basic.Lodge;
 import javelin.old.RPG;
 

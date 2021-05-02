@@ -1,4 +1,4 @@
-package javelin.model.world.location.dungeon.feature;
+package javelin.model.world.location.dungeon.feature.rare;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,6 +11,7 @@ import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.condition.TemporarySpell;
 import javelin.model.world.Period;
 import javelin.model.world.location.dungeon.DungeonFloor;
+import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.old.RPG;
 import javelin.view.screen.WorldScreen;
 

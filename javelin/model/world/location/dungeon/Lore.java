@@ -9,10 +9,10 @@ import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.table.dungeon.feature.RareFeatureTable;
 import javelin.model.item.Item;
 import javelin.model.item.key.door.Key;
-import javelin.model.world.location.dungeon.feature.LoreNote;
 import javelin.model.world.location.dungeon.feature.chest.ArtifactChest;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
 import javelin.model.world.location.dungeon.feature.chest.Crate;
+import javelin.model.world.location.dungeon.feature.common.LoreNote;
 
 /**
  * A note of interest about a {@link DungeonFloor} that can later be accessed

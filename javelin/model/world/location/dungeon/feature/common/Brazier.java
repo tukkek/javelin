@@ -1,4 +1,4 @@
-package javelin.model.world.location.dungeon.feature;
+package javelin.model.world.location.dungeon.feature.common;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -13,6 +13,7 @@ import javelin.controller.walker.pathing.DirectPath;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.branch.temple.FireTemple;
+import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.view.mappanel.dungeon.DungeonTile;
 
 /**

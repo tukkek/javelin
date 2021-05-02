@@ -91,6 +91,9 @@ public abstract class Quest implements Serializable{
 	 * Obviously, not all quests need to employ markers (such as those that target
 	 * existing {@link Location}s).
 	 *
+	 * TODO quests markers should, by default always show the difficulty level, as
+	 * in {@link Location#headsup(String)}.
+	 *
 	 * @author alex
 	 */
 	protected abstract class Marker extends Actor{

@@ -51,9 +51,11 @@ public abstract class Tile{
 			 *
 			 * More info https://netbeans.org/bugzilla/show_bug.cgi?id=165867
 			 */
-			e.printStackTrace();
-			System.out.println("Image: "+i);
-			System.out.println("Tile size: "+size);
+			//			e.printStackTrace();
+			//			System.out.println("Image: "+i);
+			//			System.out.println("Tile size: "+size);
+			System.out
+					.println("NPE: javelin.view.mappanel.Tile.draw(Graphics,Image)");
 		}
 	}
 

@@ -2,9 +2,12 @@ package javelin.controller.table.dungeon.feature;
 
 import javelin.controller.table.Table;
 import javelin.model.world.location.dungeon.DungeonFloor;
+import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.old.RPG;
 
 /**
+ * Returns a Difficulty Class modifier for {@link Feature}-related rolls.
+ *
  * @see #roll()
  * @author alex
  */

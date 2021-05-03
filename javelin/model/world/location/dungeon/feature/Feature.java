@@ -8,10 +8,12 @@ import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.table.Table;
 import javelin.controller.table.dungeon.feature.CommonFeatureTable;
+import javelin.controller.table.dungeon.feature.FeatureModifierTable;
 import javelin.controller.table.dungeon.feature.RareFeatureTable;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Perception;
+import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.Features;
@@ -146,5 +148,13 @@ public abstract class Feature implements Serializable{
 	 */
 	public boolean reveal(boolean found){
 		return found;
+	}
+
+	/**
+	 * @return A level-appropriate {@link Skill} roll Difficulty Class, modified
+	 *         by {@link FeatureModifierTable}.
+	 */
+	public static int getdc(DungeonFloor f){
+		return 10+f.level+f.gettable(FeatureModifierTable.class).roll();
 	}
 }

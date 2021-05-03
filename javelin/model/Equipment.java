@@ -186,4 +186,15 @@ public class Equipment implements Serializable{
 	public void clear(){
 		equipment.clear();
 	}
+
+	/**
+	 * @return The {@link Combatant} that owns this exact instace, or
+	 *         <code>null</code> of no one does.
+	 */
+	public Combatant getowner(Item item){
+		for(var m:squad)
+			for(var i:get(m))
+				if(i==item) return m;
+		return null;
+	}
 }

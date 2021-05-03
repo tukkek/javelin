@@ -11,7 +11,6 @@ import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.ItemsByPrice;
 import javelin.controller.content.fight.RandomDungeonEncounter;
 import javelin.controller.exception.battle.StartBattle;
-import javelin.controller.table.dungeon.feature.FeatureModifierTable;
 import javelin.model.item.Item;
 import javelin.model.item.potion.Potion;
 import javelin.model.unit.Combatant;
@@ -65,7 +64,7 @@ public class Herb extends Feature{
 	public Herb(DungeonFloor f){
 		super("herb");
 		remove=false;
-		dc=10+f.level+f.gettable(FeatureModifierTable.class).roll();
+		dc=getdc(f);
 		loot=generate(f);
 	}
 

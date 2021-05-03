@@ -10,6 +10,7 @@ import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.DungeonTier;
 import javelin.model.world.location.dungeon.Wilderness;
 import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.rare.CorruptedAltar;
 import javelin.model.world.location.dungeon.feature.rare.DungeonMap;
 import javelin.model.world.location.dungeon.feature.rare.Fountain;
 import javelin.model.world.location.dungeon.feature.rare.FruitTree;
@@ -44,14 +45,14 @@ public class RareFeatureTable extends Table implements DungeonFeatureTable{
 	/** All features in this table. */
 	public static final List<Class<? extends Feature>> ALL=new ArrayList<>();
 
-	static final Class<? extends Feature> DEBUG=null;
 	static final List<Class<? extends Feature>> LOTS=List.of(FruitTree.class,
 			Herb.class);
 	static final List<Class<? extends Feature>> AVERAGE=List.of(Fountain.class,
 			LearningStone.class,Spirit.class,Broker.class,Prisoner.class,Trader.class,
 			Recipe.class);
 	static final List<Class<? extends Feature>> FEW=List.of(Mirror.class,
-			Throne.class,Leader.class,DungeonMap.class);
+			Throne.class,Leader.class,DungeonMap.class,CorruptedAltar.class);
+	static final Class<? extends Feature> DEBUG=null;
 
 	static{
 		ALL.addAll(LOTS);

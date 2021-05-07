@@ -3,7 +3,6 @@ package javelin.controller.content.fight.mutator.mode;
 import java.util.Set;
 
 import javelin.Javelin;
-import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.encounter.EncounterGenerator.MonsterPool;
@@ -70,12 +69,10 @@ public class Horde extends FightMode{
 	@Override
 	public void end(Fight f){
 		super.end(f);
-		if(fled){
-			Fight.victory=false;
-			var vanquished=new Combatants(Fight.state.dead);
-			vanquished.retainAll(Fight.originalredteam);
-			var xpwon=RewardCalculator.rewardxp(Squad.active.members,vanquished,1);
-			Javelin.message(xpwon,true);
-		}
+		if(fled) Fight.victory=false;
+		//			var vanquished=new Combatants(Fight.state.dead);
+		//			vanquished.retainAll(Fight.originalredteam);
+		//			var xpwon=RewardCalculator.rewardxp(Squad.active.members,vanquished,1);
+		//			Javelin.message(xpwon,true);
 	}
 }

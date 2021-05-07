@@ -6,6 +6,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.ai.ThreadManager;
 import javelin.controller.ai.cache.AiCache;
+import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.content.fight.mutator.Friendly;
 import javelin.controller.content.terrain.Terrain;
@@ -76,7 +77,12 @@ public class EndBattle extends BattleEvent{
 			Squad.active.disband();
 			combatresult="You lost!";
 		}else{
-			combatresult="Fled from combat. No awards received.";
+			var xp="No awards received.";
+			var vanquished=new Combatants(Fight.state.dead);
+			vanquished.retainAll(Fight.originalredteam);
+			if(!vanquished.isEmpty())
+				xp=RewardCalculator.rewardxp(Fight.originalblueteam,vanquished,1);
+			combatresult="Fled from combat. "+xp;
 			if(!Fight.victory&&s.fleeing.size()!=Fight.originalblueteam.size()){
 				combatresult+="\nFallen allies left behind are lost!";
 				for(Combatant abandoned:s.dead)

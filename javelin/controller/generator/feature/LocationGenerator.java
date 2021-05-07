@@ -19,8 +19,8 @@ import javelin.model.Realm;
 import javelin.model.item.Tier;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
-import javelin.model.world.location.Crucible;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.WarlocksTower;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.PointOfInterest;
 import javelin.model.world.location.ResourceSite;
@@ -45,6 +45,7 @@ import javelin.model.world.location.haunt.settlement.ChaoticSettlement;
 import javelin.model.world.location.haunt.settlement.EvilSettlement;
 import javelin.model.world.location.haunt.settlement.GoodSettlement;
 import javelin.model.world.location.haunt.settlement.LawfulSettlement;
+import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.governor.MonsterGovernor;
 import javelin.model.world.location.town.labor.basic.Lodge;
@@ -183,10 +184,11 @@ public class LocationGenerator implements Serializable{
 			l.place();
 		for(var i=0;i<5;)
 			if(Portal.create()!=null) i+=1;
-		var crucibles=Crucible.generate();
-		crucibles.sort((a,b)->Double.compare(a.distance(starting.x,starting.y),
-				b.distance(starting.x,starting.y)));
-		crucibles.get(0).reveal();
+
+		//		var crucibles=Crucible.generate();
+		//		crucibles.sort((a,b)->Double.compare(a.distance(starting.x,starting.y),
+		//				b.distance(starting.x,starting.y)));
+		//		crucibles.get(0).reveal();
 	}
 
 	static void generatestartingarea(World w,Town t){
@@ -204,6 +206,8 @@ public class LocationGenerator implements Serializable{
 		});
 		spawnnear(t,new AdventurersGuild(),w,2,3,true).reveal();
 		spawnnear(t,new Arena(t),w,2,3,false).reveal();
+		var r=District.RADIUSMAX/2;
+		spawnnear(t,new WarlocksTower(),w,r+1,r*2,false).reveal();
 		placedeepdungeon(w,t);
 		w.discovered.addAll(t.getdistrict().getarea());
 	}

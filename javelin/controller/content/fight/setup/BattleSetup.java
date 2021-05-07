@@ -45,7 +45,7 @@ public class BattleSetup{
 	public void setup(){
 		rollinitiative();
 		var f=Fight.current;
-		generatemap(f,null);
+		Fight.state.map=generatemap(f,null).map;
 		for(pass=1;pass<=PLACEMENTSPASSES;pass++)
 			try{
 				if(pass==3) generatemap(f,new Field());
@@ -64,7 +64,7 @@ public class BattleSetup{
 	}
 
 	/** Allows greater control of {@link Map} generation. */
-	public void generatemap(Fight f,Map m){
+	public Map generatemap(Fight f,Map m){
 		if(f.map==null){
 			var t=Dungeon.active==null?RPG.pick(f.terrains):Terrain.UNDERGROUND;
 			f.map=t.getmaps().pick();
@@ -78,7 +78,7 @@ public class BattleSetup{
 			f.map=m;
 		}
 		f.map.generate();
-		Fight.state.map=f.map.map;
+		return f.map;
 	}
 
 	/** Rolls initiative for each {@link Combatant}. */

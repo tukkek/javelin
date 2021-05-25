@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.Weather;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
@@ -22,8 +23,14 @@ import javelin.controller.content.kit.Kit;
 import javelin.controller.content.map.Map;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.content.upgrade.classes.Commoner;
+import javelin.controller.db.EncounterIndex;
+import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.battle.StartBattle;
+import javelin.controller.generator.encounter.Encounter;
+import javelin.controller.generator.encounter.EncounterGenerator.MonsterPool;
+import javelin.controller.table.dungeon.BranchTable;
 import javelin.model.item.Item;
+import javelin.model.item.Tier;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
@@ -54,7 +61,7 @@ import javelin.view.screen.WorldScreen;
  * {@link Fight}s {@link Map}s are based on a random {@link Terrain}, while
  * {@link Branch}es are used to make each Fight more interesting and unique.
  *
- * TODO {@link Branch} stuff
+ * TODO Other {@link Branch} stuff ( {@link Mutator}s, etc)
  *
  * @author alex
  */
@@ -98,14 +105,14 @@ public class WarlocksTower extends Location{
 		Combatant recruit(float crp,TowerFight f){
 			if(crp<1) crp=1;
 			Combatant r=null;
-			var candidates=new ArrayList<Monster>();
+			var candidates=new ArrayList<Combatant>();
 			for(var cr=crp;candidates.size()<3;cr--){
 				var finalcr=cr;
-				var recruits=f.monsters.stream().filter(m->m.cr==finalcr)
+				var recruits=f.monsters.stream().filter(m->m.source.cr==finalcr)
 						.collect(Collectors.toList());
 				if(recruits!=null) candidates.addAll(recruits);
 			}
-			r=new Combatant(RPG.pick(candidates),true);
+			r=RPG.pick(candidates).clone().clonesource();
 			r.summoned=true;
 			while(ChallengeCalculator.calculatecr(r.source)<crp)
 				if(!Commoner.SINGLETON.upgrade(r)) break;
@@ -168,8 +175,11 @@ public class WarlocksTower extends Location{
 	}
 
 	class TowerFight extends Fight{
+		List<Branch> branches=new ArrayList<>(0);
+		List<Combatant> monsters=new ArrayList<>();
+		int el=Squad.active.getel();
 		Waves mutator=new Waves();
-		List<Monster> monsters=new ArrayList<>();
+		EncounterIndex index;
 		Terrain terrain;
 
 		TowerFight(){
@@ -178,20 +188,40 @@ public class WarlocksTower extends Location{
 			rewardgold=false;
 			period=Period.EVENING;
 			mutators.add(mutator);
-			terrain=RPG.pick(Terrain.NONWATER);
+			int nbranches=RPG.r(0,Tier.get(el).getordinal()+1);
+			branches=RPG.shuffle(new ArrayList<>(BranchTable.BRANCHES)).subList(0,
+					nbranches);
+			var terrains=new ArrayList<>(Terrain.NONWATER);
+			for(var b:branches)
+				terrains.addAll(b.terrains);
+			terrain=RPG.pick(terrains);
 			map=terrain.getmaps().pick();
-			monsters.addAll(terrain.getmonsters());
+			var mobs=terrain.getmonsters();
+			index=new EncounterIndex(mobs);
+			monsters.addAll(Combatants.from(mobs));
+			for(var b:branches)
+				for(var t:b.templates)
+					for(var c:Combatants.from(mobs))
+						if(t.apply(c.clonesource())>=0){
+							c.source.elite=true;
+							monsters.add(c);
+							index.put(new Encounter(c));
+						}
 			setup=new Setup();
 		}
 
 		@Override
 		public Integer getel(int teamel){
-			return Squad.active.getel();
+			return el;
 		}
 
 		@Override
 		public ArrayList<Combatant> getfoes(Integer el){
-			return super.getfoes(el);
+			try{
+				return new MonsterPool(index).generate(el);
+			}catch(GaveUp e){
+				throw new RuntimeException(e);
+			}
 		}
 
 		void loot(){
@@ -264,6 +294,11 @@ public class WarlocksTower extends Location{
 	@Override
 	public boolean interact(){
 		if(Javelin.prompt(PROMPT)!='s') return false;
+		WorldScreen.current.messagepanel.clear();
+		var loading="The Warlock is looking up tactical scenario #"+RPG.r(1,9000)
+				+" - please wait...";
+		Javelin.message(loading,Delay.NONE);
+		WorldScreen.current.messagepanel.repaint();
 		throw new StartBattle(new TowerFight());
 	}
 }

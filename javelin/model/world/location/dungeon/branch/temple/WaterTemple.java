@@ -71,7 +71,7 @@ public class WaterTemple extends Temple{
 		}
 	}
 
-	static class WaterBranch extends Branch{
+	static class WaterBranch extends TempleBranch{
 		protected WaterBranch(){
 			super("Flooded","of water","floordungeon","walltemplewater");
 			doorbackground=false;

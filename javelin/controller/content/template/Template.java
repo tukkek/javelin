@@ -7,7 +7,6 @@ import javelin.controller.content.kit.Kit;
 import javelin.controller.content.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
-import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.branch.Branch;
 
 /**
@@ -27,7 +26,7 @@ public class Template implements Serializable{
 	}
 
 	/** @return How many {@link Upgrade}s were succesful. */
-	public int apply(Combatant c,Dungeon d){
+	public int apply(Combatant c){
 		var upgraded=0;
 		for(var u:upgrades)
 			if(u.upgrade(c)) upgraded+=1;
@@ -35,10 +34,10 @@ public class Template implements Serializable{
 	}
 
 	/** @return {@link Combatant}s {@link Upgrade}d at least once. */
-	public int apply(Combatants encounter,Dungeon d){
+	public int apply(Combatants encounter){
 		var upgraded=0;
 		for(var c:encounter)
-			if(apply(c,d)>0) upgraded+=1;
+			if(apply(c)>0) upgraded+=1;
 		return upgraded;
 	}
 }

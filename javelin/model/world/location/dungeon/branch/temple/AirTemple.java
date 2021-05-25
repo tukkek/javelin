@@ -66,7 +66,7 @@ public class AirTemple extends Temple{
 		}
 	}
 
-	static class AirBranch extends Branch{
+	static class AirBranch extends TempleBranch{
 		protected AirBranch(){
 			super("Windy","of air","floortemplegood","walltempleair");
 			terrains.add(Terrain.MOUNTAINS);

@@ -56,8 +56,13 @@ public class EncounterGenerator{
 		}
 
 		/** Constructor. */
+		public MonsterPool(EncounterIndex indexp){
+			index=indexp;
+		}
+
+		/** Constructor. */
 		public MonsterPool(List<Monster> pool){
-			index=new EncounterIndex(pool);
+			this(new EncounterIndex(pool));
 		}
 
 		/**

@@ -89,7 +89,6 @@ public abstract class Temple extends Dungeon{
 				Tier.EPIC.getrandomel(false),RPG.randomize(2,1,Integer.MAX_VALUE));
 		realm=r;
 		fluff=f;
-		b.templates.add(KitTemplate.SINGLETON);
 		branches.add(b);
 		terrains.clear();
 		terrains.addAll(b.terrains);

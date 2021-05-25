@@ -22,7 +22,7 @@ public class FireTemple extends Temple{
 			+"This was clearly built as a strong defensive outpost - the walls are tall and strong, the towers full of small openings for defense.\n"
 			+"As you creep in you can't help but wonder who built such a structure, why'd they leave it and where could they be now.";
 
-	static class FireBranch extends Branch{
+	static class FireBranch extends TempleBranch{
 		FireBranch(){
 			super("Burning","of fire","floortemplefire","walltemplefire");
 			features.add(Brazier.class);

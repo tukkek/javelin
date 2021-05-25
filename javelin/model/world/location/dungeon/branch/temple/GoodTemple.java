@@ -29,7 +29,7 @@ public class GoodTemple extends Temple{
 			+"In fact, the eerie silence around the entire place makes you wonder for a moment whether this is all only a fleeting dream.\n"
 			+"You approach the holy ground, daring say nothing as you breath deeply in anticipation of the vistas inside.";
 
-	static class GoodBranch extends Branch{
+	static class GoodBranch extends TempleBranch{
 		protected GoodBranch(){
 			super("Holy","of good","floortemplegood","walldungeon");
 			features.add(Spirit.class);

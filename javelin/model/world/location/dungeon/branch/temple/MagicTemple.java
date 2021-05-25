@@ -25,7 +25,7 @@ public class MagicTemple extends Temple{
 			+"There are a few stones along the entry walls and they give off a faint octarine glow.\n"
 			+"You walk along a grand mural written in an ancient language but alas you cannot decipher it.";
 
-	static class MagicBranch extends Branch{
+	static class MagicBranch extends TempleBranch{
 		protected MagicBranch(){
 			super("Enchanted","of magic","floortemplemagic","walltemplemagic");
 			features.add(Throne.class);

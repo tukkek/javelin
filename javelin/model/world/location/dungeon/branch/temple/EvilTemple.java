@@ -70,7 +70,7 @@ public class EvilTemple extends Temple{
 		}
 	}
 
-	static class EvilBranch extends Branch{
+	static class EvilBranch extends TempleBranch{
 		protected EvilBranch(){
 			super("Dark","of evil","floortempleevil","walltempleevil");
 			doorbackground=false;

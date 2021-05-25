@@ -2,7 +2,6 @@ package javelin.controller.content.template;
 
 import javelin.controller.content.kit.Kit;
 import javelin.model.unit.Combatant;
-import javelin.model.world.location.dungeon.Dungeon;
 import javelin.old.RPG;
 
 /**
@@ -21,11 +20,11 @@ public class KitTemplate extends Template{
 	}
 
 	@Override
-	public int apply(Combatant c,Dungeon d){
+	public int apply(Combatant c){
 		var k=RPG.pick(Kit.getpreferred(c.source,true));
-		var cr=c.source.cr;
-		var target=cr*2;
-		if(d!=null) target=Math.min(target,cr+d.level/2);
+		var cr=Math.round(c.source.cr);
+		var target=cr+RPG.r(cr/2,cr);
+		//		if(d!=null) target=Math.min(target,cr+d.level/2);
 		var upgrades=0;
 		while(c.source.cr<target&&k.upgrade(c))
 			upgrades+=1;

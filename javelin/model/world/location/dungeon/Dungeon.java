@@ -177,7 +177,7 @@ public class Dungeon implements Serializable{
 		for(var e:RPG.shuffle(encounters)){
 			for(var t:templates){
 				var combatants=e.generate();
-				if(t.apply(combatants,this)>0){
+				if(t.apply(combatants)>0){
 					modified.put(new Encounter(combatants));
 					total+=1;
 				}

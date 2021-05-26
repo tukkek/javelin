@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.Javelin.Delay;
-import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.content.fight.RandomDungeonEncounter;
@@ -158,23 +157,22 @@ public class Dungeon implements Serializable{
 	}
 
 	List<EncounterIndex> indexencounters(){
-		var terrain=new ArrayList<>(terrains);
+		var index=new EncounterIndex();
+		for(var t:terrains)
+			index.merge(Organization.ENCOUNTERSBYTERRAIN.get(t.toString()));
 		for(var b:branches)
-			terrain.addAll(b.terrains);
-		var indexes=terrain.stream()
-				.map(t->Organization.ENCOUNTERSBYTERRAIN.get(t.toString()))
-				.collect(Collectors.toList());
+			index.merge(b.getencounters());
 		var templates=branches.stream().flatMap(b->b.templates.stream())
 				.collect(Collectors.toList());
-		if(templates.isEmpty()) return indexes;
-		var encounters=indexes.stream().flatMap(i->i.values().stream())
-				.flatMap(es->es.stream())
-				.filter(e->Difficulty.VERYEASY<=e.el-level
-						&&e.el-level<=Difficulty.DIFFICULT&&validate(e.group))
-				.collect(Collectors.toList());
+		if(templates.isEmpty()) return List.of(index);
+		index=index.filter(level);
+		for(var encounters:index.values())
+			for(var e:new ArrayList<>(encounters))
+				if(!validate(e.group)) encounters.remove(e);
+		index=index.limit(9);
 		var modified=new EncounterIndex();
 		var total=0;
-		for(var e:RPG.shuffle(encounters)){
+		for(var e:RPG.shuffle(index.getall())){
 			for(var t:templates){
 				var combatants=e.generate();
 				if(t.apply(combatants)>0){
@@ -185,9 +183,8 @@ public class Dungeon implements Serializable{
 			if(total>=TEMPLATEENCOUNTERS) return List.of(modified);
 		}
 		//if TEMPLATEENCOUNTERS is done away with, remove this:
-		indexes=new ArrayList<>(indexes);
-		indexes.add(modified);
-		return indexes;
+		index.merge(modified);
+		return List.of(index);
 	}
 
 	/**

@@ -1,5 +1,7 @@
 package javelin.controller.content.template;
 
+import java.math.BigDecimal;
+
 import javelin.controller.content.kit.Kit;
 import javelin.model.unit.Combatant;
 import javelin.old.RPG;
@@ -21,12 +23,12 @@ public class KitTemplate extends Template{
 
 	@Override
 	public int apply(Combatant c){
+		c.clonesource();
 		var k=RPG.pick(Kit.getpreferred(c.source,true));
 		var cr=Math.round(c.source.cr);
-		var target=cr+RPG.r(cr/2,cr);
-		//		if(d!=null) target=Math.min(target,cr+d.level/2);
+		c.xp=new BigDecimal(RPG.r(cr/2,cr));
 		var upgrades=0;
-		while(c.source.cr<target&&k.upgrade(c))
+		while(c.xp.floatValue()>0&&k.upgrade(c,true))
 			upgrades+=1;
 		return upgrades;
 	}

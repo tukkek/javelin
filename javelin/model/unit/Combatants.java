@@ -39,7 +39,7 @@ public class Combatants extends ArrayList<Combatant>
 
 	@Override
 	public Combatants clone(){
-		Combatants clone=(Combatants)super.clone();
+		var clone=(Combatants)super.clone();
 		for(int i=0;i<size();i++)
 			clone.set(i,get(i).clone());
 		return clone;

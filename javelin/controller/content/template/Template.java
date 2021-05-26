@@ -27,6 +27,7 @@ public class Template implements Serializable{
 
 	/** @return How many {@link Upgrade}s were succesful. */
 	public int apply(Combatant c){
+		c.clonesource();
 		var upgraded=0;
 		for(var u:upgrades)
 			if(u.upgrade(c)) upgraded+=1;

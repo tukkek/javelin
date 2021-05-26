@@ -197,16 +197,21 @@ public class WarlocksTower extends Location{
 			terrain=RPG.pick(terrains);
 			map=terrain.getmaps().pick();
 			var mobs=terrain.getmonsters();
-			index=new EncounterIndex(mobs);
 			monsters.addAll(Combatants.from(mobs));
+			index=new EncounterIndex(mobs);
 			for(var b:branches)
-				for(var t:b.templates)
-					for(var c:Combatants.from(mobs))
-						if(t.apply(c.clonesource())>=0){
-							c.source.elite=true;
-							monsters.add(c);
-							index.put(new Encounter(c));
+				index.merge(b.getencounters());
+			index=index.filter(el+Difficulty.EASY,el+Difficulty.DEADLY).limit(9);
+			System.out.println("index size: "+index.getall().size());
+			for(var e:index.getall())
+				for(var b:branches)
+					for(var t:b.templates){
+						var modified=new Combatants(e.group).clone();
+						if(t.apply(modified)>0){
+							monsters.addAll(modified);
+							index.put(new Encounter(modified));
 						}
+					}
 			setup=new Setup();
 		}
 

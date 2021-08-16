@@ -43,8 +43,7 @@ public class Bless extends Spell{
 	@Override
 	public String cast(Combatant caster,Combatant target,boolean saved,
 			BattleState s,ChanceNode cn){
-		s=s.clone();
-		for(Combatant c:s.getteam(caster))
+		for(var c:s.getteam(caster))
 			s.clone(c).addcondition(new Blessed(this));
 		return "All allies are blessed!";
 	}

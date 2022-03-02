@@ -11,6 +11,7 @@ import javelin.controller.content.terrain.hazard.Cold;
 import javelin.controller.content.terrain.hazard.Flood;
 import javelin.controller.content.terrain.hazard.GettingLost;
 import javelin.controller.content.terrain.hazard.Hazard;
+import javelin.model.item.Tier;
 import javelin.model.world.World;
 
 /**
@@ -30,6 +31,7 @@ public class Marsh extends Terrain{
 		representation='m';
 		liquid=true;
 		survivalbonus=-2;
+		tier=Tier.HIGH.maxlevel;
 	}
 
 	@Override

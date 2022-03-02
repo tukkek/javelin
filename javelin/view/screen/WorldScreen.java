@@ -245,6 +245,7 @@ public class WorldScreen extends BattleScreen{
 			Season.change(day);
 			Weather.weather();
 			Portal.turn();
+			RandomEncounter.evolve();
 			World.seed.featuregenerator.spawn(1f/SPAWNPERIOD,false);
 			s.endday();
 			var actors=World.getactors();

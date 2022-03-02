@@ -12,6 +12,7 @@ import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.content.action.world.WorldMove;
+import javelin.controller.content.fight.RandomEncounter;
 import javelin.controller.content.map.Map;
 import javelin.controller.content.map.Maps;
 import javelin.controller.content.terrain.hazard.Hail;
@@ -20,6 +21,7 @@ import javelin.controller.db.EncounterIndex;
 import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.generator.WorldGenerator;
 import javelin.controller.generator.encounter.Encounter;
+import javelin.model.item.Tier;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Survival;
@@ -122,6 +124,13 @@ public abstract class Terrain implements Serializable{
 
 	/** A bonus to be added manually to {@link Survival} rolls. */
 	public int survivalbonus=0;
+
+	/**
+	 * Determines {@link RandomEncounter} maximum Encounter Levels.
+	 *
+	 * TODO ideally would serialize tier but need code review for equals
+	 */
+	public int tier=Tier.MID.maxlevel;
 
 	/**
 	 * Uses current terrain as base.

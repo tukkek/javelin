@@ -8,6 +8,7 @@ import javelin.controller.content.map.terrain.hill.GentleHill;
 import javelin.controller.content.map.terrain.hill.RuggedHill;
 import javelin.controller.content.terrain.hazard.Hazard;
 import javelin.controller.content.terrain.hazard.Rockslide;
+import javelin.model.item.Tier;
 import javelin.model.world.World;
 
 /**
@@ -25,6 +26,7 @@ public class Hill extends Terrain{
 		speedhighway=1f;
 		visionbonus=+2;
 		representation='^';
+		tier=Tier.LOW.maxlevel;
 	}
 
 	@Override

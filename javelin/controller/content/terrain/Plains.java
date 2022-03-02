@@ -11,6 +11,7 @@ import javelin.controller.content.map.terrain.plain.Field;
 import javelin.controller.content.map.terrain.plain.Grasslands;
 import javelin.controller.content.terrain.hazard.Flood;
 import javelin.controller.content.terrain.hazard.Hazard;
+import javelin.model.item.Tier;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.old.RPG;
@@ -30,6 +31,7 @@ public class Plains extends Terrain{
 		speedhighway=1f;
 		visionbonus=+2;
 		representation=' ';
+		tier=Tier.LOW.maxlevel;
 	}
 
 	@Override

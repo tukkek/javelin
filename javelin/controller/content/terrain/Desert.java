@@ -17,6 +17,7 @@ import javelin.controller.content.terrain.hazard.Dehydration;
 import javelin.controller.content.terrain.hazard.GettingLost;
 import javelin.controller.content.terrain.hazard.Hazard;
 import javelin.controller.content.terrain.hazard.Heat;
+import javelin.model.item.Tier;
 import javelin.model.world.World;
 
 /**
@@ -43,6 +44,7 @@ public class Desert extends Terrain{
 		representation='d';
 		liquid=true;
 		survivalbonus=-4;
+		tier=Tier.HIGH.maxlevel;
 	}
 
 	@Override

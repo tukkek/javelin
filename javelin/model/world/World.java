@@ -7,13 +7,16 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javelin.controller.Point;
+import javelin.controller.content.fight.RandomEncounter;
 import javelin.controller.content.scenario.Campaign;
 import javelin.controller.content.scenario.Scenario;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.generator.WorldGenerator;
 import javelin.controller.generator.feature.LocationGenerator;
+import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.labor.expansive.BuildHighway;
@@ -85,6 +88,10 @@ public class World implements Serializable{
 			"Jeff Easley","Sandy Petersen","Stan Lee","Hideaki Anno","Patrick Wyatt",
 			"Bill Roper","Michiru Yamane","Sid Meier","William Gibson","Julie Bell",
 			"Boris Vallejo","Lee Salzman","Johannes Bonitz"));
+
+	/** {@link RandomEncounter}. */
+	public Map<Terrain,List<Combatants>> encounters=new HashMap<>(
+			Terrain.ALL.length);
 
 	/** Generator to be used during play. */
 	public LocationGenerator featuregenerator;

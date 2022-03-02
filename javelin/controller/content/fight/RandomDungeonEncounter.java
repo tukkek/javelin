@@ -1,15 +1,12 @@
 package javelin.controller.content.fight;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import javelin.controller.challenge.Difficulty;
 import javelin.controller.content.fight.mutator.Meld;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
-import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.old.RPG;
@@ -38,16 +35,7 @@ public class RandomDungeonEncounter extends RandomEncounter{
 
 	@Override
 	public ArrayList<Combatant> generate(){
-		/*TODO once there is a better strategical skip for encounters, this won't be
-		 * necessary anymore.*/
-		if(Difficulty.calculate(Squad.active.members,
-				encounter)<=Difficulty.VERYEASY)
-			return null;
-		return encounter==null?null:encounter.generate();
-	}
-
-	@Override
-	public boolean avoid(List<Combatant> foes){
-		return foes==null||super.avoid(foes);
+		return encounter==null||RandomEncounter.skip(encounter)?null
+				:encounter.generate();
 	}
 }

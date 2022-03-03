@@ -1,6 +1,5 @@
 package javelin.controller.content.fight.mutator.mode;
 
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -47,18 +46,19 @@ public class Waves extends FightMode{
 	/** Shown when a new wave appears. */
 	protected String message="A new wave of enemies appears!";
 	/** Total waves. */
-	protected int waves=RPG.r(MINIMUM,MAXIMUM);
+	protected int waves;
 	/** Current wave (1 for first). */
 	protected int wave=1;
 	/** Encounter level for each wave. */
 	protected int waveel;
 
-	List<EncounterIndex> encounters;
-
-	/** {@link EncounterIndex} constructor. */
-	public Waves(int elp,List<EncounterIndex> encountersp){
+	public Waves(int elp,int waves){
+		this.waves=waves;
 		waveel=elp+Waves.ELMODIFIER.get(waves);
-		encounters=encountersp;
+	}
+
+	public Waves(int elp){
+		this(elp,RPG.r(MINIMUM,MAXIMUM));
 	}
 
 	@Override

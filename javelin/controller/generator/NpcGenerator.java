@@ -1,6 +1,7 @@
 package javelin.controller.generator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -14,6 +15,7 @@ import javelin.controller.db.EncounterIndex;
 import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.old.RPG;
 
@@ -148,5 +150,29 @@ public class NpcGenerator{
 	 */
 	public static Combatant generate(Monster m,int cr){
 		return m.think(-1)?generatenpc(m,cr):generateelite(m,cr);
+	}
+
+	/**
+	 * @param el Attempts to match the Encounter Level on a best-effort basis: may
+	 *          be higher if an applied {@link Upgrade} was too strong or lower if
+	 *          failed to {@link Kit#upgrade(Combatant)} any unit.
+	 * @param weakest If <code>true</code> will prioritize the weakest
+	 *          {@link Combatant} with each {@link Upgrade} - random otherwise.
+	 * @return The same {@link Combatant} instances, upgraded to the target EL and
+	 *         renamed according to each assigned {@link Kit} per unit.
+	 */
+	public static Combatants upgrade(Combatants npcs,int el,boolean weakest){
+		var kits=new HashMap<Combatant,Kit>(npcs.size());
+		while(ChallengeCalculator.calculateel(npcs)<el){
+			var w=weakest?npcs.getweakest():RPG.pick(npcs);
+			var k=kits.get(w);
+			if(k==null){
+				k=RPG.pick(Kit.getpreferred(w.source,true));
+				kits.put(w,k);
+				k.rename(w.source);
+			}
+			if(!k.upgrade(w)) break;
+		}
+		return npcs;
 	}
 }

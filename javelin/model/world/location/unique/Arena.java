@@ -1,7 +1,6 @@
 package javelin.model.world.location.unique;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,12 +14,16 @@ import javelin.controller.content.fight.LocationFight;
 import javelin.controller.content.fight.mutator.Friendly;
 import javelin.controller.content.fight.mutator.mode.Waves;
 import javelin.controller.content.map.location.LocationMap;
-import javelin.controller.content.terrain.Terrain;
+import javelin.controller.db.EncounterIndex;
+import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.battle.StartBattle;
+import javelin.controller.generator.NpcGenerator;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
+import javelin.model.unit.Monster;
+import javelin.model.unit.Monster.MonsterType;
 import javelin.model.unit.Squad;
 import javelin.model.world.Incursion;
 import javelin.model.world.Period;
@@ -78,6 +81,9 @@ public class Arena extends UniqueLocation{
 	static final String CONFIRM="Begin an Arena match with these fighters?\n"
 			+"Press ENTER to confirm or any other key to cancel...\n\n";
 	static final String DESCRIPTION="The Arena";
+	static final EncounterIndex GLADIATORS=new EncounterIndex(Monster.ALL.stream()
+			.filter(m->m.think(-1)&&m.type.equals(MonsterType.HUMANOID))
+			.collect(Collectors.toList()));
 
 	class ArenaMap extends LocationMap{
 		List<Point> minionspawn=new ArrayList<>();
@@ -95,8 +101,41 @@ public class Arena extends UniqueLocation{
 		}
 	}
 
+	static class ArenaWaves extends Waves{
+		Combatants allies;
+
+		ArenaWaves(int elp,Combatants allies){
+			super(elp);
+			this.allies=allies;
+			message="New gladiators enter the arena!";
+		}
+
+		@Override
+		public void draw(Fight fight){
+			var b=Fight.state.blueteam;
+			fight.add(allies,b,((ArenaMap)fight.map).minionspawn);
+			waveel=ChallengeCalculator.calculateel(b)+Waves.ELMODIFIER.get(waves);
+			super.draw(fight);
+		}
+
+		@Override
+		public Combatants generate(Fight f){
+			return generate(waveel);
+		}
+
+		static Combatants generate(int targetel){
+			try{
+				int el=targetel-RPG.r(0,2);
+				var e=EncounterGenerator.generate(el,GLADIATORS);
+				return NpcGenerator.upgrade(e,targetel,true);
+			}catch(GaveUp e){
+				throw new RuntimeException(e);
+			}
+		}
+	}
+
 	class ArenaFight extends LocationFight{
-		ArrayList<Combatant> fighters;
+		Combatants fighters=new Combatants();
 		int alliesel=0;
 		int teamel;
 		int waveel;
@@ -104,38 +143,22 @@ public class Arena extends UniqueLocation{
 		ArenaFight(ArrayList<Combatant> fighters,int el){
 			super(Arena.this,new ArenaMap());
 			mutators.add(new Friendly(Combatant.STATUSINJURED));
-			this.fighters=fighters;
+			this.fighters.addAll(fighters);
 			period=Period.AFTERNOON;
 			teamel=el;
-			var encounters=Arrays.asList(Terrain.ALL).stream()
-					.map(t->t.getencounters()).collect(Collectors.toList());
-			mutators.add(new Waves(el,encounters){
-				{
-					message="New gladiators enter the arena!";
-				}
+			mutators.add(new ArenaWaves(el,generateallies()));
+		}
 
-				@Override
-				public void draw(Fight f){
-					if(!RPG.chancein(4))
-						//TODO perhaps only intelligent or NPC?
-						alliesel=ChallengeCalculator.calculateel(fighters)
-								+RPG.r(Difficulty.EASY,0);
-					var allies=EncounterGenerator.generatebyindex(alliesel,encounters);
-					for(var a:allies){
-						a.automatic=true;
-						a.mercenary=true;
-					}
-					var b=Fight.state.blueteam;
-					add(allies,b,((ArenaMap)map).minionspawn);
-					waveel=ChallengeCalculator.calculateel(b)+Waves.ELMODIFIER.get(waves);
-					super.draw(f);
-				}
-
-				@Override
-				public Combatants generate(Fight f){
-					return EncounterGenerator.generatebyindex(waveel,encounters);
-				}
-			});
+		Combatants generateallies(){
+			if(RPG.chancein(4)) return new Combatants(0);
+			alliesel=ChallengeCalculator.calculateel(fighters)
+					+RPG.r(Difficulty.EASY,0);
+			var allies=ArenaWaves.generate(alliesel);
+			for(var a:allies){
+				a.automatic=true;
+				a.mercenary=true;
+			}
+			return allies;
 		}
 
 		@Override
@@ -146,7 +169,14 @@ public class Arena extends UniqueLocation{
 		@Override
 		protected int getgoldreward(List<Combatant> defeated){
 			var gold=super.getgoldreward(defeated);
-			return gold*teamel/(alliesel+teamel);
+			var t=teamel;
+			var a=alliesel;
+			var m=Math.min(teamel,alliesel);
+			if(m<0){//ELs can be negative
+				t+=-m+1;
+				a+=-m+1;
+			}
+			return gold*t/(a+t);
 		}
 	}
 

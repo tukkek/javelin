@@ -8,13 +8,10 @@ import javelin.model.unit.Combatants;
 import javelin.model.world.location.haunt.Haunt;
 
 public class HauntWaves extends Waves{
-	/**
-	 *
-	 */
-	private final Haunt haunt;
+	final Haunt haunt;
 
 	public HauntWaves(Haunt haunt){
-		super(haunt.targetel,null);
+		super(haunt.targetel);
 		this.haunt=haunt;
 	}
 

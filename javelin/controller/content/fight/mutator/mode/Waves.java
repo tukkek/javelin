@@ -1,5 +1,6 @@
 package javelin.controller.content.fight.mutator.mode;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -9,6 +10,7 @@ import javelin.controller.db.EncounterIndex;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.generator.encounter.EncounterGenerator;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.old.RPG;
 import javelin.test.TestHaunt;
@@ -51,6 +53,8 @@ public class Waves extends FightMode{
 	protected int wave=1;
 	/** Encounter level for each wave. */
 	protected int waveel;
+	/** An {@link Combatant#ap} cost to simulate units entering combat. */
+	protected float delay=.5f;
 
 	public Waves(int elp,int waves){
 		this.waves=waves;
@@ -66,6 +70,16 @@ public class Waves extends FightMode{
 		return new Combatants(f.getfoes(waveel));
 	}
 
+	/**
+	 * An oppotunity for sub-classes to alter {@link Combatant}s before or after
+	 * they are add. By default places the units in combat.
+	 */
+	protected void place(Fight f,Combatants wave,ArrayList<Combatant> team){
+		f.add(wave,team);
+		if(this.wave>1) for(var c:wave)
+			c.ap+=delay;
+	}
+
 	@Override
 	public void checkend(Fight f){
 		var red=Fight.state.redteam;
@@ -74,7 +88,7 @@ public class Waves extends FightMode{
 		if(wave>waves) return;
 		var wave=generate(f);
 		if(wave==null) return;
-		f.add(wave,red);
+		place(f,wave,red);
 		var p=RPG.pick(wave).getlocation();
 		BattleScreen.active.center(p.x,p.y);
 		Javelin.redraw();

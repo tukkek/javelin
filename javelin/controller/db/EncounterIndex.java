@@ -1,6 +1,7 @@
 package javelin.controller.db;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -11,6 +12,7 @@ import javelin.controller.challenge.Difficulty;
 import javelin.controller.collection.CountingSet;
 import javelin.controller.exception.UnbalancedTeams;
 import javelin.controller.generator.NpcGenerator;
+import javelin.controller.generator.encounter.AlignmentDetector;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
@@ -139,5 +141,31 @@ public class EncounterIndex extends TreeMap<Integer,List<Encounter>>{
 			i.put(el,encounters);
 		}
 		return i;
+	}
+
+	/** {@link #merge(EncounterIndex)} many indexes into one. */
+	public static EncounterIndex merge(Collection<EncounterIndex> merge){
+		var i=new EncounterIndex();
+		for(var m:merge)
+			i.merge(m);
+		return i;
+	}
+
+	/**
+	 * Combines all current {@link Encounter}s to maximize encounters by Ecnounter
+	 * Level. Uses {@link AlignmentDetector}.
+	 *
+	 * Can be called multiple times but naturally can only generate higher ELs,
+	 * with {@link Encounter}s acting as the building blocks.
+	 */
+	public void expand(){
+		var encounters=getall();
+		var nencounters=encounters.size();
+		for(var i=0;i<nencounters;i++)
+			for(var j=i+1;j<nencounters;j++){
+				var e=new Combatants(encounters.get(i).group);
+				e.addAll(encounters.get(j).group);
+				if(new AlignmentDetector(e).check()) put(new Encounter(e));
+			}
 	}
 }

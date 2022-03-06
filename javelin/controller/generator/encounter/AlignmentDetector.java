@@ -2,8 +2,8 @@ package javelin.controller.generator.encounter;
 
 import java.util.List;
 
-import javelin.model.unit.Alignment.Morals;
 import javelin.model.unit.Alignment.Ethics;
+import javelin.model.unit.Alignment.Morals;
 import javelin.model.unit.Combatant;
 
 /**
@@ -39,7 +39,8 @@ public class AlignmentDetector{
 
 	/**
 	 * @return <code>false</code> if there are good and evil (or lawful and
-	 *         chaotic) creatures coexisting on the given group.
+	 *         chaotic) creatures coexisting on the given group. <code>true</code>
+	 *         if all alignments match.
 	 */
 	public boolean check(){
 		if(good&&evil) return false;

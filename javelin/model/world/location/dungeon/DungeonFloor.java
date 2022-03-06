@@ -388,7 +388,9 @@ public class DungeonFloor implements Serializable{
 					return c;
 				}
 			}
-			c.place(this,z.getpoint());
+			var p=z.getpoint();
+			if(p==null) return null;
+			c.place(this,p);
 			return c;
 		}catch(ReflectiveOperationException e){
 			throw new RuntimeException(e);

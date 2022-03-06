@@ -13,7 +13,6 @@ import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.collection.CountingSet;
-import javelin.controller.content.fight.RandomEncounter;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.db.Preferences;
 import javelin.controller.exception.RestartWorldGeneration;
@@ -104,7 +103,6 @@ public class WorldGenerator extends Thread{
 			var realms=RPG.shuffle(new LinkedList<>(Realm.REALMS));
 			var regions=new ArrayList<HashSet<Point>>(realms.size());
 			generategeography(realms,regions,world);
-			RandomEncounter.generate(world);
 			world.featuregenerator=World.scenario.locationgenerator
 					.getDeclaredConstructor().newInstance();
 			var start=world.featuregenerator.generate(realms,regions,world);

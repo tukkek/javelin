@@ -2,20 +2,15 @@ package javelin.controller.generator.encounter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import javelin.Javelin;
-import javelin.controller.content.fight.Fight;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.content.terrain.Water;
 import javelin.controller.db.EncounterIndex;
 import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.exception.GaveUp;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
-import javelin.model.unit.Squad;
-import javelin.model.world.Period;
-import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.haunt.Haunt;
 import javelin.old.RPG;
 
@@ -30,8 +25,19 @@ import javelin.old.RPG;
  * @author alex
  */
 public class EncounterGenerator{
-	static final int MAXSIZEDIFFERENCE=5;
-	static final int MAXTRIES=1000;
+	/** @see EncounterIndex#expand() */
+	static final int EXPANSIONS=2;
+	/**
+	 * So small it should be instant to {@link EncounterIndex#expand()}.
+	 *
+	 * If you divide all Index sizes in two before they get Generated here, the
+	 * lower half's ceiling is ~60 while the upper half's floor is much higer at
+	 * ~700. Basically this strategy is allowing that lower half to pre-expand
+	 * once but there is a lot of room for other indexes between 100-700 later on,
+	 * especially as more {@link Haunt}s are added - so let's be conservative here
+	 * and rise later as needed.
+	 */
+	static final int PREEXPAND=100;
 	static final boolean PRINTINFO=false;
 
 	static int minel=Integer.MIN_VALUE;
@@ -75,35 +81,50 @@ public class EncounterGenerator{
 		}
 	}
 
-	/**
-	 * TODO ideally at some point here would use {@link Terrain#ALL} but currently
-	 * {@link Terrain#WATER} can't even reliably generate encounters with EL less
-	 * than 2, so clearly some work has got to go into adding low-level aquatic
-	 * enemies first.
-	 */
-	static int checklimit(int baseline,int step){
-		String failure=null;
-		for(var el=baseline;;el+=step)
-			for(var t:Terrain.NONWATER){
-				if(Javelin.DEBUG&&PRINTINFO)
-					failure=String.format("Failure: %s el%s",t,el);
-				if(generate(el,t)==null){
-					if(failure!=null) System.out.println(failure);
-					return el-step;
-				}
-			}
-	}
+	//	static int checklimit(int baseline,int step){
+	//		String failure=null;
+	//		for(var el=baseline;;el+=step)
+	//			for(var t:Terrain.NONWATER){
+	//				if(Javelin.DEBUG&&PRINTINFO)
+	//					failure=String.format("Failure: %s el%s",t,el);
+	//				if(generate(el,t)==null){
+	//					if(failure!=null) System.out.println(failure);
+	//					return el-step;
+	//				}
+	//			}
+	//	}
 
 	static{
-		minel=checklimit(0,-1);
-		maxel=checklimit(0,+1);
+		/**
+		 * TODO ideally at some point here would use {@link Terrain#ALL} but
+		 * currently {@link Terrain#WATER} can't even reliably generate encounters
+		 * with EL less than 2, so clearly some work has got to go into adding
+		 * low-level aquatic enemies first.
+		 */
+		var encounters=EncounterIndex.merge(Terrain.NONWATER.stream()
+				.map(t->Organization.ENCOUNTERSBYTERRAIN.get(t.toString()))
+				.collect(Collectors.toList()));
+		//		for(var i=0;i<1+EXPANSIONS;i++)
+		//			encounters.expand();
+		var els=new ArrayList<>(encounters.keySet());
+		els.sort(null);
+		minel=els.get(0);
+		maxel=els.get(els.size()-1)+4;
+		//				for(var t:terrains)
+		//			encounters.add(Organization.ENCOUNTERSBYTERRAIN.get(t.toString()));)
+		//		for(var t:Terrain.NONWATER)
+		//			generate(maxel,null)
+		//		minel=checklimit(0,-1);
+		//		maxel=checklimit(0,+1);
 	}
+
+	public static List<Integer> COUNT=new ArrayList<>();
 
 	/**
 	 * @param el Target encounter level - will work around this is cannot generate
 	 *          exactly what is given.
-	 * @param encounters Usually {@link Terrain#current()} but not necessarily -
-	 *          for example not when generation a
+	 * @param index Usually {@link Terrain#current()} but not necessarily - for
+	 *          example not when generation a
 	 *          {@link javelin.model.world.location.Location#garrison}, which uses
 	 *          the local terrain instead.
 	 * @return Enemy units for an encounter. <code>null</code> should not be
@@ -117,10 +138,19 @@ public class EncounterGenerator{
 			List<EncounterIndex> encounters){
 		if(el<minel) el=minel;
 		if(el>maxel) el=maxel;
-		Combatants encounter=null;
-		for(int i=0;i<MAXTRIES;i++){
-			encounter=select(el,encounters);
+		var index=EncounterIndex.merge(encounters);
+		var attempts=1+EXPANSIONS;
+		COUNT.add(index.count());
+		while(attempts>1&&el>index.firstKey()&&index.count()<PREEXPAND){
+			index.expand();
+			attempts-=1;
+		}
+		//		clean(index);
+		for(int i=0;i<attempts;i++){
+			if(i>0) index.expand();
+			var encounter=select(el,index);
 			if(encounter!=null) return encounter;
+			if(el<index.firstKey()) break;
 		}
 		return null;
 	}
@@ -135,64 +165,38 @@ public class EncounterGenerator{
 		return generatebyindex(el,encounters);
 	}
 
-	static Combatants select(int elp,List<EncounterIndex> encounters){
-		ArrayList<Integer> popper=new ArrayList<>();
-		popper.add(elp);
-		while(RPG.chancein(2)){
-			Integer pop=popper.get(RPG.r(0,popper.size()-1));
-			popper.remove(popper.indexOf(pop));
-			pop-=2;
-			popper.add(pop);
-			popper.add(pop);
-		}
-		final Combatants foes=new Combatants();
-		for(final int el:popper){
-			List<Combatant> group=makeencounter(el,encounters);
-			if(group==null) return null;
-			for(Combatant invitee:group)
-				if(!validatecreature(invitee,foes)) return null;
-			for(Combatant invitee:group)
-				foes.add(invitee);
-		}
-		if(!new AlignmentDetector(foes).check()) return null;
-		return foes.size()>getmaxenemynumber()?null:foes;
+	static Combatants select(int elp,EncounterIndex encounters){
+		var groups=encounters.get(elp);
+		return groups==null||groups.isEmpty()?null:RPG.pick(groups).generate();
+
+		//		var els=new LinkedList<Integer>();
+		//		els.add(elp);
+		//		while(RPG.chancein(2)){
+		//			var el=els.remove(RPG.r(0,els.size()-1));
+		//			els.add(el-2);
+		//			els.add(el-2);
+		//		}
+		//		var foes=new Combatants();
+		//		for(var el:els){
+		//			var groups=encounters.get(el);
+		//			if(groups.isEmpty()) return null;
+		//			var group=RPG.pick(groups).generate();
+		//			foes.addAll(group);
+		//		}
+		//		if(!new AlignmentDetector(foes).check()) return null;
+		//		//		return foes.size()>getmaxenemynumber()?null:foes;]
+		//		return foes;
 	}
 
-	private static boolean validatecreature(Combatant invitee,
-			ArrayList<Combatant> foes){
-		if(foes.indexOf(invitee)>=0) return false;
-		final boolean underground=Dungeon.active!=null;
-		return !invitee.source.nightonly||underground
-				||Period.NIGHT.is()&&Period.EVENING.is();
-	}
-
-	/**
-	 * See {@link EncounterGenerator}'s main javadoc description for mote info on
-	 * enemy group size.
-	 *
-	 * @return The recommended number of enemies to face at most in one battle.
-	 *         Other modules may differ from this but this is a suggestion to
-	 *         avoid the computer player taking a long time to act while the human
-	 *         player has to wait (for example: 1 human unit against 20 enemies).
-	 */
-	public static int getmaxenemynumber(){
-		int current=4;
-		if(Fight.state==null){
-			if(Squad.active!=null) current=Squad.active.members.size();
-		}else if(!Fight.state.blueteam.isEmpty())
-			current=Fight.state.blueteam.size();
-		return MAXSIZEDIFFERENCE+current;
-	}
-
-	static List<Combatant> makeencounter(final int el,
-			List<EncounterIndex> encounters){
-		List<Encounter> possibilities=new ArrayList<>();
-		for(var index:encounters){
-			List<Encounter> tier=index.get(el);
-			if(tier!=null) possibilities.addAll(tier);
-		}
-		return possibilities.isEmpty()?null:RPG.pick(possibilities).generate();
-	}
+	//	private static void clean(EncounterIndex index){
+	//		if(Dungeon.active!=null||Period.NIGHT.is()||Period.EVENING.is()) return;
+	//		for(var el:index.keySet()){
+	//			var tier=index.get(el);
+	//			for(var g:new ArrayList<>(tier))
+	//				if(g.group.stream().filter(c->c.source.nightonly).findAny().isPresent())
+	//					tier.remove(g);
+	//		}
+	//	}
 
 	/** As {@link #generate(int, Terrain)} but for one terrain. */
 	public static Combatants generate(int el,Terrain t){

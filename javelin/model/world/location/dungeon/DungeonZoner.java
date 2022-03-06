@@ -12,17 +12,18 @@ import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.old.RPG;
 
 /**
- * Helps place {@link Features} in {@link DungeonFloor}s more smartly than a random
- * naive approach. Mostly takes into consideraton {@link Door}s to divide the
- * map into {@link Zone}s - assuming that the dungeon population would choose to
- * secure their goods, naturally-ocurring features, access to lower levels, etc.
+ * Helps place {@link Features} in {@link DungeonFloor}s more smartly than a
+ * random naive approach. Mostly takes into consideraton {@link Door}s to divide
+ * the map into {@link Zone}s - assuming that the dungeon population would
+ * choose to secure their goods, naturally-ocurring features, access to lower
+ * levels, etc.
  *
  * @author alex
  */
 public class DungeonZoner{
 	/**
-	 * A {@link DungeonFloor} might be comprised of one or more zones, with frontiers
-	 * represented by doors.
+	 * A {@link DungeonFloor} might be comprised of one or more zones, with
+	 * frontiers represented by doors.
 	 *
 	 * @author alex
 	 */
@@ -81,9 +82,10 @@ public class DungeonZoner{
 	}
 
 	/**
-	 * All the zones scanned in the given {@link DungeonFloor}. The first item is where
-	 * the Dungeon entrance is located. Subsequent zones are added breadth-first,
-	 * which means deeper zones will be generally found at the end of the list.
+	 * All the zones scanned in the given {@link DungeonFloor}. The first item is
+	 * where the Dungeon entrance is located. Subsequent zones are added
+	 * breadth-first, which means deeper zones will be generally found at the end
+	 * of the list.
 	 */
 	public List<Zone> zones=new ArrayList<>();
 	ArrayList<Point> result=new ArrayList<>();
@@ -110,9 +112,13 @@ public class DungeonZoner{
 	 *         that is very small.
 	 */
 	public Point getpoint(){
+		var pool=new ArrayList<>(result);
 		Point p=null;
-		while(p==null||dungeon.features.get(p.x,p.y)!=null)
-			p=RPG.pick(result);
+		while(p==null||dungeon.features.get(p.x,p.y)!=null){
+			if(pool.size()==0) return null;
+			p=RPG.pick(pool);
+			pool.remove(p);
+		}
 		return p;
 	}
 

@@ -11,7 +11,7 @@ import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 
 /**
- * A group of monsters to be fought against.
+ * A group of generic monsters to be fought against.
  *
  * @author alex
  */
@@ -19,7 +19,12 @@ public class Encounter{
 	/** An arbitrary number to help balance {@link Encounter} size. */
 	public static final int BIG=9;
 
-	/** Units encountered. */
+	/**
+	 * Units encountered.
+	 *
+	 * TODO turning this to {@link Monster} at some point would be huge on
+	 * performance
+	 */
 	public List<Combatant> group;
 	/** Encounter level as per OGL rules. */
 	public int el;

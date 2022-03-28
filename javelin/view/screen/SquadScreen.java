@@ -1,8 +1,8 @@
 package javelin.view.screen;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
@@ -19,117 +19,111 @@ import javelin.old.RPG;
  * @author alex
  */
 public class SquadScreen extends InfoScreen{
-	public static final ArrayList<Monster> CANDIDATES=new ArrayList<>();
-	public static final float[] SELECTABLE={1f,1.25f,1.5f};
+  /** All units suitable for a starting {@link Squad}. */
+  public static final ArrayList<Monster> CANDIDATES=new ArrayList<>();
 
-	static final String ALPHABET="abcdefghijklmnopqrstuvwxyz";
-	static final int MONSTERPERPAGE=ALPHABET.indexOf('y');
+  static final List<Float> CRS=List.of(1f,1.25f,1.5f);
+  static final String KEYS="abcdefghijklmnopqrstuvwxy0123456789";
+  static final String ENTRY=" %s - %s";
+  static final String FORMAT="""
+      Available units:
 
-	static{
-		for(float cr:SELECTABLE){
-			List<Monster> tier=Monster.BYCR.get(cr);
-			if(tier!=null) for(Monster candidate:tier)
-				if(candidate.isalive()) CANDIDATES.add(candidate);
-		}
-	}
+      %s
 
-	protected Squad squad=new Squad(0,0,8,null);
+      Press letter to select character
+      Press z to pick a random unit
+      Press BACKSPACE to clear current selection
+      Press ENTER to coninue with current selection
 
-	List<Monster> candidates;
-	boolean first=true;
+      Your team:
 
-	public SquadScreen(List<Monster> candidates){
-		super("");
-		this.candidates=candidates;
-		Collections.sort(candidates,MonstersByName.INSTANCE);
-	}
+      %s
+      """;
 
-	public SquadScreen(){
-		this(CANDIDATES);
-	}
+  static{
+    var candidates=CRS.stream().flatMap(cr->Monster.BYCR.get(cr).stream())
+        .filter(Monster::isalive).collect(Collectors.toList());
+    CANDIDATES.addAll(candidates);
+    CANDIDATES.sort(MonstersByName.INSTANCE);
+  }
 
-	void select(){
-		page(0);
-		if(World.scenario!=null) World.scenario.upgradesquad(squad);
-		squad.gold+=getstartinggold();
-		squad.gold=Javelin.round(squad.gold);
-		squad.sort();
-	}
+  Squad squad=new Squad(0,0,8,null);
+  boolean first=true;
 
-	public int getstartinggold(){
-		int gold=0;
-		for(Combatant c:squad.members){
-			float level=c.source.cr-1;
-			if(level>=1)
-				gold+=RewardCalculator.calculatepcequipment(Math.round(level));
-		}
-		return gold;
-	}
+  /** Constructor. */
+  public SquadScreen(){
+    super("");
+  }
 
-	private void page(int index){
-		Javelin.app.switchScreen(this);
-		text="Available monsters:\n";
-		int next=index+MONSTERPERPAGE;
-		int letter=printpage(index,next);
-		repaint();
-		Character input=InfoScreen.feedback();
-		if(input.equals(' '))
-			page(next<candidates.size()?next:0);
-		else if(input=='z'){
-			while(!pickrandom())
-				continue;
-			if(!checkifsquadfull()) page(index);
-		}else if(input=='\n'){
-			if(squad.members.isEmpty()) page(index);
-		}else{
-			int selection=ALPHABET.indexOf(input);
-			if(selection>=0&&selection<letter){
-				recruit(candidates.get(index+selection));
-				if(checkifsquadfull()) return;
-			}
-			page(index);
-		}
-	}
+  void pickrandom(){
+    Monster candidate=null;
+    while(candidate==null){
+      candidate=RPG.pick(CANDIDATES);
+      for(var m:squad.members)
+        if(m.source.name.equals(candidate.name)) candidate=null;
+    }
+    recruit(candidate);
+  }
 
-	boolean pickrandom(){
-		Monster candidate=RPG.pick(candidates);
-		for(Combatant m:squad.members)
-			if(m.source.name.equals(candidate.name)) return false;
-		recruit(candidate);
-		return true;
-	}
+  void recruit(Monster m){
+    var c=squad.recruit(m);
+    c.hp=c.source.hd.maximize();
+    c.maxhp=c.hp;
+  }
 
-	private void recruit(Monster m){
-		Combatant c=squad.recruit(m);
-		c.hp=c.source.hd.maximize();
-		c.maxhp=c.hp;
-	}
+  String printtable(){
+    var mid=(int)Math.ceil(CANDIDATES.size()/2f);
+    var columns=List.of(CANDIDATES.subList(0,mid),
+        CANDIDATES.subList(mid,CANDIDATES.size()));
+    var pad=columns.get(0).stream().map(m->m.name.length())
+        .reduce((a,b)->a>b?a:b).get();
+    var table=new ArrayList<String>(mid);
+    for(var i=0;i<columns.get(0).size();i++){
+      var a=columns.get(0).get(i);
+      var keya=KEYS.charAt(i);
+      var columna="%s - %s".formatted(keya,a);
+      var columnb="";
+      if(i<columns.get(1).size()){
+        var b=columns.get(1).get(i);
+        var keyb=KEYS.charAt(CANDIDATES.indexOf(b));
+        columnb=ENTRY.formatted(keyb,b);
+      }
+      var padding=" ".repeat(pad-a.name.length());
+      table.add("%s%s %s".formatted(columna,padding,columnb));
+    }
+    return String.join("\n",table);
+  }
 
-	protected boolean checkifsquadfull(){
-		return World.scenario.checkfullsquad(squad.members);
-	}
+  void print(){
+    while(!World.scenario.checkfullsquad(squad.members)){
+      Javelin.app.switchScreen(this);
+      var team=String.join("\n",squad.members.stream().map(Combatant::toString)
+          .collect(Collectors.toList()));
+      text=FORMAT.formatted(printtable(),team);
+      repaint();
+      var f=InfoScreen.feedback();
+      if(f=='\n'&&!squad.members.isEmpty()) break;
+      var i=KEYS.indexOf(f);
+      if(0<=i&&i<CANDIDATES.size()) recruit(CANDIDATES.get(i));
+      else if(f=='z') pickrandom();
+      else if(f=='\b') squad.members.clear();
+    }
+  }
 
-	int printpage(int index,int next){
-		int letter=0;
-		for(int i=index;i<next&&i<candidates.size();i++){
-			text+="\n"+ALPHABET.charAt(letter)+" - "+candidates.get(i).toString();
-			letter+=1;
-		}
-		text+="\n";
-		text+="\nPress letter to select character";
-		if(candidates.size()>MONSTERPERPAGE) text+="\nPress SPACE to switch pages";
-		text+="\nPress z to pick a random unit";
-		text+="\nPress ENTER to coninue with current selection";
-		text+="\n";
-		text+="\nYour team:";
-		text+="\n";
-		for(Combatant m:squad.members)
-			text+="\n"+m.source.toString();
-		return letter;
-	}
-
-	public Squad open(){
-		select();
-		return squad;
-	}
+  /**
+   * Displays this screen.
+   *
+   * @return {@link Monster}s selected by the player.
+   */
+  public Squad open(){
+    print();
+    World.scenario.upgradesquad(squad);
+    var gold=squad.members.stream().map(c->c.source.cr-1)
+        .filter(level->level>=1)
+        .map(level->RewardCalculator.calculatepcequipment(Math.round(level)))
+        .reduce(0,(a,b)->a+b);
+    squad.gold=Javelin.round(gold);
+    squad.sort();
+    return squad;
+  }
 }

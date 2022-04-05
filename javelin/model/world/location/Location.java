@@ -344,11 +344,13 @@ public abstract class Location extends Actor{
     return !ishostile();
   }
 
+  /** Spawns an {@link Incursion} and changes {@link #garrison}. */
   public void spawn(){
     Incursion.spawn(new Incursion(x,y,garrison,realm));
-    var el=getel(null);
-    if(el>20) el=20; //TODO
-    garrison=EncounterGenerator.generate(el,Terrain.get(x,y));
+    Combatants garrison=null;
+    for(var el=getel(null);garrison==null;el-=1)
+      garrison=EncounterGenerator.generate(el,Terrain.get(x,y));
+    this.garrison=garrison;
   }
 
   @Override

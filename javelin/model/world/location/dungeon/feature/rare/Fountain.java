@@ -6,7 +6,6 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.DungeonImages;
@@ -44,7 +43,7 @@ public class Fountain extends Feature{
 	public static void heal(Combatant c){
 		c.detox(c.source.poison);
 		c.heal(c.maxhp,true);
-		for(Spell s:c.spells)
+		for(var s:c.spells)
 			s.used=0;
 	}
 

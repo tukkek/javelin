@@ -23,37 +23,38 @@ import javelin.view.Images;
  * @author alex
  */
 public class Underground extends Terrain{
-	/** Constructor. */
-	public Underground(){
-		name="underground";
-		survivalbonus=-2;
-	}
+  /** Constructor. */
+  public Underground(){
+    name="underground";
+    survivalbonus=-2;
+    safe=null;
+  }
 
-	@Override
-	public Maps getmaps(){
-		var maps=new Maps();
-		for(var m:List.of(new Caves(),new BigCave(),new Maze(),new Pit(),
-				new FloorPlan(),new Complex(),new Constructed(),new AncientCave())){
-			var d=Dungeon.active;
-			if(d!=null){
-				var i=d.dungeon.images;
-				if(d.dungeon instanceof Wilderness){
-					m.floor=Images.get(i.get(DungeonImages.FLOOR));
-					m.wall=Images.get(i.get(DungeonImages.WALL));
-				}else{
-					m.floor=Images.get(List.of("dungeon",i.get(DungeonImages.FLOOR)));
-					m.wall=Images.get(List.of("dungeon",i.get(DungeonImages.WALL)));
-				}
-				if(m.wall==m.obstacle)
-					m.obstacle=Images.get(List.of("terrain","rock2"));
-			}
-			maps.add(m);
-		}
-		return maps;
-	}
+  @Override
+  public Maps getmaps(){
+    var maps=new Maps();
+    for(var m:List.of(new Caves(),new BigCave(),new Maze(),new Pit(),
+        new FloorPlan(),new Complex(),new Constructed(),new AncientCave())){
+      var d=Dungeon.active;
+      if(d!=null){
+        var i=d.dungeon.images;
+        if(d.dungeon instanceof Wilderness){
+          m.floor=Images.get(i.get(DungeonImages.FLOOR));
+          m.wall=Images.get(i.get(DungeonImages.WALL));
+        }else{
+          m.floor=Images.get(List.of("dungeon",i.get(DungeonImages.FLOOR)));
+          m.wall=Images.get(List.of("dungeon",i.get(DungeonImages.WALL)));
+        }
+        if(m.wall==m.obstacle)
+          m.obstacle=Images.get(List.of("terrain","rock2"));
+      }
+      maps.add(m);
+    }
+    return maps;
+  }
 
-	@Override
-	public Integer getweather(){
-		return Math.max(Weather.CLEAR,Weather.current-1);
-	}
+  @Override
+  public Integer getweather(){
+    return Math.max(Weather.CLEAR,Weather.current-1);
+  }
 }

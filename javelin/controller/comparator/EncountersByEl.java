@@ -5,16 +5,22 @@ import java.util.Comparator;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.unit.Combatants;
 
+/**
+ * Compares in increasing Encounter Level order.
+ *
+ * @author alex
+ */
 public class EncountersByEl implements Comparator<Combatants>{
-	public static final EncountersByEl INSTANCE=new EncountersByEl();
+  /** Singleton. */
+  public static final EncountersByEl INSTANCE=new EncountersByEl();
 
-	private EncountersByEl(){
-		// singleton
-	}
+  EncountersByEl(){
+    // singleton
+  }
 
-	@Override
-	public int compare(Combatants a,Combatants b){
-		return ChallengeCalculator.calculateel(a)
-				-ChallengeCalculator.calculateel(b);
-	}
+  @Override
+  public int compare(Combatants a,Combatants b){
+    return Integer.compare(ChallengeCalculator.calculateel(a),
+        ChallengeCalculator.calculateel(b));
+  }
 }

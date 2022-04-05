@@ -1,13 +1,13 @@
+Mini-games are games within the game world. You can play Javelin exclusively by focusing on a particular mini-game or you can interact with them as part of your campaign (or even ignore them completely).
+
 ARENA
-A sequence of battles taking place in the same map - offering buildings that will let you restore and upgrade your units, buy items, recruit allies and more! Gold and experience rewards are increased so that the tension is always ramping up as the match goes on! Take down all enemy rally points to win!
 
-BATTLEFIELD
-The purpose of the Battlefield is to pit large armies against each other. There are strategic points placed around the map, assigned to both teams - each generating army points, every turn, that can be used to summon more units into battle! Capture your enemy's control points while fighting for survival!
+The Arena is always located inside a player's starting town and it grows together with that town. It allows players to train their units in a safer environment (although accidents can still happen)... The Arena might not have the sheer variety of the rest of the world but it offers easy access to many interesting combat scenarios without leaving town and the safer combat rules allows for an increase in challenge without as much risk as if you were in a real combat situation.
 
-(Hint: summoning an army worth 10 points is much better than summoning a 5-point army twice - use your points wisely!)
+DEEP DUNGEON
 
-CRIMSON WAR
-Become the rising leader of a small contingent - lead them into battle as you benefit from a simple progression system and reinforcements join both sides!
+Unlike most dungeons, the Deep Dungeon is guaranteed to start at floor 1 and end at floor 20 in every single game. It's the perfect way for dungeon crawlers to experience the game - it even offers more ways to level up than the normal dungeon, so that players don't need to go travelling around the world for the perfect Academy to train their units! Like most dungeons, the Deep Dungeon has plenty of ways in and out, for when you need to go back to town to rest and restock.
 
-MONSTER MADNESS
-A lighthearted but challenging game where you're at a constant disadvantage against powerful enemies. Protect all of your buildings as reinforcements slowly join the fight!
+WARLOCK'S TOWER
+
+The mad Warlock has turned his tower into the ultimate proving ground for those risk-minded adventurers looking for a real challenge (with equally high rewards)! The Warlock will provide a player will extremely challenging fights but if you manage to survive, he will make it worth your trouble! Players can use the Tower as a way to gain power early on or when they feel they are ready for a challenge or as a way to gain levels quickly - and aren't afraid of a little risk of death...

@@ -17,7 +17,6 @@ import javelin.controller.content.terrain.hazard.Dehydration;
 import javelin.controller.content.terrain.hazard.GettingLost;
 import javelin.controller.content.terrain.hazard.Hazard;
 import javelin.controller.content.terrain.hazard.Heat;
-import javelin.model.item.Tier;
 import javelin.model.world.World;
 
 /**
@@ -26,74 +25,72 @@ import javelin.model.world.World;
  * @author alex
  */
 public class Desert extends Terrain{
-	/**
-	 * Used instead of normal storms on the desert, makes it easier to get lost.
-	 *
-	 * @see #describeweather()
-	 */
-	public static final String SANDSTORM="sandstorm";
+  /**
+   * Used instead of normal storms on the desert, makes it easier to get lost.
+   *
+   * @see #describeweather()
+   */
+  public static final String SANDSTORM="sandstorm";
 
-	/** Constructor. */
-	public Desert(){
-		name="desert";
-		difficultycap=-2;
-		speedtrackless=1/2f;
-		speedroad=1/2f;
-		speedhighway=1f;
-		visionbonus=0;
-		representation='d';
-		liquid=true;
-		survivalbonus=-4;
-		tier=Tier.HIGH.maxlevel;
-	}
+  /** Constructor. */
+  public Desert(){
+    name="desert";
+    difficultycap=-2;
+    speedtrackless=1/2f;
+    speedroad=1/2f;
+    speedhighway=1f;
+    visionbonus=0;
+    representation='d';
+    liquid=true;
+    survivalbonus=-4;
+  }
 
-	@Override
-	public Maps getmaps(){
-		Maps m=new Maps();
-		m.add(new Tundra());
-		m.add(new RockyDesert());
-		m.add(new SandyDesert());
-		m.add(new Rocks());
-		m.add(new Ruins());
-		return m;
-	}
+  @Override
+  public Maps getmaps(){
+    var m=new Maps();
+    m.add(new Tundra());
+    m.add(new RockyDesert());
+    m.add(new SandyDesert());
+    m.add(new Rocks());
+    m.add(new Ruins());
+    return m;
+  }
 
-	@Override
-	protected Point generatesource(World w){
-		Point source=super.generatesource(w);
-		while(!w.map[source.x][source.y].equals(Terrain.FOREST)
-				||search(source,Terrain.MOUNTAINS,1,w)==0)
-			source=super.generatesource(w);
-		return source;
-	}
+  @Override
+  protected Point generatesource(World w){
+    var source=super.generatesource(w);
+    while(!w.map[source.x][source.y].equals(Terrain.FOREST)
+        ||search(source,Terrain.MOUNTAINS,1,w)==0)
+      source=super.generatesource(w);
+    return source;
+  }
 
-	@Override
-	public void generatesurroundings(HashSet<Point> area,World w){
-		int radius=2;
-		for(Point p:area)
-			for(int x=-radius;x<=+radius;x++)
-				for(int y=-radius;y<=+radius;y++){
-					int surroundingx=p.x+x;
-					int surroundingy=p.y+y;
-					if(!World.validatecoordinate(surroundingx,surroundingy)) continue;
-					if(w.map[surroundingx][surroundingy].equals(Terrain.FOREST))
-						w.map[surroundingx][surroundingy]=Terrain.PLAIN;
-				}
-	}
+  @Override
+  public void generatesurroundings(HashSet<Point> area,World w){
+    var radius=2;
+    for(Point p:area)
+      for(var x=-radius;x<=+radius;x++) for(var y=-radius;y<=+radius;y++){
+        var surroundingx=p.x+x;
+        var surroundingy=p.y+y;
+        if(!World.validatecoordinate(surroundingx,surroundingy)) continue;
+        if(w.map[surroundingx][surroundingy].equals(Terrain.FOREST))
+          w.map[surroundingx][surroundingy]=Terrain.PLAIN;
+      }
+  }
 
-	@Override
-	public Set<Hazard> gethazards(boolean special){
-		Set<Hazard> hazards=super.gethazards(special);
-		hazards.add(new Dehydration());
-		hazards.add(new Heat());
-		hazards.add(new Cold());
-		hazards.add(new GettingLost(describeweather()==SANDSTORM?24:14));
-		if(special) hazards.add(new Break());
-		return hazards;
-	}
+  @Override
+  public Set<Hazard> gethazards(boolean special){
+    var hazards=super.gethazards(special);
+    hazards.add(new Dehydration());
+    hazards.add(new Heat());
+    hazards.add(new Cold());
+    hazards.add(new GettingLost(describeweather()==SANDSTORM?24:14));
+    if(special) hazards.add(new Break());
+    return hazards;
+  }
 
-	@Override
-	public String describeweather(){
-		return Weather.current==Weather.STORM?SANDSTORM:"";
-	}
+  @Override
+  public String describeweather(){
+    return Weather.current==Weather.STORM?SANDSTORM:"";
+  }
 }

@@ -18,24 +18,24 @@ import javelin.old.RPG;
  * @author alex
  */
 public class RandomDungeonEncounter extends RandomEncounter{
-	Combatants encounter;
+  Combatants encounter;
 
-	/** {@link Dungeon} constructor. */
-	public RandomDungeonEncounter(DungeonFloor f){
-		set(Terrain.UNDERGROUND);
-		mutators.add(new Meld());
-		encounter=RPG.pick(f.encounters);
-	}
+  /** {@link Dungeon} constructor. */
+  public RandomDungeonEncounter(DungeonFloor f){
+    set(Terrain.UNDERGROUND);
+    mutators.add(new Meld());
+    encounter=RPG.pick(f.encounters);
+  }
 
-	/** Picks a random map to use from this pool. */
-	public void set(Terrain t){
-		map=t.getmaps().pick();
-		weather=t.getweather();
-	}
+  /** Picks a random map to use from this pool. */
+  public void set(Terrain t){
+    map=t.getmaps().pick();
+    weather=t.getweather();
+  }
 
-	@Override
-	public ArrayList<Combatant> generate(){
-		return encounter==null||RandomEncounter.skip(encounter)?null
-				:encounter.generate();
-	}
+  @Override
+  public Combatants generate(ArrayList<Combatant> blueteam){
+    if(encounter==null||RandomEncounter.skip(encounter)) return null;
+    return encounter.generate();
+  }
 }

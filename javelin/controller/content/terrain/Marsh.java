@@ -11,7 +11,6 @@ import javelin.controller.content.terrain.hazard.Cold;
 import javelin.controller.content.terrain.hazard.Flood;
 import javelin.controller.content.terrain.hazard.GettingLost;
 import javelin.controller.content.terrain.hazard.Hazard;
-import javelin.model.item.Tier;
 import javelin.model.world.World;
 
 /**
@@ -20,46 +19,45 @@ import javelin.model.world.World;
  * @author alex
  */
 public class Marsh extends Terrain{
-	/** Constructor. */
-	public Marsh(){
-		name="marsh";
-		difficultycap=-1;
-		speedtrackless=1/2f;
-		speedroad=3/4f;
-		speedhighway=1f;
-		visionbonus=-2;
-		representation='m';
-		liquid=true;
-		survivalbonus=-2;
-		tier=Tier.HIGH.maxlevel;
-	}
+  /** Constructor. */
+  public Marsh(){
+    name="marsh";
+    difficultycap=-1;
+    speedtrackless=1/2f;
+    speedroad=3/4f;
+    speedhighway=1f;
+    visionbonus=-2;
+    representation='m';
+    liquid=true;
+    survivalbonus=-2;
+  }
 
-	@Override
-	public Maps getmaps(){
-		Maps m=new Maps();
-		m.add(new Moor());
-		m.add(new Swamp());
-		return m;
-	}
+  @Override
+  public Maps getmaps(){
+    var m=new Maps();
+    m.add(new Moor());
+    m.add(new Swamp());
+    return m;
+  }
 
-	@Override
-	protected Point generatesource(World w){
-		Point source=super.generatesource(w);
-		while(!w.map[source.x][source.y].equals(Terrain.FOREST)
-				&&search(source,WATER,1,w)==0)
-			source=super.generatesource(w);
-		return source;
-	}
+  @Override
+  protected Point generatesource(World w){
+    var source=super.generatesource(w);
+    while(!w.map[source.x][source.y].equals(Terrain.FOREST)
+        &&search(source,WATER,1,w)==0)
+      source=super.generatesource(w);
+    return source;
+  }
 
-	@Override
-	public Set<Hazard> gethazards(boolean special){
-		Set<Hazard> hazards=super.gethazards(special);
-		hazards.add(new GettingLost(10));
-		hazards.add(new Cold());
-		if(special){
-			hazards.add(new Flood());
-			hazards.add(new Break());
-		}
-		return hazards;
-	}
+  @Override
+  public Set<Hazard> gethazards(boolean special){
+    var hazards=super.gethazards(special);
+    hazards.add(new GettingLost(10));
+    hazards.add(new Cold());
+    if(special){
+      hazards.add(new Flood());
+      hazards.add(new Break());
+    }
+    return hazards;
+  }
 }

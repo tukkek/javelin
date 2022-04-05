@@ -26,45 +26,45 @@ import javelin.model.world.World;
  * @author alex
  */
 public class Mountains extends Terrain{
-	/** Constructor. */
-	public Mountains(){
-		name="mountains";
-		difficultycap=-2;
-		speedtrackless=1/2f;
-		speedroad=3/4f;
-		speedhighway=3/4f;
-		visionbonus=+4;
-		representation='M';
-		survivalbonus=-2;
-	}
+  /** Constructor. */
+  public Mountains(){
+    name="mountains";
+    difficultycap=-2;
+    speedtrackless=1/2f;
+    speedroad=3/4f;
+    speedhighway=3/4f;
+    visionbonus=+4;
+    representation='M';
+    survivalbonus=-2;
+  }
 
-	@Override
-	public Maps getmaps(){
-		Maps m=new Maps();
-		m.addAll(List.of(new Meadow(),new RuggedHill(),new ForbiddingMountain(),
-				new MountainPass(),new MountainCave(),new MountainPath()));
-		if(Weather.current==Weather.STORM||Season.current==Season.WINTER)
-			m.add(new MountainsOfMadness());
-		return m;
-	}
+  @Override
+  public Maps getmaps(){
+    var m=new Maps();
+    m.addAll(List.of(new Meadow(),new RuggedHill(),new ForbiddingMountain(),
+        new MountainPass(),new MountainCave(),new MountainPath()));
+    if(Weather.current==Weather.STORM||Season.current==Season.WINTER)
+      m.add(new MountainsOfMadness());
+    return m;
+  }
 
-	@Override
-	protected Point generatesource(World w){
-		Point source=super.generatesource(w);
-		while(!w.map[source.x][source.y].equals(Terrain.FOREST)
-				&&search(source,MOUNTAINS,1,w)==0)
-			source=super.generatesource(w);
-		return source;
-	}
+  @Override
+  protected Point generatesource(World w){
+    var source=super.generatesource(w);
+    while(!w.map[source.x][source.y].equals(Terrain.FOREST)
+        &&search(source,MOUNTAINS,1,w)==0)
+      source=super.generatesource(w);
+    return source;
+  }
 
-	@Override
-	public Set<Hazard> gethazards(boolean special){
-		Set<Hazard> hazards=super.gethazards(special);
-		hazards.add(new Cold());
-		if(special){
-			hazards.add(new Rockslide());
-			hazards.add(new Break());
-		}
-		return hazards;
-	}
+  @Override
+  public Set<Hazard> gethazards(boolean special){
+    var hazards=super.gethazards(special);
+    hazards.add(new Cold());
+    if(special){
+      hazards.add(new Rockslide());
+      hazards.add(new Break());
+    }
+    return hazards;
+  }
 }

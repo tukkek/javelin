@@ -6,6 +6,7 @@ import java.util.HashMap;
 import javelin.Javelin;
 import javelin.controller.content.fight.RandomEncounter;
 import javelin.controller.exception.RepeatTurn;
+import javelin.controller.exception.battle.StartBattle;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -73,8 +74,12 @@ public class Camp extends WorldAction{
 		final int rest=period[1];
 		for(int i=0;i<=hours;i++){
 			Squad.active.delay(1);
-			if(World.scenario.worldencounters)
+			if(World.scenario.worldencounters) try{
 				RandomEncounter.encounter(1/WorldScreen.HOURSPERENCOUNTER);
+			}catch(StartBattle e){
+				Javelin.message("You are interruped while resting!",false);
+				throw e;
+			}
 			if(i>0&&i%rest==0) Lodge.rest(1,rest,false,Lodge.LODGE);
 		}
 	}

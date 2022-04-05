@@ -11,38 +11,37 @@ import javelin.model.world.location.town.labor.Labor;
  * @author alex
  */
 public class Growth extends Labor{
-	/**
-	 * Ideally 20 should be the soft limit, but this offers a higher hard limit as
-	 * well.
-	 */
-	public static final int MAXPOPULATION=30;
-	/**
-	 * To be used for equality, such as for removing another instance from a list.
-	 *
-	 * @see Object#equals(Object)
-	 */
-	public static final Growth INSTANCE=new Growth();
+  /**
+   * Ideally 20 should be the soft limit, but this offers a higher hard limit as
+   * well.
+   */
+  public static final int MAXPOPULATION=30;
+  /**
+   * To be used for equality, such as for removing another instance from a list.
+   *
+   * @see Object#equals(Object)
+   */
+  public static final Growth INSTANCE=new Growth();
 
-	/** Constructor. */
-	public Growth(){
-		super("Growth",-1,Rank.HAMLET);
-	}
+  /** Constructor. */
+  public Growth(){
+    super("Growth",-1,Rank.HAMLET);
+  }
 
-	@Override
-	public void done(){
-		town.population+=1;
-		if(town.population>30) town.population=MAXPOPULATION;
-	}
+  @Override
+  public void done(){
+    town.population+=1;
+    if(town.population>30) town.population=MAXPOPULATION;
+  }
 
-	@Override
-	public boolean validate(District d){
-		define();
-		return super.validate(d)&&d.town.population<30;
-	}
+  @Override
+  public boolean validate(District d){
+    define();
+    return super.validate(d)&&d.town.population<30;
+  }
 
-	@Override
-	protected void define(){
-		cost=town.population;
-		if(cost>20) cost+=cost-20;
-	}
+  @Override
+  protected void define(){
+    cost=town.population;
+  }
 }

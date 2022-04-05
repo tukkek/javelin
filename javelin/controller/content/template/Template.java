@@ -18,27 +18,30 @@ import javelin.model.world.location.dungeon.branch.Branch;
  * @author alex
  */
 public class Template implements Serializable{
-	List<Upgrade> upgrades;
+  List<Upgrade> upgrades;
 
-	/** Constructor. */
-	protected Template(List<Upgrade> u){
-		upgrades=u;
-	}
+  /** Constructor. */
+  protected Template(List<Upgrade> u){
+    upgrades=u;
+  }
 
-	/** @return How many {@link Upgrade}s were succesful. */
-	public int apply(Combatant c){
-		c.clonesource();
-		var upgraded=0;
-		for(var u:upgrades)
-			if(u.upgrade(c)) upgraded+=1;
-		return upgraded;
-	}
+  /** @return How many {@link Upgrade}s were succesful. */
+  public int apply(Combatant c){
+    c.clonesource();
+    var upgraded=0;
+    for(var u:upgrades) if(u.upgrade(c)) upgraded+=1;
+    return upgraded;
+  }
 
-	/** @return {@link Combatant}s {@link Upgrade}d at least once. */
-	public int apply(Combatants encounter){
-		var upgraded=0;
-		for(var c:encounter)
-			if(apply(c)>0) upgraded+=1;
-		return upgraded;
-	}
+  /** @return {@link Combatant}s {@link Upgrade}d at least once. */
+  public int apply(Combatants encounter){
+    var upgraded=0;
+    for(var c:encounter) if(apply(c)>0) upgraded+=1;
+    return upgraded;
+  }
+
+  @Override
+  public String toString(){
+    return getClass().getSimpleName();
+  }
 }

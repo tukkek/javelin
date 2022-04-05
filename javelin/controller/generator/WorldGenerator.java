@@ -41,9 +41,7 @@ public class WorldGenerator extends Thread{
   public static final Terrain[] GENERATIONORDER={Terrain.MOUNTAINS,
       Terrain.MOUNTAINS,Terrain.DESERT,Terrain.PLAIN,Terrain.HILL,Terrain.WATER,
       Terrain.WATER,Terrain.MARSH,Terrain.FOREST};
-  /**
-   * Arbitrary number to serve as guideline for {@link Terrain} generation.
-   */
+  /** Arbitrary number to serve as guideline for {@link Terrain} generation. */
   public static final int NREGIONS=16;
   /** @see Debug */
   public static final CountingSet RESETS=Javelin.DEBUG?new CountingSet():null;
@@ -199,7 +197,7 @@ public class WorldGenerator extends Thread{
         t.interrupt();
         t.join();
       }
-    }catch(ReflectiveOperationException | InterruptedException e){
+    }catch(ReflectiveOperationException|InterruptedException e){
       throw new RuntimeException(e);
     }
   }
@@ -219,7 +217,6 @@ public class WorldGenerator extends Thread{
     var dungeons=World.getactors().stream()
         .filter(a->a instanceof DungeonEntrance)
         .map(a->((DungeonEntrance)a).dungeon).collect(Collectors.toList());
-    dungeons=new ArrayList<>(dungeons);
     for(var d:new ArrayList<>(dungeons)) addbranches(d,dungeons);
     dungeons=dungeons.stream().filter(d->d.floors.getFirst().features.isEmpty())
         .sorted((a,b)->Integer.compare(a.floors.size(),b.floors.size()))

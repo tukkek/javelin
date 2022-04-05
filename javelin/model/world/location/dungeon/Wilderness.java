@@ -74,211 +74,211 @@ import javelin.view.mappanel.dungeon.DungeonWalker;
  * @author alex
  */
 public class Wilderness extends Dungeon{
-	/** {@link DungeonFloor#features} that are not relevant to Wildernesses. */
-	public static final Set<Class<? extends Feature>> FORBIDDEN=Set.of(
-			Brazier.class,Mirror.class,Throne.class,Fountain.class,Prisoner.class,
-			Crate.class,LoreNote.class);
+  /** {@link DungeonFloor#features} that are not relevant to Wildernesses. */
+  public static final Set<Class<? extends Feature>> FORBIDDEN=Set.of(
+      Brazier.class,Mirror.class,Throne.class,Fountain.class,Prisoner.class,
+      Crate.class,LoreNote.class);
 
-	static final String DESCRIPTION="Wilderness";
+  static final String DESCRIPTION="Wilderness";
 
-	class Path extends Feature{
-		int tile=RPG.r(1,14);
+  class Path extends Feature{
+    int tile=RPG.r(1,14);
 
-		public Path(){
-			super("path");
-			remove=false;
-		}
+    public Path(){
+      super("path");
+      remove=false;
+    }
 
-		@Override
-		public boolean activate(){
-			return false;
-		}
+    @Override
+    public boolean activate(){
+      return false;
+    }
 
-		@Override
-		public Image getimage(){
-			return Images.get(List.of("dungeon","path","path"+tile));
-		}
-	}
+    @Override
+    public Image getimage(){
+      return Images.get(List.of("dungeon","path","path"+tile));
+    }
+  }
 
-	class PathWalker extends DungeonWalker{
-		PathWalker(Point from,Point to,DungeonFloor f){
-			super(from,to,f);
-			pathing=new DirectPath();
-			discoveredonly=false;
-		}
-	}
+  class PathWalker extends DungeonWalker{
+    PathWalker(Point from,Point to,DungeonFloor f){
+      super(from,to,f);
+      pathing=new DirectPath();
+      discoveredonly=false;
+    }
+  }
 
-	class WildernessFloor extends DungeonFloor{
-		public WildernessFloor(Integer level,Dungeon d){
-			super(level,d);
-		}
+  class WildernessFloor extends DungeonFloor{
+    public WildernessFloor(Integer level,Dungeon d){
+      super(level,d);
+    }
 
-		/** Places {@link Exit} and {@link Squad} on a border {@link Tile}. */
-		void generateentrance(char[][] map){
-			var top=floors.getFirst();
-			var width=map.length;
-			var height=map[0].length;
-			top.squadlocation=null;
-			while(top.squadlocation==null){
-				top.squadlocation=new Point(RPG.r(0,width-1),RPG.r(0,height-1));
-				if(RPG.chancein(2))
-					top.squadlocation.x=RPG.chancein(2)?0:width-1;
-				else
-					top.squadlocation.y=RPG.chancein(2)?0:height-1;
-				var empty=top.squadlocation.getadjacent().stream().filter(
-						p->p.validate(0,0,width,height)&&map[p.x][p.y]==FloorTile.FLOOR);
-				if(empty.count()<3) top.squadlocation=null;
-			}
-			map[top.squadlocation.x][top.squadlocation.y]=FloorTile.FLOOR;
-			new Exit(top.squadlocation).place(this,top.squadlocation);
-		}
+    /** Places {@link Exit} and {@link Squad} on a border {@link Tile}. */
+    void generateentrance(char[][] map){
+      var top=floors.getFirst();
+      var width=map.length;
+      var height=map[0].length;
+      top.squadlocation=null;
+      while(top.squadlocation==null){
+        top.squadlocation=new Point(RPG.r(0,width-1),RPG.r(0,height-1));
+        if(RPG.chancein(2)) top.squadlocation.x=RPG.chancein(2)?0:width-1;
+        else top.squadlocation.y=RPG.chancein(2)?0:height-1;
+        var empty=top.squadlocation.getadjacent().stream().filter(
+            p->p.validate(0,0,width,height)&&map[p.x][p.y]==FloorTile.FLOOR);
+        if(empty.count()<3) top.squadlocation=null;
+      }
+      map[top.squadlocation.x][top.squadlocation.y]=FloorTile.FLOOR;
+      new Exit(top.squadlocation).place(this,top.squadlocation);
+    }
 
-		@Override
-		protected char[][] map(){
-			var m=RPG.pick(dungeon.terrains).getmaps().pick();
-			m.generate();
-			var width=m.map.length;
-			int height=m.map[0].length;
-			var map=new char[width][height];
-			for(var x=0;x<width;x++)
-				for(var y=0;y<height;y++)
-					map[x][y]=m.map[x][y].blocked?FloorTile.WALL:FloorTile.FLOOR;
-			for(var i=0;i<entrances;i++)
-				generateentrance(map);
-			dungeon.images.put(DungeonImages.FLOOR,Images.NAMES.get(m.floor));
-			dungeon.images.put(DungeonImages.WALL,Images.NAMES.get(m.wall));
-			dungeon.name=m.name;
-			return map;
-		}
+    @Override
+    protected char[][] map(){
+      var m=RPG.pick(dungeon.terrains).getmaps().pick();
+      m.generate();
+      var width=m.map.length;
+      var height=m.map[0].length;
+      var map=new char[width][height];
+      for(var x=0;x<width;x++) for(var y=0;y<height;y++)
+        map[x][y]=m.map[x][y].blocked?FloorTile.WALL:FloorTile.FLOOR;
+      for(var i=0;i<entrances;i++) generateentrance(map);
+      dungeon.images.put(DungeonImages.FLOOR,Images.NAMES.get(m.floor));
+      dungeon.images.put(DungeonImages.WALL,Images.NAMES.get(m.wall));
+      dungeon.name=m.name;
+      return map;
+    }
 
-		@Override
-		protected int calculateencounterrate(){
-			var totalsteps=countfloor()/(DISCOVEREDPERSTEP*dungeon.vision);
-			var attemptstoclear=RPG.randomize(3,1,Integer.MAX_VALUE);
-			return 2*totalsteps/attemptstoclear;
-		}
+    @Override
+    protected int calculateencounterrate(){
+      var totalsteps=countfloor()/(DISCOVEREDPERSTEP*dungeon.vision);
+      var attemptstoclear=RPG.randomize(3,1,Integer.MAX_VALUE);
+      return 2*totalsteps/attemptstoclear;
+    }
 
-		@Override
-		protected void generateencounters(List<EncounterIndex> index){
-			var target=RPG.randomize(6,1,Integer.MAX_VALUE);
-			while(encounters.size()<target){
-				var el=level+Difficulty.get()+Difficulty.EASY;
-				var e=EncounterGenerator.generatebyindex(el,index);
-				if(e!=null) encounters.add(e);
-			}
-		}
+    @Override
+    protected void generateencounters(List<EncounterIndex> index){
+      var target=RPG.randomize(6,1,Integer.MAX_VALUE);
+      var easy=Difficulty.EASY;
+      while(encounters.size()<target){
+        var el=level+Difficulty.get()+easy;
+        var e=EncounterGenerator.generatebyindex(el,index);
+        if(e==null) easy+=1;
+        else encounters.add(e);
+      }
+    }
 
-		void generatepaths(){
-			var nodes=new ArrayList<>(features.stream().map(f->f.getlocation())
-					.collect(Collectors.toList()));
-			var w=map.length;
-			var h=map[0].length;
-			var extra=RPG.randomize(2,0,Integer.MAX_VALUE);
-			for(var i=0;i<extra;i++){
-				var p=new Point(RPG.r(0,w-1),RPG.r(0,h-1));
-				if(!nodes.contains(p)&&!isoccupied(p)) nodes.add(p);
-			}
-			var paths=new HashSet<Point>();
-			for(var i=0;i<nodes.size();i++)
-				for(var j=i+1;j<nodes.size();j++){
-					var walker=new PathWalker(nodes.get(i),nodes.get(j),this).walk();
-					if(walker!=null) paths.addAll(walker);
-				}
-			paths.stream()
-					.filter(p->RPG.chancein(2)&&p.validate(0,0,w,h)&&!isoccupied(p))
-					.forEach(p->new Path().place(this,p));
-		}
+    void generatepaths(){
+      var nodes=new ArrayList<>(features.stream().map(Feature::getlocation)
+          .collect(Collectors.toList()));
+      var w=map.length;
+      var h=map[0].length;
+      var extra=RPG.randomize(2,0,Integer.MAX_VALUE);
+      for(var i=0;i<extra;i++){
+        var p=new Point(RPG.r(0,w-1),RPG.r(0,h-1));
+        if(!nodes.contains(p)&&!isoccupied(p)) nodes.add(p);
+      }
+      var paths=new HashSet<Point>();
+      for(var i=0;i<nodes.size();i++) for(var j=i+1;j<nodes.size();j++){
+        var walker=new PathWalker(nodes.get(i),nodes.get(j),this).walk();
+        if(walker!=null) paths.addAll(walker);
+      }
+      paths.stream()
+          .filter(p->RPG.chancein(2)&&p.validate(0,0,w,h)&&!isoccupied(p))
+          .forEach(p->new Path().place(this,p));
+    }
 
-		@Override
-		protected void populate(){
-			var nfeatures=RPG.randomize(5,0,Integer.MAX_VALUE);
-			var z=new DungeonZoner(this,squadlocation);
-			for(var i=0;i<nfeatures;i++)
-				generatefeature().place(this,z.getpoint());
-			generatepaths();
-			var pool=RewardCalculator.getgold(level);
-			var ncrates=RPG.randomize(3,0,Integer.MAX_VALUE);
-			for(var i=0;i<ncrates;i++){
-				int gold=RPG.randomize(pool/ncrates,1,Integer.MAX_VALUE);
-				var c=new Crate(gold,this);
-				c.place(this,z.getpoint());
-			}
-			generatebranches(z);
-		}
-	}
+    @Override
+    protected void populate(){
+      var nfeatures=RPG.randomize(5,0,Integer.MAX_VALUE);
+      var z=new DungeonZoner(this,squadlocation);
+      for(var i=0;i<nfeatures;i++){
+        var p=z.getpoint();
+        if(p==null) break;
+        generatefeature().place(this,p);
+      }
+      generatepaths();
+      var pool=RewardCalculator.getgold(level);
+      var ncrates=RPG.randomize(3,0,Integer.MAX_VALUE);
+      for(var i=0;i<ncrates;i++){
+        var gold=RPG.randomize(pool/ncrates,1,Integer.MAX_VALUE);
+        var c=new Crate(gold,this);
+        var p=z.getpoint();
+        if(p!=null) c.place(this,p);
+      }
+      generatebranches(z);
+    }
+  }
 
-	class Exit extends StairsUp{
-		Exit(Point p){
-			super(p,Wilderness.this.floors.getFirst());
-			prompt="Leave area?";
-		}
-	}
+  class Exit extends StairsUp{
+    Exit(Point p){
+      super(p,Wilderness.this.floors.getFirst());
+      prompt="Leave area?";
+    }
+  }
 
-	/** Number of {@link Exit}s. */
-	protected int entrances=1;
+  /** Number of {@link Exit}s. */
+  protected int entrances=1;
 
-	/** Subclass constructor. */
-	protected Wilderness(int level){
-		super(DESCRIPTION,level,1);
-		vision*=2;
-	}
+  /** Subclass constructor. */
+  protected Wilderness(int level){
+    super(DESCRIPTION,level,1);
+    vision*=2;
+  }
 
-	private static int getlevel(){
-		var tier=0;
-		while(RPG.chancein(2)&&tier<Tier.TIERS.size()-1)
-			tier+=1;
-		var t=Tier.TIERS.get(tier);
-		return RPG.r(t.minlevel,t.maxlevel);
-	}
+  private static int getlevel(){
+    var tier=0;
+    while(RPG.chancein(2)&&tier<Tier.TIERS.size()-1) tier+=1;
+    var t=Tier.TIERS.get(tier);
+    return RPG.r(t.minlevel,t.maxlevel);
+  }
 
-	/** Public constructor. */
-	public Wilderness(){
-		this(getlevel());
-	}
+  /** Public constructor. */
+  public Wilderness(){
+    this(getlevel());
+  }
 
-	@Override
-	public void generate(){
-		var e=entrance.getlocation();
-		var t=World.getseed().map[e.x][e.y];
-		terrains.clear();
-		terrains.add(t);
-		super.generate();
-	}
+  @Override
+  public void generate(){
+    var e=entrance.getlocation();
+    var t=World.getseed().map[e.x][e.y];
+    terrains.clear();
+    terrains.add(t);
+    super.generate();
+  }
 
-	@Override
-	public String getimagename(){
-		return "wilderness";
-	}
+  @Override
+  public String getimagename(){
+    return "wilderness";
+  }
 
-	@Override
-	protected DungeonFloor createfloor(int level){
-		return new WildernessFloor(level,this);
-	}
+  @Override
+  protected DungeonFloor createfloor(int level){
+    return new WildernessFloor(level,this);
+  }
 
-	@Override
-	void generatelore(){
-		//don't
-	}
+  @Override
+  void generatelore(){
+    //don't
+  }
 
-	@Override
-	public RandomDungeonEncounter fight(){
-		var e=super.fight();
-		e.set(RPG.pick(terrains));
-		e.map.floor=Images.get(images.get(DungeonImages.FLOOR));
-		e.map.wall=Images.get(images.get(DungeonImages.WALL));
-		e.map.wallfloor=e.map.floor;
-		return e;
-	}
+  @Override
+  public RandomDungeonEncounter fight(){
+    var e=super.fight();
+    e.set(RPG.pick(terrains));
+    e.map.floor=Images.get(images.get(DungeonImages.FLOOR));
+    e.map.wall=Images.get(images.get(DungeonImages.WALL));
+    e.map.wallfloor=e.map.floor;
+    return e;
+  }
 
-	/** @return All {@link DungeonEntrance}s to a wildernessa. */
-	public static List<DungeonEntrance> getwildernesses(){
-		return World.getactors().stream().filter(a->a instanceof DungeonEntrance)
-				.map(a->(DungeonEntrance)a).filter(e->e.dungeon instanceof Wilderness)
-				.collect(Collectors.toList());
-	}
+  /** @return All {@link DungeonEntrance}s to a wildernessa. */
+  public static List<DungeonEntrance> getwildernesses(){
+    return World.getactors().stream().filter(a->a instanceof DungeonEntrance)
+        .map(a->(DungeonEntrance)a).filter(e->e.dungeon instanceof Wilderness)
+        .collect(Collectors.toList());
+  }
 
-	@Override
-	protected void generateappearance(){
-		// don't, as would mix avatar/dungeon/ and avatar/terrain/ folders
-	}
+  @Override
+  protected void generateappearance(){
+    // don't, as would mix avatar/dungeon/ and avatar/terrain/ folders
+  }
 }

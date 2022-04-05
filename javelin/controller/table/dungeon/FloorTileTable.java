@@ -14,46 +14,44 @@ import javelin.old.RPG;
 
 /** @see DungeonGenerator */
 public class FloorTileTable extends Table{
-	public static final Mutator DEBUGMUTATOR=null;
+  public static final Mutator DEBUGMUTATOR=null;
 
-	static final FloorTile DEBUGROOM=null;
-	static final FloorTile DEBUGCORRIDOR=null;
+  static final FloorTile DEBUGROOM=null;
+  static final FloorTile DEBUGCORRIDOR=null;
 
-	/** Constructor. */
-	public FloorTileTable(DungeonFloor f){
-		var branch=f.dungeon.branches.stream().flatMap(b->b.tiles.stream())
-				.collect(Collectors.toList());
-		var rooms=selectrooms(branch);
-		for(var r:rooms)
-			add(r,10);
-		if(RPG.chancein(2)&&DEBUGROOM==null) add(StaticTemplate.FACTORY,1);
-		for(var c:selectcorridors(branch,rooms))
-			add(c,10);
-	}
+  /** Constructor. */
+  public FloorTileTable(DungeonFloor f){
+    var branch=f.dungeon.branches.stream().flatMap(b->b.tiles.stream())
+        .collect(Collectors.toList());
+    var rooms=selectrooms(branch);
+    for(var r:rooms) add(r,10);
+    if(StaticTemplate.ENABLED&&RPG.chancein(2)&&DEBUGROOM==null)
+      add(StaticTemplate.FACTORY,1);
+    for(var c:selectcorridors(branch,rooms)) add(c,10);
+  }
 
-	List<FloorTile> selectrooms(List<FloorTile> branch){
-		if(Javelin.DEBUG&&DEBUGROOM!=null) return List.of(DEBUGROOM);
-		int nrooms=RPG.randomize(4,1,FloorTile.GENERATED.size());
-		var rooms=RPG.pick(FloorTile.GENERATED,nrooms);
-		rooms.addAll(
-				branch.stream().filter(t->!t.corridor).collect(Collectors.toList()));
-		return rooms;
-	}
+  List<FloorTile> selectrooms(List<FloorTile> branch){
+    if(Javelin.DEBUG&&DEBUGROOM!=null) return List.of(DEBUGROOM);
+    var nrooms=RPG.randomize(4,1,FloorTile.GENERATED.size());
+    var rooms=RPG.pick(FloorTile.GENERATED,nrooms);
+    rooms.addAll(
+        branch.stream().filter(t->!t.corridor).collect(Collectors.toList()));
+    return rooms;
+  }
 
-	List<FloorTile> selectcorridors(List<FloorTile> branch,List<FloorTile> rooms){
-		if(Javelin.DEBUG&&DEBUGCORRIDOR!=null) return List.of(DEBUGCORRIDOR);
-		int ncorridors=0;
-		var maxcorridors=Math.max(rooms.size(),FloorTile.CORRIDORS.size());
-		while(RPG.chancein(2)&&ncorridors<maxcorridors)
-			ncorridors+=1;
-		var corridors=RPG.pick(FloorTile.CORRIDORS,ncorridors);
-		corridors.addAll(
-				branch.stream().filter(t->t.corridor).collect(Collectors.toList()));
-		return corridors;
-	}
+  List<FloorTile> selectcorridors(List<FloorTile> branch,List<FloorTile> rooms){
+    if(Javelin.DEBUG&&DEBUGCORRIDOR!=null) return List.of(DEBUGCORRIDOR);
+    var ncorridors=0;
+    var maxcorridors=Math.max(rooms.size(),FloorTile.CORRIDORS.size());
+    while(RPG.chancein(2)&&ncorridors<maxcorridors) ncorridors+=1;
+    var corridors=RPG.pick(FloorTile.CORRIDORS,ncorridors);
+    corridors.addAll(
+        branch.stream().filter(t->t.corridor).collect(Collectors.toList()));
+    return corridors;
+  }
 
-	/** @return Selected templates. */
-	public List<FloorTile> gettemplates(){
-		return getrows().stream().map(r->(FloorTile)r).collect(Collectors.toList());
-	}
+  /** @return Selected templates. */
+  public List<FloorTile> gettemplates(){
+    return getrows().stream().map(r->(FloorTile)r).collect(Collectors.toList());
+  }
 }

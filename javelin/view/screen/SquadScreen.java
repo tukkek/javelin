@@ -2,6 +2,7 @@ package javelin.view.screen;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
@@ -58,6 +59,8 @@ public class SquadScreen extends InfoScreen{
   void pickrandom(){
     Monster candidate=null;
     while(candidate==null){
+      if(Javelin.DEBUG&&CANDIDATES.isEmpty())
+        throw new NoSuchElementException();
       candidate=RPG.pick(CANDIDATES);
       for(var m:squad.members)
         if(m.source.name.equals(candidate.name)) candidate=null;

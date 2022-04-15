@@ -220,12 +220,12 @@ public abstract class Fight{
    * @return Opponent units.
    */
   public ArrayList<Combatant> setup(){
+    for(var m:mutators) m.setup(this);
     if(Debug.period!=null) period=Period.ALL.stream()
         .filter(p->p.toString().equalsIgnoreCase(Debug.period)).findFirst()
         .orElseThrow();
     state=new BattleState(this);
     state.blueteam=new ArrayList<>(getblueteam());
-    for(var m:mutators) m.setup(this);
     return generate(state.blueteam);
   }
 

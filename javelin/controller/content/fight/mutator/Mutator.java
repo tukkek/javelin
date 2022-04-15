@@ -24,55 +24,41 @@ import javelin.view.screen.BattleScreen;
  */
 @SuppressWarnings("unused")
 public abstract class Mutator implements Serializable{
-	/** Called before {@link Fight#setup()}. */
-	public void setup(Fight f){
-		return;
-	}
+  /** Called before {@link Fight#setup()}. */
+  public void setup(Fight f){}
 
-	/** Last opportunity for changing this fight. */
-	public void ready(Fight f){
-		return;
-	}
+  /** Last opportunity for changing this fight. */
+  public void ready(Fight f){}
 
-	/**
-	 * Called after {@ling BattleState#blueTeam} and {@ling BattleState#redTeam}
-	 * teams are set but before they are placed, allowing for temporary
-	 * {@link Combatant}s to be included.
-	 */
-	public void prepare(Fight f){
-		return;
-	}
+  /**
+   * Called after {@ling BattleState#blueTeam} and {@ling BattleState#redTeam}
+   * teams are set but before they are placed, allowing for temporary
+   * {@link Combatant}s to be included.
+   */
+  public void prepare(Fight f){}
 
-	/** Called after painting the {@link BattleScreen} for the first time. */
-	public void draw(Fight f){
-		return;
-	}
+  /** Called after painting the {@link BattleScreen} for the first time. */
+  public void draw(Fight f){}
 
-	/**
-	 * Opportunity to change state before a {@link Fight} ends. Should not throw
-	 * {@link EndBattle} by itself.
-	 */
-	public void checkend(Fight f){
-		return;
-	}
+  /**
+   * Opportunity to change state before a {@link Fight} ends. Should not throw
+   * {@link EndBattle} by itself.
+   *
+   * TODO seems like it would make more sense to return {@link Boolean} and
+   * declared {@link EndBattle}. Exceptions could still be thrown to support
+   * "legacy" code. Also rename to <code>end(Fight)</code>?
+   */
+  public void checkend(Fight f){}
 
-	/** After any unit ends its {@link Action}. */
-	public void endturn(Fight f){
-		return;
-	}
+  /** After any unit ends its {@link Action}. */
+  public void endturn(Fight f){}
 
-	/** Called when a fight ends but before clean-ups. */
-	public void end(Fight f){
-		return;
-	}
+  /** Called when a fight ends but before clean-ups. */
+  public void end(Fight f){}
 
-	/** Called upon an unit's death. */
-	public void die(Combatant c,BattleState s,Fight f){
-		return;
-	}
+  /** Called upon an unit's death. */
+  public void die(Combatant c,BattleState s,Fight f){}
 
-	/** Called after the battle {@link #end(Fight)}, results are shown, etc. */
-	public void after(Fight f){
-		return;
-	}
+  /** Called after the battle {@link #end(Fight)}, results are shown, etc. */
+  public void after(Fight f){}
 }

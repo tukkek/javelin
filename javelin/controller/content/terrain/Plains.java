@@ -2,6 +2,7 @@ package javelin.controller.content.terrain;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javelin.controller.Point;
@@ -9,6 +10,7 @@ import javelin.controller.content.map.Maps;
 import javelin.controller.content.map.terrain.plain.Farm;
 import javelin.controller.content.map.terrain.plain.Field;
 import javelin.controller.content.map.terrain.plain.Grasslands;
+import javelin.controller.content.map.terrain.plain.PlainsShore;
 import javelin.controller.content.terrain.hazard.Flood;
 import javelin.controller.content.terrain.hazard.Hazard;
 import javelin.model.unit.Squad;
@@ -35,11 +37,9 @@ public class Plains extends Terrain{
 
   @Override
   public Maps getmaps(){
-    var m=new Maps();
-    m.add(new Farm());
-    m.add(new Grasslands());
-    m.add(new Field());
-    return m;
+    if(checkshore(List.of(Terrain.WATER)))
+      return new Maps(List.of(new PlainsShore()));
+    return new Maps(List.of(new Farm(),new Grasslands(),new Field()));
   }
 
   @Override

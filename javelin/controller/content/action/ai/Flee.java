@@ -34,43 +34,43 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
  * @author alex
  */
 public class Flee extends Action implements AiAction{
-	public static final Action SINGLETON=new Flee();
-	/** @see Difficulty */
-	public static final int FLEEAT=Difficulty.VERYEASY;
+  public static final Action SINGLETON=new Flee();
+  /** @see Difficulty */
+  public static final int FLEEAT=Difficulty.VERYEASY;
 
-	static final boolean ALLOWFLEE=true;
+  static final boolean ALLOWFLEE=true;
 
-	private Flee(){
-		super("Flee");
-	}
+  private Flee(){
+    super("Flee");
+  }
 
-	@Override
-	public boolean perform(Combatant active){
-		throw new UnsupportedOperationException();
-	}
+  @Override
+  public boolean perform(Combatant active){
+    throw new UnsupportedOperationException();
+  }
 
-	public static boolean flee(Combatant active,BattleState s){
-		if(!ALLOWFLEE||!Fight.current.canflee||!s.redteam.contains(s.next)
-				||s.isengaged(active))
-			return false;
-		var red=ChallengeCalculator.calculateel(s.redteam);
-		var blue=ChallengeCalculator.calculateel(s.blueteam);
-		return red-blue<=FLEEAT;
-	}
+  public static boolean flee(Combatant c,BattleState s){
+    if(!ALLOWFLEE||!Fight.current.canflee||!c.source.think(-1)
+        ||!s.redteam.contains(s.next)||s.isengaged(c))
+      return false;
+    var red=ChallengeCalculator.calculateel(s.redteam);
+    var blue=ChallengeCalculator.calculateel(s.blueteam);
+    return red-blue<=FLEEAT;
+  }
 
-	@Override
-	public List<List<ChanceNode>> getoutcomes(Combatant active,BattleState s){
-		ArrayList<List<ChanceNode>> outcomes=new ArrayList<>();
-		s=s.clone();
-		s.flee(active);
-		ArrayList<ChanceNode> chances=new ArrayList<>(1);
-		ChanceNode node=new ChanceNode(s,1,active+" flees!",Javelin.Delay.BLOCK);
-		AiOverlay overlay=new AiOverlay(active.location[0],active.location[1]);
-		overlay.image=AiMovement.MOVEOVERLAY;
-		node.overlay=overlay;
-		chances.add(node);
-		outcomes.add(chances);
-		return outcomes;
-	}
+  @Override
+  public List<List<ChanceNode>> getoutcomes(Combatant active,BattleState s){
+    var outcomes=new ArrayList<List<ChanceNode>>();
+    s=s.clone();
+    s.flee(active);
+    var chances=new ArrayList<ChanceNode>(1);
+    var node=new ChanceNode(s,1,active+" flees!",Javelin.Delay.BLOCK);
+    var overlay=new AiOverlay(active.location[0],active.location[1]);
+    overlay.image=AiMovement.MOVEOVERLAY;
+    node.overlay=overlay;
+    chances.add(node);
+    outcomes.add(chances);
+    return outcomes;
+  }
 
 }

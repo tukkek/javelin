@@ -35,7 +35,7 @@ import javelin.view.screen.WorldScreen;
  *
  * @author alex
  */
-public class Shore extends Map{
+public class WaterShore extends Map{
 	boolean shoretop=false;
 	boolean shorebottom=false;
 	boolean shoreleft=false;
@@ -46,7 +46,7 @@ public class Shore extends Map{
 	Integer verticaldirection=null;
 
 	/** Constructor. */
-	public Shore(){
+	public WaterShore(){
 		super("Shore",DndMap.SIZE,DndMap.SIZE);
 		flooded=Images.get(List.of("terrain","aquatic"));
 		floor=Images.get(List.of("terrain","desert"));

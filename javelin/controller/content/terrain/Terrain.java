@@ -32,6 +32,7 @@ import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.productive.Mine;
 import javelin.old.RPG;
+import javelin.view.mappanel.world.WorldTile;
 
 /**
  * Represent different types of {@link World} terrain.
@@ -113,8 +114,6 @@ public abstract class Terrain implements Serializable{
   /** Used to see distant {@link World} terrain. */
   public Integer visionbonus=null;
 
-  private ArrayList<Actor> towns;
-
   /** ASCII representation of terrain type for debugging purposes. */
   public Character representation=null;
 
@@ -135,7 +134,7 @@ public abstract class Terrain implements Serializable{
    * @param y {@link World} coordinate.
    * @return Speed in miles per hour to traverse this terrain.
    *
-   * @see Squad#move()
+   * @see Squad#move(boolean, Terrain, int, int)
    * @see Terrain#current()
    */
   public int speed(int mph,int x,int y){
@@ -286,14 +285,14 @@ public abstract class Terrain implements Serializable{
    * @param p Given a point...
    * @param neighbor will check if there is such a terrain tile...
    * @param radius in the given radius around it.
-   * @param World World instance.
+   * @param w World instance.
    * @return Number of terrain tiles from the given type found in radius.
    */
   public static int search(Point p,Terrain neighbor,int radius,World w){
     var found=0;
     for(var x=p.x-radius;x<=p.x+radius;x++)
       for(var y=p.y-radius;y<=p.y+radius;y++){
-        if((x==p.x&&y==p.y)||!World.validatecoordinate(x,y)) continue;
+        if(x==p.x&&y==p.y||!World.validatecoordinate(x,y)) continue;
         if(w.map[x][y].equals(neighbor)) found+=1;
       }
     return found;
@@ -419,5 +418,17 @@ public abstract class Terrain implements Serializable{
   /** @return Terrain {@link Encounter}s. */
   public EncounterIndex getencounters(){
     return Organization.ENCOUNTERSBYTERRAIN.get(name);
+  }
+
+  /**
+   * @return <code>true</code> if any {@link #shore} {@link WorldTile} is
+   *   adjacent, <code>false</code> if {@link Squad#active} is
+   *   <code>null</code>.
+   */
+  protected boolean checkshore(List<Terrain> find){
+    if(Squad.active==null) return false;
+    var s=Squad.active.getlocation();
+    for(var t:find) if(Terrain.search(s,t,1,World.seed)>0) return true;
+    return false;
   }
 }

@@ -1,11 +1,13 @@
 package javelin.controller.content.terrain;
 
+import java.util.List;
 import java.util.Set;
 
 import javelin.controller.Point;
 import javelin.controller.content.map.Maps;
 import javelin.controller.content.map.terrain.hill.GentleHill;
 import javelin.controller.content.map.terrain.hill.RuggedHill;
+import javelin.controller.content.map.terrain.plain.PlainsShore;
 import javelin.controller.content.terrain.hazard.Hazard;
 import javelin.controller.content.terrain.hazard.Rockslide;
 import javelin.model.world.World;
@@ -30,10 +32,9 @@ public class Hill extends Terrain{
 
   @Override
   public Maps getmaps(){
-    var m=new Maps();
-    m.add(new GentleHill());
-    m.add(new RuggedHill());
-    return m;
+    if(checkshore(List.of(Terrain.WATER)))
+      return new Maps(List.of(new PlainsShore())); //TODO #339
+    return new Maps(List.of(new GentleHill(),new RuggedHill()));
   }
 
   @Override

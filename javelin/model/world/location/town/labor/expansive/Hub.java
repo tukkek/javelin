@@ -225,6 +225,6 @@ public class Hub extends Location{
 
 	@Override
 	public String describe(){
-		return getname()+".";
+		return ishostile()?super.describe():getname()+".";
 	}
 }

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.content.fight.mutator.Meld;
-import javelin.controller.content.map.location.TownMap;
 import javelin.controller.content.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
@@ -27,7 +26,7 @@ public class IncursionFight extends Fight{
     hide=false;
     canflee=true;
     var d=i.getdistrict();
-    map=d==null?RPG.pick(Terrain.get(i.x,i.y).getmaps()):new TownMap(d.town);
+    map=d==null?RPG.pick(Terrain.get(i.x,i.y).getmaps()):d.town.getmap();
   }
 
   @Override
@@ -68,7 +67,7 @@ public class IncursionFight extends Fight{
 
   @Override
   public Combatants generate(ArrayList<Combatant> blueteam){
-    Combatants foes=super.generate(blueteam);
+    var foes=super.generate(blueteam);
     incursion.squad=clone(foes);
     return foes;
   }

@@ -12,13 +12,13 @@ import javelin.controller.walker.pathing.DirectPath;
 import javelin.old.RPG;
 import javelin.view.Images;
 
+/** @author alex */
 public class PlainsShore extends Map{
   /** Constructor. */
   public PlainsShore(){
     super("Plains shore",DndMap.SIZE,DndMap.SIZE);
     floor=Images.get(List.of("terrain","grass"));
     obstacle=rock;
-    wall=Images.get(List.of("terrain","orcwall"));
     flooded=Images.get(List.of("terrain","aquatic"));
   }
 

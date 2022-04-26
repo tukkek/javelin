@@ -1,4 +1,4 @@
-package javelin.controller.content.map.location;
+package javelin.controller.content.map.location.town;
 
 import java.util.ArrayList;
 import java.util.Collections;

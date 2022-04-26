@@ -15,9 +15,12 @@ import javelin.controller.content.event.urban.UrbanEvent;
 import javelin.controller.content.event.urban.UrbanEvents;
 import javelin.controller.content.event.urban.negative.Riot;
 import javelin.controller.content.event.urban.neutral.HostTournament;
+import javelin.controller.content.fight.Fight;
 import javelin.controller.content.fight.Siege;
 import javelin.controller.content.fight.tournament.Exhibition;
-import javelin.controller.content.map.location.TownMap;
+import javelin.controller.content.map.Map;
+import javelin.controller.content.map.location.town.ShoreTownMap;
+import javelin.controller.content.map.location.town.TownMap;
 import javelin.controller.content.scenario.Campaign;
 import javelin.controller.content.scenario.Scenario;
 import javelin.controller.content.terrain.Terrain;
@@ -25,6 +28,7 @@ import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.model.Realm;
+import javelin.model.item.Tier;
 import javelin.model.unit.Alignment;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -302,10 +306,22 @@ public class Town extends Location{
     return true;
   }
 
+  /**
+   * TODO would be cool if the Town maps could be seeded per Town, per
+   * {@link Tier}.
+   *
+   * @return {@link Fight} map.
+   */
+  public Map getmap(){
+    if(Terrain.search(getlocation(),Terrain.WATER,1,World.seed)>0)
+      return new ShoreTownMap(this);
+    return new TownMap(this);
+  }
+
   @Override
   protected Siege fight(){
     var s=new Siege(this);
-    s.map=new TownMap(this);
+    s.map=getmap();
     s.hide=false;
     s.bribe=true;
     return s;

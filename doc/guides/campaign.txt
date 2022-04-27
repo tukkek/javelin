@@ -4,8 +4,6 @@ As most roguelikes, becoming a good Javelin player takes time and patience - but
 
 Javelin, as a roguelike, can be hard. Take things at your own pace, there are many ways to play and enjoy it. Your journey is more important than the destination.
 
-(Remember that you can press h in or out of battle to see a list of all possible actions you can perform. You can also press k to configure your key bindings). 
-
 THE CAMPAIGN
 
 Every time you start a new game a new world is generated! If you want to give up on a playthrough, press Q (uppercase) to quit and start a new game. If you want to save your current campaign and continue later on, just close the game window (saving is automatic).
@@ -36,6 +34,14 @@ On many situations, the game will show you a difficulty estimate based on your c
 Learning when to flee from a dangerous combat scenario or a dangerous situation you've ran into is a major skill in Javelin! Once your learn the game you will become better at not putting yourself at risk but the game is designed so that not even the most veteran of players will be safe all the time. Do not hesitate to cut your losses and run away to safety!
 
 FURTHER HELP
+
+You can press h in or out of battle to see a list of all possible actions you can perform (you can also press k to configure your key bindings). 
+
+When you open this help menu, it will also list all the available guides, much like this one - including descriptions of spells, upgrades and more.
+
+If you still can't find the information you're looking for or just want to discuss the game or make a suggestion, check the community links below!
+
+EXTERNAL RESOURCES  
 
 * News and updates: http://javelinrl.wordpress.com
 * Community chat: https://discord.gg/Eh6SxsV

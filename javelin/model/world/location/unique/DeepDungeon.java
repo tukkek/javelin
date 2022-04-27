@@ -19,50 +19,51 @@ import javelin.model.world.location.dungeon.DungeonTier;
  * @author alex
  */
 public class DeepDungeon extends Dungeon{
-	static final String DESCRIPTION="Deep dungeon";
+  static final String DESCRIPTION="Deep dungeon";
 
-	/** @see Location */
-	public static class DeepDungeonEntrance extends DungeonEntrance{
-		/** Constructor. */
-		public DeepDungeonEntrance(DeepDungeon d){
-			super(d);
-		}
+  /** @see Location */
+  public static class DeepDungeonEntrance extends DungeonEntrance{
+    /** Constructor. */
+    public DeepDungeonEntrance(DeepDungeon d){
+      super(d);
+    }
 
-		@Override
-		protected void generate(boolean water){
-			//handled by LocationGenerator
-		}
-	}
+    @Override
+    protected void generate(boolean water){
+      //handled by LocationGenerator
+    }
+  }
 
-	class DeepDungeonFloor extends DungeonFloor{
-		DeepDungeonFloor(Integer level,Dungeon d){
-			super(level,d);
-		}
+  class DeepDungeonFloor extends DungeonFloor{
+    DeepDungeonFloor(Integer level,Dungeon d){
+      super(level,d);
+    }
 
-		@Override
-		public DungeonTier gettier(){
-			return DungeonTier.get(level);
-		}
-	}
+    @Override
+    public DungeonTier gettier(){
+      return DungeonTier.get(level);
+    }
+  }
 
-	/** Constructor. */
-	public DeepDungeon(){
-		super(DESCRIPTION,Tier.LOW.minlevel,Tier.EPIC.maxlevel);
-		images=new DungeonImages(DungeonTier.TEMPLE);
-	}
+  /** Constructor. */
+  public DeepDungeon(){
+    super(DESCRIPTION,Tier.LOW.minlevel,Tier.EPIC.maxlevel);
+    images=new DungeonImages(DungeonTier.TEMPLE);
+    bonus=null;
+  }
 
-	@Override
-	public String getimagename(){
-		return "deepdungeon";
-	}
+  @Override
+  public String getimagename(){
+    return "deepdungeon";
+  }
 
-	@Override
-	protected DungeonFloor createfloor(int level){
-		return new DeepDungeonFloor(level,this);
-	}
+  @Override
+  protected DungeonFloor createfloor(int level){
+    return new DeepDungeonFloor(level,this);
+  }
 
-	@Override
-	protected synchronized String baptize(String suffix){
-		return name;
-	}
+  @Override
+  protected synchronized String baptize(String suffix){
+    return name;
+  }
 }

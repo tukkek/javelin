@@ -25,6 +25,7 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.StairsUp;
 import javelin.model.world.location.dungeon.feature.chest.Crate;
+import javelin.model.world.location.dungeon.feature.chest.GemDisplay;
 import javelin.model.world.location.dungeon.feature.common.Brazier;
 import javelin.model.world.location.dungeon.feature.common.LoreNote;
 import javelin.model.world.location.dungeon.feature.rare.Fountain;
@@ -206,6 +207,11 @@ public class Wilderness extends Dungeon{
       }
       generatebranches(z);
     }
+
+    @Override
+    public String toString(){
+      return dungeon.name;
+    }
   }
 
   class Exit extends StairsUp{
@@ -222,6 +228,12 @@ public class Wilderness extends Dungeon{
   protected Wilderness(int level){
     super(DESCRIPTION,level,1);
     vision*=2;
+    bonus=GemDisplay.class;
+  }
+
+  /** Public constructor. */
+  public Wilderness(){
+    this(getlevel());
   }
 
   private static int getlevel(){
@@ -229,11 +241,6 @@ public class Wilderness extends Dungeon{
     while(RPG.chancein(2)&&tier<Tier.TIERS.size()-1) tier+=1;
     var t=Tier.TIERS.get(tier);
     return RPG.r(t.minlevel,t.maxlevel);
-  }
-
-  /** Public constructor. */
-  public Wilderness(){
-    this(getlevel());
   }
 
   @Override
@@ -270,7 +277,7 @@ public class Wilderness extends Dungeon{
     return e;
   }
 
-  /** @return All {@link DungeonEntrance}s to a wildernessa. */
+  /** @return All {@link DungeonEntrance}s to a wilderness. */
   public static List<DungeonEntrance> getwildernesses(){
     return World.getactors().stream().filter(a->a instanceof DungeonEntrance)
         .map(a->(DungeonEntrance)a).filter(e->e.dungeon instanceof Wilderness)

@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.Javelin.Delay;
+import javelin.controller.Point;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.content.fight.RandomDungeonEncounter;
@@ -34,11 +35,13 @@ import javelin.model.world.location.dungeon.branch.temple.Temple;
 import javelin.model.world.location.dungeon.feature.Decoration;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.StairsUp;
+import javelin.model.world.location.dungeon.feature.chest.ArtDisplay;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
 import javelin.model.world.location.dungeon.feature.chest.SpecialChest;
 import javelin.model.world.location.dungeon.feature.common.Passage;
 import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.model.world.location.dungeon.feature.trap.Trap;
+import javelin.model.world.location.town.diplomacy.quest.fetch.FetchQuest;
 import javelin.model.world.location.unique.DeepDungeon;
 import javelin.old.RPG;
 import javelin.view.screen.BattleScreen;
@@ -101,6 +104,9 @@ public class Dungeon implements Serializable{
   protected String name;
   /** {@link RPG#chancein(int)} chance to {@link Branch}. */
   protected int branchchance=4;
+  /** Placed once per dungeon for the benefit of {@link FetchQuest}s. */
+  protected Class<? extends Chest> bonus=ArtDisplay.class;
+  
 
   /**
    * Top-level floor constructor.
@@ -131,13 +137,7 @@ public class Dungeon implements Serializable{
       var suffix=branches.get(1).suffix.toLowerCase();
       return String.format("%s %s %s",prefix,base,suffix);
     }
-    if(Javelin.DEBUG){
-      if(getClass()==Dungeon.class||getClass()==Wilderness.class){
-        //ok
-      }else{
-        throw new RuntimeException(getClass().getSimpleName());
-      }
-    }
+    if(Javelin.DEBUG) if((getClass()!=Dungeon.class)&&(getClass()!=Wilderness.class)) throw new RuntimeException(getClass().getSimpleName());
     try{
       var name=World.getseed().dungeonnames.pop();
       name=name.substring(name.lastIndexOf(" ")+1,name.length());
@@ -185,11 +185,28 @@ public class Dungeon implements Serializable{
       }
       if(total>=TEMPLATEENCOUNTERS) return List.of(modified);
     }
-    //if TEMPLATEENCOUNTERS is done away with, remove this:
+    //TODO if TEMPLATEENCOUNTERS is done away with, remove this:
     index.merge(modified);
     return List.of(index);
   }
-
+  
+  void generatebonus(){
+    if(bonus==null) return;
+    try {
+      for(var f:RPG.shuffle(new ArrayList<>(floors))) {
+        var b=bonus.getConstructor(Integer.class,DungeonFloor.class).
+            newInstance(RewardCalculator.getgold(f.level),f);
+        var u=f.getunnocupied();
+        if(u!=null&&b.generateitem()){
+          b.place(f,u);
+          return;
+        }
+      }
+    }catch(ReflectiveOperationException e) {
+      if(Javelin.DEBUG) throw new RuntimeException(e);
+    }
+  }
+  
   /**
    * Calls {@link #generate()} on all floors; then {@link Feature#define()} on
    * each floor's {@link #features}; then generates {@link Lore}.
@@ -201,10 +218,12 @@ public class Dungeon implements Serializable{
       for(var feature:f.features.getall()) feature.define(f,floors);
     generatelore();
     generateappearance();
+    generatebonus();
     for(var b:branches) b.define(this);
     name=baptize(name);
     if(entrance!=null) entrance.set(this);
   }
+
 
   /**
    * If there are {@link #branches}, pick between them and the base image for

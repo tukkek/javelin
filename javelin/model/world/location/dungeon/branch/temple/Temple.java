@@ -38,94 +38,94 @@ import javelin.old.RPG;
  * @author alex
  */
 public abstract class Temple extends Dungeon{
-	/** @see Location */
-	public static class TempleEntrance extends DungeonEntrance{
-		/** Constructor. */
-		public TempleEntrance(Temple t){
-			super(t);
-		}
+  /** @see Location */
+  public static class TempleEntrance extends DungeonEntrance{
+    /** Constructor. */
+    public TempleEntrance(Temple t){
+      super(t);
+    }
 
-		@Override
-		protected boolean validateplacement(boolean water,World w,
-				List<Actor> actors){
-			var t=(Temple)dungeon;
-			return t.terrains.contains(Terrain.get(x,y))
-					&&super.validateplacement(water,w,actors);
-		}
-	}
+    @Override
+    protected boolean validateplacement(boolean water,World w,
+        List<Actor> actors){
+      var t=(Temple)dungeon;
+      return t.terrains.contains(Terrain.get(x,y))
+          &&super.validateplacement(water,w,actors);
+    }
+  }
 
-	class TempleFloor extends DungeonFloor{
-		TempleFloor(Integer level,Dungeon d){
-			super(level,d);
-		}
+  class TempleFloor extends DungeonFloor{
+    TempleFloor(Integer level,Dungeon d){
+      super(level,d);
+    }
 
-		@Override
-		protected LinkedList<Decoration> generatedecoration(int minimum){
-			return null;
-		}
-	}
+    @Override
+    protected LinkedList<Decoration> generatedecoration(int minimum){
+      return null;
+    }
+  }
 
-	/** @see LocationGenerator */
-	public static void generatetemples(){
-		var temples=List.of(new AirTemple(),new EarthTemple(),new FireTemple(),
-				new EvilTemple(),new GoodTemple(),new MagicTemple(),new WaterTemple());
-		for(var t:RPG.shuffle(new ArrayList<>(temples)))
-			t.place();
-	}
+  /** @see LocationGenerator */
+  public static void generatetemples(){
+    var temples=List.of(new AirTemple(),new EarthTemple(),new FireTemple(),
+        new EvilTemple(),new GoodTemple(),new MagicTemple(),new WaterTemple());
+    for(var t:RPG.shuffle(new ArrayList<>(temples))) t.place();
+  }
 
-	/** @return All temple {@link Location}s. */
-	public static List<TempleEntrance> gettemples(){
-		var temples=new ArrayList<TempleEntrance>(7);
-		for(var a:World.getactors())
-			if(a instanceof TempleEntrance) temples.add((TempleEntrance)a);
-		return temples;
-	}
+  /** @return All temple {@link Location}s. */
+  public static List<TempleEntrance> gettemples(){
+    var temples=new ArrayList<TempleEntrance>(7);
+    for(var a:World.getactors())
+      if(a instanceof TempleEntrance) temples.add((TempleEntrance)a);
+    return temples;
+  }
 
-	Realm realm;
+  Realm realm;
 
-	/** Constructor. */
-	public Temple(Realm r,Branch b,String f){
-		super("The Temple of "+Javelin.capitalize(r.name),
-				Tier.EPIC.getrandomel(false),RPG.randomize(2,1,Integer.MAX_VALUE));
-		realm=r;
-		fluff=f;
-		branches.add(b);
-		terrains.clear();
-		terrains.addAll(b.terrains);
-	}
+  /** Constructor. */
+  public Temple(Realm r,Branch b,String f){
+    super("The Temple of "+Javelin.capitalize(r.name),
+        Tier.EPIC.getrandomel(false),RPG.randomize(2,1,Integer.MAX_VALUE));
+    realm=r;
+    fluff=f;
+    bonus=null;
+    branches.add(b);
+    terrains.clear();
+    terrains.addAll(b.terrains);
+  }
 
-	@Override
-	public String getimagename(){
-		return "temple"+realm;
-	}
+  @Override
+  public String getimagename(){
+    return "temple"+realm;
+  }
 
-	@Override
-	protected void generateappearance(){
-		var b=branches.get(0);
-		doorbackground=b.doorbackground;
-		images.put(DungeonImages.FLOOR,b.floor);
-		images.put(DungeonImages.WALL,b.wall);
-	}
+  @Override
+  protected void generateappearance(){
+    var b=branches.get(0);
+    doorbackground=b.doorbackground;
+    images.put(DungeonImages.FLOOR,b.floor);
+    images.put(DungeonImages.WALL,b.wall);
+  }
 
-	@Override
-	protected DungeonFloor createfloor(int level){
-		return new TempleFloor(level,this);
-	}
+  @Override
+  protected DungeonFloor createfloor(int level){
+    return new TempleFloor(level,this);
+  }
 
-	/** @see TempleEntrance#place() */
-	protected void place(){
-		new TempleEntrance(this).place();
-	}
+  /** @see TempleEntrance#place() */
+  protected void place(){
+    new TempleEntrance(this).place();
+  }
 
-	@Override
-	public Feature generatespecialchest(DungeonFloor f){
-		return realm!=null&&f==f.dungeon.floors.getLast()
-				?new ArtifactChest(RPG.pick(realm.artifacts))
-				:super.generatespecialchest(f);
-	}
+  @Override
+  public Feature generatespecialchest(DungeonFloor f){
+    return realm!=null&&f==f.dungeon.floors.getLast()
+        ?new ArtifactChest(RPG.pick(realm.artifacts))
+        :super.generatespecialchest(f);
+  }
 
-	@Override
-	protected synchronized String baptize(String suffix){
-		return name;
-	}
+  @Override
+  protected synchronized String baptize(String suffix){
+    return name;
+  }
 }

@@ -1,12 +1,12 @@
-Alex "kek" Henry
-* Main developer
+Alex "tukkek" Henry
+* Creator
 
 Wizards of the Coast @ http://company.wizards.com/
 * d20 System Reference Document
 * Open Game License
 
 Craig “Upper Krust” Cochrane @ http://eternitypublishing.wordpress.com/
-* Immortal’s Handbook and its Challenging Challenge RAtins appendix
+* Immortal’s Handbook and its Challenging Challenge Ratings appendix (distributed with permission)
 
 John H. Kim @ http://www.darkshire.net/jhkim
 * XML SRD Monster Data
@@ -59,10 +59,10 @@ gamesbyangelina
 * A Puzzling Present - Image Bank https://opengameart.org/content/a-puzzling-present-image-bank
 
 Hyptosis and Zabin
-* 2d tiles and sprites https://opengameart.org/content/lots-of-free-2d-tiles-and-sprites-by-hyptosis
+* 2D tiles and sprites https://opengameart.org/content/lots-of-free-2d-tiles-and-sprites-by-hyptosis
 
 Simon "staz" Zolin
-* fast media player https://github.com/stsaz/fmedia
+* Fast media player https://github.com/stsaz/fmedia
 
 Special thanks
 * 11132113

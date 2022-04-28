@@ -78,6 +78,23 @@ public abstract class Fight{
   public List<Terrain> terrains=getdefaultterrains();
 
   /**
+   * Average combat duration in rounds. This is a very tricky estimate, based on
+   * lack of sources, full reliance on anecdotal evidence and high-level combat
+   * being much more volatile (because of "whoever goes first wins" abilities).
+   *
+   * In my research, the one source I found for d20 proper suggested 4 rounds as
+   * median.
+   * https://paizo.com/threads/rzs2kgg1?On-average-how-many-rounds-does-combat-last
+   *
+   * A dozen or two discussions for other D&D editions and Pathfinder 2E boiled
+   * down to a median of 4.
+   *
+   * D&D 5e is designed around 3-round combats, with a couple "multiply damage
+   * by 3" guidelines that imply it in the DMG and MM.
+   */
+  public static final int COMBATLENGTH=4;
+
+  /**
    * @return An encounter level for which an appropriate challenge should be
    *   generated. May return <code>null</code> if the subclass will generate its
    *   own foes manually.

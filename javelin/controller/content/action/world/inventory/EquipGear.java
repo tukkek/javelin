@@ -3,6 +3,7 @@ package javelin.controller.content.action.world.inventory;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javelin.controller.content.action.world.WorldAction;
 import javelin.model.item.Item;
 import javelin.model.item.gear.Gear;
 import javelin.view.screen.InfoScreen;
@@ -13,25 +14,31 @@ import javelin.view.screen.InfoScreen;
  * @author alex
  */
 public class EquipGear extends UseItems{
-	/** Singleton. */
-	@SuppressWarnings("hiding")
-	public static final EquipGear INSTANCE=new EquipGear();
+  /** Singleton. */
+  @SuppressWarnings("hiding")
+  public static final EquipGear INSTANCE=new EquipGear();
 
-	/** Constructor. */
-	EquipGear(){
-		super("Equip gear",new int[]{'e'},new String[]{"e"});
-		stayopen=true;
-	}
+  /** Constructor. */
+  EquipGear(){
+    super("Equip gear",new int[]{'e'},new String[]{"e"});
+    stayopen=true;
+    switchto="other items";
+  }
 
-	@Override
-	protected List<Item> filter(List<Item> items){
-		return items.stream().filter(i->i instanceof Gear)
-				.collect(Collectors.toList());
-	}
+  @Override
+  protected List<Item> filter(List<Item> items){
+    return items.stream().filter(i->i instanceof Gear)
+        .collect(Collectors.toList());
+  }
 
-	@Override
-	boolean use(InfoScreen infoscreen,Item i){
-		var g=(Gear)i;
-		return g.equip(findowner(g));
-	}
+  @Override
+  boolean use(InfoScreen infoscreen,Item i){
+    var g=(Gear)i;
+    return g.equip(findowner(g));
+  }
+
+  @Override
+  protected WorldAction switchscreen(){
+    return UseItems.INSTANCE;
+  }
 }

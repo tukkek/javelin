@@ -55,6 +55,8 @@ public class ShoreTownMap extends PlainsShore{
     tier=t;
     floor=Images.get(List.of("terrain","towngrass"));
     wall=Images.get(List.of("terrain","shipfloor"));
+    obstacle=Images.get(List.of("terrain","bush"));
+    obstaclechance=8;
   }
 
   /** Constructor. */
@@ -85,7 +87,9 @@ public class ShoreTownMap extends PlainsShore{
       var t=tier.getordinal()+1;
       var dry=Point.getrange(0,0,DndMap.SIZE,DndMap.SIZE).stream()
           .filter(p->!map[p.x][p.y].flooded).collect(toList());
-      var sections=segment(t+1,dry,t/4.0);
+      var nsections=t+1;
+      nsections=RPG.high(nsections,nsections*2);
+      var sections=segment(nsections,dry,t/4.0);
       for(var s:sections) walls.addAll(s.draw());
     }catch(GaveUp e){
       return false;

@@ -9,11 +9,18 @@ import javelin.controller.content.map.DndMap;
 import javelin.controller.content.map.Map;
 import javelin.controller.walker.Walker;
 import javelin.controller.walker.pathing.DirectPath;
+import javelin.model.state.Square;
 import javelin.old.RPG;
 import javelin.view.Images;
 
 /** @author alex */
 public class PlainsShore extends Map{
+  /**
+   * @see Square#obstructed
+   * @see RPG#chancein(int)
+   */
+  protected int obstaclechance=30;
+
   /** Constructor. */
   public PlainsShore(){
     super("Plains shore",DndMap.SIZE,DndMap.SIZE);
@@ -84,6 +91,6 @@ public class PlainsShore extends Map{
     var s=drawshore();
     drawriver(s);
     for(var x=0;x<DndMap.SIZE;x+=1) for(var y=0;y<DndMap.SIZE;y+=1)
-      if(RPG.chancein(30)) map[x][y].obstructed=true;
+      if(RPG.chancein(obstaclechance)) map[x][y].obstructed=true;
   }
 }

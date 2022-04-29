@@ -84,14 +84,15 @@ public class HillShore extends Map{
   }
 
   /** TODO pull up to Map */
-  void mirror(boolean horizontally,boolean vertically){
-    if(horizontally) Collections.reverse(Arrays.asList(map));
-    if(vertically) for(var tiles:map) Collections.reverse(Arrays.asList(tiles));
+  public static void mirror(boolean horizontally,boolean vertically,Map m){
+    if(horizontally) Collections.reverse(Arrays.asList(m.map));
+    if(vertically)
+      for(var tiles:m.map) Collections.reverse(Arrays.asList(tiles));
   }
 
   /** TODO pull up to Map */
-  void rotate(){
-    mirror(RPG.chancein(2),RPG.chancein(2));
+  public static void rotate(Map m){
+    mirror(RPG.chancein(2),RPG.chancein(2),m);
   }
 
   @Override
@@ -99,6 +100,6 @@ public class HillShore extends Map{
     walls=drawwalls();
     drawbush();
     drawsea();
-    rotate();
+    rotate(this);
   }
 }

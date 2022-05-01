@@ -13,6 +13,7 @@ import javelin.controller.content.map.terrain.mountain.MountainCave;
 import javelin.controller.content.map.terrain.mountain.MountainPass;
 import javelin.controller.content.map.terrain.mountain.MountainPath;
 import javelin.controller.content.map.terrain.mountain.MountainsOfMadness;
+import javelin.controller.content.map.terrain.mountain.Ridge;
 import javelin.controller.content.terrain.hazard.Break;
 import javelin.controller.content.terrain.hazard.Cold;
 import javelin.controller.content.terrain.hazard.Hazard;
@@ -42,7 +43,7 @@ public class Mountains extends Terrain{
   public Maps getmaps(){
     var m=new Maps();
     m.addAll(List.of(new Meadow(),new RuggedHill(),new ForbiddingMountain(),
-        new MountainPass(),new MountainCave(),new MountainPath()));
+        new MountainPass(),new MountainCave(),new MountainPath(),new Ridge()));
     if(Weather.current==Weather.STORM||Season.current==Season.WINTER)
       m.add(new MountainsOfMadness());
     return m;

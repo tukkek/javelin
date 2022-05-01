@@ -3,6 +3,7 @@ package javelin.controller.content.map.location.town;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 import javelin.Debug;
 import javelin.controller.Point;
 import javelin.controller.content.map.DndMap;
+import javelin.controller.content.map.Map;
 import javelin.controller.content.map.terrain.plain.PlainsShore;
 import javelin.controller.exception.GaveUp;
 import javelin.model.item.Tier;
@@ -19,19 +21,21 @@ import javelin.view.Images;
 
 /** @author alex */
 public class ShoreTownMap extends PlainsShore{
-  class Section{
-    HashSet<Point> area=new HashSet<>();
-    HashSet<Point> structures=new HashSet<>();
+  /** @see ShoreTownMap#segment(int, double, Collection, Map) */
+  public static class Section{
+    public HashSet<Point> segments=new HashSet<>();
+
+    public HashSet<Point> area=new HashSet<>();
 
     public Section(Point p){
       area.add(p);
     }
 
-    public boolean grow(){
+    public boolean grow(Map m){
       for(var p:RPG.shuffle(new ArrayList<>(area))){
         var adjacent=p.getadjacent().stream()
             .filter(next->next.validate(0,0,DndMap.SIZE,DndMap.SIZE)
-                &&!map[next.x][next.y].flooded&&!area.contains(next))
+                &&!m.map[next.x][next.y].flooded&&!area.contains(next))
             .collect(Collectors.toList());
         if(!adjacent.isEmpty()){
           area.addAll(adjacent);
@@ -41,10 +45,9 @@ public class ShoreTownMap extends PlainsShore{
       return false;
     }
 
-    public HashSet<Point> draw() throws GaveUp{
-      for(var s:segment(RPG.r(1,8),new ArrayList<>(area),.4))
-        structures.addAll(s.area);
-      return structures;
+    public HashSet<Point> draw(Map m) throws GaveUp{
+      for(var s:segment(RPG.r(1,8),.4,area,m)) segments.addAll(s.area);
+      return segments;
     }
   }
 
@@ -64,20 +67,27 @@ public class ShoreTownMap extends PlainsShore{
     this(Tier.get(t.population));
   }
 
-  boolean grow(ArrayList<Section> sections){
-    for(var s:RPG.shuffle(sections)) if(s.grow()) return true;
+  static boolean grow(ArrayList<Section> sections,Map m){
+    for(var s:RPG.shuffle(sections)) if(s.grow(m)) return true;
     return false;
   }
 
-  List<Section> segment(int nsections,List<Point> area,double occupy)
-      throws GaveUp{
-    var sections=new ArrayList<Section>(nsections);
-    if(area.size()<nsections) throw new GaveUp();
-    for(var d:RPG.shuffle(area).subList(0,nsections))
+  /**
+   * Given a number of seed {@link Point}s, occupies at random a certain
+   * coverage of the given area, creaitng individual segments.
+   *
+   * @throws GaveUp If cannot grow any of the seeds anymore. This method isn't
+   *   deterministc so retries are possible but not guaranteed to work.
+   */
+  public static List<Section> segment(int seeds,double occupy,
+      Collection<Point> area,Map m) throws GaveUp{
+    var sections=new ArrayList<Section>(seeds);
+    if(area.size()<seeds) throw new GaveUp();
+    for(var d:RPG.shuffle(new ArrayList<>(area)).subList(0,seeds))
       sections.add(new Section(d));
     var target=area.size()*occupy;
     while(sections.stream().mapToInt(s->s.area.size()).sum()<target)
-      if(!grow(sections)) throw new GaveUp();
+      if(!grow(sections,m)) throw new GaveUp();
     return sections;
   }
 
@@ -89,8 +99,8 @@ public class ShoreTownMap extends PlainsShore{
           .filter(p->!map[p.x][p.y].flooded).collect(toList());
       var nsections=t+1;
       nsections=RPG.high(nsections,nsections*2);
-      var sections=segment(nsections,dry,t/4.0);
-      for(var s:sections) walls.addAll(s.draw());
+      var sections=segment(nsections,t/4.0,dry,this);
+      for(var s:sections) walls.addAll(s.draw(this));
     }catch(GaveUp e){
       return false;
     }

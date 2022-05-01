@@ -83,16 +83,24 @@ public class HillShore extends Map{
     for(var b:bushes) map[b.x][b.y].obstructed=true;
   }
 
-  /** TODO pull up to Map */
-  public static void mirror(boolean horizontally,boolean vertically,Map m){
-    if(horizontally) Collections.reverse(Arrays.asList(m.map));
-    if(vertically)
-      for(var tiles:m.map) Collections.reverse(Arrays.asList(tiles));
-  }
-
-  /** TODO pull up to Map */
-  public static void rotate(Map m){
-    mirror(RPG.chancein(2),RPG.chancein(2),m);
+  /**
+   * From https://stackoverflow.com/a/39212120
+   *
+   * TODO pull up to Map
+   */
+  public static void rotate(Map map){
+    var m=map.map;
+    if(RPG.chancein(2)) Collections.reverse(Arrays.asList(m));
+    if(RPG.chancein(2))
+      for(var tiles:m) Collections.reverse(Arrays.asList(tiles));
+    for(var rotations=RPG.r(1,4);rotations>1;rotations--)
+      for(var i=0;i<m.length/2;i++) for(var j=0;j<m.length-1-2*i;j++){
+        var tmp=m[j+i][m.length-1-i];
+        m[j+i][m.length-1-i]=m[i][j+i];
+        m[i][j+i]=m[m.length-1-j-i][i];
+        m[m.length-1-j-i][i]=m[m.length-1-i][m.length-1-j-i];
+        m[m.length-1-i][m.length-1-j-i]=tmp;
+      }
   }
 
   @Override

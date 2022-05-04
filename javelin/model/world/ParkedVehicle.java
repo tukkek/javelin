@@ -19,54 +19,55 @@ import javelin.view.Images;
  * @author alex
  */
 public class ParkedVehicle extends Actor{
-	public Transport transport;
+  public Transport transport;
 
-	/**
-	 * @param x {@link World} coordinate.
-	 * @param y {@link World} coordinate.
-	 * @param transport Vehicle to be parked.
-	 */
-	public ParkedVehicle(int x,int y,Transport transport){
-		this.x=x;
-		this.y=y;
-		this.transport=transport;
-	}
+  /**
+   * @param x {@link World} coordinate.
+   * @param y {@link World} coordinate.
+   * @param transport Vehicle to be parked.
+   */
+  public ParkedVehicle(int x,int y,Transport transport){
+    this.x=x;
+    this.y=y;
+    this.transport=transport;
+  }
 
-	@Override
-	public boolean interact(){
-		if(Squad.active.transport!=null) if(Javelin.prompt(
-				"Are you sure you want to abandon your current vehicle? Press c to confirm....")!='c')
-			throw new RepeatTurn();
-		Squad.active.transport=transport;
-		remove();
-		Squad.active.move(x,y);
-		Squad.active.place();
-		Squad.active.updateavatar();
-		return true;
-	}
+  @Override
+  public boolean interact(){
+    if(Squad.active.transport!=null) if(Javelin.prompt(
+        "Are you sure you want to abandon your current vehicle? Press c to confirm....")!='c')
+      throw new RepeatTurn();
+    Squad.active.transport=transport;
+    remove();
+    Squad.active.move(x,y);
+    Squad.active.place();
+    Squad.active.updateavatar();
+    return true;
+  }
 
-	@Override
-	public Boolean destroy(Incursion attacker){
-		return true;
-	}
+  @Override
+  public Boolean destroy(Incursion attacker){
+    return true;
+  }
 
-	@Override
-	public Image getimage(){
-		return Images.get(transport.name.toLowerCase());
-	}
+  @Override
+  public Image getimage(){
+    var path=List.of("world","transport",transport.name.toLowerCase());
+    return Images.get(path);
+  }
 
-	@Override
-	public List<Combatant> getcombatants(){
-		return null;
-	}
+  @Override
+  public List<Combatant> getcombatants(){
+    return null;
+  }
 
-	@Override
-	public String describe(){
-		return "Parked "+transport.name.toLowerCase()+".";
-	}
+  @Override
+  public String describe(){
+    return "Parked "+transport.name.toLowerCase()+".";
+  }
 
-	@Override
-	public Integer getel(Integer attackerel){
-		return Integer.MIN_VALUE;
-	}
+  @Override
+  public Integer getel(Integer attackerel){
+    return Integer.MIN_VALUE;
+  }
 }

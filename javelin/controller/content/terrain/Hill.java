@@ -18,8 +18,11 @@ import javelin.model.world.World;
  * @author alex
  */
 public class Hill extends Terrain{
+  static final Maps MAPS=new Maps(List.of(GentleHill.class,RuggedHill.class));
+
   /** Constructor. */
   public Hill(){
+    super(MAPS,new Maps(List.of(HillShore.class)));
     name="hill";
     difficultycap=-4;
     speedtrackless=1/2f;
@@ -28,13 +31,6 @@ public class Hill extends Terrain{
     visionbonus=+2;
     representation='^';
     safe=true;
-  }
-
-  @Override
-  public Maps getmaps(){
-    if(checkshore(List.of(Terrain.WATER)))
-      return new Maps(List.of(new HillShore()));
-    return new Maps(List.of(new GentleHill(),new RuggedHill()));
   }
 
   @Override

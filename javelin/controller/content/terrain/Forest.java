@@ -1,6 +1,7 @@
 package javelin.controller.content.terrain;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javelin.controller.Point;
@@ -21,41 +22,35 @@ import javelin.model.world.World;
  * @author alex
  */
 public class Forest extends Terrain{
-	/** Constructor. */
-	public Forest(){
-		name="forest";
-		difficultycap=-3;
-		speedtrackless=1/2f;
-		speedroad=1f;
-		speedhighway=1f;
-		visionbonus=-4;
-		representation='F';
-		survivalbonus=+4;
-	}
+  static final Maps MAPS=new Maps(List.of(SparseForest.class,MediumForest.class,
+      DenseForest.class,ForestPath.class));
 
-	@Override
-	public Maps getmaps(){
-		Maps m=new Maps();
-		m.add(new SparseForest());
-		m.add(new MediumForest());
-		m.add(new DenseForest());
-		m.add(new ForestPath());
-		return m;
-	}
+  /** Constructor. */
+  public Forest(){
+    super(MAPS,Maps.EMPTY);
+    name="forest";
+    difficultycap=-3;
+    speedtrackless=1/2f;
+    speedroad=1f;
+    speedhighway=1f;
+    visionbonus=-4;
+    representation='F';
+    survivalbonus=+4;
+  }
 
-	@Override
-	HashSet<Point> generatearea(World world){
-		return gettiles(world);
-	}
+  @Override
+  HashSet<Point> generatearea(World world){
+    return gettiles(world);
+  }
 
-	@Override
-	public Set<Hazard> gethazards(boolean special){
-		Set<Hazard> hazards=super.gethazards(special);
-		hazards.add(new GettingLost(16));
-		if(special){
-			hazards.add(new FallingTrees());
-			hazards.add(new Break());
-		}
-		return hazards;
-	}
+  @Override
+  public Set<Hazard> gethazards(boolean special){
+    var hazards=super.gethazards(special);
+    hazards.add(new GettingLost(16));
+    if(special){
+      hazards.add(new FallingTrees());
+      hazards.add(new Break());
+    }
+    return hazards;
+  }
 }

@@ -29,7 +29,7 @@ public class RandomDungeonEncounter extends RandomEncounter{
 
   /** Picks a random map to use from this pool. */
   public void set(Terrain t){
-    map=t.getmaps().pick();
+    map=t.getmap();
     weather=t.getweather();
   }
 

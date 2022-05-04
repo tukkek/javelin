@@ -7,10 +7,8 @@ import java.util.List;
 import java.util.Set;
 
 import javelin.controller.Point;
-import javelin.controller.content.map.Map;
 import javelin.controller.content.map.Maps;
 import javelin.controller.content.map.terrain.water.DeepWaters;
-import javelin.controller.content.map.terrain.water.WaterShore;
 import javelin.controller.content.terrain.hazard.Hazard;
 import javelin.controller.content.terrain.hazard.Ice;
 import javelin.controller.content.terrain.hazard.Storm;
@@ -36,6 +34,7 @@ public class Water extends Terrain{
 
   /** Constructor. */
   public Water(){
+    super(new Maps(List.of(DeepWaters.class)),Maps.EMPTY);
     name="aquatic";
     difficultycap=-3;
     speedtrackless=1f;
@@ -45,12 +44,6 @@ public class Water extends Terrain{
     representation='~';
     liquid=true;
     survivalbonus=-3;
-  }
-
-  @Override
-  public Maps getmaps(){
-    var m=checkshore(Terrain.NONWATER)?new WaterShore():new DeepWaters();
-    return new Maps(List.of(m));
   }
 
   @Override

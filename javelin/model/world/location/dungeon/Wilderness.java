@@ -134,7 +134,7 @@ public class Wilderness extends Dungeon{
 
     @Override
     protected char[][] map(){
-      var m=RPG.pick(dungeon.terrains).getmaps().pick();
+      var m=RPG.pick(dungeon.terrains).getmap();
       m.generate();
       var width=m.map.length;
       var height=m.map[0].length;

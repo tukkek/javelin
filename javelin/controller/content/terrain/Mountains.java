@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 
 import javelin.controller.Point;
-import javelin.controller.Weather;
 import javelin.controller.content.map.Maps;
 import javelin.controller.content.map.terrain.hill.RuggedHill;
 import javelin.controller.content.map.terrain.mountain.ForbiddingMountain;
@@ -18,7 +17,6 @@ import javelin.controller.content.terrain.hazard.Break;
 import javelin.controller.content.terrain.hazard.Cold;
 import javelin.controller.content.terrain.hazard.Hazard;
 import javelin.controller.content.terrain.hazard.Rockslide;
-import javelin.model.world.Season;
 import javelin.model.world.World;
 
 /**
@@ -27,8 +25,13 @@ import javelin.model.world.World;
  * @author alex
  */
 public class Mountains extends Terrain{
+  static final Maps MAPS=new Maps(List.of(Meadow.class,RuggedHill.class,
+      ForbiddingMountain.class,MountainPass.class,MountainCave.class,
+      MountainPath.class,Ridge.class,MountainsOfMadness.class));
+
   /** Constructor. */
   public Mountains(){
+    super(MAPS,Maps.EMPTY);
     name="mountains";
     difficultycap=-2;
     speedtrackless=1/2f;
@@ -37,16 +40,6 @@ public class Mountains extends Terrain{
     visionbonus=+4;
     representation='M';
     survivalbonus=-2;
-  }
-
-  @Override
-  public Maps getmaps(){
-    var m=new Maps();
-    m.addAll(List.of(new Meadow(),new RuggedHill(),new ForbiddingMountain(),
-        new MountainPass(),new MountainCave(),new MountainPath(),new Ridge()));
-    if(Weather.current==Weather.STORM||Season.current==Season.WINTER)
-      m.add(new MountainsOfMadness());
-    return m;
   }
 
   @Override

@@ -12,6 +12,7 @@ import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.content.action.world.WorldMove;
+import javelin.controller.content.fight.Fight;
 import javelin.controller.content.fight.RandomEncounter;
 import javelin.controller.content.map.Map;
 import javelin.controller.content.map.Maps;
@@ -32,7 +33,6 @@ import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.productive.Mine;
 import javelin.old.RPG;
-import javelin.view.mappanel.world.WorldTile;
 
 /**
  * Represent different types of {@link World} terrain.
@@ -126,6 +126,15 @@ public abstract class Terrain implements Serializable{
   /** @see RandomEncounter */
   public Boolean safe=false;
 
+  Maps maps;
+  Maps shoremaps;
+
+  /** Constructor. */
+  protected Terrain(Maps maps,Maps shoremaps){
+    this.maps=maps;
+    this.shoremaps=shoremaps;
+  }
+
   /**
    * Uses current terrain as base.
    *
@@ -189,12 +198,6 @@ public abstract class Terrain implements Serializable{
   public boolean equals(Object obj){
     return obj!=null&&name.equals(((Terrain)obj).name);
   }
-
-  /**
-   * @return A battle map instance to be generated.
-   * @see Map#generate()
-   */
-  abstract public Maps getmaps();
 
   HashSet<Point> generatearea(World world){
     var source=generatesource(world);
@@ -420,15 +423,18 @@ public abstract class Terrain implements Serializable{
     return Organization.ENCOUNTERSBYTERRAIN.get(name);
   }
 
-  /**
-   * @return <code>true</code> if any {@link #shore} {@link WorldTile} is
-   *   adjacent, <code>false</code> if {@link Squad#active} is
-   *   <code>null</code>.
-   */
-  protected boolean checkshore(List<Terrain> find){
-    if(Squad.active==null) return false;
-    var s=Squad.active.getlocation();
-    for(var t:find) if(Terrain.search(s,t,1,World.seed)>0) return true;
-    return false;
+  /** @return {@link Fight} map. */
+  public Map getmap(){
+    var m=maps;
+    if(Squad.active!=null&&!shoremaps.isEmpty()){
+      var s=Squad.active.getlocation();
+      if(Terrain.search(s,Terrain.WATER,1,World.seed)>0) m=shoremaps;
+    }
+    return m.pick();
+  }
+
+  /** @return Count of {@link #maps} and {@link #shoremaps}; */
+  public int countmaps(){
+    return maps.size()+shoremaps.size();
   }
 }

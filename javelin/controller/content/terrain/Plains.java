@@ -23,8 +23,12 @@ import javelin.old.RPG;
  * @author alex
  */
 public class Plains extends Terrain{
+  static final Maps MAPS=new Maps(
+      List.of(Farm.class,Grasslands.class,Field.class));
+
   /** Constructor. */
   public Plains(){
+    super(MAPS,new Maps(List.of(PlainsShore.class)));
     name="plains";
     difficultycap=-4;
     speedtrackless=3/4f;
@@ -33,13 +37,6 @@ public class Plains extends Terrain{
     visionbonus=+2;
     representation=' ';
     safe=true;
-  }
-
-  @Override
-  public Maps getmaps(){
-    if(checkshore(List.of(Terrain.WATER)))
-      return new Maps(List.of(new PlainsShore()));
-    return new Maps(List.of(new Farm(),new Grasslands(),new Field()));
   }
 
   @Override

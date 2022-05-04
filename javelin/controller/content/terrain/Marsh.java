@@ -1,5 +1,6 @@
 package javelin.controller.content.terrain;
 
+import java.util.List;
 import java.util.Set;
 
 import javelin.controller.Point;
@@ -21,6 +22,7 @@ import javelin.model.world.World;
 public class Marsh extends Terrain{
   /** Constructor. */
   public Marsh(){
+    super(new Maps(List.of(Moor.class,Swamp.class)),Maps.EMPTY);
     name="marsh";
     difficultycap=-1;
     speedtrackless=1/2f;
@@ -30,14 +32,6 @@ public class Marsh extends Terrain{
     representation='m';
     liquid=true;
     survivalbonus=-2;
-  }
-
-  @Override
-  public Maps getmaps(){
-    var m=new Maps();
-    m.add(new Moor());
-    m.add(new Swamp());
-    return m;
   }
 
   @Override

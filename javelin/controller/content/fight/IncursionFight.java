@@ -9,7 +9,6 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.world.Incursion;
-import javelin.old.RPG;
 
 /**
  * @see Incursion
@@ -26,7 +25,7 @@ public class IncursionFight extends Fight{
     hide=false;
     canflee=true;
     var d=i.getdistrict();
-    map=d==null?RPG.pick(Terrain.get(i.x,i.y).getmaps()):d.town.getmap();
+    map=d==null?Terrain.get(i.x,i.y).getmap():d.town.getmap();
   }
 
   @Override

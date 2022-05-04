@@ -1,4 +1,4 @@
-package javelin.controller.content.map.terrain.water;
+package javelin.controller.content.map.terrain.desert;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,6 +7,7 @@ import java.util.List;
 import javelin.controller.Point;
 import javelin.controller.content.map.DndMap;
 import javelin.controller.content.map.Map;
+import javelin.controller.content.map.terrain.water.DeepWaters;
 import javelin.controller.content.terrain.Water;
 import javelin.model.world.World;
 import javelin.old.RPG;
@@ -35,7 +36,7 @@ import javelin.view.screen.WorldScreen;
  *
  * @author alex
  */
-public class WaterShore extends Map{
+public class DesertShore extends Map{
 	boolean shoretop=false;
 	boolean shorebottom=false;
 	boolean shoreleft=false;
@@ -46,7 +47,7 @@ public class WaterShore extends Map{
 	Integer verticaldirection=null;
 
 	/** Constructor. */
-	public WaterShore(){
+	public DesertShore(){
 		super("Shore",DndMap.SIZE,DndMap.SIZE);
 		flooded=Images.get(List.of("terrain","aquatic"));
 		floor=Images.get(List.of("terrain","desert"));

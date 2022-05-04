@@ -1,11 +1,13 @@
 package javelin.controller.content.terrain;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.content.map.Maps;
+import javelin.controller.content.map.terrain.desert.DesertShore;
 import javelin.controller.content.map.terrain.desert.Rocks;
 import javelin.controller.content.map.terrain.desert.RockyDesert;
 import javelin.controller.content.map.terrain.desert.Ruins;
@@ -25,6 +27,8 @@ import javelin.model.world.World;
  * @author alex
  */
 public class Desert extends Terrain{
+  static final Maps MAPS=new Maps(List.of(Tundra.class,RockyDesert.class,
+      SandyDesert.class,Rocks.class,Ruins.class));
   /**
    * Used instead of normal storms on the desert, makes it easier to get lost.
    *
@@ -34,6 +38,7 @@ public class Desert extends Terrain{
 
   /** Constructor. */
   public Desert(){
+    super(MAPS,new Maps(List.of(DesertShore.class)));
     name="desert";
     difficultycap=-2;
     speedtrackless=1/2f;
@@ -43,17 +48,6 @@ public class Desert extends Terrain{
     representation='d';
     liquid=true;
     survivalbonus=-4;
-  }
-
-  @Override
-  public Maps getmaps(){
-    var m=new Maps();
-    m.add(new Tundra());
-    m.add(new RockyDesert());
-    m.add(new SandyDesert());
-    m.add(new Rocks());
-    m.add(new Ruins());
-    return m;
   }
 
   @Override

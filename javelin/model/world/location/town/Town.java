@@ -21,6 +21,7 @@ import javelin.controller.content.fight.tournament.Exhibition;
 import javelin.controller.content.map.Map;
 import javelin.controller.content.map.location.town.ShoreTownMap;
 import javelin.controller.content.map.location.town.TownMap;
+import javelin.controller.content.map.terrain.marsh.MarshShore.MarshTown;
 import javelin.controller.content.scenario.Campaign;
 import javelin.controller.content.scenario.Scenario;
 import javelin.controller.content.terrain.Terrain;
@@ -313,9 +314,11 @@ public class Town extends Location{
    * @return {@link Fight} map.
    */
   public Map getmap(){
+    var t=Tier.get(population);
+    if(Terrain.MARSH.equals(Terrain.get(x,y))) return new MarshTown(t);
     if(Terrain.search(getlocation(),Terrain.WATER,1,World.seed)>0)
-      return new ShoreTownMap(this);
-    return new TownMap(this);
+      return new ShoreTownMap(t);
+    return new TownMap(t);
   }
 
   @Override

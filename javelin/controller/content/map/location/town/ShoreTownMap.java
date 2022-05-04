@@ -12,7 +12,6 @@ import javelin.controller.content.map.Section;
 import javelin.controller.content.map.terrain.plain.PlainsShore;
 import javelin.controller.exception.GaveUp;
 import javelin.model.item.Tier;
-import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
 import javelin.view.Images;
 
@@ -27,11 +26,6 @@ public class ShoreTownMap extends PlainsShore{
     wall=Images.get(List.of("terrain","shipfloor"));
     obstacle=Images.get(List.of("terrain","bush"));
     obstaclechance=8;
-  }
-
-  /** Constructor. */
-  public ShoreTownMap(Town t){
-    this(Tier.get(t.population));
   }
 
   boolean drawtown(){

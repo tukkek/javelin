@@ -12,6 +12,7 @@ import javelin.controller.Point;
 import javelin.controller.content.map.DndMap;
 import javelin.controller.content.map.Map;
 import javelin.controller.content.map.Section;
+import javelin.controller.content.map.Section.Sections;
 import javelin.controller.content.map.terrain.hill.HillShore;
 import javelin.controller.exception.GaveUp;
 import javelin.model.state.Square;
@@ -42,7 +43,8 @@ public class Ridge extends Map{
     var area=Point.getrange(from,0,to,SIZE);
     var segments=new HashSet<Point>((from+to)*SIZE);
     while(segments.isEmpty()) try{
-      var sections=Section.segment(20,.4,area,this);
+      var sections=new Sections(Section.class,this);
+      sections.segment(20,.4,area);
       for(var s:sections) if(s.area.size()>1) segments.addAll(s.area);
     }catch(GaveUp e){
       segments.clear();

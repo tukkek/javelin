@@ -9,6 +9,8 @@ import javelin.controller.Point;
 import javelin.controller.content.map.DndMap;
 import javelin.controller.content.map.Map;
 import javelin.controller.content.map.Section;
+import javelin.controller.content.map.Section.Sections;
+import javelin.controller.content.map.Section.ThinSection;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.dungeon.template.FloorTile;
 import javelin.model.state.Square;
@@ -55,12 +57,12 @@ public class DwarvenCave extends Map{
   }
 
   Set<Point> drawinnerwalls(Set<Point> outer,Set<Point> area) throws GaveUp{
-    var inner=new HashSet<>(area);
+    Set<Point> inner=new HashSet<>(area);
     inner.removeAll(outer);
     var innerseeds=RPG.rolldice(2,4);
-    var sections=Section.segment(innerseeds,.1,inner,this);
-    inner.clear();
-    for(var s:sections) inner.addAll(s.area);
+    var sections=new Sections(Section.class,this);
+    sections.segment(innerseeds,.1,inner);
+    inner=sections.getarea();
     for(var i:inner) map[i.x][i.y].blocked=true;
     return inner;
   }
@@ -68,16 +70,19 @@ public class DwarvenCave extends Map{
   List<Point> drawwater(Set<Point> empty) throws GaveUp{
     var patches=RPG.randomize(2,0,Integer.MAX_VALUE);
     var water=new ArrayList<Point>();
-    for(var s:Section.segment(patches,.06,empty,this))
-      for(var a:s.area) if(!map[a.x][a.y].blocked) water.add(a);
+    var sections=new Sections(Section.class,this);
+    sections.segment(patches,.06,empty);
+    for(var a:sections.getarea()) if(!map[a.x][a.y].blocked) water.add(a);
     for(var w:water) map[w.x][w.y].flooded=true;
     return water;
   }
 
   void drawrocks(Set<Point> empty) throws GaveUp{
     var patches=RPG.randomize(2,0,Integer.MAX_VALUE);
-    for(var s:Section.segment(patches,.2,empty,this))
-      for(var a:s.area) if(RPG.chancein(5)) map[a.x][a.y].obstructed=true;
+    var sections=new Sections(ThinSection.class,this);
+    sections.segment(patches,.2,empty);
+    for(var a:sections.getarea())
+      if(RPG.chancein(5)) map[a.x][a.y].obstructed=true;
   }
 
   @Override

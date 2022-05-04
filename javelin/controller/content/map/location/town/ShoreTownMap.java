@@ -9,6 +9,7 @@ import javelin.Debug;
 import javelin.controller.Point;
 import javelin.controller.content.map.DndMap;
 import javelin.controller.content.map.Section;
+import javelin.controller.content.map.Section.Sections;
 import javelin.controller.content.map.terrain.plain.PlainsShore;
 import javelin.controller.exception.GaveUp;
 import javelin.model.item.Tier;
@@ -36,8 +37,9 @@ public class ShoreTownMap extends PlainsShore{
           .filter(p->!map[p.x][p.y].flooded).collect(toList());
       var nsections=t+1;
       nsections=RPG.high(nsections,nsections*2);
-      var sections=Section.segment(nsections,t/4.0,dry,this);
-      for(var s:sections) walls.addAll(s.segment(this));
+      var sections=new Sections(Section.class,this);
+      sections.segment(nsections,t/4.0,new HashSet<>(dry));
+      for(var s:sections) walls.addAll(s.segment(this,Section.class));
     }catch(GaveUp e){
       return false;
     }

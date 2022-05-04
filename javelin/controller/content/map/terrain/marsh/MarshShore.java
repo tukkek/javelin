@@ -10,6 +10,7 @@ import javelin.controller.Point;
 import javelin.controller.content.map.DndMap;
 import javelin.controller.content.map.Map;
 import javelin.controller.content.map.Section;
+import javelin.controller.content.map.Section.Sections;
 import javelin.controller.content.map.Section.ThinSection;
 import javelin.controller.content.map.location.town.TownMap;
 import javelin.controller.content.map.terrain.underground.DwarvenCave;
@@ -51,10 +52,11 @@ public class MarshShore extends Map{
 
     @Override
     void drawinside(Set<Point> path){
-      List<Section> sections=null;
       var seeds=Math.round(Math.round(SIZE*SIZE*occupation/10));
+      Sections sections=null;
       while(sections==null) try{
-        sections=Section.segment(seeds,occupation,path,this,Section.class);
+        sections=new Sections(Section.class,this);
+        sections.segment(seeds,occupation,path);
         for(var s:sections) for(var a:s.area) map[a.x][a.y].blocked=true;
       }catch(GaveUp e){
         continue;
@@ -88,10 +90,11 @@ public class MarshShore extends Map{
         m.obstructed=true;
       }
     }
-    List<Section> patches=null;
+    Sections patches=null;
     while(patches==null) try{
       var npatches=RPG.randomize(6,0,Integer.MAX_VALUE);
-      patches=Section.segment(npatches,.05,path,this,ThinSection.class);
+      patches=new Sections(ThinSection.class,this);
+      patches.segment(npatches,.05,path);
       for(var p:patches) for(var a:p.area) map[a.x][a.y].obstructed=true;
     }catch(GaveUp e){
       continue;

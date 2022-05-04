@@ -1,5 +1,7 @@
 package javelin.controller.content.map;
 
+import static java.util.stream.Collectors.toSet;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -19,6 +21,54 @@ import javelin.old.RPG;
  * {@link Square#flooded} areas...
  */
 public class Section{
+  /**
+   * A {@link Collection} of {@link Section}s, with helper methods.
+   *
+   * @author alex
+   */
+  public static class Sections extends ArrayList<Section>{
+    Class<? extends Section> type;
+    Map map;
+
+    /** Constructor. */
+    public Sections(Class<? extends Section> type,Map m){
+      this.type=type;
+      map=m;
+    }
+
+    boolean grow(Map m){
+      for(var s:RPG.shuffle(this)) if(s.grow(m)) return true;
+      return false;
+    }
+
+    /**
+     * Given a number of seed {@link Point}s, expands up to a certain coverage
+     * of the given area, creating individual, contigual segments.
+     *
+     * @throws GaveUp If cannot grow any of the seeds anymore. This method isn't
+     *   deterministc so retries are possible but not guaranteed to work.
+     */
+    public void segment(int seeds,double occupy,Set<Point> area) throws GaveUp{
+      try{
+        if(area.size()<seeds)
+          throw new IllegalArgumentException("Not enough area.");
+        var c=type.getConstructor(Point.class);
+        for(var d:RPG.shuffle(new ArrayList<>(area)).subList(0,seeds))
+          add(c.newInstance(d));
+        var target=area.size()*occupy;
+        while(stream().mapToInt(s->s.area.size()).sum()<target)
+          if(!grow(map)) throw new GaveUp();
+      }catch(ReflectiveOperationException e){
+        throw new RuntimeException(e);
+      }
+    }
+
+    /** @return Every {@link Section#area} collected. */
+    public Set<Point> getarea(){
+      return stream().flatMap(s->s.area.stream()).collect(toSet());
+    }
+  }
+
   /** Grows one {@link Point#getadjacent()} at a time rather than all. */
   public static class ThinSection extends Section{
     /** Constructor. */
@@ -35,7 +85,7 @@ public class Section{
 
   /** Area grown from the initial seed. */
   public HashSet<Point> area=new HashSet<>();
-  /** @see #segment(Map) */
+  /** @see #segment(Map, Class) */
   public HashSet<Point> segments=new HashSet<>();
 
   /** Constructor. */
@@ -66,43 +116,10 @@ public class Section{
   }
 
   /** Creates new {@link Section}s insinde the {@link #area}. */
-  public Set<Point> segment(Map m) throws GaveUp{
-    for(var s:Section.segment(RPG.r(1,8),.4,area,m)) segments.addAll(s.area);
+  public Set<Point> segment(Map m,Class<? extends Section> type) throws GaveUp{
+    var sections=new Sections(type,m);
+    sections.segment(RPG.r(1,8),.4,area);
+    for(var s:sections) segments.addAll(s.area);
     return segments;
-  }
-
-  static boolean grow(ArrayList<Section> sections,Map m){
-    for(var s:RPG.shuffle(sections)) if(s.grow(m)) return true;
-    return false;
-  }
-
-  /**
-   * Given a number of seed {@link Point}s, occupies at random a certain
-   * coverage of the given area, creaitng individual segments.
-   *
-   * @throws GaveUp If cannot grow any of the seeds anymore. This method isn't
-   *   deterministc so retries are possible but not guaranteed to work.
-   */
-  public static List<Section> segment(int seeds,double occupy,
-      Collection<Point> area,Map m,Class<? extends Section> type) throws GaveUp{
-    try{
-      var sections=new ArrayList<Section>(seeds);
-      if(area.size()<seeds) throw new GaveUp();
-      var c=type.getConstructor(Point.class);
-      for(var d:RPG.shuffle(new ArrayList<>(area)).subList(0,seeds))
-        sections.add(c.newInstance(d));
-      var target=area.size()*occupy;
-      while(sections.stream().mapToInt(s->s.area.size()).sum()<target)
-        if(!grow(sections,m)) throw new GaveUp();
-      return sections;
-    }catch(ReflectiveOperationException e){
-      throw new RuntimeException(e);
-    }
-  }
-
-  /** TODO remove and inline {@link Section} parameter on callers */
-  public static List<Section> segment(int seeds,double occupy,
-      Collection<Point> area,Map m) throws GaveUp{
-    return segment(seeds,occupy,area,m,Section.class);
   }
 }

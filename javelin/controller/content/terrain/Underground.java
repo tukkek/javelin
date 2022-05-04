@@ -6,6 +6,7 @@ import javelin.controller.Weather;
 import javelin.controller.content.map.Maps;
 import javelin.controller.content.map.terrain.underground.AncientCave;
 import javelin.controller.content.map.terrain.underground.Constructed;
+import javelin.controller.content.map.terrain.underground.DwarvenCave;
 import javelin.controller.content.map.terrain.underground.Railway;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonImages;
@@ -36,7 +37,7 @@ public class Underground extends Terrain{
     var maps=new Maps();
     for(var m:List.of(new Caves(),new BigCave(),new Maze(),new Pit(),
         new FloorPlan(),new Complex(),new Constructed(),new AncientCave(),
-        new Railway())){
+        new Railway(),new DwarvenCave())){
       var d=Dungeon.active;
       if(d!=null){
         var i=d.dungeon.images;

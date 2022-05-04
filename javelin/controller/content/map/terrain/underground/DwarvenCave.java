@@ -8,9 +8,10 @@ import java.util.Set;
 import javelin.controller.Point;
 import javelin.controller.content.map.DndMap;
 import javelin.controller.content.map.Map;
-import javelin.controller.content.map.location.town.ShoreTownMap;
+import javelin.controller.content.map.Section;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.dungeon.template.FloorTile;
+import javelin.model.state.Square;
 import javelin.old.RPG;
 import javelin.view.Images;
 
@@ -29,20 +30,26 @@ public class DwarvenCave extends Map{
     flooded=Images.get(List.of("terrain","aquatic"));
   }
 
-  Set<Point> drawouterwalls(Set<Point> area){
-    var outerarea=SIZE*4/10;
-    var outer=new HashSet<Point>(SIZE*4/10);
-    while(outer.size()<outerarea){
+  /** @return Segments of {@link Square}s along the map borders. */
+  public static Set<Point> occupyborder(int seeds,int target){
+    var outer=new HashSet<Point>(seeds);
+    while(outer.size()<seeds){
       var p=new Point(RPG.r(SIZE),RPG.r(SIZE));
       if(RPG.chancein(2)) p.x=RPG.chancein(2)?0:SIZE-1;
       else p.y=RPG.chancein(2)?0:SIZE-1;
       outer.add(p);
     }
-    while(outer.size()<area.size()/3){
+    while(outer.size()<target){
       var adjacent=RPG.pick(outer).getorthogonallyadjacent().stream()
           .filter(p->p.validate(0,0,SIZE,SIZE)&&!outer.contains(p)).toList();
       if(!adjacent.isEmpty()) outer.add(RPG.pick(adjacent));
     }
+    return outer;
+  }
+
+  Set<Point> drawouterwalls(Set<Point> area){
+    var outerarea=SIZE*4/10;
+    var outer=occupyborder(outerarea,area.size()/3);
     for(var o:outer) map[o.x][o.y].blocked=true;
     return outer;
   }
@@ -51,7 +58,7 @@ public class DwarvenCave extends Map{
     var inner=new HashSet<>(area);
     inner.removeAll(outer);
     var innerseeds=RPG.rolldice(2,4);
-    var sections=ShoreTownMap.segment(innerseeds,.1,inner,this);
+    var sections=Section.segment(innerseeds,.1,inner,this);
     inner.clear();
     for(var s:sections) inner.addAll(s.area);
     for(var i:inner) map[i.x][i.y].blocked=true;
@@ -61,7 +68,7 @@ public class DwarvenCave extends Map{
   List<Point> drawwater(Set<Point> empty) throws GaveUp{
     var patches=RPG.randomize(2,0,Integer.MAX_VALUE);
     var water=new ArrayList<Point>();
-    for(var s:ShoreTownMap.segment(patches,.06,empty,this))
+    for(var s:Section.segment(patches,.06,empty,this))
       for(var a:s.area) if(!map[a.x][a.y].blocked) water.add(a);
     for(var w:water) map[w.x][w.y].flooded=true;
     return water;
@@ -69,7 +76,7 @@ public class DwarvenCave extends Map{
 
   void drawrocks(Set<Point> empty) throws GaveUp{
     var patches=RPG.randomize(2,0,Integer.MAX_VALUE);
-    for(var s:ShoreTownMap.segment(patches,.2,empty,this))
+    for(var s:Section.segment(patches,.2,empty,this))
       for(var a:s.area) if(RPG.chancein(5)) map[a.x][a.y].obstructed=true;
   }
 

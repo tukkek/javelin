@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javelin.controller.Point;
 import javelin.controller.content.map.Maps;
+import javelin.controller.content.map.terrain.marsh.MarshShore;
 import javelin.controller.content.map.terrain.marsh.Moor;
 import javelin.controller.content.map.terrain.marsh.Swamp;
 import javelin.controller.content.terrain.hazard.Break;
@@ -22,7 +23,8 @@ import javelin.model.world.World;
 public class Marsh extends Terrain{
   /** Constructor. */
   public Marsh(){
-    super(new Maps(List.of(Moor.class,Swamp.class)),Maps.EMPTY);
+    super(new Maps(List.of(Moor.class,Swamp.class)),
+        new Maps(List.of(MarshShore.class)));
     name="marsh";
     difficultycap=-1;
     speedtrackless=1/2f;

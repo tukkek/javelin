@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import javelin.controller.walker.Walker;
 import javelin.model.unit.Combatant;
@@ -63,7 +64,7 @@ public class Point implements Cloneable,Serializable{
 
   /**
    * @return <code>true</code> if this is valid inside the bounds of a
-   *   2-dimensional array (not that max values are exclusive).
+   *   2-dimensional array (note that max values are exclusive).
    */
   public boolean validate(int minx,int miny,int maxx,int maxy){
     return minx<=x&&x<maxx&&miny<=y&&y<maxy;
@@ -165,5 +166,15 @@ public class Point implements Cloneable,Serializable{
     else if(x>=maxx) x=maxx-1;
     if(y<miny) y=miny;
     else if(y>=maxy) y=maxy-1;
+  }
+
+  /** @return {@link #getrange(int, int, int, int)} but from origin. */
+  public static Set<Point> getrange(int maxx,int maxy){
+    return getrange(0,0,maxx,maxy);
+  }
+
+  /** @return As {@link #validate(int, int, int, int)} but from origin. */
+  public boolean validate(int maxx,int maxy){
+    return validate(0,0,maxx,maxy);
   }
 }

@@ -28,9 +28,7 @@ import javelin.model.world.location.town.diplomacy.Diplomacy;
 import javelin.model.world.location.town.diplomacy.quest.fetch.FetchArt;
 import javelin.model.world.location.town.diplomacy.quest.fetch.FetchGem;
 import javelin.model.world.location.town.diplomacy.quest.find.Connect;
-import javelin.model.world.location.town.diplomacy.quest.find.Discover.DiscoverHaunt;
-import javelin.model.world.location.town.diplomacy.quest.find.Discover.DiscoverTemple;
-import javelin.model.world.location.town.diplomacy.quest.find.Discover.DiscoverTown;
+import javelin.model.world.location.town.diplomacy.quest.find.Discover;
 import javelin.model.world.location.town.labor.Trait;
 import javelin.old.RPG;
 import javelin.view.Images;
@@ -63,7 +61,7 @@ public abstract class Quest implements Serializable{
   /** Short-term quests expire within a week on average (default). */
   public static final int SHORT=7;
   /** Long-term quests expire within a month on average. */
-  public static final int LONG=30;
+  public static final int LONG=30;//TODO make default
 
   static final String COMPLETE="""
       You have completed a quest (%s)!
@@ -71,13 +69,12 @@ public abstract class Quest implements Serializable{
       %s\
       Mood in %s is now: %s.""";
   static final List<Class<? extends Quest>> ALL=new ArrayList<>(8);
-  static final Class<? extends Quest> DEBUG=null;
+  static final Class<? extends Quest> DEBUG=Discover.class;
 
   static{
-    //TODO QUESTS.put(Trait.CRIMINAL,List.of(Heist.class));
-    QUESTS.put(Trait.EXPANSIVE,
-        List.of(DiscoverTown.class,DiscoverTemple.class,DiscoverHaunt.class));
-    //TODO QUESTS.put(Trait.MAGICAL,List.of(Clear.class));
+    //TODO QUESTS.put(Trait.CRIMINAL,List.of(Hit.class));
+    QUESTS.put(Trait.EXPANSIVE,List.of(Discover.class));
+    //QUESTS.put(Trait.MAGICAL,List.of(FetchRecipe.class));
     QUESTS.put(Trait.MERCANTILE,List.of(Connect.class));
     //TODO QUESTS.put(Trait.MILITARY,List.of(Raid.class));
     QUESTS.put(Trait.NATURAL,List.of(FetchGem.class));
@@ -312,7 +309,7 @@ public abstract class Quest implements Serializable{
     if(!reward.isEmpty())
       reward="You are rewarded for your efforts with: "+reward+"!\n";
     var reputation=town.diplomacy.describestatus().toLowerCase();
-    return String.format(COMPLETE,name,xp,reward,town,reputation);
+    return COMPLETE.formatted(name,xp,reward,town,reputation);
   }
 
   /** Completes the quest succesfully. */

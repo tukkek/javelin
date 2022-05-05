@@ -1,8 +1,9 @@
 package javelin.model.world.location.town.diplomacy.quest.find;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
+import javelin.controller.comparator.ActorByDistance;
+import javelin.controller.content.terrain.Terrain;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.branch.temple.Temple;
@@ -10,6 +11,7 @@ import javelin.model.world.location.dungeon.branch.temple.Temple.TempleEntrance;
 import javelin.model.world.location.haunt.Haunt;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Trait;
+import javelin.old.RPG;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -19,67 +21,41 @@ import javelin.view.screen.WorldScreen;
  * @see WorldScreen#discover(int, int)
  * @author alex
  */
-public abstract class Discover extends FindQuest{
-	static final String DISCOVERED="You have found a new %s: %s!\n";
+public class Discover extends FindQuest{
+  static final List<Class<? extends Actor>> LOCATIONS=List.of(Town.class,
+      TempleEntrance.class,Haunt.class);
 
-	/** @see Town */
-	public static class DiscoverTown extends Discover{
-		/** Constructor. */
-		public DiscoverTown(){
-			super("town",Town.class);
-		}
-	}
+  Actor target;
 
-	/** @see TempleEntrance */
-	public static class DiscoverTemple extends Discover{
-		/** Constructor. */
-		public DiscoverTemple(){
-			super("temple",TempleEntrance.class);
-		}
-	}
+  boolean validate(Actor target){
+    if(target.cansee()) return false;
+    for(var l:LOCATIONS) if(l.isInstance(target)) return true;
+    return false;
+  }
 
-	/** @see Haunt */
-	public static class DiscoverHaunt extends Discover{
-		/** Constructor. */
-		public DiscoverHaunt(){
-			super("haunt",Haunt.class);
-		}
-	}
+  @Override
+  protected void define(Town t){
+    super.define(t);
+    target=RPG.shuffle(World.getactors()).stream().filter(this::validate)
+        .sorted((a,b)->new ActorByDistance(t).compare(a,b)).findFirst()
+        .orElse(null);
+    if(target==null) return;
+    var whereabouts=Terrain.get(target.x,target.y).toString().toLowerCase();
+    name="Discover %s in the %s".formatted(target,whereabouts);
+  }
 
-	Class<? extends Actor> type;
-	String typename;
-	List<Actor> undiscovered;
-	Actor discovered=null;
+  @Override
+  public boolean validate(){
+    return super.validate()&&target!=null;
+  }
 
-	/** Constructor. */
-	public Discover(String name,Class<? extends Actor> type){
-		typename=name;
-		this.type=type;
-	}
+  @Override
+  protected boolean complete(){
+    return target!=null&&target.cansee();
+  }
 
-	@Override
-	protected void define(Town t){
-		super.define(t);
-		name="Discover a new "+typename;
-		undiscovered=World.getactors().stream()
-				.filter(a->type.isInstance(a)&&!a.cansee())
-				.collect(Collectors.toList());
-	}
-
-	@Override
-	public boolean validate(){
-		return super.validate()&&!undiscovered.isEmpty();
-	}
-
-	@Override
-	protected boolean complete(){
-		discovered=undiscovered.stream().filter(u->u.cansee()).findAny()
-				.orElse(null);
-		return discovered!=null;
-	}
-
-	@Override
-	protected String message(){
-		return String.format(DISCOVERED,typename,discovered)+super.message();
-	}
+  @Override
+  protected String message(){
+    return "You have discovered %s!\n".formatted(target)+super.message();
+  }
 }

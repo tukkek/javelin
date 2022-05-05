@@ -11,6 +11,7 @@ import javelin.controller.content.map.terrain.mountain.Meadow;
 import javelin.controller.content.map.terrain.mountain.MountainCave;
 import javelin.controller.content.map.terrain.mountain.MountainPass;
 import javelin.controller.content.map.terrain.mountain.MountainPath;
+import javelin.controller.content.map.terrain.mountain.MountainShore;
 import javelin.controller.content.map.terrain.mountain.MountainsOfMadness;
 import javelin.controller.content.map.terrain.mountain.Ridge;
 import javelin.controller.content.terrain.hazard.Break;
@@ -31,7 +32,7 @@ public class Mountains extends Terrain{
 
   /** Constructor. */
   public Mountains(){
-    super(MAPS,Maps.EMPTY);
+    super(MAPS,new Maps(List.of(MountainShore.class)));
     name="mountains";
     difficultycap=-2;
     speedtrackless=1/2f;

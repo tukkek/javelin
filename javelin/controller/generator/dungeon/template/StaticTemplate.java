@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import javelin.controller.exception.GaveUp;
+import javelin.controller.generator.dungeon.DungeonGenerator;
 import javelin.old.RPG;
 
 public class StaticTemplate extends FloorTile{
@@ -71,7 +72,7 @@ public class StaticTemplate extends FloorTile{
     for(File f:files){
       var t=new StaticTemplate(f);
       if(t.original==null) continue;
-      var clone=(StaticTemplate)t.create();
+      var clone=(StaticTemplate)t.create(null);
       if(clone==null) errors.add("rm "+t.name);
       else STATIC.add(clone);
     }
@@ -119,7 +120,7 @@ public class StaticTemplate extends FloorTile{
   }
 
   @Override
-  public void generate(){
+  public void generate(DungeonGenerator g){
     tiles=original;
     if(tiles!=null){
       width=tiles.length;
@@ -168,7 +169,7 @@ public class StaticTemplate extends FloorTile{
   }
 
   @Override
-  public FloorTile create(){
-    return factory?RPG.pick(STATIC).create():super.create();
+  public FloorTile create(DungeonGenerator g){
+    return factory?RPG.pick(STATIC).create(g):super.create(g);
   }
 }

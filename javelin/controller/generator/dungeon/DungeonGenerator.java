@@ -21,14 +21,6 @@ public class DungeonGenerator{
   static final int DEBUGSIZE=1;
   static final int MAXATTEMPTS=9*1000;
 
-  /**
-   * TODO temporary: will need to be refactored when more than one level can be
-   * generated (with one set of tables/parameters per level) and/or for
-   * multithreading. Should be as simple as passing an instance of this or of a
-   * new class GeneratorLevel to Templates.
-   */
-  public static DungeonGenerator instance;
-
   public VirtualMap map=new VirtualMap();
   public char[][] grid;
   public String ascii;
@@ -53,7 +45,6 @@ public class DungeonGenerator{
     this.minrooms=minrooms;
     this.maxrooms=maxrooms;
     floor=f;
-    instance=this;
   }
 
   public void start() throws GaveUp{
@@ -68,7 +59,7 @@ public class DungeonGenerator{
 
   FloorTile generateroom(){
     FloorTile t=null;
-    while(t==null) t=RPG.pick(pool).create();
+    while(t==null) t=RPG.pick(pool).create(this);
     return t;
   }
 
@@ -193,6 +184,7 @@ public class DungeonGenerator{
       DungeonFloor f){
     StaticTemplate.load();
     DungeonGenerator dungeon=null;
+    var tries=0;
     while(dungeon==null) try{
       dungeon=new DungeonGenerator(minrooms,maxrooms,f);
       dungeon.start();
@@ -200,6 +192,8 @@ public class DungeonGenerator{
       if(!(minrooms<=size&&size<=maxrooms)){
         dungeon=null;
         if(Javelin.DEBUG) System.out.println("Wrong size: "+size);
+        tries+=1;
+        if(tries%3==0) f.gettable(FloorTileTable.class).modify();
       }
     }catch(GaveUp e){
       continue;

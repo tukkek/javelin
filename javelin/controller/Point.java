@@ -177,4 +177,9 @@ public class Point implements Cloneable,Serializable{
   public boolean validate(int maxx,int maxy){
     return validate(0,0,maxx,maxy);
   }
+
+  /** As {@link #bind(int, int)} but from origin. */
+  public void bind(int maxx,int maxy){
+    bind(0,0,maxx,maxy);
+  }
 }

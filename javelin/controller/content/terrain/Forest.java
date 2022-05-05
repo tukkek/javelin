@@ -8,6 +8,7 @@ import javelin.controller.Point;
 import javelin.controller.content.map.Maps;
 import javelin.controller.content.map.terrain.forest.DenseForest;
 import javelin.controller.content.map.terrain.forest.ForestPath;
+import javelin.controller.content.map.terrain.forest.ForestShore;
 import javelin.controller.content.map.terrain.forest.MediumForest;
 import javelin.controller.content.map.terrain.forest.SparseForest;
 import javelin.controller.content.terrain.hazard.Break;
@@ -27,7 +28,7 @@ public class Forest extends Terrain{
 
   /** Constructor. */
   public Forest(){
-    super(MAPS,Maps.EMPTY);
+    super(MAPS,new Maps(List.of(ForestShore.class)));
     name="forest";
     difficultycap=-3;
     speedtrackless=1/2f;

@@ -13,7 +13,6 @@ import javelin.controller.content.map.DndMap;
 import javelin.controller.content.map.Map;
 import javelin.controller.content.map.Section;
 import javelin.controller.content.map.Section.Sections;
-import javelin.controller.content.map.terrain.hill.HillShore;
 import javelin.controller.exception.GaveUp;
 import javelin.model.state.Square;
 import javelin.old.RPG;
@@ -89,6 +88,6 @@ public class Ridge extends Map{
           .isPresent())
         map[r.x][r.y].blocked=true;
     obstruct();
-    HillShore.rotate(this);
+    rotate();
   }
 }

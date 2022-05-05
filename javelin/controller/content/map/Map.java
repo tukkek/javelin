@@ -2,6 +2,8 @@ package javelin.controller.content.map;
 
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -245,5 +247,29 @@ public abstract class Map{
   protected List<Point> getallempty(){
     return Point.getrange(0,0,map.length,map[0].length).stream()
         .filter(p->!map[p.x][p.y].blocked).collect(Collectors.toList());
+  }
+
+  /**
+   * 1/2 chance of mirroring the map vertically, 1/2 chance of mirroring it
+   * horizontally and 1/4 chance each of rotating it 0°, 90°. 180°. 270°.
+   *
+   * Note that this only rotates the {@link Square} arrays, any other
+   * coordinates will need to be adjusted manually or calculated or updated
+   * after rotating.
+   *
+   * From https://stackoverflow.com/a/39212120
+   */
+  protected void rotate(){
+    if(RPG.chancein(2)) Collections.reverse(Arrays.asList(map));
+    if(RPG.chancein(2))
+      for(var tiles:map) Collections.reverse(Arrays.asList(tiles));
+    for(var rotations=RPG.r(1,4);rotations>1;rotations--)
+      for(var i=0;i<map.length/2;i++) for(var j=0;j<map.length-1-2*i;j++){
+        var tmp=map[j+i][map.length-1-i];
+        map[j+i][map.length-1-i]=map[i][j+i];
+        map[i][j+i]=map[map.length-1-j-i][i];
+        map[map.length-1-j-i][i]=map[map.length-1-i][map.length-1-j-i];
+        map[map.length-1-i][map.length-1-j-i]=tmp;
+      }
   }
 }

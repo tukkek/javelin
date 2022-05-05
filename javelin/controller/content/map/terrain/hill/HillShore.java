@@ -1,8 +1,6 @@
 package javelin.controller.content.map.terrain.hill;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -83,31 +81,11 @@ public class HillShore extends Map{
     for(var b:bushes) map[b.x][b.y].obstructed=true;
   }
 
-  /**
-   * From https://stackoverflow.com/a/39212120
-   *
-   * TODO pull up to Map
-   */
-  public static void rotate(Map map){
-    var m=map.map;
-    if(RPG.chancein(2)) Collections.reverse(Arrays.asList(m));
-    if(RPG.chancein(2))
-      for(var tiles:m) Collections.reverse(Arrays.asList(tiles));
-    for(var rotations=RPG.r(1,4);rotations>1;rotations--)
-      for(var i=0;i<m.length/2;i++) for(var j=0;j<m.length-1-2*i;j++){
-        var tmp=m[j+i][m.length-1-i];
-        m[j+i][m.length-1-i]=m[i][j+i];
-        m[i][j+i]=m[m.length-1-j-i][i];
-        m[m.length-1-j-i][i]=m[m.length-1-i][m.length-1-j-i];
-        m[m.length-1-i][m.length-1-j-i]=tmp;
-      }
-  }
-
   @Override
   public void generate(){
     walls=drawwalls();
     drawbush();
     drawsea();
-    rotate(this);
+    rotate();
   }
 }

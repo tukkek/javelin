@@ -7,7 +7,6 @@ import java.util.List;
 import javelin.controller.Point;
 import javelin.controller.content.map.DndMap;
 import javelin.controller.content.map.Map;
-import javelin.controller.content.map.terrain.hill.HillShore;
 import javelin.controller.content.terrain.Underground;
 import javelin.controller.walker.Walker;
 import javelin.controller.walker.pathing.DirectPath;
@@ -89,7 +88,6 @@ public class Railway extends Map{
     carve();
     decorate();
     flood();
-    HillShore.rotate(this);
+    rotate();
   }
-
 }

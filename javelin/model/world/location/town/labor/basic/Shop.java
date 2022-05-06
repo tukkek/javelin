@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
@@ -299,5 +300,25 @@ public class Shop extends Location{
   /** @param i Add this as a {@link PurchaseOption}. */
   public void add(Item i){
     selection.add(i);
+  }
+
+  /**
+   * Same as shop but with a fixed selection of {@link Tier#LOW} items ti
+   * prevent players from restarting new games until they end up with a
+   * perceived "optimal" choice of items (thus encouraging them to bore
+   * theselves, which goes against the DCSS philosophy document). This can still
+   * be upgraded as a normal shop later on and as such the initial selection
+   * must be keep fairly small.
+   *
+   * @see BasicAcademy
+   */
+  static public Shop newbasic(){
+    var s=new Shop();
+    var cheap=Item.randomize(Item.NONPRECIOUS.stream().filter(i->i.price<100)
+        .collect(Collectors.toList()));
+    for(var i:cheap) i.identified=true;
+    s.selection.clear();
+    s.selection.addAll(cheap.subList(0,Math.min(5,cheap.size())));
+    return s;
   }
 }

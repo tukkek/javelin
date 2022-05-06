@@ -1,4 +1,4 @@
-package javelin.model.world.location.town.labor.basic.starting;
+package javelin.model.world.location.town.labor.basic;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -51,34 +51,34 @@ import javelin.model.world.location.town.labor.Labor;
  * all their unit's desired builds while still largely relying on the randomness
  * of building more interesting in-depth Guilds to further advance those builds.
  *
- * @see BasicShop
+ * @see Shop#newbasic()
  * @author alex
  */
 public class BasicAcademy extends Academy{
-	static final String DESCRIPTION="Academy";
+  static final String DESCRIPTIONBASIC="Academy";
 
-	/** Constructor. */
-	public BasicAcademy(){
-		super(DESCRIPTION,DESCRIPTION,Tier.LOW.minlevel,Tier.LOW.maxlevel,Set.of(),
-				null,null);
-		/* TODO not ideal but the starting academy keeps being snatched by enemy incursions,
-		 *  making further progress impossible. The ideal solution would be to make it a
-		 *  higher CR or allow other forms of advacenemnt. */
-		impermeable=true;
-		/* TODO raise damage isn't "proper" for low-level characters but there's
-		 * not any other good "generic" alternatives for now. It's not intended
-		 * that players should return to the basic academy during mid- and late-
-		 * game to raise damage.*/
-		upgrades.addAll(Set.of(RaiseStrength.SINGLETON,RaiseDexterity.SINGLETON,
-				RaiseConstitution.SINGLETON,RaiseIntelligence.SINGLETON,
-				RaiseWisdom.SINGLETON,RaiseCharisma.SINGLETON,Commoner.SINGLETON,
-				Warrior.SINGLETON,Expert.SINGLETON,Aristocrat.SINGLETON,
-				NaturalArmor.LEATHER,NaturalArmor.SCALES,NaturalArmor.PLATES,
-				MeleeDamage.INSTANCE,RangedDamage.INSTANCE));
-	}
+  /** Constructor. */
+  public BasicAcademy(){
+    super(DESCRIPTIONBASIC,DESCRIPTIONBASIC,Tier.LOW.minlevel,Tier.LOW.maxlevel,
+        Set.of(),null,null);
+    /* TODO not ideal but the starting academy keeps being snatched by enemy
+     * incursions, making further progress impossible. The ideal solution would
+     * be to make it a higher CR or allow other forms of advacenemnt. */
+    impermeable=true;
+    /* TODO raise damage isn't "proper" for low-level characters but there's not
+     * any other good "generic" alternatives for now. It's not intended that
+     * players should return to the basic academy during mid- and late- game to
+     * raise damage. */
+    upgrades.addAll(Set.of(RaiseStrength.SINGLETON,RaiseDexterity.SINGLETON,
+        RaiseConstitution.SINGLETON,RaiseIntelligence.SINGLETON,
+        RaiseWisdom.SINGLETON,RaiseCharisma.SINGLETON,Commoner.SINGLETON,
+        Warrior.SINGLETON,Expert.SINGLETON,Aristocrat.SINGLETON,
+        NaturalArmor.LEATHER,NaturalArmor.SCALES,NaturalArmor.PLATES,
+        MeleeDamage.INSTANCE,RangedDamage.INSTANCE));
+  }
 
-	@Override
-	public ArrayList<Labor> getupgrades(District d){
-		return new ArrayList<>(0);
-	}
+  @Override
+  public ArrayList<Labor> getupgrades(District d){
+    return new ArrayList<>(0);
+  }
 }

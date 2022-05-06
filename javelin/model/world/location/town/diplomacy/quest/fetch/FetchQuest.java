@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.comparator.ActorByDistance;
+import javelin.controller.content.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.item.precious.PreciousObject;
 import javelin.model.unit.Squad;
@@ -26,6 +27,9 @@ import javelin.old.RPG;
  * @author alex
  */
 public abstract class FetchQuest extends Quest{
+  /** If <code>true</code>, add {@link Item#price} to {@link #gold}. */
+  protected boolean sellitem=true;
+
   Class<? extends Chest> type;
   Item goal;
 
@@ -47,8 +51,13 @@ public abstract class FetchQuest extends Quest{
     return floors.isEmpty()?null:floors.get(0);
   }
 
-  static String describe(Item i,DungeonFloor f){
-    return "Fetch %s from %s".formatted(i.name.toLowerCase(),f);
+  static String describe(Item i,DungeonFloor f,boolean showterrain){
+    var name="Fetch %s from %s".formatted(i.name.toLowerCase(),f);
+    if(showterrain){
+      var l=f.dungeon.entrance.getlocation();
+      name+=" in the "+Terrain.get(l.x,l.y).toString().toLowerCase();
+    }
+    return name;
   }
 
   @Override
@@ -57,8 +66,8 @@ public abstract class FetchQuest extends Quest{
     var floor=search(type,el,t);
     if(floor==null) return;
     goal=RPG.pick(RPG.pick(floor.features.getall(type)).items);
-    gold+=goal.price;
-    name=describe(goal,floor);
+    if(sellitem) gold+=goal.price;
+    name=describe(goal,floor,!(floor.dungeon instanceof Wilderness));
   }
 
   @Override
@@ -73,11 +82,18 @@ public abstract class FetchQuest extends Quest{
         &&s.equipment.remove(goal)!=null;
   }
 
-  /** Helper to test if {@link #goal}s can be found in all ELs. */
-  static public String test(Class<? extends Chest> type,int el,Town t){
+  static String test(int el,Class<? extends Chest> type,Town t){
     var floor=search(type,el,t);
-    if(floor==null) return null;
-    var i=floor.features.get(type).items.get(0);
-    return describe(i,floor);
+    if(floor==null) return "";
+    var c=floor.features.get(type);
+    return describe(c.items.get(0),floor,false);
+  }
+
+  /** Helper to test if {@link #goal}s can be found in all ELs. */
+  static public String test(Class<? extends Chest> type,Town t){
+    var results=new ArrayList<String>(20);
+    for(var population=1;population<=20;population++)
+      results.add("EL%s: %s".formatted(population,test(population,type,t)));
+    return String.join("\n",results);
   }
 }

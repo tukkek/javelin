@@ -6,7 +6,7 @@ import javelin.model.world.location.town.labor.Trait;
 
 /**
  * @see Trait#RELIGIOUS
- * @see Dungeon#bonus
+ * @see Dungeon#goals
  * @author alex
  */
 public class FetchArt extends FetchQuest{

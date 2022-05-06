@@ -1,9 +1,10 @@
 package javelin.model.world.location.dungeon.feature.chest;
 
+import static java.util.stream.Collectors.toList;
+
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.table.dungeon.feature.FeatureModifierTable;
@@ -27,94 +28,100 @@ import javelin.view.Images;
  * @author alex
  */
 public class Chest extends Feature{
-	/** Items inside the chest. */
-	public ItemSelection items=new ItemSelection();
-	/** Gold inside the chest. */
-	public int gold=0;
+  /** Items inside the chest. */
+  public ItemSelection items=new ItemSelection();
+  /** Gold inside the chest. */
+  public int gold=0;
 
-	/**
-	 * {@link Skill#PERCEPTION} difficulty class or <code>null</code> if not
-	 * hidden.
-	 *
-	 * @see Decoration#hide(Feature)
-	 */
-	Integer searchdc;
+  /**
+   * {@link Skill#PERCEPTION} difficulty class or <code>null</code> if not
+   * hidden.
+   *
+   * @see Decoration#hide(Feature)
+   */
+  Integer searchdc;
 
-	/**
-	 * Constructor.
-	 *
-	 * @param f
-	 */
-	Chest(DungeonFloor f){
-		super("chest");
-		searchdc=10+f.level+f.gettable(FeatureModifierTable.class).roll();
-	}
+  /**
+   * Constructor.
+   *
+   * @param f
+   */
+  Chest(DungeonFloor f){
+    super("chest");
+    searchdc=10+f.level+f.gettable(FeatureModifierTable.class).roll();
+  }
 
-	/** Construtor with {@link #gold} pool. */
-	public Chest(Integer gold,DungeonFloor f){
-		this(f);
-		if(gold<1) gold=1;
-		this.gold=Javelin.round(gold);
-	}
+  /** Construtor with {@link #gold} pool. */
+  public Chest(Integer gold,DungeonFloor f){
+    this(f);
+    if(gold<1) gold=1;
+    this.gold=Javelin.round(gold);
+  }
 
-	/** Constructor with {@link #items}. */
-	public Chest(Item i,DungeonFloor f){
-		this(f);
-		if(i!=null) items.add(i);
-	}
+  /** Constructor with {@link #items}. */
+  public Chest(Item i,DungeonFloor f){
+    this(f);
+    if(i!=null) items.add(i);
+  }
 
-	/**
-	 * Converts {@link #gold} to container-appropriate {@link Item}s.
-	 *
-	 * @return <code>true</code> if generated any {@link #items}.
-	 */
-	public boolean generateitem(){
-		var range=new ArrayList<>(List.of(RPG.randomize(gold,0,Integer.MAX_VALUE),
-				RPG.randomize(gold,0,Integer.MAX_VALUE)));
-		range.sort(null);
-		var candidates=new ArrayList<>(
-				Item.ITEMS.stream().filter(i->allow(i)).collect(Collectors.toList()));
-		var item=RPG.shuffle(candidates).stream().map(i->i.randomize())
-				.filter(i->range.get(0)<=i.price&&i.price<=range.get(1)).findAny()
-				.orElse(null);
-		if(item==null) return false;
-		gold=0;
-		items.add(item);
-		return true;
-	}
+  /**
+   * @return Modifiable list of {@link #items} candidates. By default,
+   *   {@link Item#ITEMS} filtered through {@link #allow(Item)}.
+   */
+  protected List<Item> getcandidates(){
+    var candidates=Item.ITEMS.stream().filter(this::allow).collect(toList());
+    return new ArrayList<>(candidates);
+  }
 
-	@Override
-	public boolean activate(){
-		if(items.isEmpty()){
-			if(gold<1) gold=1;
-			String message="Party receives $"+Javelin.format(gold)+"!";
-			Javelin.message(message,false);
-			Squad.active.gold+=gold;
-		}else
-			for(Item i:items)
-				i.grab();
-		return true;
-	}
+  /**
+   * Converts {@link #gold} to container-appropriate {@link Item}s.
+   *
+   * @return <code>true</code> if generated any {@link #items}.
+   */
+  public boolean generateitem(){
+    var range=new ArrayList<>(List.of(RPG.randomize(gold,0,Integer.MAX_VALUE),
+        RPG.randomize(gold,0,Integer.MAX_VALUE)));
+    range.sort(null);
+    var candidates=getcandidates();
+    var item=RPG.shuffle(candidates).stream().map(Item::randomize)
+        .filter(i->range.get(0)<=i.price&&i.price<=range.get(1)).findAny()
+        .orElse(null);
+    if(item==null) return false;
+    gold=0;
+    items.add(item);
+    return true;
+  }
 
-	@Override
-	public String toString(){
-		return getClass().getSimpleName()+": "
-				+(items.isEmpty()?"$"+Javelin.format(gold):items);
-	}
+  @Override
+  public boolean activate(){
+    if(items.isEmpty()){
+      if(gold<1) gold=1;
+      var message="Party receives $"+Javelin.format(gold)+"!";
+      Javelin.message(message,false);
+      Squad.active.gold+=gold;
+    }else for(Item i:items) i.grab();
+    return true;
+  }
 
-	@Override
-	public Image getimage(){
-		var i=Dungeon.active.dungeon.images.get(DungeonImages.CHEST);
-		return Images.get(List.of("dungeon","chest",i));
-	}
+  @Override
+  public String toString(){
+    return getClass().getSimpleName()+": "
+        +(items.isEmpty()?"$"+Javelin.format(gold):items);
+  }
 
-	/** @return <code>true</code> if the item is allowed on this container. */
-	protected boolean allow(Item i){
-		return true;
-	}
+  @Override
+  public Image getimage(){
+    var i=Dungeon.active.dungeon.images.get(DungeonImages.CHEST);
+    return Images.get(List.of("dungeon","chest",i));
+  }
 
-	@Override
-	public boolean discover(Combatant searching,int searchroll){
-		return searchroll>=searchdc;
-	}
+  /** @return <code>true</code> if the item is allowed on this container. */
+  protected boolean allow(Item i){
+    return true;
+  }
+
+  @Override
+  public boolean discover(Combatant searching,int searchroll){
+    return searchroll>=searchdc;
+  }
 }

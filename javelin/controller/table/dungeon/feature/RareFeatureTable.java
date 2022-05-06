@@ -17,7 +17,6 @@ import javelin.model.world.location.dungeon.feature.rare.FruitTree;
 import javelin.model.world.location.dungeon.feature.rare.Herb;
 import javelin.model.world.location.dungeon.feature.rare.LearningStone;
 import javelin.model.world.location.dungeon.feature.rare.Mirror;
-import javelin.model.world.location.dungeon.feature.rare.Recipe;
 import javelin.model.world.location.dungeon.feature.rare.Spirit;
 import javelin.model.world.location.dungeon.feature.rare.Throne;
 import javelin.model.world.location.dungeon.feature.rare.inhabitant.Broker;
@@ -38,57 +37,52 @@ import javelin.old.RPG;
  * {@link LearningStone}s or Recipes later on.
  *
  * @author alex
- * @see InhabitantTable
  * @see FeatureRarityTable
  */
 public class RareFeatureTable extends Table implements DungeonFeatureTable{
-	/** All features in this table. */
-	public static final List<Class<? extends Feature>> ALL=new ArrayList<>();
+  /** All features in this table. */
+  public static final List<Class<? extends Feature>> ALL=new ArrayList<>();
 
-	static final List<Class<? extends Feature>> LOTS=List.of(FruitTree.class,
-			Herb.class);
-	static final List<Class<? extends Feature>> AVERAGE=List.of(Fountain.class,
-			LearningStone.class,Spirit.class,Broker.class,Prisoner.class,Trader.class,
-			Recipe.class);
-	static final List<Class<? extends Feature>> FEW=List.of(Mirror.class,
-			Throne.class,Leader.class,DungeonMap.class,CorruptedAltar.class);
-	static final Class<? extends Feature> DEBUG=null;
+  static final List<Class<? extends Feature>> LOTS=List.of(FruitTree.class,
+      Herb.class);
+  static final List<Class<? extends Feature>> AVERAGE=List.of(Fountain.class,
+      LearningStone.class,Spirit.class,Broker.class,Prisoner.class,
+      Trader.class);
+  static final List<Class<? extends Feature>> FEW=List.of(Mirror.class,
+      Throne.class,Leader.class,DungeonMap.class,CorruptedAltar.class);
+  static final Class<? extends Feature> DEBUG=null;
 
-	static{
-		ALL.addAll(LOTS);
-		ALL.addAll(AVERAGE);
-		ALL.addAll(FEW);
-	}
+  static{
+    ALL.addAll(LOTS);
+    ALL.addAll(AVERAGE);
+    ALL.addAll(FEW);
+  }
 
-	/** Constructor. */
-	public RareFeatureTable(DungeonFloor f){
-		if(Javelin.DEBUG&&DEBUG!=null){
-			add(DEBUG,1);
-			return;
-		}
-		var tier=f.gettier().tier.getordinal();
-		var features=define(tier,f);
-		var types=RPG.shuffle(new ArrayList<>(features.keySet()));
-		var ntypes=RPG.randomize(RPG.rolldice(tier+1,4),2,types.size());
-		for(var t:types.subList(0,ntypes))
-			add(t,features.get(t));
-	}
+  /** Constructor. */
+  public RareFeatureTable(DungeonFloor f){
+    if(Javelin.DEBUG&&DEBUG!=null){
+      add(DEBUG,1);
+      return;
+    }
+    var tier=f.gettier().tier.getordinal();
+    var features=define(tier,f);
+    var types=RPG.shuffle(new ArrayList<>(features.keySet()));
+    var ntypes=RPG.randomize(RPG.rolldice(tier+1,4),2,types.size());
+    for(var t:types.subList(0,ntypes)) add(t,features.get(t));
+  }
 
-	HashMap<Class<? extends Feature>,Integer> define(int tier,DungeonFloor floor){
-		var features=new HashMap<Class<? extends Feature>,Integer>();
-		for(var f:LOTS)
-			features.put(f,ROWS*2);
-		if(tier>=1) for(var f:AVERAGE)
-			features.put(f,ROWS);
-		if(tier>=2) for(var f:FEW)
-			features.put(f,ROWS/2);
-		if(floor.dungeon instanceof Wilderness) for(var f:Wilderness.FORBIDDEN)
-			features.remove(f);
-		return features;
-	}
+  HashMap<Class<? extends Feature>,Integer> define(int tier,DungeonFloor floor){
+    var features=new HashMap<Class<? extends Feature>,Integer>();
+    for(var f:LOTS) features.put(f,ROWS*2);
+    if(tier>=1) for(var f:AVERAGE) features.put(f,ROWS);
+    if(tier>=2) for(var f:FEW) features.put(f,ROWS/2);
+    if(floor.dungeon instanceof Wilderness)
+      for(var f:Wilderness.FORBIDDEN) features.remove(f);
+    return features;
+  }
 
-	@Override
-	public Feature rollfeature(DungeonFloor d){
-		return CommonFeatureTable.generate(this,d);
-	}
+  @Override
+  public Feature rollfeature(DungeonFloor d){
+    return CommonFeatureTable.generate(this,d);
+  }
 }

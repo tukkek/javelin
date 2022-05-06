@@ -25,7 +25,7 @@ public class Marsh extends Terrain{
   public Marsh(){
     super(new Maps(List.of(Moor.class,Swamp.class)),
         new Maps(List.of(MarshShore.class)));
-    name="marsh";
+    name="marshlands";
     difficultycap=-1;
     speedtrackless=1/2f;
     speedroad=3/4f;

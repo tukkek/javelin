@@ -38,8 +38,7 @@ public class Desert extends Terrain{
 
   /** Constructor. */
   public Desert(){
-    super(MAPS,new Maps(List.of(DesertShore.class)));
-    name="desert";
+    super("desert",MAPS,new Maps(List.of(DesertShore.class)));
     difficultycap=-2;
     speedtrackless=1/2f;
     speedroad=1/2f;

@@ -99,9 +99,8 @@ public abstract class Terrain implements Serializable{
   public Float speedroad=null;
   /** Major road. */
   public Float speedhighway=null;
-  /** Used to determine tile. */
+  /** SRD name. Used to determine tile. */
   public String name=null;
-
   /**
    * Maximum encounter level delta allowed, in order to make some terrains more
    * noob-friendly.
@@ -113,24 +112,24 @@ public abstract class Terrain implements Serializable{
   public Integer difficultycap=Integer.MAX_VALUE;
   /** Used to see distant {@link World} terrain. */
   public Integer visionbonus=null;
-
   /** ASCII representation of terrain type for debugging purposes. */
   public Character representation=null;
-
   /** Terrains that "overflow". They receive a "shore" visual. */
   public boolean liquid=false;
-
   /** A bonus to be added manually to {@link Survival} rolls. */
   public int survivalbonus=0;
-
   /** @see RandomEncounter */
   public Boolean safe=false;
+  /** Human-friendly name, as in "Location is in the %s". */
+  public String description;
 
   Maps maps;
   Maps shoremaps;
 
   /** Constructor. */
-  protected Terrain(Maps maps,Maps shoremaps){
+  protected Terrain(String name,Maps maps,Maps shoremaps){
+    this.name=name;
+    description=name;
     this.maps=maps;
     this.shoremaps=shoremaps;
   }

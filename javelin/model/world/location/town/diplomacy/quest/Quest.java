@@ -69,7 +69,7 @@ public abstract class Quest implements Serializable{
       %s\
       Mood in %s is now: %s.""";
   static final List<Class<? extends Quest>> ALL=new ArrayList<>(8);
-  static final Class<? extends Quest> DEBUG=null;
+  static final Class<? extends Quest> DEBUG=Discover.class;
 
   static{
     //TODO QUESTS.put(Trait.CRIMINAL,List.of(Hit.class));
@@ -322,6 +322,31 @@ public abstract class Quest implements Serializable{
     if(gold>0) Squad.active.gold+=gold;
     if(item!=null) item.grab();
     town.diplomacy.quests.remove(this);
+  }
+
+  /**
+   * This is important for quests so as to not always deterministically return
+   * the same goal ({@link Location}, {@link Item})... when a new quest is
+   * generated - while still allowing for probably selecting the closest goal.
+   *
+   * TODO make sure all quests are using
+   *
+   * @return 50% chance of first item, then 50% of second...
+   */
+  public static <K extends Object> K select(List<K> items){
+    for(var i:items) if(RPG.chancein(2)) return i;
+    return items.get(0);
+  }
+
+  /**
+   * TODO make sure all quests are using
+   *
+   * @return Terrain-based {@link #name} suffix to help players estimate the
+   *   goal's location ("in the forest").
+   */
+  public static String locate(Actor a){
+    var l=a.getlocation();
+    return "in the "+Terrain.get(l.x,l.y).description;
   }
 
 }

@@ -32,8 +32,7 @@ public class Mountains extends Terrain{
 
   /** Constructor. */
   public Mountains(){
-    super(MAPS,new Maps(List.of(MountainShore.class)));
-    name="mountains";
+    super("mountains",MAPS,new Maps(List.of(MountainShore.class)));
     difficultycap=-2;
     speedtrackless=1/2f;
     speedroad=3/4f;

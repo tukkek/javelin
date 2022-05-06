@@ -28,8 +28,7 @@ public class Forest extends Terrain{
 
   /** Constructor. */
   public Forest(){
-    super(MAPS,new Maps(List.of(ForestShore.class)));
-    name="forest";
+    super("forest",MAPS,new Maps(List.of(ForestShore.class)));
     difficultycap=-3;
     speedtrackless=1/2f;
     speedroad=1f;

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.comparator.ActorByDistance;
-import javelin.controller.content.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.item.precious.PreciousObject;
 import javelin.model.unit.Squad;
@@ -48,15 +47,12 @@ public abstract class FetchQuest extends Quest{
         .filter(f->el+Difficulty.VERYEASY<f.level&&f.level<el+Difficulty.DEADLY
             &&f.features.get(type)!=null)
         .collect(toList());
-    return floors.isEmpty()?null:floors.get(0);
+    return floors.isEmpty()?null:Quest.select(floors);
   }
 
   static String describe(Item i,DungeonFloor f,boolean showterrain){
     var name="Fetch %s from %s".formatted(i.name.toLowerCase(),f);
-    if(showterrain){
-      var l=f.dungeon.entrance.getlocation();
-      name+=" in the "+Terrain.get(l.x,l.y).toString().toLowerCase();
-    }
+    if(showterrain) name+=" "+locate(f.dungeon.entrance);
     return name;
   }
 

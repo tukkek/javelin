@@ -28,8 +28,7 @@ public class Plains extends Terrain{
 
   /** Constructor. */
   public Plains(){
-    super(MAPS,new Maps(List.of(PlainsShore.class)));
-    name="plains";
+    super("plains",MAPS,new Maps(List.of(PlainsShore.class)));
     difficultycap=-4;
     speedtrackless=3/4f;
     speedroad=1f;

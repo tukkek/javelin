@@ -34,8 +34,8 @@ public class Water extends Terrain{
 
   /** Constructor. */
   public Water(){
-    super(new Maps(List.of(DeepWaters.class)),Maps.EMPTY);
-    name="aquatic";
+    super("aquatic",new Maps(List.of(DeepWaters.class)),Maps.EMPTY);
+    description="water";
     difficultycap=-3;
     speedtrackless=1f;
     speedroad=1f;

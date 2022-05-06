@@ -50,8 +50,7 @@ public class Underground extends Terrain{
 
   /** Constructor. */
   public Underground(){
-    super(MAPS,Maps.EMPTY);
-    name="underground";
+    super("underground",MAPS,Maps.EMPTY);
     survivalbonus=-2;
     safe=null;
   }

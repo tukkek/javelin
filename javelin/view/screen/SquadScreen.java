@@ -62,8 +62,10 @@ public class SquadScreen extends InfoScreen{
       if(Javelin.DEBUG&&CANDIDATES.isEmpty())
         throw new NoSuchElementException();
       candidate=RPG.pick(CANDIDATES);
-      for(var m:squad.members)
-        if(m.source.name.equals(candidate.name)) candidate=null;
+      for(var m:squad.members) if(m.source.name.equals(candidate.name)){
+        candidate=null;
+        break;
+      }
     }
     recruit(candidate);
   }

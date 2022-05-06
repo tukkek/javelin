@@ -21,11 +21,12 @@ import javelin.model.world.World;
  * @author alex
  */
 public class Marsh extends Terrain{
+  static final Maps MAPS=new Maps(List.of(Moor.class,Swamp.class));
+
   /** Constructor. */
   public Marsh(){
-    super(new Maps(List.of(Moor.class,Swamp.class)),
-        new Maps(List.of(MarshShore.class)));
-    name="marshlands";
+    super("marsh",MAPS,new Maps(List.of(MarshShore.class)));
+    description="marshlands";
     difficultycap=-1;
     speedtrackless=1/2f;
     speedroad=3/4f;

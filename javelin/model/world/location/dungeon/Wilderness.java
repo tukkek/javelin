@@ -228,7 +228,7 @@ public class Wilderness extends Dungeon{
   protected Wilderness(int level){
     super(DESCRIPTION,level,1);
     vision*=2;
-    bonus=GemDisplay.class;
+    goals=List.of(GemDisplay.class);
   }
 
   /** Public constructor. */

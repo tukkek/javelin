@@ -69,7 +69,7 @@ public abstract class Quest implements Serializable{
       %s\
       Mood in %s is now: %s.""";
   static final List<Class<? extends Quest>> ALL=new ArrayList<>(8);
-  static final Class<? extends Quest> DEBUG=Discover.class;
+  static final Class<? extends Quest> DEBUG=null;
 
   static{
     //TODO QUESTS.put(Trait.CRIMINAL,List.of(Hit.class));

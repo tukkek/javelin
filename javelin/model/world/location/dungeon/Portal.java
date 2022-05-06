@@ -32,7 +32,7 @@ public class Portal extends DungeonEntrance{
       branches.addAll(new BranchTable(List.of(t)).rollaffixes());
       entrances=RPG.randomize(2,1,Integer.MAX_VALUE);
       branchchance=2;
-      bonus=null;
+      goals=null;
     }
 
     @Override

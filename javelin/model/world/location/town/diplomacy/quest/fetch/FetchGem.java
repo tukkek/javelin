@@ -6,7 +6,7 @@ import javelin.model.world.location.town.labor.Trait;
 
 /**
  * @see Trait#NATURAL
- * @see Wilderness#bonus
+ * @see Wilderness#goals
  * @author alex
  */
 public class FetchGem extends FetchQuest{

@@ -38,6 +38,7 @@ import javelin.model.world.location.dungeon.feature.StairsUp;
 import javelin.model.world.location.dungeon.feature.chest.ArtDisplay;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
 import javelin.model.world.location.dungeon.feature.chest.SpecialChest;
+import javelin.model.world.location.dungeon.feature.chest.Bookcase.RecipeBookcase;
 import javelin.model.world.location.dungeon.feature.common.Passage;
 import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.model.world.location.dungeon.feature.trap.Trap;
@@ -105,7 +106,7 @@ public class Dungeon implements Serializable{
   /** {@link RPG#chancein(int)} chance to {@link Branch}. */
   protected int branchchance=4;
   /** Placed once per dungeon for the benefit of {@link FetchQuest}s. */
-  protected Class<? extends Chest> bonus=ArtDisplay.class;
+  protected List<Class<? extends Chest>> goals=List.of(ArtDisplay.class,RecipeBookcase.class);
   
 
   /**
@@ -137,7 +138,7 @@ public class Dungeon implements Serializable{
       var suffix=branches.get(1).suffix.toLowerCase();
       return String.format("%s %s %s",prefix,base,suffix);
     }
-    if(Javelin.DEBUG) if((getClass()!=Dungeon.class)&&(getClass()!=Wilderness.class)) throw new RuntimeException(getClass().getSimpleName());
+    if(Javelin.DEBUG) if(getClass()!=Dungeon.class&&getClass()!=Wilderness.class) throw new RuntimeException(getClass().getSimpleName());
     try{
       var name=World.getseed().dungeonnames.pop();
       name=name.substring(name.lastIndexOf(" ")+1,name.length());
@@ -190,17 +191,15 @@ public class Dungeon implements Serializable{
     return List.of(index);
   }
   
-  void generatebonus(){
-    if(bonus==null) return;
+  void generategoals(){
+    if(goals==null) return;
     try {
-      for(var f:RPG.shuffle(new ArrayList<>(floors))) {
-        var b=bonus.getConstructor(Integer.class,DungeonFloor.class).
+      for(var g:goals) while(RPG.chancein(2)){
+        var f=RPG.pick(floors);
+        var chest=g.getConstructor(Integer.class,DungeonFloor.class).
             newInstance(RewardCalculator.getgold(f.level),f);
         var u=f.getunnocupied();
-        if(u!=null&&b.generateitem()){
-          b.place(f,u);
-          return;
-        }
+        if(u!=null&&chest.generateitem()) chest.place(f,u);
       }
     }catch(ReflectiveOperationException e) {
       if(Javelin.DEBUG) throw new RuntimeException(e);
@@ -218,7 +217,7 @@ public class Dungeon implements Serializable{
       for(var feature:f.features.getall()) feature.define(f,floors);
     generatelore();
     generateappearance();
-    generatebonus();
+    generategoals();
     for(var b:branches) b.define(this);
     name=baptize(name);
     if(entrance!=null) entrance.set(this);

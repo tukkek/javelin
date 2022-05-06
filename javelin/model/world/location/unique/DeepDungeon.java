@@ -49,7 +49,7 @@ public class DeepDungeon extends Dungeon{
   public DeepDungeon(){
     super(DESCRIPTION,Tier.LOW.minlevel,Tier.EPIC.maxlevel);
     images=new DungeonImages(DungeonTier.TEMPLE);
-    bonus=null;
+    goals=null;
   }
 
   @Override

@@ -1,28 +1,24 @@
 package javelin.model.world.location.town.diplomacy.quest;
 
-import java.awt.Image;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.controller.Point;
+import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.ItemsByPrice;
 import javelin.controller.content.ContentSummary;
 import javelin.controller.content.terrain.Terrain;
 import javelin.model.item.Item;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.diplomacy.Diplomacy;
@@ -30,10 +26,9 @@ import javelin.model.world.location.town.diplomacy.quest.fetch.FetchArt;
 import javelin.model.world.location.town.diplomacy.quest.fetch.FetchGem;
 import javelin.model.world.location.town.diplomacy.quest.find.Connect;
 import javelin.model.world.location.town.diplomacy.quest.find.Discover;
+import javelin.model.world.location.town.diplomacy.quest.kill.Raid;
 import javelin.model.world.location.town.labor.Trait;
 import javelin.old.RPG;
-import javelin.view.Images;
-import javelin.view.screen.WorldScreen;
 
 /**
  * A task that can be completed for rewards and {@link Diplomacy#reputation}.
@@ -70,7 +65,7 @@ public abstract class Quest implements Serializable{
       %s
       Mood in %s is now: %s.""";
   static final List<Class<? extends Quest>> ALL=new ArrayList<>(8);
-  static final Class<? extends Quest> DEBUG=Discover.class;
+  static final Class<? extends Quest> DEBUG=Raid.class;
 
   static{
     //TODO QUESTS.put(Trait.CRIMINAL,List.of(Hit.class));
@@ -81,74 +76,6 @@ public abstract class Quest implements Serializable{
     QUESTS.put(Trait.NATURAL,List.of(FetchGem.class));
     QUESTS.put(Trait.RELIGIOUS,List.of(FetchArt.class));
     for(var quests:QUESTS.values()) ALL.addAll(quests);
-  }
-
-  /**
-   * Simple, generic {@link World} actor to use with quests. Ideally subclasses
-   * need only override {@link #interact()}.
-   *
-   * Sharing a same image, it reduces cognitive overload and dependency on art
-   * assets while providing a simple, standard "this is related to a
-   * {@link Town} quest and nothing more" visual feedback.
-   *
-   * Obviously, not all quests need to employ markers (such as those that target
-   * existing {@link Location}s).
-   *
-   * TODO quests markers should, by default always show the difficulty level, as
-   * in {@link Location#headsup(String)}.
-   *
-   * @author alex
-   */
-  protected abstract class Marker extends Actor{
-    boolean inside;
-
-    /**
-     * @param inside If <code>true</code>, place it inside the {@link District},
-     *   otherwise outside, nearby.
-     */
-    protected Marker(boolean inside){
-      this.inside=inside;
-    }
-
-    @Override
-    public List<Combatant> getcombatants(){
-      return null;
-    }
-
-    @Override
-    public Image getimage(){
-      return Images.get(List.of("world","questmarker"));
-    }
-
-    @Override
-    public String describe(){
-      return town+"quest ("+Quest.this.toString().toLowerCase()+").";
-    }
-
-    @Override
-    public Integer getel(Integer attackerel){
-      return el;
-    }
-
-    @Override
-    public void place(){
-      if(x==-1){
-        var positions=new HashSet<Point>();
-        var d=town.getdistrict();
-        if(inside) positions.addAll(d.getfreespaces());
-        else{
-          var r=d.getradius()*2;
-          positions.addAll(Point.getrange(town.x-r,town.y-r,town.x+r,town.y+r));
-          positions.removeAll(d.getarea());
-        }
-        setlocation(RPG.pick(positions.stream()
-            .filter(p->World.validatecoordinate(p.x,p.y)
-                &&!Terrain.get(p.x,p.y).equals(Terrain.WATER))
-            .collect(Collectors.toList())));
-      }
-      super.place();
-      WorldScreen.discover(x,y);
-    }
   }
 
   /** Town this quest was generated for. */
@@ -173,7 +100,7 @@ public abstract class Quest implements Serializable{
   /** When <code>true</code> will not expire the quest until redeemed. */
   public boolean completed=false;
   /** Encounter level, between 1 and {@link Town#population}. */
-  protected int el;
+  public int el;
   /**
    * Random daily chance a quest will expire.
    *
@@ -315,6 +242,11 @@ public abstract class Quest implements Serializable{
     if(gold>0) Squad.active.gold+=gold;
     if(item!=null) item.grab();
     town.diplomacy.quests.remove(this);
+  }
+
+  /** @return <code>true</code> if this is a good challenge for this quest. */
+  protected boolean challenge(int el){
+    return this.el+Difficulty.EASY<=el&&el<=this.el+Difficulty.DIFFICULT;
   }
 
   /**

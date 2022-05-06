@@ -1,21 +1,45 @@
 package javelin.model.world.location.town.diplomacy.quest.kill;
 
-import javelin.controller.content.fight.mutator.mode.FightMode;
-import javelin.controller.content.map.Map;
-import javelin.controller.content.terrain.Terrain;
-import javelin.controller.generator.encounter.EncounterGenerator.MonsterPool;
-import javelin.model.world.location.dungeon.branch.Branch;
+import javelin.controller.comparator.ActorByDistance;
+import javelin.model.world.location.Location;
 import javelin.model.world.location.haunt.Haunt;
+import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.diplomacy.quest.Quest;
 import javelin.model.world.location.town.labor.Trait;
 
 /**
- * A {@link Haunt}-lite quest, that instead uses {@link Terrain}s for
- * {@link Map}s and {@link MonsterPool}s rather than {@link Branch}es as base
- * but with similar {@link FightMode}s.
+ * Clear a {@link Haunt}.
  *
  * @see Trait#MILITARY
  * @author alex
  */
 public class Raid extends KillQuest{
+  Location target;
 
+  /** Constructor. */
+  public Raid(){
+    duration=SHORT;
+  }
+
+  @Override
+  protected void define(Town t){
+    super.define(t);
+    var comparator=new ActorByDistance(town);
+    var targets=Haunt.gethaunts().stream()
+        .filter(h->h.ishostile()&&challenge(h.getel(el)))
+        .sorted(comparator::compare).toList();
+    if(targets.isEmpty()) return;
+    target=Quest.select(targets);
+    name="Clear %s %s".formatted(target,Quest.locate(target));
+  }
+
+  @Override
+  public boolean validate(){
+    return super.validate()&&target!=null;
+  }
+
+  @Override
+  protected boolean complete(){
+    return !target.ishostile();
+  }
 }

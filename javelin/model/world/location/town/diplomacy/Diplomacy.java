@@ -32,105 +32,103 @@ import javelin.old.RPG;
  * @see Mandate#validate(Diplomacy)
  */
 public class Diplomacy implements Serializable{
-	/**
-	 * Currency for acquiring{@link Mandate} rewards once it reaches a value equal
-	 * or greater than {@link Town#population}.
-	 */
-	public int reputation=0;
-	/** Possible diplomatic actions. */
-	public TreeSet<Mandate> treaties=new TreeSet<>();
-	/** Town these rewards are for. */
-	public Town town;
-	/** Active quests. Updated daily. */
-	public List<Quest> quests=new ArrayList<>(1);
+  /**
+   * Currency for acquiring{@link Mandate} rewards once it reaches a value equal
+   * or greater than {@link Town#population}.
+   */
+  public int reputation=0;
+  /** Possible diplomatic actions. */
+  public TreeSet<Mandate> treaties=new TreeSet<>();
+  /** Town these rewards are for. */
+  public Town town;
+  /** Active quests. Updated daily. */
+  public List<Quest> quests=new ArrayList<>(1);
 
-	/** Generates a fresh set of relationships, when a campaign starts. */
-	public Diplomacy(Town t){
-		town=t;
-	}
+  /** Generates a fresh set of relationships, when a campaign starts. */
+  public Diplomacy(Town t){
+    town=t;
+  }
 
-	/** Ticks a day off active quests and generates new ones. */
-	public void updatequests(){
-		if(!World.scenario.quests) return;
-		for(var q:new ArrayList<>(quests))
-			q.update(true);
-		if(quests.size()<town.getrank().rank&&RPG.chancein(7)){
-			var q=Quest.generate(town);
-			if(q!=null){
-				quests.add(q);
-				if(q.alert()) town.events.add("New quest available: "+q+".");
-			}
-		}
-	}
+  /** Ticks a day off active quests and generates new ones. */
+  public void updatequests(){
+    if(!World.scenario.quests) return;
+    for(var q:new ArrayList<>(quests)) q.update(true);
+    if(quests.size()<town.getrank().rank&&RPG.chancein(7)){
+      var q=Quest.generate(town);
+      if(q!=null){
+        quests.add(q);
+        town.events.add("New quest available: "+q+".");
+      }
+    }
+  }
 
-	void updatemandates(){
-		if(!treaties.isEmpty()&&RPG.chancein(30)){
-			var m=RPG.pick(treaties);
-			treaties.remove(m);
-			town.events.add("Treaty opportunity expired: "+m+".");
-		}
-		if(treaties.size()<town.getrank().rank&&RPG.chancein(7)){
-			var m=Mandate.generate(this);
-			if(m!=null) town.events.add("New treaty available: "+m+".");
-		}
-	}
+  void updatemandates(){
+    if(!treaties.isEmpty()&&RPG.chancein(30)){
+      var m=RPG.pick(treaties);
+      treaties.remove(m);
+      town.events.add("Treaty opportunity expired: "+m+".");
+    }
+    if(treaties.size()<town.getrank().rank&&RPG.chancein(7)){
+      var m=Mandate.generate(this);
+      if(m!=null) town.events.add("New treaty available: "+m+".");
+    }
+  }
 
-	/** To be called once per day per instance. */
-	public void turn(){
-		reputation-=town.population/400f;
-		validate();
-		if(town.ishostile()) return;
-		updatequests();
-		updatemandates();
-	}
+  /** To be called once per day per instance. */
+  public void turn(){
+    reputation-=town.population/400f;
+    validate();
+    if(town.ishostile()) return;
+    updatequests();
+    updatemandates();
+  }
 
-	/**
-	 * Removes invalid entries from {@link #treaties}.
-	 *
-	 * @see Mandate#validate()
-	 */
-	public void validate(){
-		for(var card:new ArrayList<>(treaties))
-			if(!card.validate()){
-				treaties.remove(card);
-				town.events.add("Treaty no longer eligible: "+card+".");
-			}
-	}
+  /**
+   * Removes invalid entries from {@link #treaties}.
+   *
+   * @see Mandate#validate()
+   */
+  public void validate(){
+    for(var card:new ArrayList<>(treaties)) if(!card.validate()){
+      treaties.remove(card);
+      town.events.add("Treaty no longer eligible: "+card+".");
+    }
+  }
 
-	/**
-	 * @return A percentage, where 0 is zero {@link #reputation} and 1 is
-	 *         {@link #reputation} == {@link Town#population}.
-	 */
-	public float getstatus(){
-		return reputation/(float)town.population;
-	}
+  /**
+   * @return A percentage, where 0 is zero {@link #reputation} and 1 is
+   *   {@link #reputation} == {@link Town#population}.
+   */
+  public float getstatus(){
+    return reputation/(float)town.population;
+  }
 
-	/** @return A human description of {@link #getstatus()}. */
-	public String describestatus(){
-		var s=getstatus();
-		if(s<=-1) return "Hostile";
-		if(s<=0) return "Cautious";
-		if(s<=.3) return "Neutral";
-		if(s<=.7) return "Content";
-		if(s<1) return "Happy";
-		return "Loyal";
-	}
+  /** @return A human description of {@link #getstatus()}. */
+  public String describestatus(){
+    var s=getstatus();
+    if(s<=-1) return "Hostile";
+    if(s<=0) return "Cautious";
+    if(s<=.3) return "Neutral";
+    if(s<=.7) return "Content";
+    if(s<1) return "Happy";
+    return "Loyal";
+  }
 
-	/** @return <code>true</code> if can claim a {@link Mandate}. */
-	public boolean claim(){
-		return getstatus()>=1&&!treaties.isEmpty();
-	}
+  /** @return <code>true</code> if can claim a {@link Mandate}. */
+  public boolean claim(){
+    return getstatus()>=1&&!treaties.isEmpty();
+  }
 
-	/** @param m Pays for, plays and discards this. */
-	public void enact(Mandate m){
-		reputation-=town.population;
-		m.act();
-		treaties.remove(m);
-	}
+  /** @param m Pays for, plays and discards this. */
+  public void enact(Mandate m){
+    reputation-=town.population;
+    m.act();
+    treaties.remove(m);
+  }
 
-	/** Removes all active {@link Quest}s and {@link Mandate}s. */
-	public void clear(){
-		quests.clear();
-		treaties.clear();
-	}
+  /** Removes all active {@link Quest}s and {@link Mandate}s. */
+  public void clear(){
+    quests.clear();
+    treaties.clear();
+  }
 }

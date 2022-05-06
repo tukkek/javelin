@@ -15,6 +15,6 @@ public abstract class FindQuest extends Quest{
   @Override
   protected void define(Town t){
     super.define(t);
-    duration=LONG;
+    duration=SHORT;
   }
 }

@@ -21,6 +21,7 @@ import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
@@ -58,15 +59,15 @@ import javelin.view.screen.WorldScreen;
 public abstract class Quest implements Serializable{
   /** All available quest templates. */
   public final static Map<String,List<Class<? extends Quest>>> QUESTS=new HashMap<>();
-  /** Short-term quests expire within a week on average (default). */
+  /** For {@link World} quests. */
   public static final int SHORT=7;
-  /** Long-term quests expire within a month on average. */
-  public static final int LONG=30;//TODO make default
+  /** Default {@link #duration}. For {@link Dungeon} quests. */
+  public static final int LONG=30;
 
   static final String COMPLETE="""
       You have completed a quest (%s)!
       %s
-      %s\
+      %s
       Mood in %s is now: %s.""";
   static final List<Class<? extends Quest>> ALL=new ArrayList<>(8);
   static final Class<? extends Quest> DEBUG=Discover.class;
@@ -174,10 +175,11 @@ public abstract class Quest implements Serializable{
   /** Encounter level, between 1 and {@link Town#population}. */
   protected int el;
   /**
-   * @see #SHORT
-   * @see #LONG
+   * Random daily chance a quest will expire.
+   *
+   * @see RPG#chancein(int)
    */
-  protected int duration=SHORT;
+  protected int duration=LONG;
 
   /** @return If <code>false</code>, cancel or skip this quest type. */
   public boolean validate(){
@@ -270,22 +272,13 @@ public abstract class Quest implements Serializable{
   }
 
   /**
-   * @return If <code>true</code>, notify player when quest is generated or on
-   *   {@link #cancel()}. By default only <code>true</code> if {@link #duration}
-   *   is {@link #LONG}.
-   */
-  public boolean alert(){
-    return duration==LONG;
-  }
-
-  /**
-   * Removes this from {@link Town#quests} and lowers
+   * Removes this from {@link Diplomacy#quests} and lowers
    * {@link Diplomacy#reputation}.
    */
   public void cancel(){
     town.diplomacy.quests.remove(this);
     town.diplomacy.reputation-=1;
-    if(alert()) town.events.add("Quest expired: "+name+".");
+    town.events.add("Quest expired: "+name+".");
   }
 
   /**

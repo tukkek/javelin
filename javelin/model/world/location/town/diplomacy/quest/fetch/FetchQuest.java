@@ -35,7 +35,6 @@ public abstract class FetchQuest extends Quest{
   /** Constructor. */
   public FetchQuest(Class<? extends Chest> goal){
     type=goal;
-    duration=LONG;
   }
 
   static DungeonFloor search(Class<? extends Chest> type,int el,Town t){

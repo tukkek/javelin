@@ -5,13 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.content.template.KitTemplate;
 import javelin.controller.content.terrain.Terrain;
-import javelin.controller.content.wish.Win;
 import javelin.controller.generator.feature.LocationGenerator;
 import javelin.model.Realm;
 import javelin.model.item.Tier;
-import javelin.model.item.artifact.Artifact;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
@@ -29,11 +26,12 @@ import javelin.old.RPG;
  * Temples are {@link Tier#EPIC} {@link Dungeon}s with a single {@link Branch},
  * Each Temple is focused on a particular {@link Realm}.
  *
- * Deep in each Temple there will be an {@link Artifact} and once all of those
- * are collected, the player can {@link Win}.
+ * Temples could be generated for random Branches instead but currently
+ * requiring new art for every new Branch is unsustainable and undesired. Other
+ * branches can be featured prominently in the eventual end-game systems.
  *
- * TODO once all Temples have {@link Branch#templates}, remove
- * {@link KitTemplate} (or keep)?
+ * Each Temple contains an AscensionKey that is used to gradually unlock more
+ * end-game crafting options. TODO https://github.com/tukkek/javelin/issues/269
  *
  * @author alex
  */

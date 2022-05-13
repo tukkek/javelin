@@ -1,4 +1,4 @@
-package javelin.model.item.focus;
+package javelin.model.item.trigger;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;

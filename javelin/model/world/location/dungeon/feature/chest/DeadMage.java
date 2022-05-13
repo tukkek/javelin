@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Set;
 
 import javelin.model.item.Item;
-import javelin.model.item.focus.Rod;
-import javelin.model.item.focus.Staff;
-import javelin.model.item.focus.Wand;
+import javelin.model.item.trigger.Rod;
+import javelin.model.item.trigger.Staff;
+import javelin.model.item.trigger.Wand;
 import javelin.model.unit.skill.Spellcraft;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.view.Images;

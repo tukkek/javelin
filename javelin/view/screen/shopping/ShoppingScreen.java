@@ -8,7 +8,7 @@ import javelin.Javelin;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.consumable.Scroll;
-import javelin.model.item.focus.Wand;
+import javelin.model.item.trigger.Wand;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Town;

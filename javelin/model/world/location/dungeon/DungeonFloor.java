@@ -256,8 +256,10 @@ public class DungeonFloor implements Serializable{
 
   /** Generates {@link BranchPortal}s. */
   protected void generatebranches(DungeonZoner z){
-    while(RPG.chancein(dungeon.branchchance))
-      new BranchPortal(this).place(this,z.getpoint());
+    while(RPG.chancein(dungeon.branchchance)){
+      var p=z.getpoint();
+      if(p!=null) new BranchPortal(this).place(this,p);
+    }
   }
 
   /** Place {@link Features}s and defines {@link #squadlocation}. */
@@ -322,7 +324,7 @@ public class DungeonFloor implements Serializable{
   /** @param nfeatures Target quantity of {@link Feature}s to place. */
   protected void generatefeatures(int nfeatures,DungeonZoner zoner){
     while(nfeatures>0){
-      generatefeature().place(this,zoner.getpoint());
+      zoner.place(generatefeature(),this);
       nfeatures-=1;
     }
   }
@@ -389,7 +391,9 @@ public class DungeonFloor implements Serializable{
 
   void generatechests(int chests,int pool,DungeonZoner z,
       LinkedList<Decoration> d){
-    dungeon.generatespecialchest(this).place(this,z.getpoint());
+    var p=z.getpoint();
+    if(p==null) return;
+    dungeon.generatespecialchest(this).place(this,p);
     if(pool==0) return;
     if(chests<1) chests=1;
     var hidden=Math.max(2,chests/10);

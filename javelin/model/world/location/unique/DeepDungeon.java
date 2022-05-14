@@ -7,6 +7,9 @@ import javelin.model.world.location.dungeon.DungeonEntrance;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.DungeonTier;
+import javelin.model.world.location.dungeon.DungeonZoner;
+import javelin.model.world.location.dungeon.feature.rare.LearningStone;
+import javelin.old.RPG;
 
 /**
  * A {@link DungeonFloor} from {@link Tier#LOW} to {@link Tier#HIGH}, mainly for
@@ -42,6 +45,12 @@ public class DeepDungeon extends Dungeon{
     @Override
     public DungeonTier gettier(){
       return DungeonTier.get(level);
+    }
+
+    @Override
+    protected void generatefeatures(int nfeatures,DungeonZoner zoner){
+      super.generatefeatures(nfeatures,zoner);
+      while(RPG.chancein(2)) zoner.place(new LearningStone(this),this);
     }
   }
 

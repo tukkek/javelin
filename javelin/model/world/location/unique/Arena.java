@@ -77,151 +77,152 @@ import javelin.view.Images;
  * @author alex
  */
 public class Arena extends UniqueLocation{
-	static final String NONEELIGIBLE="Only gladiators in full health are allowed to fight in the arena!";
-	static final String CONFIRM="Begin an Arena match with these fighters?\n"
-			+"Press ENTER to confirm or any other key to cancel...\n\n";
-	static final String DESCRIPTION="The Arena";
-	static final EncounterIndex GLADIATORS=new EncounterIndex(Monster.ALL.stream()
-			.filter(m->m.think(-1)&&m.type.equals(MonsterType.HUMANOID))
-			.collect(Collectors.toList()));
+  static final String NONEELIGIBLE="Only gladiators in full health are allowed to fight in the arena!";
+  static final String CONFIRM="Begin an Arena match with these fighters?\n"
+      +"Press ENTER to confirm or any other key to cancel...\n\n";
+  static final String DESCRIPTION="The Arena";
+  static final EncounterIndex GLADIATORS=new EncounterIndex(Monster.ALL.stream()
+      .filter(m->m.think(-1)&&MonsterType.HUMANOID.equals(m.type))
+      .collect(Collectors.toList()));
 
-	class ArenaMap extends LocationMap{
-		List<Point> minionspawn=new ArrayList<>();
+  class ArenaMap extends LocationMap{
+    List<Point> minionspawn=new ArrayList<>();
 
-		public ArenaMap(){
-			super("colosseum");
-			wall=Images.get(List.of("terrain","orcwall"));
-			floor=Images.get(List.of("terrain","desert"));
-		}
+    public ArenaMap(){
+      super("colosseum");
+      wall=Images.get(List.of("terrain","orcwall"));
+      floor=Images.get(List.of("terrain","desert"));
+    }
 
-		@Override
-		protected Square processtile(Square s,int x,int y,char c){
-			if(c=='3') minionspawn.add(new Point(x,y));
-			return super.processtile(s,x,y,c);
-		}
-	}
+    @Override
+    protected Square processtile(Square s,int x,int y,char c){
+      if(c=='3') minionspawn.add(new Point(x,y));
+      return super.processtile(s,x,y,c);
+    }
+  }
 
-	static class ArenaWaves extends Waves{
-		Combatants allies;
+  static class ArenaWaves extends Waves{
+    Combatants allies;
 
-		ArenaWaves(int elp,Combatants allies){
-			super(elp);
-			this.allies=allies;
-			message="New gladiators enter the arena!";
-		}
+    ArenaWaves(int elp,Combatants allies){
+      super(elp);
+      this.allies=allies;
+      message="New gladiators enter the arena!";
+    }
 
-		@Override
-		public void draw(Fight fight){
-			var b=Fight.state.blueteam;
-			fight.add(allies,b,((ArenaMap)fight.map).minionspawn);
-			waveel=ChallengeCalculator.calculateel(b)+Waves.ELMODIFIER.get(waves);
-			super.draw(fight);
-		}
+    @Override
+    public void draw(Fight fight){
+      var b=Fight.state.blueteam;
+      fight.add(allies,b,((ArenaMap)fight.map).minionspawn);
+      waveel=ChallengeCalculator.calculateel(b)+Waves.ELMODIFIER.get(waves);
+      super.draw(fight);
+    }
 
-		@Override
-		public Combatants generate(Fight f){
-			return generate(waveel);
-		}
+    @Override
+    public Combatants generate(Fight f){
+      return generate(waveel);
+    }
 
-		static Combatants generate(int targetel){
-			try{
-				int el=targetel-RPG.r(0,2);
-				var e=EncounterGenerator.generate(el,GLADIATORS);
-				return NpcGenerator.upgrade(e,targetel,true);
-			}catch(GaveUp e){
-				throw new RuntimeException(e);
-			}
-		}
-	}
+    static Combatants generate(int targetel){
+      try{
+        var el=targetel-RPG.r(0,2);
+        var e=EncounterGenerator.generate(el,GLADIATORS);
+        return NpcGenerator.upgrade(e,targetel,true);
+      }catch(GaveUp e){
+        throw new RuntimeException(e);
+      }
+    }
+  }
 
-	class ArenaFight extends LocationFight{
-		Combatants fighters=new Combatants();
-		int alliesel=0;
-		int teamel;
-		int waveel;
+  class ArenaFight extends LocationFight{
+    Combatants fighters=new Combatants();
+    int alliesel=0;
+    int teamel;
+    int waveel;
 
-		ArenaFight(ArrayList<Combatant> fighters,int el){
-			super(Arena.this,new ArenaMap());
-			mutators.add(new Friendly(Combatant.STATUSINJURED));
-			this.fighters.addAll(fighters);
-			period=Period.AFTERNOON;
-			teamel=el;
-			mutators.add(new ArenaWaves(el,generateallies()));
-		}
+    ArenaFight(ArrayList<Combatant> fighters,int el){
+      super(Arena.this,new ArenaMap());
+      mutators.add(new Friendly(Combatant.STATUSINJURED));
+      this.fighters.addAll(fighters);
+      period=Period.AFTERNOON;
+      teamel=el;
+      mutators.add(new ArenaWaves(el,generateallies()));
+    }
 
-		Combatants generateallies(){
-			if(RPG.chancein(4)) return new Combatants(0);
-			alliesel=ChallengeCalculator.calculateel(fighters)
-					+RPG.r(Difficulty.EASY,0);
-			var allies=ArenaWaves.generate(alliesel);
-			for(var a:allies){
-				a.automatic=true;
-				a.mercenary=true;
-			}
-			return allies;
-		}
+    Combatants generateallies(){
+      if(RPG.chancein(4)) return new Combatants(0);
+      alliesel=ChallengeCalculator.calculateel(fighters)
+          +RPG.r(Difficulty.EASY,0);
+      var allies=ArenaWaves.generate(alliesel);
+      for(var a:allies){
+        a.automatic=true;
+        a.mercenary=true;
+      }
+      return allies;
+    }
 
-		@Override
-		public ArrayList<Combatant> getblueteam(){
-			return fighters;
-		}
+    @Override
+    public ArrayList<Combatant> getblueteam(){
+      return fighters;
+    }
 
-		@Override
-		protected int getgoldreward(List<Combatant> defeated){
-			var gold=super.getgoldreward(defeated);
-			var t=teamel;
-			var a=alliesel;
-			var m=Math.min(teamel,alliesel);
-			if(m<0){//ELs can be negative
-				t+=-m+1;
-				a+=-m+1;
-			}
-			return gold*t/(a+t);
-		}
-	}
+    @Override
+    public String reward(){
+      double t=teamel;
+      double a=alliesel;
+      var m=Math.min(teamel,alliesel);
+      if(m<0){//ELs can be negative
+        t+=-m+1;
+        a+=-m+1;
+      }
+      goldbonus=t/(a+t);
+      return super.reward();
+    }
+  }
 
-	Town town;
+  Town town;
 
-	/** Constructor. */
-	public Arena(Town t){
-		super(DESCRIPTION,DESCRIPTION,15,20);
-		town=t;
-		generategarrison=false;
-	}
+  /** Constructor. */
+  public Arena(Town t){
+    super(DESCRIPTION,DESCRIPTION,15,20);
+    town=t;
+    generategarrison=false;
+  }
 
-	@Override
-	public List<Combatant> getcombatants(){
-		return null;
-	}
+  @Override
+  public List<Combatant> getcombatants(){
+    return null;
+  }
 
-	Combatant choosefighter(List<Combatant> squad,List<Combatant> fighters){
-		if(squad.isEmpty()) return null;
-		var prompt="Add which fighter to your team?\n\nCurrently selected: ";
-		var current=fighters.isEmpty()?"none selected yet":Javelin.group(fighters);
-		var choices=squad.stream().sorted(CombatantsByNameAndMercenary.SINGLETON)
-				.map(c->c+" ("+c.getstatus()+")").collect(Collectors.toList());
-		var choice=Javelin.choose(prompt+current+".",choices,true,false);
-		return choice>=0?squad.get(choice):null;
-	}
+  Combatant choosefighter(List<Combatant> squad,List<Combatant> fighters){
+    if(squad.isEmpty()) return null;
+    var prompt="Add which fighter to your team?\n\nCurrently selected: ";
+    var current=fighters.isEmpty()?"none selected yet":Javelin.group(fighters);
+    var choices=squad.stream().sorted(CombatantsByNameAndMercenary.SINGLETON)
+        .map(c->c+" ("+c.getstatus()+")").collect(Collectors.toList());
+    var choice=Javelin.choose(prompt+current+".",choices,true,false);
+    return choice>=0?squad.get(choice):null;
+  }
 
-	@Override
-	public boolean interact(){
-		if(!super.interact()) return false;
-		if(!isopen(List.of(Period.AFTERNOON,Period.EVENING),this)) return false;
-		var hurt=Squad.active.members.stream()
-				.filter(c->c.getnumericstatus()<Combatant.STATUSSCRATCHED).limit(1);
-		if(hurt.count()>0){
-			Javelin.message(NONEELIGIBLE,false);
-			return false;
-		}
-		//TODO there needs to be a check of whether can generate opponents first, probably be instantiating the Fight first and valitaing
-		//TODO use the confirm prompt to pay an entry fee
-		var team=new Combatants(Squad.active.members);
-		if(Javelin.prompt(CONFIRM+Javelin.group(team)+".")!='\n') return false;
-		var el=ChallengeCalculator.calculateel(team);
-		el=Math.min(el,town.getrank().maxpopulation);
-		var f=new ArenaFight(team,el);
-		/*TODO would be cool to be able to generate fights in advance so here we could check if EmcounterGenerator was able to come up with something or not*/
-		throw new StartBattle(f);
-	}
+  @Override
+  public boolean interact(){
+    if(!super.interact()||!isopen(List.of(Period.AFTERNOON,Period.EVENING),this)) return false;
+    var hurt=Squad.active.members.stream()
+        .filter(c->c.getnumericstatus()<Combatant.STATUSSCRATCHED).limit(1);
+    if(hurt.count()>0){
+      Javelin.message(NONEELIGIBLE,false);
+      return false;
+    }
+    //TODO there needs to be a check of whether can generate opponents first, probably be instantiating the Fight first and valitaing
+    //TODO use the confirm prompt to pay an entry fee
+    var team=new Combatants(Squad.active.members);
+    if(Javelin.prompt(CONFIRM+Javelin.group(team)+".")!='\n') return false;
+    var el=ChallengeCalculator.calculateel(team);
+    el=Math.min(el,town.getrank().maxpopulation);
+    var f=new ArenaFight(team,el);
+    /* TODO would be cool to be able to generate fights in advance so here we
+     * could check if EmcounterGenerator was able to come up with something or
+     * not */
+    throw new StartBattle(f);
+  }
 }

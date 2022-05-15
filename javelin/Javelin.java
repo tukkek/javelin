@@ -17,7 +17,6 @@ import javax.swing.WindowConstants;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
 
 import javelin.controller.collection.CountingSet;
 import javelin.controller.content.upgrade.classes.ClassLevelUpgrade;
@@ -239,7 +238,7 @@ public class Javelin{
     prompt+="\n\n";
     var nnames=names.size();
     var multicolumn=nnames>20;
-    var options=new ArrayList<Object>();
+    var options=new ArrayList<>();
     for(var i=0;i<nnames;i++){
       var leftcolumn=i%2==0;
       var name=names.get(i).toString();
@@ -426,5 +425,18 @@ public class Javelin{
   /** @return A "Capitalized" version of the input. */
   public static String capitalize(String s){
     return Character.toUpperCase(s.charAt(0))+s.substring(1).toLowerCase();
+  }
+
+  /**
+   * @return Given DC and the d20 roll bonus, human-friendly chance of success.
+   */
+  static public String describe(int bonus,int dc){
+    var difficulty=dc-bonus;
+    if(difficulty<=00) return "very easy";
+    if(difficulty<=05) return "easy";
+    if(difficulty<=10) return "fair";
+    if(difficulty<=15) return "tough";
+    if(difficulty<=20) return "formidable";
+    return "impossible";
   }
 }

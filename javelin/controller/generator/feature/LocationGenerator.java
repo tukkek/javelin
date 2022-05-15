@@ -2,7 +2,7 @@ package javelin.controller.generator.feature;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,6 +19,7 @@ import javelin.model.Realm;
 import javelin.model.item.Tier;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
+import javelin.model.world.location.ContestedTerritory;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.PointOfInterest;
@@ -27,7 +28,6 @@ import javelin.model.world.location.WarlocksTower;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonEntrance;
 import javelin.model.world.location.dungeon.DungeonTier;
-import javelin.model.world.location.dungeon.Portal;
 import javelin.model.world.location.dungeon.Wilderness;
 import javelin.model.world.location.dungeon.branch.temple.Temple;
 import javelin.model.world.location.haunt.AbandonedManor;
@@ -121,12 +121,15 @@ public class LocationGenerator implements Serializable{
    * @see Frequency#starting
    */
   public void spawn(float chance,boolean generatingworld){
-    if((count()>=World.scenario.startingfeatures)||(!generatingworld&&!World.scenario.respawnlocations)) return;
+    if(count()>=World.scenario.startingfeatures
+        ||!generatingworld&&!World.scenario.respawnlocations)
+      return;
     var features=generators.keySet();
     for(var f:RPG.shuffle(new ArrayList<>(features))){
       var frequency=generators.get(f);
-      if(generatingworld&&!frequency.starting) continue;
-      if(frequency.max!=null&&World.getall(f).size()>=frequency.max) continue;
+      if(generatingworld&&!frequency.starting
+          ||frequency.max!=null&&World.getall(f).size()>=frequency.max)
+        continue;
       if(RPG.random()<=chance*frequency.chance) frequency.generate(f).place();
     }
   }
@@ -158,7 +161,39 @@ public class LocationGenerator implements Serializable{
     return a;
   }
 
-  void generatestaticlocations(Town starting){
+  long countadjacent(Point p){
+    var actors=World.getactors();
+    var s=World.scenario.size;
+    return p.getadjacent().stream()
+        .filter(a->a.validate(s,s)&&World.get(a.x,a.y,actors)!=null).count();
+  }
+
+  void placecontested(){
+    var s=World.scenario.size;
+    var free=Point.getrange(s,s);
+    var w=World.getseed();
+    for(var a:World.getactors()) free.remove(a.getlocation());
+    for(var t:RPG.shuffle(new ArrayList<>(Arrays.asList(Terrain.STANDARD)))){
+      var maps=new ArrayList<>(t.maps);
+      maps.addAll(t.shoremaps);
+      for(var m:RPG.shuffle(maps)){
+        var locations=free.stream().filter(p->Terrain.get(p.x,p.y).equals(t)
+            &&countadjacent(p)==0&&District.get(p.x,p.y)==null).toList();
+        if(t.shoremaps.contains(m)) locations=locations.stream()
+            .filter(p->Terrain.search(p,Terrain.WATER,1,w)>0).toList();
+        if(!locations.isEmpty()) try{
+          var i=m.getConstructor().newInstance();
+          var l=RPG.pick(locations);
+          new ContestedTerritory(i).place(l);
+          free.remove(l);
+        }catch(ReflectiveOperationException e){
+          throw new RuntimeException(e);
+        }
+      }
+    }
+  }
+
+  void generatestaticlocations(){
     var locations=new ArrayList<Location>();
     locations.add(new PillarOfSkulls());
     for(var h:RPG.shuffle(HAUNTS)) try{
@@ -175,12 +210,7 @@ public class LocationGenerator implements Serializable{
     }
     for(var i=0;i<15;i++) locations.add(new DungeonEntrance(new Wilderness()));
     for(var l:RPG.shuffle(locations)) l.place();
-    for(var i=0;i<5;) if(Portal.create()!=null) i+=1;
-
-    //		var crucibles=Crucible.generate();
-    //		crucibles.sort((a,b)->Double.compare(a.distance(starting.x,starting.y),
-    //				b.distance(starting.x,starting.y)));
-    //		crucibles.get(0).reveal();
+    placecontested();
   }
 
   static void generatestartingarea(World w,Town t){
@@ -244,7 +274,7 @@ public class LocationGenerator implements Serializable{
     setup();
     Temple.generatetemples();
     generatestartingarea(w,starting);
-    generatestaticlocations(starting);
+    generatestaticlocations();
     for(Class<? extends Actor> feature:generators.keySet())
       generators.get(feature).seed(feature);
     var target=World.scenario.startingfeatures-Location.count();

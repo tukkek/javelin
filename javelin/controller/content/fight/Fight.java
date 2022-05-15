@@ -42,6 +42,22 @@ import javelin.view.screen.BattleScreen;
 public abstract class Fight{
   static final String ESCAPE="Are you sure you want to escape?\n"
       +"Press ENTER to confirm or any other key to cancel...";
+  /**
+   * Average combat duration in rounds. This is a very tricky estimate, based on
+   * lack of sources, full reliance on anecdotal evidence and high-level combat
+   * being much more volatile (because of "whoever goes first wins" abilities).
+   *
+   * In my research, the one source I found for d20 proper suggested 4 rounds as
+   * median.
+   * https://paizo.com/threads/rzs2kgg1?On-average-how-many-rounds-does-combat-last
+   *
+   * A dozen or two discussions for other D&D editions and Pathfinder 2E boiled
+   * down to a median of 4.
+   *
+   * D&D 5e is designed around 3-round combats, with a couple "multiply damage
+   * by 3" guidelines that imply it in the DMG and MM.
+   */
+  public static final int COMBATLENGTH=4;
 
   /** Global fight state. */
   public static BattleState state=null;
@@ -77,22 +93,10 @@ public abstract class Fight{
   /** {@link #map} fallback. See {@link #getdefaultterrains()}. */
   public List<Terrain> terrains=getdefaultterrains();
 
-  /**
-   * Average combat duration in rounds. This is a very tricky estimate, based on
-   * lack of sources, full reliance on anecdotal evidence and high-level combat
-   * being much more volatile (because of "whoever goes first wins" abilities).
-   *
-   * In my research, the one source I found for d20 proper suggested 4 rounds as
-   * median.
-   * https://paizo.com/threads/rzs2kgg1?On-average-how-many-rounds-does-combat-last
-   *
-   * A dozen or two discussions for other D&D editions and Pathfinder 2E boiled
-   * down to a median of 4.
-   *
-   * D&D 5e is designed around 3-round combats, with a couple "multiply damage
-   * by 3" guidelines that imply it in the DMG and MM.
-   */
-  public static final int COMBATLENGTH=4;
+  /** Will multiply gold reward. */
+  protected double goldbonus=1;
+  /** Will multiply experience reward. */
+  protected double xpbonus=1;
 
   /**
    * @return An encounter level for which an appropriate challenge should be
@@ -121,13 +125,6 @@ public abstract class Fight{
       throw new RuntimeException("Cannot bribe this fight! "+getClass());
   }
 
-  /** @return Amount of gold to reward party. */
-  protected int getgoldreward(List<Combatant> defeated){
-    var gold=RewardCalculator.receivegold(defeated);
-    /* should at least serve as food for 1 day */
-    return Javelin.round(Math.max(gold,Squad.active.eat()/2));
-  }
-
   /**
    * Only called on victory.
    *
@@ -136,9 +133,11 @@ public abstract class Fight{
   public String reward(){
     var rewards="Congratulations! ";
     var r=Fight.originalredteam;
-    if(rewardxp) rewards+=RewardCalculator.rewardxp(Fight.originalblueteam,r,1);
+    if(rewardxp)
+      rewards+=RewardCalculator.rewardxp(Fight.originalblueteam,r,xpbonus);
     if(rewardgold){
-      var gold=getgoldreward(r);
+      var gold=RewardCalculator.receivegold(r)*goldbonus;
+      gold=Javelin.round(Math.max(gold,Squad.active.eat()/2));
       Squad.active.gold+=gold;
       rewards+=" Party receives $"+Javelin.format(gold)+"!";
     }

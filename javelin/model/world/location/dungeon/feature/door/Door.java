@@ -2,11 +2,14 @@ package javelin.model.world.location.dungeon.feature.door;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javelin.Debug;
 import javelin.Javelin;
 import javelin.controller.Point;
+import javelin.controller.content.fight.Fight;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.generator.dungeon.template.FloorTile;
 import javelin.controller.table.dungeon.door.HiddenDoor;
@@ -39,22 +42,33 @@ import javelin.old.RPG;
  * @author alex
  */
 public class Door extends Feature{
-  static final List<Class<? extends Door>> TYPES=new ArrayList<>();
   static final List<DoorTrap> TRAPS=Arrays.asList(Alarm.INSTANCE,
       ArcaneLock.INSTANCE,HoldPortal.INSTANCE);
   static final String SPENDMASTERKEY="Do you want to spend a master key to open this door?\n"
       +"Press ENTER to confirm or any other key to cancel...";
+  static final String FORCE="""
+      The door is stuck (difficulty: %s)... Do you want to force it?
+
+      Press ENTER to try to force it once, b to force until it's broken or any other key to cancel...
+      """;
+  static final String BEYONDSTUCK="This door is stuck beyond hope of being budged by %s...";
+  static final String FORCED="%s breaks the door down!";
+  static final String FORCEFAIL="%s could not break the door...";
+  static final Map<Character,Integer> ATTEMPTS=new HashMap<>();
+  static final List<Class<? extends Door>> TYPES=new ArrayList<>();
+
+  static void registerdoortype(Class<? extends Door> d,int chances){
+    for(var i=0;i<chances;i++) TYPES.add(d);
+  }
 
   static{
+    ATTEMPTS.put('\n',1);
+    ATTEMPTS.put('b',Integer.MAX_VALUE);
     registerdoortype(WoodenDoor.class,3);
     registerdoortype(GoodWoodenDoor.class,2);
     registerdoortype(ExcellentWoodenDoor.class,2);
     registerdoortype(StoneDoor.class,1);
     registerdoortype(IronDoor.class,1);
-  }
-
-  static void registerdoortype(Class<? extends Door> d,int chances){
-    for(var i=0;i<chances;i++) TYPES.add(d);
   }
 
   /** DC of {@link DisableDevice} to unlock. */
@@ -73,9 +87,7 @@ public class Door extends Feature{
   /** <code>true</code> if locked. */
   public boolean locked;
   /** @see #searchdc */
-  /**
-   * TODO use only #draw, remove
-   */
+  /** TODO use only #draw, remove */
   boolean hidden;
 
   Door(String avatar,int breakdcstuck,int breakdclocked,
@@ -93,6 +105,27 @@ public class Door extends Feature{
     if(unlockdc<2) unlockdc=2;
     if(trap!=null) trap.generate(this);
     draw=!hidden;
+  }
+
+  boolean force(Combatant forcer,int strength){
+    if(breakdc>20+strength){
+      Javelin.message(BEYONDSTUCK.formatted(forcer),true);
+      return false;
+    }
+    var prompt=FORCE.formatted(Javelin.describe(strength,breakdc));
+    var attempts=ATTEMPTS.getOrDefault(Javelin.prompt(prompt),0);
+    if(attempts==0) return false;
+    Fight f=null;
+    for(var i=0;i<attempts&&stuck&&f==null;i++){
+      if(10+strength>=breakdc||RPG.r(1,20)+strength>=breakdc) stuck=false;
+      if(RPG.chancein(10)) f=Dungeon.active.dungeon.fight();
+    }
+    Javelin.message((stuck?FORCEFAIL:FORCED).formatted(forcer),false);
+    if(f!=null){
+      Javelin.message("The noise draws someone's attention!",true);
+      throw new StartBattle(f);
+    }
+    return !stuck;
   }
 
   @Override
@@ -113,39 +146,11 @@ public class Door extends Feature{
         return false;
       }
     locked=false;
-    if(stuck){
-      var prompt="The door is too heavy to open... Do you want to force it?\n";
-      prompt+="Press ENTER to force or any other key to cancel...";
-      if(Javelin.prompt(prompt)!='\n'||!force(forcer,strength)) return false;
-    }
+    if(stuck&&!force(forcer,strength)) return false;
     enter=true;
     remove();
     spring(unlocker==null?forcer:unlocker);
     return true;
-  }
-
-  boolean force(Combatant forcer,int strength){
-    var forced=false;
-    var alerted=false;
-    forced=attemptbreak(strength);
-    alerted=RPG.chancein(10);
-    String result;
-    if(forced){
-      result=forcer+" breaks the door down!";
-      stuck=false;
-    }else result=forcer+" could not break the door...";
-    if(alerted) result+="\nThe noise draws someone's attention!";
-    Javelin.message(result,false);
-    if(alerted) throw new StartBattle(Dungeon.active.dungeon.fight());
-    return !stuck;
-  }
-
-  boolean attemptbreak(int strength){
-    if(10+strength>=breakdc) return true;
-    var roll=RPG.r(1,20);
-    if(roll==20) return true;
-    if(roll==1) return false;
-    return roll+strength>=breakdc;
   }
 
   boolean usekey(){

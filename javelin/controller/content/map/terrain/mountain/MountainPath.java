@@ -13,15 +13,15 @@ import javelin.view.Images;
  * @author alex
  */
 public class MountainPath extends ForestPath{
-	/** Constructor. */
-	public MountainPath(){
-		wall=Images.get(List.of("terrain","ruggedwall"));
-		floor=Images.get(List.of("terrain","desert"));
-		obstacle=Images.get(List.of("terrain","rock2"));
-		paths=RPG.r(1,4)+4;
-		river=RPG.chancein(9);
-		riverwidth=new int[]{1,2};
-		obstructed=RPG.r(5,20)/100f;
-
-	}
+  /** Constructor. */
+  public MountainPath(){
+    name="Mountain path";
+    wall=Images.get(List.of("terrain","ruggedwall"));
+    floor=Images.get(List.of("terrain","desert"));
+    obstacle=Images.get(List.of("terrain","rock2"));
+    paths=RPG.r(1,4)+4;
+    river=RPG.chancein(9);
+    riverwidth=new int[]{1,2};
+    obstructed=RPG.r(5,20)/100f;
+  }
 }

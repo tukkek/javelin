@@ -48,7 +48,7 @@ public class EncounterGenerator{
    * generate {@link Combatants} accordingly. This is helpful because
    * {@link Terrain} pools are vast and can generate any type of encounter level
    * easily while {@link EncounterIndex}es are usually more limited and thus
-   * more slowly scan all available encounter pools.
+   * more exhaustively scan all available encounter pools.
    *
    * @author alex
    */

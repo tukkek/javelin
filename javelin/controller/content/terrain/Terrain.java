@@ -122,9 +122,10 @@ public abstract class Terrain implements Serializable{
   public Boolean safe=false;
   /** Human-friendly name, as in "Location is in the %s". */
   public String description;
-
-  Maps maps;
-  Maps shoremaps;
+  /** {@link Fight} {@link Map}s. */
+  public Maps maps;
+  /** As {@link #maps} but next to {@link Water}. */
+  public Maps shoremaps;
 
   /** Constructor. */
   protected Terrain(String name,Maps maps,Maps shoremaps){

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
@@ -13,8 +12,13 @@ import javelin.model.Realm;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.Tier;
+import javelin.model.item.consumable.Eidolon;
+import javelin.model.item.consumable.Scroll;
+import javelin.model.item.potion.Potion;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureLightWounds;
+import javelin.model.unit.abilities.spell.enchantment.compulsion.Bane;
 import javelin.model.world.Period;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
@@ -27,6 +31,7 @@ import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
+import javelin.old.RPG;
 import javelin.view.screen.Option;
 import javelin.view.screen.shopping.ShoppingScreen;
 import javelin.view.screen.town.PurchaseOption;
@@ -314,11 +319,20 @@ public class Shop extends Location{
    */
   static public Shop newbasic(){
     var s=new Shop();
-    var cheap=Item.randomize(Item.NONPRECIOUS.stream().filter(i->i.price<100)
-        .collect(Collectors.toList()));
-    for(var i:cheap) i.identified=true;
     s.selection.clear();
-    s.selection.addAll(cheap.subList(0,Math.min(5,cheap.size())));
+    s.selection.addAll(
+        List.of(new Potion(new CureLightWounds()),new Scroll(new Bane())));
+    var cheap=Item.randomize(Item.NONPRECIOUS.stream().filter(i->i.price<100)
+        .map(Item::clone).limit(5).toList());
+    var eidolons=cheap.stream().filter(c->c instanceof Eidolon).toList();
+    if(!eidolons.isEmpty()){
+      cheap.add(RPG.pick(eidolons));
+      cheap.removeAll(eidolons);
+    }
+    if(s.selection.size()<5) s.selection
+        .addAll(cheap.subList(0,Math.min(5-s.selection.size(),cheap.size())));
+    s.selection.sort();
+    for(var i:s.selection) i.identified=true;
     return s;
   }
 }

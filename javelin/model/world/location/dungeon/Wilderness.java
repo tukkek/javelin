@@ -254,7 +254,7 @@ public class Wilderness extends Dungeon{
 
   @Override
   public String getimagename(){
-    return "wilderness";
+    return "wilderness-"+Tier.get(level).toString().toLowerCase();
   }
 
   @Override

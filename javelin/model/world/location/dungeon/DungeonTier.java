@@ -2,7 +2,7 @@ package javelin.model.world.location.dungeon;
 
 import java.util.List;
 
-import javelin.model.item.Tier;
+import javelin.controller.challenge.Tier;
 import javelin.model.world.location.dungeon.branch.temple.Temple;
 
 public class DungeonTier{

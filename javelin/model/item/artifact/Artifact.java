@@ -1,8 +1,8 @@
 package javelin.model.item.artifact;
 
 import javelin.Javelin;
+import javelin.controller.challenge.Tier;
 import javelin.model.item.Item;
-import javelin.model.item.Tier;
 import javelin.model.item.gear.rune.RuneGear;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;

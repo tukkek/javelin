@@ -8,10 +8,10 @@ import java.util.List;
 
 import javelin.Debug;
 import javelin.controller.Point;
+import javelin.controller.challenge.Tier;
 import javelin.controller.content.fight.Siege;
 import javelin.controller.content.map.DndMap;
 import javelin.controller.content.map.Map;
-import javelin.model.item.Tier;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 import javelin.old.RPG;

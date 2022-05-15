@@ -1,12 +1,12 @@
 package javelin.test;
 
 import javelin.Debug;
+import javelin.controller.challenge.Tier;
 import javelin.controller.content.fight.mutator.mode.Boss;
 import javelin.controller.content.fight.mutator.mode.Waves;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.generator.feature.LocationGenerator;
-import javelin.model.item.Tier;
 import javelin.model.world.location.haunt.Haunt;
 
 /**

@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
+import javelin.controller.challenge.Tier;
 import javelin.controller.content.event.urban.UrbanEvents;
 import javelin.controller.content.event.wild.WildEvents;
 import javelin.controller.content.kit.Kit;
@@ -23,7 +24,6 @@ import javelin.controller.table.dungeon.BranchTable;
 import javelin.controller.table.dungeon.ChestTable;
 import javelin.controller.table.dungeon.feature.DecorationTable;
 import javelin.model.item.Item;
-import javelin.model.item.Tier;
 import javelin.model.item.consumable.Eidolon;
 import javelin.model.item.consumable.Scroll;
 import javelin.model.item.gear.Gear;

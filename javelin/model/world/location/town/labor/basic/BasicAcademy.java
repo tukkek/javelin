@@ -3,6 +3,7 @@ package javelin.model.world.location.town.labor.basic;
 import java.util.ArrayList;
 import java.util.Set;
 
+import javelin.controller.challenge.Tier;
 import javelin.controller.content.scenario.Campaign;
 import javelin.controller.content.upgrade.NaturalArmor;
 import javelin.controller.content.upgrade.Upgrade;
@@ -20,7 +21,6 @@ import javelin.controller.content.upgrade.damage.MeleeDamage;
 import javelin.controller.content.upgrade.damage.RangedDamage;
 import javelin.model.Realm;
 import javelin.model.item.Item;
-import javelin.model.item.Tier;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.Academy;
 import javelin.model.world.location.Guild;

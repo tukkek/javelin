@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import javelin.controller.Point;
+import javelin.controller.challenge.Tier;
 import javelin.controller.content.map.DndMap;
 import javelin.controller.content.map.Map;
 import javelin.controller.content.map.Section;
@@ -16,7 +17,6 @@ import javelin.controller.content.map.location.town.TownMap;
 import javelin.controller.content.map.terrain.underground.DwarvenCave;
 import javelin.controller.content.terrain.Marsh;
 import javelin.controller.exception.GaveUp;
-import javelin.model.item.Tier;
 import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
 import javelin.view.Images;

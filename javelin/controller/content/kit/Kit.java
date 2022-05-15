@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.challenge.Tier;
 import javelin.controller.content.kit.dragoon.BlackDragoon;
 import javelin.controller.content.kit.dragoon.BlueDragoon;
 import javelin.controller.content.kit.dragoon.GreenDragoon;
@@ -23,7 +24,6 @@ import javelin.controller.content.kit.wizard.Transmuter;
 import javelin.controller.content.upgrade.Upgrade;
 import javelin.controller.content.upgrade.ability.RaiseAbility;
 import javelin.controller.content.upgrade.classes.ClassLevelUpgrade;
-import javelin.model.item.Tier;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.discipline.Discipline;

@@ -17,7 +17,7 @@ import javax.imageio.ImageIO;
 
 import javelin.Debug;
 import javelin.Javelin;
-import javelin.model.item.Tier;
+import javelin.controller.challenge.Tier;
 import javelin.model.state.MeldCrystal;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;

@@ -7,12 +7,12 @@ import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.challenge.Tier;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.NpcGenerator;
 import javelin.controller.generator.encounter.Encounter;
-import javelin.model.item.Tier;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.old.RPG;

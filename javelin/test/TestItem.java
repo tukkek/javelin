@@ -6,8 +6,8 @@ import java.util.List;
 
 import javelin.Debug;
 import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.challenge.Tier;
 import javelin.model.item.Item;
-import javelin.model.item.Tier;
 
 /**
  * Helper methods to help test {@link Item}s.

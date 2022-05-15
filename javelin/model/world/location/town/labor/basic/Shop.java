@@ -7,11 +7,11 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.challenge.Tier;
 import javelin.controller.comparator.OptionsByPriority;
 import javelin.model.Realm;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
-import javelin.model.item.Tier;
 import javelin.model.item.consumable.Eidolon;
 import javelin.model.item.consumable.Scroll;
 import javelin.model.item.potion.Potion;

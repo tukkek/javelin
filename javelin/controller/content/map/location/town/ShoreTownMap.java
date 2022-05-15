@@ -7,12 +7,12 @@ import java.util.List;
 
 import javelin.Debug;
 import javelin.controller.Point;
+import javelin.controller.challenge.Tier;
 import javelin.controller.content.map.DndMap;
 import javelin.controller.content.map.Section;
 import javelin.controller.content.map.Section.Sections;
 import javelin.controller.content.map.terrain.plain.PlainsShore;
 import javelin.controller.exception.GaveUp;
-import javelin.model.item.Tier;
 import javelin.old.RPG;
 import javelin.view.Images;
 

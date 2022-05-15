@@ -1,7 +1,7 @@
 package javelin.model.world.location.order;
 
+import javelin.controller.challenge.Tier;
 import javelin.model.item.Item;
-import javelin.model.item.Tier;
 import javelin.model.item.consumable.Scroll;
 import javelin.model.item.potion.Potion;
 import javelin.model.world.Period;

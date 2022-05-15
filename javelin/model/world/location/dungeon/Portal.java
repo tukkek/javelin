@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.controller.Point;
+import javelin.controller.challenge.Tier;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.table.dungeon.BranchTable;
-import javelin.model.item.Tier;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;

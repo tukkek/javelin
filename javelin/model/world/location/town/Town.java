@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.Point;
+import javelin.controller.challenge.Tier;
 import javelin.controller.content.event.urban.UrbanEvent;
 import javelin.controller.content.event.urban.UrbanEvents;
 import javelin.controller.content.event.urban.negative.Riot;
@@ -29,7 +30,6 @@ import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.model.Realm;
-import javelin.model.item.Tier;
 import javelin.model.unit.Alignment;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;

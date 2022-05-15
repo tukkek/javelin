@@ -8,6 +8,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.Difficulty;
+import javelin.controller.challenge.Tier;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.content.fight.Siege;
 import javelin.controller.content.fight.mutator.mode.Waves;
@@ -17,7 +18,6 @@ import javelin.controller.content.terrain.Terrain;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.generator.encounter.AlignmentDetector;
 import javelin.controller.generator.encounter.EncounterGenerator;
-import javelin.model.item.Tier;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;

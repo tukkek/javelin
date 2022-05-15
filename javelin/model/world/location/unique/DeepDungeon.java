@@ -1,6 +1,6 @@
 package javelin.model.world.location.unique;
 
-import javelin.model.item.Tier;
+import javelin.controller.challenge.Tier;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonEntrance;

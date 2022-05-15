@@ -10,6 +10,7 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
+import javelin.controller.challenge.Tier;
 import javelin.controller.content.action.UseItem;
 import javelin.controller.content.action.world.inventory.EquipGear;
 import javelin.controller.content.action.world.inventory.UseItems;

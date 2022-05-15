@@ -1,36 +1,46 @@
 package javelin.model.world.location.town.diplomacy.quest.kill;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javelin.controller.comparator.ActorByDistance;
-import javelin.model.world.location.Location;
+import javelin.model.world.location.ContestedTerritory;
+import javelin.model.world.location.Fortification;
 import javelin.model.world.location.haunt.Haunt;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.diplomacy.quest.Quest;
 import javelin.model.world.location.town.labor.Trait;
 
 /**
- * Clear a {@link Haunt}.
+ * Clear a {@link Haunt} or {@link ContestedTerritory}.
  *
  * @see Trait#MILITARY
  * @author alex
  */
 public class Raid extends KillQuest{
-  Location target;
+  Fortification target;
 
   /** Constructor. */
   public Raid(){
     duration=SHORT;
   }
 
+  static List<? extends Fortification> gettargets(int el,Town town){
+    var comparator=new ActorByDistance(town);
+    return List.of(Haunt.gethaunts(),ContestedTerritory.getall()).stream()
+        .flatMap(List::stream)
+        .filter(t->t.ishostile()&&challenge(el,t.getel(el)))
+        .sorted(comparator::compare).toList();
+  }
+
   @Override
   protected void define(Town t){
     super.define(t);
-    var comparator=new ActorByDistance(town);
-    var targets=Haunt.gethaunts().stream()
-        .filter(h->h.ishostile()&&challenge(h.getel(el)))
-        .sorted(comparator::compare).toList();
+    var targets=gettargets(el,t);
     if(targets.isEmpty()) return;
     target=Quest.select(targets);
-    name="Clear %s %s".formatted(target,Quest.locate(target));
+    var territory=target.descriptionknown.toLowerCase();
+    name="Clear %s, %s".formatted(territory,Quest.locate(target));
   }
 
   @Override
@@ -41,5 +51,17 @@ public class Raid extends KillQuest{
   @Override
   protected boolean complete(){
     return !target.ishostile();
+  }
+
+  /** @return {@link Town}s with valid target EL (or <code>null</code>). */
+  public static String test(){
+    var towns=Town.gettowns();
+    var output=new ArrayList<String>(towns.size());
+    for(var t:towns){
+      var targets=gettargets(t.population,t);
+      var el=targets.isEmpty()?null:targets.get(0).getel(null);
+      output.add("%s: raid EL %s".formatted(t,el));
+    }
+    return String.join("\n",output);
   }
 }

@@ -65,14 +65,14 @@ public abstract class Quest implements Serializable{
       %s
       Mood in %s is now: %s.""";
   static final List<Class<? extends Quest>> ALL=new ArrayList<>(8);
-  static final Class<? extends Quest> DEBUG=Raid.class;
+  static final Class<? extends Quest> DEBUG=null;
 
   static{
     //TODO QUESTS.put(Trait.CRIMINAL,List.of(Hit.class));
     QUESTS.put(Trait.EXPANSIVE,List.of(Discover.class));
     //QUESTS.put(Trait.MAGICAL,List.of(FetchRecipe.class));
     QUESTS.put(Trait.MERCANTILE,List.of(Connect.class));
-    //TODO QUESTS.put(Trait.MILITARY,List.of(Raid.class));
+    QUESTS.put(Trait.MILITARY,List.of(Raid.class));
     QUESTS.put(Trait.NATURAL,List.of(FetchGem.class));
     QUESTS.put(Trait.RELIGIOUS,List.of(FetchArt.class));
     for(var quests:QUESTS.values()) ALL.addAll(quests);
@@ -245,8 +245,10 @@ public abstract class Quest implements Serializable{
   }
 
   /** @return <code>true</code> if this is a good challenge for this quest. */
-  protected boolean challenge(int el){
-    return this.el+Difficulty.EASY<=el&&el<=this.el+Difficulty.DIFFICULT;
+  static protected boolean challenge(int questel,int targetel){
+    var e=questel+Difficulty.DIFFICULT;
+    var d=questel+Difficulty.DEADLY;
+    return e<=targetel&&targetel<=d;
   }
 
   /**

@@ -153,6 +153,12 @@ public class RPG{
     return result;
   }
 
+  /** @return 50% chance of first item, then 50% of second... */
+  static public <K> K select(List<K> items){
+    for(var i:items) if(chancein(2)) return i;
+    return items.get(0);
+  }
+
   /** @return Lowest of two calls to {@link #r(int, int)}. */
   public static int low(int from,int to){
     return Math.min(r(from,to),r(from,to));

@@ -2,7 +2,6 @@ package javelin.model.world.location.town.diplomacy.quest.find;
 
 import java.util.List;
 
-import javelin.controller.comparator.ActorByDistance;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.branch.temple.Temple;
@@ -11,7 +10,6 @@ import javelin.model.world.location.haunt.Haunt;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.diplomacy.quest.Quest;
 import javelin.model.world.location.town.labor.Trait;
-import javelin.old.RPG;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -36,11 +34,9 @@ public class Discover extends FindQuest{
   @Override
   protected void define(Town t){
     super.define(t);
-    var c=new ActorByDistance(t);
-    var targets=RPG.shuffle(World.getactors()).stream().filter(this::validate)
-        .sorted(c::compare).toList();
+    var targets=World.getactors().stream().filter(this::validate).toList();
     if(targets.isEmpty()) return;
-    target=Quest.select(targets);
+    target=select(targets);
     name="Discover %s %s".formatted(target,Quest.locate(target));
   }
 

@@ -8,7 +8,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.controller.comparator.ActorByDistance;
+import javelin.controller.comparator.ActorsByDistance;
 import javelin.controller.content.scenario.Scenario;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.exception.RepeatTurn;
@@ -254,7 +254,7 @@ public abstract class Actor implements Serializable{
   }
 
   public <K extends Actor> List<K> sortbydistance(List<K> actor){
-    actor.sort(new ActorByDistance(this));
+    actor.sort(new ActorsByDistance(this));
     return actor;
   }
 

@@ -1,11 +1,10 @@
 package javelin.model.world.location.town.diplomacy.quest.fetch;
 
-import static java.util.stream.Collectors.toList;
-
 import java.util.ArrayList;
+import java.util.List;
 
 import javelin.controller.challenge.Difficulty;
-import javelin.controller.comparator.ActorByDistance;
+import javelin.controller.comparator.ActorsByDistance;
 import javelin.model.item.Item;
 import javelin.model.item.precious.PreciousObject;
 import javelin.model.unit.Squad;
@@ -38,15 +37,15 @@ public abstract class FetchQuest extends Quest{
   }
 
   static DungeonFloor search(Class<? extends Chest> type,int el,Town t){
-    var dungeons=new ArrayList<>(DungeonEntrance.getdungeons());
-    dungeons.addAll(Wilderness.getwildernesses());
-    var sort=new ActorByDistance(t);
-    var floors=dungeons.stream().sorted((a,b)->sort.compare(a,b))
+    var sort=new ActorsByDistance(t);
+    var floors=List
+        .of(DungeonEntrance.getdungeons(),Wilderness.getwildernesses()).stream()
+        .flatMap(List::stream).sorted(sort::compare)
         .flatMap(d->d.dungeon.floors.stream())
         .filter(f->el+Difficulty.VERYEASY<f.level&&f.level<el+Difficulty.DEADLY
             &&f.features.get(type)!=null)
-        .collect(toList());
-    return floors.isEmpty()?null:Quest.select(floors);
+        .toList();
+    return floors.isEmpty()?null:RPG.select(floors);
   }
 
   static String describe(Item i,DungeonFloor f,boolean showterrain){

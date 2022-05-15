@@ -2,11 +2,9 @@ package javelin.model.world.location.town.diplomacy.quest.find;
 
 import java.util.HashSet;
 
-import javelin.controller.comparator.ActorByDistance;
 import javelin.model.world.location.ResourceSite;
 import javelin.model.world.location.ResourceSite.Resource;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.diplomacy.quest.Quest;
 import javelin.model.world.location.town.labor.Trait;
 
 /**
@@ -25,9 +23,7 @@ public class Connect extends FindQuest{
     r.removeAll(t.resources);
     if(r.isEmpty()) return;
     var targets=ResourceSite.getall();
-    var c=new ActorByDistance(t);
-    targets.sort(c::compare);
-    var site=Quest.select(targets);
+    var site=select(targets);
     target=site.type;
     name="Connect %s".formatted(target.name.toLowerCase());
   }

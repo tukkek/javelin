@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import javelin.Javelin;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.comparator.ActorsByDistance;
 import javelin.controller.comparator.ItemsByPrice;
 import javelin.controller.content.ContentSummary;
 import javelin.controller.content.terrain.Terrain;
@@ -258,11 +259,12 @@ public abstract class Quest implements Serializable{
    *
    * TODO make sure all quests are using
    *
-   * @return 50% chance of first item, then 50% of second...
+   *
    */
-  public static <K extends Object> K select(List<K> items){
-    for(var i:items) if(RPG.chancein(2)) return i;
-    return items.get(0);
+  public <K extends Actor> K select(List<K> items){
+    items=new ArrayList<>(items);
+    items.sort(new ActorsByDistance(town));
+    return RPG.select(items);
   }
 
   /**

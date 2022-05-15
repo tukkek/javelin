@@ -12,7 +12,7 @@ import javelin.controller.Point;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.collection.WeightedList;
-import javelin.controller.comparator.ActorByDistance;
+import javelin.controller.comparator.ActorsByDistance;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.generator.encounter.Encounter;
@@ -146,7 +146,7 @@ public class Caravan extends Actor{
 					.collect(Collectors.toList());
 			if(!towns.isEmpty()){
 				if(from==null) return RPG.pick(towns).getlocation();
-				towns.sort(new ActorByDistance(from).reversed());
+				towns.sort(new ActorsByDistance(from).reversed());
 				var chances=new WeightedList<>(towns).distribution;
 				return RPG.pick(chances).getlocation();
 			}

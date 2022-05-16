@@ -47,7 +47,7 @@ public class WorldGenerator extends Thread{
   public static final CountingSet RESETS=Javelin.DEBUG?new CountingSet():null;
 
   static final int MAXRETRIES=1000*2;
-  static final int NOISEAMOUNT=World.scenario.size*World.scenario.size/10;
+  static final int NOISEAMOUNT=World.SIZE*World.SIZE/10;
   static final Terrain[] NOISE={Terrain.PLAIN,Terrain.HILL,Terrain.FOREST,
       Terrain.MOUNTAINS};
   static final int REFRESH=100;
@@ -95,19 +95,14 @@ public class WorldGenerator extends Thread{
 
   /** Creates {@link World} geography and {@link Location}s. */
   protected void generate(){
-    try{
-      retries=0;
-      world=new World();
-      var realms=RPG.shuffle(new LinkedList<>(Realm.REALMS));
-      var regions=new ArrayList<HashSet<Point>>(realms.size());
-      generategeography(realms,regions,world);
-      world.featuregenerator=World.scenario.locationgenerator
-          .getDeclaredConstructor().newInstance();
-      var start=world.featuregenerator.generate(realms,regions,world);
-      finish(start,world);
-    }catch(ReflectiveOperationException e){
-      throw new RuntimeException(e);
-    }
+    retries=0;
+    world=new World();
+    var realms=RPG.shuffle(new LinkedList<>(Realm.REALMS));
+    var regions=new ArrayList<HashSet<Point>>(realms.size());
+    generategeography(realms,regions,world);
+    world.featuregenerator=new LocationGenerator();
+    var start=world.featuregenerator.generate(realms,regions,world);
+    finish(start,world);
   }
 
   public synchronized void finish(Location start,World w){
@@ -152,7 +147,7 @@ public class WorldGenerator extends Thread{
 
   protected void generategeography(LinkedList<Realm> realms,
       ArrayList<HashSet<Point>> regions,World w){
-    var size=World.scenario.size;
+    var size=World.SIZE;
     for(var i=0;i<size;i++) for(var j=0;j<size;j++) w.map[i][j]=Terrain.FOREST;
     for(Terrain t:WorldGenerator.GENERATIONORDER) regions.add(t.generate(w));
     var nw=new Point(0,0);
@@ -166,7 +161,7 @@ public class WorldGenerator extends Thread{
   }
 
   void floodedge(Point from,Point to,int deltax,int deltay,World w){
-    var edge=new ArrayList<Point>(World.scenario.size);
+    var edge=new ArrayList<Point>(World.SIZE);
     edge.add(from);
     edge.add(to);
     if(from.x!=to.x)
@@ -197,7 +192,7 @@ public class WorldGenerator extends Thread{
         t.interrupt();
         t.join();
       }
-    }catch(ReflectiveOperationException|InterruptedException e){
+    }catch(InterruptedException e){
       throw new RuntimeException(e);
     }
   }
@@ -238,9 +233,8 @@ public class WorldGenerator extends Thread{
     return true;
   }
 
-  static void startthread() throws ReflectiveOperationException{
-    var generator=World.scenario.worldgenerator;
-    var thread=generator.getDeclaredConstructor().newInstance();
+  static void startthread(){
+    var thread=new WorldGenerator();
     thread.start();
     WORLDTHREADS.add(thread);
   }

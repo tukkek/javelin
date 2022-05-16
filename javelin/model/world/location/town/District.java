@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.HashSet;
 
 import javelin.controller.Point;
-import javelin.controller.content.scenario.Scenario;
 import javelin.controller.content.terrain.Terrain;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
@@ -83,7 +82,7 @@ public class District{
    *   district.
    */
   public int getradius(){
-    return town.getrank().getradius()+World.scenario.districtmodifier;
+    return town.getrank().getradius();
   }
 
   /**
@@ -134,8 +133,8 @@ public class District{
         continue searching;
       var neighbors=0;
       for(var x=p.x-1;x<=p.x+1;x++) for(var y=p.y-1;y<=p.y+1;y++){
-        if(x==p.x&&y==p.y||!World.validatecoordinate(x,y)||w.roads[p.x][p.y]
-            ||w.highways[p.x][p.y]||World.get(x,y,locations)==null)
+        if(x==p.x&&y==p.y||!World.validatecoordinate(x,y)
+            ||World.get(x,y,locations)==null)
           continue;
         neighbors+=1;
         if(neighbors>MOSTNEIGHBORSALLOWED) continue searching;

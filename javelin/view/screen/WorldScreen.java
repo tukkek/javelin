@@ -18,7 +18,6 @@ import javelin.controller.content.action.world.WorldAction;
 import javelin.controller.content.action.world.WorldMove;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.content.fight.RandomEncounter;
-import javelin.controller.content.scenario.Scenario;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.content.terrain.hazard.Hazard;
 import javelin.controller.db.StateManager;
@@ -183,11 +182,8 @@ public class WorldScreen extends BattleScreen{
   @Override
   public void turn(){
     if(WorldScreen.welcome) saywelcome();
-    else if(World.scenario.win()){
-      StateManager.clear();
-      System.exit(0);
-    }else Javelin.lose();
-    endturn();
+    else Javelin.lose();
+    endday();
     if(World.getall(Squad.class).isEmpty()) return;
     if(Squad.active!=null){
       save();
@@ -233,15 +229,34 @@ public class WorldScreen extends BattleScreen{
     if(el>=Tier.MID.minlevel&&RPG.chancein(Time.SEASON*el/20)) l.spawn();
   }
 
-  /**
-   * Player acts and ends turn, allowing time to pass.
-   *
-   * @see Javelin#act()
-   * @see Squad#time
-   */
-  void endturn(){
-    var s=World.scenario;
-    s.endturn();
+  void cover(){
+    if(Debug.showmap) return;
+    var amount=2;
+    var stayrevealed=new HashSet<Point>();
+    var mappanel=WorldScreen.current.mappanel;
+    for(Actor a:World.getactors()){
+      if(!mappanel.tiles[a.x][a.y].discovered) continue;
+      var point=a.getlocation();
+      stayrevealed.add(point);
+      var l=a instanceof Location?(Location)a:null;
+      if(l==null) continue;
+      var vision=l.watch();
+      if(vision>0) for(var x=point.x-vision;x<=point.x+vision;x++)
+        for(var y=point.y-vision;y<=point.y+vision;y++)
+          stayrevealed.add(new Point(x,y));
+    }
+    for(Point p:RPG
+        .shuffle(new ArrayList<>(Point.getrange(World.SIZE,World.SIZE)))){
+      var t=mappanel.tiles[p.x][p.y];
+      if(!t.discovered||stayrevealed.contains(p)) continue;
+      t.cover();
+      amount-=1;
+      if(amount==0) break;
+    }
+    Squad.updatevision();
+  }
+
+  void endday(){
     if(Dungeon.active!=null) return;
     var act=Javelin.act();
     var time=Math.round(act==null?lastday*24:act.gettime());
@@ -253,7 +268,7 @@ public class WorldScreen extends BattleScreen{
       Portal.turn();
       RandomEncounter.evolve();
       World.seed.featuregenerator.spawn(1f/SPAWNPERIOD,false);
-      s.endday();
+      cover();
       var actors=World.getactors();
       var incursions=Incursion.getall();
       actors.removeAll(incursions);
@@ -272,7 +287,7 @@ public class WorldScreen extends BattleScreen{
   }
 
   /**
-   * Called from {@link #endturn()}, these daily activiities may throw a
+   * Called from {@link #endday()}, these daily activiities may throw a
    * {@link StartBattle} and break normal code flow, so we leave them for last.
    * If an exception is throw, nothing here should have been important to the
    * {@link Scenario} in question.
@@ -381,10 +396,9 @@ public class WorldScreen extends BattleScreen{
   public boolean explore(int x,int y){
     var s=Squad.active;
     var hoursellapsed=s.move(false,Terrain.current(),x,y);
-    if(World.scenario.worldencounters&&(s.transport==null||s.transport.battle())
+    if((s.transport==null||s.transport.battle())
         &&!Town.getdistricts().contains(new Point(x,y)))
       RandomEncounter.encounter(hoursellapsed/HOURSPERENCOUNTER);
-    if(!World.scenario.worldhazards) return true;
     var special=RPG.r(1,Terrain.HAZARDCHANCE)==1;
     if(s.getdistrict()!=null) return true;
     var hazards=Terrain.get(x,y).gethazards(special).stream()

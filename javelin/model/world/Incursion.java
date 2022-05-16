@@ -224,7 +224,7 @@ public class Incursion extends Actor{
   @SuppressWarnings("unused")
   public static void spawn(Incursion i){
     if(Javelin.DEBUG&&!SPAWN) return;
-    var size=World.scenario.size;
+    var size=World.SIZE;
     var actors=World.getactors().stream().map(Actor::getlocation).toList();
     var from=new Point(i.x,i.y);
     Point spawn=null;

@@ -25,31 +25,27 @@ import javelin.test.TestShop;
  * @author alex
  */
 public class CraftingOrder extends Order{
-	static final int DAY=24;
-	static final int MAXWORK=8;
+  static final int DAY=24;
+  static final int MAXWORK=8;
 
-	/** Item to be done at {@link Order#completionat}. */
-	public Item item;
+  /** Item to be done at {@link Order#completionat}. */
+  public Item item;
 
-	/** @see TestShop */
-	public static int calculateeta(Item i){
-		int hours=DAY/MAXWORK;
-		if(i.price<=250&&(i instanceof Potion||i instanceof Scroll))
-			hours*=2;
-		else if(i.price<1000)
-			hours*=4;
-		else
-			hours*=4*i.price/1000;
-		return hours<24?24:hours;
-	}
+  /** @see TestShop */
+  public static int calculateeta(Item i){
+    var hours=DAY/MAXWORK;
+    if(i.price<=250&&(i instanceof Potion||i instanceof Scroll)) hours*=2;
+    else if(i.price<1000) hours*=4;
+    else hours*=4*i.price/1000;
+    return hours<24?24:hours;
+  }
 
-	public CraftingOrder(Item i,OrderQueue queue){
-		super(calculateeta(i),i.name);
-		item=i.clone();
-		if(queue!=null&&!queue.queue.isEmpty()){
-			long hours=queue.last().completionat-Period.gettime();
-			completionat+=hours/World.scenario.boost;
-		}
-	}
-
+  public CraftingOrder(Item i,OrderQueue queue){
+    super(calculateeta(i),i.name);
+    item=i.clone();
+    if(queue!=null&&!queue.queue.isEmpty()){
+      var hours=queue.last().completionat-Period.gettime();
+      completionat+=hours;
+    }
+  }
 }

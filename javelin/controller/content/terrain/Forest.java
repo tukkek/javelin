@@ -30,9 +30,7 @@ public class Forest extends Terrain{
   public Forest(){
     super("forest",MAPS,new Maps(List.of(ForestShore.class)));
     difficultycap=-3;
-    speedtrackless=1/2f;
-    speedroad=1f;
-    speedhighway=1f;
+    movement=1/2f;
     visionbonus=-4;
     representation='F';
     survivalbonus=+4;

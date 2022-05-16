@@ -9,7 +9,6 @@ import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.comparator.ActorsByDistance;
-import javelin.controller.content.scenario.Scenario;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.RestartWorldGeneration;
@@ -51,10 +50,6 @@ public abstract class Actor implements Serializable{
    */
   public boolean impermeable=false;
   /**
-   * TODO probably better to handle this the way {@link DungeonWorld} does.
-   */
-  public boolean allowedinscenario=true;
-  /**
    * Unique actors are those whose names are very unlikely to appear twice in
    * the same {@link World}.
    */
@@ -73,7 +68,7 @@ public abstract class Actor implements Serializable{
   /** Adds this actor to the {@link World}. */
   public void place(){
     if(x==-1) generate(false);
-    if(World.scenario.allowallactors||allowedinscenario) registerinstance();
+    registerinstance();
   }
 
   /** Move actor to the given coordinates. */
@@ -319,11 +314,8 @@ public abstract class Actor implements Serializable{
 
   /** @return <code>true</code> if {@link #getlocation()} is valid. */
   protected boolean validateplacement(boolean water,World w,List<Actor> actors){
-    if(!water&&w.map[x][y].equals(Terrain.WATER)||World.get(x,y,actors)!=null
-        ||getdistrict()!=null)
-      return false;
-    if(w.roads[x][y]||w.highways[x][y]) return false;
-    return true;
+    if(!water&&w.map[x][y].equals(Terrain.WATER)) return false;
+    return World.get(x,y,actors)==null&&getdistrict()==null;
   }
 
   /**
@@ -337,7 +329,7 @@ public abstract class Actor implements Serializable{
     var actors=World.getactors();
     actors.remove(this);
     var w=World.getseed();
-    var points=Point.getrange(0,0,World.scenario.size,World.scenario.size);
+    var points=Point.getrange(World.SIZE,World.SIZE);
     for(var p:RPG.shuffle(new ArrayList<>(points))){
       x=p.x;
       y=p.y;

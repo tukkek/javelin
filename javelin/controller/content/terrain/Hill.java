@@ -25,9 +25,7 @@ public class Hill extends Terrain{
     super("hill",MAPS,new Maps(List.of(HillShore.class)));
     description="hills";
     difficultycap=-4;
-    speedtrackless=1/2f;
-    speedroad=3/4f;
-    speedhighway=1f;
+    movement=1/2f;
     visionbonus=+2;
     representation='^';
     safe=true;

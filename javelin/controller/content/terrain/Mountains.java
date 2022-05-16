@@ -34,9 +34,7 @@ public class Mountains extends Terrain{
   public Mountains(){
     super("mountains",MAPS,new Maps(List.of(MountainShore.class)));
     difficultycap=-2;
-    speedtrackless=1/2f;
-    speedroad=3/4f;
-    speedhighway=3/4f;
+    movement=1/2f;
     visionbonus=+4;
     representation='M';
     survivalbonus=-2;

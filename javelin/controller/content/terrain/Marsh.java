@@ -28,9 +28,7 @@ public class Marsh extends Terrain{
     super("marsh",MAPS,new Maps(List.of(MarshShore.class)));
     description="marshlands";
     difficultycap=-1;
-    speedtrackless=1/2f;
-    speedroad=3/4f;
-    speedhighway=1f;
+    movement=1/2f;
     visionbonus=-2;
     representation='m';
     liquid=true;

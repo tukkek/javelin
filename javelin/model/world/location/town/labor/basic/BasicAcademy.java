@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import javelin.controller.challenge.Tier;
-import javelin.controller.content.scenario.Campaign;
 import javelin.controller.content.upgrade.NaturalArmor;
 import javelin.controller.content.upgrade.Upgrade;
 import javelin.controller.content.upgrade.ability.RaiseCharisma;

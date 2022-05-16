@@ -22,7 +22,6 @@ import javelin.controller.content.event.urban.positive.FoodSurplus;
 import javelin.controller.content.event.urban.positive.GainResource;
 import javelin.controller.db.StateManager;
 import javelin.model.unit.Squad;
-import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Trait;
 import javelin.old.RPG;
@@ -37,73 +36,68 @@ import javelin.old.RPG;
  * @see Town#ishostile()
  */
 public class UrbanEvents extends EventDealer{
-	/** If <code>false</code>, will not deal any. */
-	public static final boolean ENABLED=false;
+  /** If <code>false</code>, will not deal any. */
+  public static final boolean ENABLED=false;
 
-	/**
-	 * Singleton instance.
-	 *
-	 * @see StateManager
-	 */
-	public static UrbanEvents instance=new UrbanEvents();
-	/**
-	 * Used by {@link #newinstance(Class)} to be passed as a constructor argument.
-	 */
-	public static Town generating;
+  /**
+   * Singleton instance.
+   *
+   * @see StateManager
+   */
+  public static UrbanEvents instance=new UrbanEvents();
+  /**
+   * Used by {@link #newinstance(Class)} to be passed as a constructor argument.
+   */
+  public static Town generating;
 
-	private UrbanEvents(){
-		positive.addcontent(List.of(NothingHappens.class,CollectiveEffort.class,
-				FoodSurplus.class,GainResource.class));
-		neutral.addcontent(
-				List.of(NothingHappens.class,HostTournament.class,Migration.class));
-		negative.addcontent(List.of(NothingHappens.class,Guards.class,Riot.class,
-				Fire.class,Sabotage.class,Revolt.class,Flood.class,FoodShortage.class,
-				Robbers.class,LoseResource.class));
-	}
+  private UrbanEvents(){
+    positive.addcontent(List.of(NothingHappens.class,CollectiveEffort.class,
+        FoodSurplus.class,GainResource.class));
+    neutral.addcontent(
+        List.of(NothingHappens.class,HostTournament.class,Migration.class));
+    negative.addcontent(List.of(NothingHappens.class,Guards.class,Riot.class,
+        Fire.class,Sabotage.class,Revolt.class,Flood.class,FoodShortage.class,
+        Robbers.class,LoseResource.class));
+  }
 
-	@Override
-	protected EventCard newinstance(Class<? extends EventCard> type)
-			throws ReflectiveOperationException{
-		return type.getConstructor(Town.class).newInstance(generating);
-	}
+  @Override
+  protected EventCard newinstance(Class<? extends EventCard> type)
+      throws ReflectiveOperationException{
+    return type.getConstructor(Town.class).newInstance(generating);
+  }
 
-	@Override
-	protected EventDeck choosedeck(){
-		List<EventDeck> choices;
-		var happiness=generating.diplomacy.getstatus();
-		if(happiness>+1)
-			choices=List.of(positive,positive,neutral,negative);
-		else if(happiness<-1)
-			choices=List.of(positive,neutral,negative,negative);
-		else
-			choices=List.of(positive,neutral,negative);
-		return RPG.pick(choices);
-	}
+  @Override
+  protected EventDeck choosedeck(){
+    List<EventDeck> choices;
+    var happiness=generating.diplomacy.getstatus();
+    if(happiness>+1) choices=List.of(positive,positive,neutral,negative);
+    else if(happiness<-1) choices=List.of(positive,neutral,negative,negative);
+    else choices=List.of(positive,neutral,negative);
+    return RPG.pick(choices);
+  }
 
-	@Override
-	public String printsummary(String title){
-		if(!World.scenario.urbanevents) return "(Urban events disabled)";
-		var info=new ArrayList<String>();
-		info.add(positive.getcontentsize()+" positive");
-		info.add(neutral.getcontentsize()+" neutral");
-		info.add(negative.getcontentsize()+" negative");
-		var types=new HashSet<Class<? extends EventCard>>();
-		types.addAll(positive.getcontent());
-		types.addAll(neutral.getcontent());
-		types.addAll(negative.getcontent());
-		var cards=new ArrayList<UrbanEvent>(types.size());
-		generating=Town.gettowns().get(0);
-		for(var t:types)
-			try{
-				cards.add((UrbanEvent)newinstance(t));
-			}catch(ReflectiveOperationException e){
-				throw new RuntimeException(e);
-			}
-		info.add(cards.stream().filter(c->c.traits==null).count()+" basic");
-		for(var t:Trait.ALL){
-			var valid=cards.stream().filter(c->c.traits!=null&&c.traits.contains(t));
-			info.add(valid.count()+" "+t);
-		}
-		return types.size()+" "+title.toLowerCase()+" ("+String.join(", ",info)+")";
-	}
+  @Override
+  public String printsummary(String title){
+    if(!ENABLED) return "(Urban events disabled)";
+    var info=new ArrayList<String>();
+    info.add(positive.getcontentsize()+" positive");
+    info.add(neutral.getcontentsize()+" neutral");
+    info.add(negative.getcontentsize()+" negative");
+    var types=new HashSet<Class<? extends EventCard>>(positive.getcontent());
+    types.addAll(neutral.getcontent());
+    types.addAll(negative.getcontent());
+    var cards=new ArrayList<UrbanEvent>(types.size());
+    generating=Town.gettowns().get(0);
+    for(var t:types) try{
+      cards.add((UrbanEvent)newinstance(t));
+    }catch(ReflectiveOperationException e){
+      throw new RuntimeException(e);
+    }
+    info.add(cards.stream().filter(c->c.traits==null).count()+" basic");
+    for(var t:Trait.ALL){
+      var valid=cards.stream().filter(c->c.traits!=null&&c.traits.contains(t));
+      info.add(valid.count()+" "+t);
+    }
+    return types.size()+" "+title.toLowerCase()+" ("+String.join(", ",info)+")";
+  }
 }

@@ -13,31 +13,30 @@ import javelin.model.world.location.Location;
  * @author alex
  */
 public abstract class UniqueLocation extends Fortification{
-	/**
-	 * Constructor. See {@link Location#WorldPlace(String)}.
-	 *
-	 * @param minel
-	 * @param maxel
-	 */
-	public UniqueLocation(String descriptionknown,String descriptionunknown,
-			int minel,int maxel){
-		super(descriptionknown,descriptionunknown,minel,maxel);
-		impermeable=true;
-		allowentry=false;
-		gossip=true;
-		vision=0;
-		allowedinscenario=false;
-		unique=true;
-	}
+  /**
+   * Constructor. See {@link Location#WorldPlace(String)}.
+   *
+   * @param minel
+   * @param maxel
+   */
+  public UniqueLocation(String descriptionknown,String descriptionunknown,
+      int minel,int maxel){
+    super(descriptionknown,descriptionunknown,minel,maxel);
+    impermeable=true;
+    allowentry=false;
+    gossip=true;
+    vision=0;
+    unique=true;
+  }
 
-	@Override
-	public Boolean destroy(Incursion attacker){
-		return impermeable?Incursion.ignore(attacker):super.destroy(attacker);
-	}
+  @Override
+  public Boolean destroy(Incursion attacker){
+    return impermeable?Incursion.ignore(attacker):super.destroy(attacker);
+  }
 
-	@Override
-	public Integer getel(){
-		return impermeable?null:super.getel();
-	}
+  @Override
+  public Integer getel(){
+    return impermeable?null:super.getel();
+  }
 
 }

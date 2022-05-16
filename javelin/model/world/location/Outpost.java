@@ -14,50 +14,48 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class Outpost extends Fortification{
-	/** How many squares away to help vision with. */
-	public static final int VISIONRANGE=3;
-	private static final String DESCRIPTION="Outpost";
+  /** How many squares away to help vision with. */
+  public static final int VISIONRANGE=3;
+  private static final String DESCRIPTION="Outpost";
 
-	/** Constructor. */
-	public Outpost(){
-		super(DESCRIPTION,DESCRIPTION,1,5);
-		gossip=true;
-		vision=VISIONRANGE;
-		allowedinscenario=false;
-	}
+  /** Constructor. */
+  public Outpost(){
+    super(DESCRIPTION,DESCRIPTION,1,5);
+    gossip=true;
+    vision=VISIONRANGE;
+  }
 
-	/** Puts a new instance in the {@link World} map. */
-	public static void build(){
-		new Outpost().place();
-	}
+  /** Puts a new instance in the {@link World} map. */
+  public static void build(){
+    new Outpost().place();
+  }
 
-	@Override
-	public boolean interact(){
-		if(!super.interact()) return false;
-		return false;
-	}
+  @Override
+  public boolean interact(){
+    super.interact();
+    return false;
+  }
 
-	/**
-	 * Given a coordinate shows a big amount of land around that.
-	 *
-	 * @param range How far squares away will become visible.
-	 * @see WorldScreen#discovered
-	 */
-	static public void discover(int xp,int yp,int range){
-		for(int x=xp-range;x<=xp+range;x++)
-			for(int y=yp-range;y<=yp+range;y++)
-				WorldScreen.discover(x,y);
-	}
+  /**
+   * Given a coordinate shows a big amount of land around that.
+   *
+   * @param range How far squares away will become visible.
+   * @see WorldScreen#discovered
+   */
+  static public void discover(int xp,int yp,int range){
+    for(var x=xp-range;x<=xp+range;x++)
+      for(var y=yp-range;y<=yp+range;y++) WorldScreen.discover(x,y);
+  }
 
-	@Override
-	protected boolean validateplacement(boolean water,World w,List<Actor> actors){
-		var o=findnearest(Outpost.class);
-		if(o!=null&&o.distance(x,y)<=VISIONRANGE*2) return false;
-		return super.validateplacement(water,w,actors);
-	}
+  @Override
+  protected boolean validateplacement(boolean water,World w,List<Actor> actors){
+    var o=findnearest(Outpost.class);
+    if(o!=null&&o.distance(x,y)<=VISIONRANGE*2) return false;
+    return super.validateplacement(water,w,actors);
+  }
 
-	@Override
-	public List<Combatant> getcombatants(){
-		return garrison;
-	}
+  @Override
+  public List<Combatant> getcombatants(){
+    return garrison;
+  }
 }

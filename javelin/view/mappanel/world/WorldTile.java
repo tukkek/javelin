@@ -1,9 +1,7 @@
 package javelin.view.mappanel.world;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +34,7 @@ public class WorldTile extends Tile{
   }
 
   public WorldTile(int xp,int yp,WorldPanel p){
-    super(xp,yp,!World.scenario.fogofwar);
+    super(xp,yp,false);
   }
 
   @Override
@@ -56,9 +54,6 @@ public class WorldTile extends Tile{
           draw(g,COASTLINES.get(p));
       }
     }
-    if(World.seed.highways[x][y]) paintroad(Color.LIGHT_GRAY,(Graphics2D)g);
-    else
-      if(World.seed.roads[x][y]) paintroad(new Color(170,130,40),(Graphics2D)g);
     final var a=WorldPanel.ACTORS.get(new Point(x,y));
     if(a!=null) drawactor(g,a);
     if(MapPanel.overlay!=null) MapPanel.overlay.overlay(this);
@@ -79,37 +74,11 @@ public class WorldTile extends Tile{
     }
     final var l=a instanceof Location?(Location)a:null;
     if(l==null) return;
-    if(l.drawgarisson())
-      draw(g,Images.HOSTILE.get(Tier.get(l.getel())));
+    if(l.drawgarisson()) draw(g,Images.HOSTILE.get(Tier.get(l.getel())));
     if(l.hascrafted()) draw(g,Images.CRAFTING);
     if(l.hasupgraded()) draw(g,Images.UPGRADING);
     if(l.isworking()) draw(g,Images.LABOR);
     final var t=l instanceof Town?(Town)l:null;
     if(t!=null&&!t.ishostile()&&t.isworking()) draw(g,Images.LABOR);
-  }
-
-  void paintroad(Color c,Graphics2D g){
-    g.setColor(c);
-    g.setStroke(new BasicStroke(4));
-    final var center=MapPanel.tilesize/2;
-    var any=false;
-    var p=getposition();
-    for(var deltax=-1;deltax<=+1;deltax++)
-      for(var deltay=-1;deltay<=+1;deltay++){
-        if(deltax==0&&deltay==0) continue;
-        final var tox=p.x+deltax;
-        final var toy=p.y+deltay;
-        if(!World.validatecoordinate(tox,toy)) continue;
-        if(World.seed.roads[tox][toy]||World.seed.highways[tox][toy]
-            ||WorldPanel.DESTINATIONS.get(new Point(tox,toy))!=null){
-          any=true;
-          g.drawLine(p.x+center,p.y+center,deltax*center+center,
-              deltay*center+center);
-        }
-      }
-    if(!any){
-      g.drawLine(center,y,center,MapPanel.tilesize);
-      g.drawLine(x,center,MapPanel.tilesize,center);
-    }
   }
 }

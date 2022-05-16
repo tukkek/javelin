@@ -6,7 +6,6 @@ import java.util.List;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.content.fight.RandomEncounter;
-import javelin.controller.content.scenario.Scenario;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.walker.Walker;
@@ -43,11 +42,6 @@ public abstract class Fortification extends Location{
   public int maxlevel;
   /** TODO There is certainly a better way to do this. */
   public boolean generategarrison=true;
-  /**
-   * Will not have a garrison if {@link Scenario#clearlocations} is
-   * <code>true</code>.
-   */
-  public boolean clear=false;
   /** If not empty will use this for {@link #generategarrison(int, int)}. */
   protected List<Terrain> terrain=new ArrayList<>(0);
   /** Neutral location don't generate a garrison. */
@@ -150,7 +144,6 @@ public abstract class Fortification extends Location{
     if(generategarrison&&garrison.isEmpty()){
       generategarrison();
       generategarrison=false;
-      if(World.scenario.clearlocations&&clear) capture();
     }
     if(!ishostile()) realm=null;
   }

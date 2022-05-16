@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
-import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.diplomacy.mandate.Mandate;
 import javelin.model.world.location.town.diplomacy.quest.Quest;
@@ -51,7 +50,6 @@ public class Diplomacy implements Serializable{
 
   /** Ticks a day off active quests and generates new ones. */
   public void updatequests(){
-    if(!World.scenario.quests) return;
     for(var q:new ArrayList<>(quests)) q.update(true);
     if(quests.size()<town.getrank().rank&&RPG.chancein(7)){
       var q=Quest.generate(town);

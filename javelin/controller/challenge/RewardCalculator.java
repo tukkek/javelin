@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import javelin.Javelin;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
-import javelin.model.world.World;
 import javelin.old.RPG;
 
 /**
@@ -111,7 +110,6 @@ public class RewardCalculator{
   public static int getgold(final float cr){
     if(cr<=0) return 0;
     var gold=cr*cr*cr*7.5f;
-    if(World.scenario!=null) gold*=World.scenario.boost;
     return Math.round(gold);
   }
 
@@ -137,7 +135,6 @@ public class RewardCalculator{
         team.stream().map(c->c.source.cr+Math.max(0,c.xp.floatValue()))
             .collect(Collectors.toList()));
     var eldifference=Math.round(el-elblue);
-    if(World.scenario!=null) bonus*=World.scenario.boost;
     var partycr=getpartyxp(eldifference,team.size(),bonus);
     distributexp(team,partycr);
     var xp=new BigDecimal(100*partycr).setScale(0,RoundingMode.UP);

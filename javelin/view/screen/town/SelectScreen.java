@@ -20,220 +20,209 @@ import javelin.view.screen.Option;
  * @author alex
  */
 public abstract class SelectScreen extends InfoScreen{
-	/** Default key to proceed ({@value #PROCEED}). */
-	public static final char PROCEED='q';
-	/**
-	 * List of keys except q.
-	 *
-	 * TODO would probably work better as a list (with indexof(), etc). Can use
-	 * {@link Arrays#asList(Object...)}.
-	 */
-	static final char[] KEYS="1234567890abcdefghijklmnoprstuvxwyz/*-+.!@#$%&()_=[]{}<>;:\"\\|"
-			.toCharArray();
-	/** Current town or <code>null</code>. */
-	protected final Town town;
-	/** If <code>true</code> will show {@link #title}. */
-	public boolean showtitle=true;
-	/** Header. */
-	protected String title;
-	/**
-	 * TODO remove on 2.0
-	 */
-	protected boolean stayopen=true;
-	/** If <code>false</code> wills stay open after selection. */
-	boolean closeafterselect=false;
-	/**
-	 * If <code>true</code> will display a message about using {@link #PROCEED} to
-	 * quit the screen.
-	 */
-	protected boolean showquit=true;
-	public boolean forceclose=false;
-	String originaltext;
+  /** Default key to proceed ({@value #PROCEED}). */
+  public static final char PROCEED='q';
+  /**
+   * List of keys except q.
+   *
+   * TODO would probably work better as a list (with indexof(), etc). Can use
+   * {@link Arrays#asList(Object...)}.
+   */
+  static final char[] KEYS="1234567890abcdefghijklmnoprstuvxwyz/*-+.!@#$%&()_=[]{}<>;:\"\\|"
+      .toCharArray();
+  /** Current town or <code>null</code>. */
+  protected final Town town;
+  /** If <code>true</code> will show {@link #title}. */
+  public boolean showtitle=true;
+  /** Header. */
+  protected String title;
+  /**
+   * TODO remove on 2.0
+   */
+  protected boolean stayopen=true;
+  /** If <code>false</code> wills stay open after selection. */
+  boolean closeafterselect=false;
+  /**
+   * If <code>true</code> will display a message about using {@link #PROCEED} to
+   * quit the screen.
+   */
+  protected boolean showquit=true;
+  public boolean forceclose=false;
+  String originaltext;
 
-	/** Constructor. */
-	public SelectScreen(final String name,final Town t){
-		super("");
-		town=t;
-		title=name+"\n\n";
-	}
+  /** Constructor. */
+  public SelectScreen(final String name,final Town t){
+    super("");
+    town=t;
+    title=name+"\n\n";
+  }
 
-	@Override
-	public void show(){
-		text=showtitle?title:"";
-		final List<Option> options=getoptions();
-		options.addAll(getfixedoptions());
-		if(options.isEmpty())
-			stayopen=false;
-		else{
-			for(final Option o:options)
-				roundcost(o);
-			options.sort(sort());
-			printoptions(options);
-			final String extrainfo=printinfo();
-			if(!extrainfo.isEmpty()) text+="\n"+extrainfo+"\n";
-			if(showquit) text+="\nPress "+PROCEED+" to quit this screen\n";
-			IntroScreen.configurescreen(this);
-			processinput(options);
-		}
-		var stayopen=this.stayopen;
-		if(World.scenario!=null){ //TODO workaround
-			var squads=World.getall(Squad.class);
-			if(squads!=null&&squads.isEmpty()) stayopen=false;
-		}
-		if(stayopen)
-			show();
-		else
-			onexit();
-	}
+  @Override
+  public void show(){
+    text=showtitle?title:"";
+    final var options=getoptions();
+    options.addAll(getfixedoptions());
+    if(options.isEmpty()) stayopen=false;
+    else{
+      for(final Option o:options) roundcost(o);
+      options.sort(sort());
+      printoptions(options);
+      final var extrainfo=printinfo();
+      if(!extrainfo.isEmpty()) text+="\n"+extrainfo+"\n";
+      if(showquit) text+="\nPress "+PROCEED+" to quit this screen\n";
+      IntroScreen.configurescreen(this);
+      processinput(options);
+    }
+    var stayopen=this.stayopen;
+    var squads=World.getall(Squad.class);
+    if(squads!=null&&squads.isEmpty()) stayopen=false;
+    if(stayopen) show();
+    else onexit();
+  }
 
-	protected Comparator<Option> sort(){
-		return OptionsByPriority.INSTANCE;
-	}
+  protected Comparator<Option> sort(){
+    return OptionsByPriority.INSTANCE;
+  }
 
-	public void printoptions(final List<Option> options){
-		for(int i=0;i<options.size();i++){
-			final Option o=options.get(i);
-			text+=(o.key==null?KEYS[i]:o.key)+" - "+o.toString()+printpriceinfo(o)
-					+"\n";
-		}
-	}
+  public void printoptions(final List<Option> options){
+    for(var i=0;i<options.size();i++){
+      final var o=options.get(i);
+      text+=(o.key==null?KEYS[i]:o.key)+" - "+o.toString()+printpriceinfo(o)
+          +"\n";
+    }
+  }
 
-	/** Called when closing this screen. */
-	public void onexit(){
-		// delegate
-	}
+  /** Called when closing this screen. */
+  public void onexit(){
+    // delegate
+  }
 
-	/**
-	 * @return Textual representation of {@link Option#price}.
-	 */
-	public String printpriceinfo(Option o){
-		return " "+getCurrency()+Javelin.format(o.price);
-	}
+  /**
+   * @return Textual representation of {@link Option#price}.
+   */
+  public String printpriceinfo(Option o){
+    return " "+getCurrency()+Javelin.format(o.price);
+  }
 
-	/**
-	 * @param options Read player input until a selection is made or the screen is
-	 *          closed.
-	 */
-	public void processinput(final List<Option> options){
-		char feedback=' ';
-		Javelin.app.switchScreen(this);
-		while(feedback!=PROCEED){
-			repaint();
-			feedback=InfoScreen.feedback();
-			if(select(feedback,options)){
-				originaltext=null;
-				return;
-			}
-		}
-		if(feedback==PROCEED) proceed();
-	}
+  /**
+   * @param options Read player input until a selection is made or the screen is
+   *   closed.
+   */
+  public void processinput(final List<Option> options){
+    var feedback=' ';
+    Javelin.app.switchScreen(this);
+    while(feedback!=PROCEED){
+      repaint();
+      feedback=InfoScreen.feedback();
+      if(select(feedback,options)){
+        originaltext=null;
+        return;
+      }
+    }
+    if(feedback==PROCEED) proceed();
+  }
 
-	protected void proceed(){
-		stayopen=false;
-	}
+  protected void proceed(){
+    stayopen=false;
+  }
 
-	/**
-	 * @param feedback Player input.
-	 * @return <code>false</code> if no {@link Option} was chosen by the given
-	 *         input, otherwise the return value of {@link #select(Option)}.
-	 * @return <code>true</code> to exit this screen.
-	 */
-	protected boolean select(char feedback,final List<Option> options){
-		if(originaltext==null) originaltext=text;
-		print(originaltext);
-		Option o=convertselectionkey(feedback,options);
-		if(o==null){
-			int selected=convertnumericselection(feedback);
-			if(selected<0||selected>=options.size()) return false;
-			o=options.get(selected);
-			/* Don't allow options with explicit keys to be selected by numbers */
-			if(o.key!=null) return false;
-		}
-		return select(o);
-	}
+  /**
+   * @param feedback Player input.
+   * @return <code>false</code> if no {@link Option} was chosen by the given
+   *   input, otherwise the return value of {@link #select(Option)}.
+   * @return <code>true</code> to exit this screen.
+   */
+  protected boolean select(char feedback,final List<Option> options){
+    if(originaltext==null) originaltext=text;
+    print(originaltext);
+    var o=convertselectionkey(feedback,options);
+    if(o==null){
+      var selected=convertnumericselection(feedback);
+      if(selected<0||selected>=options.size()) return false;
+      o=options.get(selected);
+      /* Don't allow options with explicit keys to be selected by numbers */
+      if(o.key!=null) return false;
+    }
+    return select(o);
+  }
 
-	static Option convertselectionkey(Character c,List<Option> options){
-		for(Option o:options)
-			if(c.equals(o.key)) return o;
-		return null;
-	}
+  static Option convertselectionkey(Character c,List<Option> options){
+    for(Option o:options) if(c.equals(o.key)) return o;
+    return null;
+  }
 
-	/**
-	 * @return selection index or -1 if not chosen.
-	 */
-	static public int convertnumericselection(char feedback){
-		for(int i=0;i<KEYS.length;i++)
-			if(KEYS[i]==feedback) return i;
-		return -1;
-	}
+  /**
+   * @return selection index or -1 if not chosen.
+   */
+  static public int convertnumericselection(char feedback){
+    for(var i=0;i<KEYS.length;i++) if(KEYS[i]==feedback) return i;
+    return -1;
+  }
 
-	/** Allows subclasses to round {@link Option#price}s. */
-	public void roundcost(final Option o){
-		return;
-	}
+  /** Allows subclasses to round {@link Option#price}s. */
+  public void roundcost(final Option o){}
 
-	/**
-	 * @return Static options.
-	 */
-	protected List<Option> getfixedoptions(){
-		return new ArrayList<>();
-	}
+  /**
+   * @return Static options.
+   */
+  protected List<Option> getfixedoptions(){
+    return new ArrayList<>();
+  }
 
-	/**
-	 * @return How to address currency (ex: $).
-	 */
-	public abstract String getCurrency();
+  /**
+   * @return How to address currency (ex: $).
+   */
+  public abstract String getCurrency();
 
-	/**
-	 * @return Footer note.
-	 */
-	public abstract String printinfo();
+  /**
+   * @return Footer note.
+   */
+  public abstract String printinfo();
 
-	/**
-	 * Called after an Option is selected.
-	 *
-	 * @param o Selection.
-	 * @return <code>true</code> to exit the screen, <code>false</code> to
-	 *         continue with selection.
-	 * @see #stayopen
-	 */
-	public abstract boolean select(Option o);
+  /**
+   * Called after an Option is selected.
+   *
+   * @param o Selection.
+   * @return <code>true</code> to exit the screen, <code>false</code> to
+   *   continue with selection.
+   * @see #stayopen
+   */
+  public abstract boolean select(Option o);
 
-	/**
-	 * @return Dynamic options.
-	 * @see #getfixedoptions()
-	 */
-	public abstract List<Option> getoptions();
+  /**
+   * @return Dynamic options.
+   * @see #getfixedoptions()
+   */
+  public abstract List<Option> getoptions();
 
-	/**
-	 * @param c Given the user-input key
-	 * @return the index of that key in {@link #KEYS}.
-	 */
-	public static int convertkeytoindex(char c){
-		if(c=='\t') return 0;
-		for(int i=0;i<KEYS.length;i++){
-			char key=KEYS[i];
-			if(key==c) return i;
-		}
-		return -1;
-	}
+  /**
+   * @param c Given the user-input key
+   * @return the index of that key in {@link #KEYS}.
+   */
+  public static int convertkeytoindex(char c){
+    if(c=='\t') return 0;
+    for(var i=0;i<KEYS.length;i++){
+      var key=KEYS[i];
+      if(key==c) return i;
+    }
+    return -1;
+  }
 
-	/**
-	 * @return The corresponding key from {@link #KEYS}. If the index is higher
-	 *         than actionable keys will return ? instead.
-	 */
-	public static char getkey(int i){
-		return i<KEYS.length?KEYS[i]:'?';
-	}
+  /**
+   * @return The corresponding key from {@link #KEYS}. If the index is higher
+   *   than actionable keys will return ? instead.
+   */
+  public static char getkey(int i){
+    return i<KEYS.length?KEYS[i]:'?';
+  }
 
-	/**
-	 * @param skip Skip these characters.
-	 * @return A list of input characters used to convert to/from input lists.
-	 */
-	public static ArrayList<Character> filterkeys(String skip){
-		ArrayList<Character> keys=new ArrayList<>();
-		for(char key:KEYS)
-			if(skip.indexOf(key)==-1) keys.add(key);
-		return keys;
-	}
+  /**
+   * @param skip Skip these characters.
+   * @return A list of input characters used to convert to/from input lists.
+   */
+  public static ArrayList<Character> filterkeys(String skip){
+    var keys=new ArrayList<Character>();
+    for(char key:KEYS) if(skip.indexOf(key)==-1) keys.add(key);
+    return keys;
+  }
 }

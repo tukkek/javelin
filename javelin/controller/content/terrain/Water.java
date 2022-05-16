@@ -30,6 +30,8 @@ import javelin.old.RPG;
  * @author alex
  */
 public class Water extends Terrain{
+  static final int DESERTRADIUS=2;
+
   Point currentheight;
 
   /** Constructor. */
@@ -37,9 +39,7 @@ public class Water extends Terrain{
     super("aquatic",new Maps(List.of(DeepWaters.class)),Maps.EMPTY);
     description="water";
     difficultycap=-3;
-    speedtrackless=1f;
-    speedroad=1f;
-    speedhighway=1f;
+    movement=1f;
     visionbonus=0;
     representation='~';
     liquid=true;
@@ -51,7 +51,7 @@ public class Water extends Terrain{
     var source=super.generatesource(world);
     while(!world.map[source.x][source.y].equals(Terrain.MOUNTAINS)
         &&!world.map[source.x][source.y].equals(Terrain.HILL)
-        &&search(source,DESERT,World.scenario.desertradius,world)==0)
+        &&search(source,DESERT,DESERTRADIUS,world)==0)
       source=super.generatesource(world);
     currentheight=source;
     return source;
@@ -76,9 +76,7 @@ public class Water extends Terrain{
   }
 
   boolean verify(Point p,World w){
-    if(checkinvalid(p.x,p.y,w)
-        ||search(p,DESERT,World.scenario.desertradius,w)>0)
-      return false;
+    if(checkinvalid(p.x,p.y,w)||search(p,DESERT,DESERTRADIUS,w)>0) return false;
     for(Town t:Town.gettowns()) if(t.distance(p.x,p.y)<=2) return false;
     return true;
   }

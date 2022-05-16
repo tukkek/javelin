@@ -40,9 +40,7 @@ public class Desert extends Terrain{
   public Desert(){
     super("desert",MAPS,new Maps(List.of(DesertShore.class)));
     difficultycap=-2;
-    speedtrackless=1/2f;
-    speedroad=1/2f;
-    speedhighway=1f;
+    movement=1/2f;
     visionbonus=0;
     representation='d';
     liquid=true;

@@ -420,7 +420,6 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
    */
   public boolean swim(){
     if(transport!=null&&(transport.sails||transport.flies)) return true;
-    if(!World.scenario.crossrivers) return false;
     for(Combatant c:members) if(c.source.swim()==0) return false;
     return true;
   }
@@ -634,9 +633,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 
   /** @return Recuirts the supplised unit permanently and asks for a name. */
   public Combatant recruit(Combatant c){
-    var askname=World.scenario!=null&&World.scenario.asksquadnames;
-    if(askname&&!Javelin.DEBUG)
-      c.source.customName=NamingScreen.getname(c.toString());
+    if(!Javelin.DEBUG) c.source.customName=NamingScreen.getname(c.toString());
     add(c);
     /* night-only is largely cosmetic so just don't appear for player units */
     c.source.nightonly=false;

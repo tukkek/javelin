@@ -12,7 +12,6 @@ import java.util.Set;
 
 import javelin.controller.Point;
 import javelin.controller.challenge.Tier;
-import javelin.controller.content.scenario.Scenario;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.generator.WorldGenerator;
@@ -47,6 +46,7 @@ import javelin.model.world.location.haunt.settlement.GoodSettlement;
 import javelin.model.world.location.haunt.settlement.LawfulSettlement;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.governor.HumanGovernor;
 import javelin.model.world.location.town.governor.MonsterGovernor;
 import javelin.model.world.location.town.labor.basic.BasicAcademy;
 import javelin.model.world.location.town.labor.basic.Lodge;
@@ -72,6 +72,15 @@ public class LocationGenerator implements Serializable{
           BeastLair.class,Spire.class,Conflux.class,GoodSettlement.class,
           EvilSettlement.class,LawfulSettlement.class,ChaoticSettlement.class,
           HolyGrounds.class,DarkShrine.class));
+
+  /**
+   * Number of {@link Location}s to spawn. Ideally we want the player finding a
+   * new location every one or two steps into the unknown (fog of war), given
+   * that the map scale is very concentrated.
+   *
+   * {@link LocationGenerator}.
+   */
+  static final int STARTINGFEATURES=Math.round(World.SIZE*World.SIZE/(5*1.5f));
 
   final HashMap<Class<? extends Actor>,Frequency> generators=new HashMap<>();
 
@@ -121,9 +130,7 @@ public class LocationGenerator implements Serializable{
    * @see Frequency#starting
    */
   public void spawn(float chance,boolean generatingworld){
-    if(count()>=World.scenario.startingfeatures
-        ||!generatingworld&&!World.scenario.respawnlocations)
-      return;
+    if(count()>=STARTINGFEATURES||!generatingworld) return;
     var features=generators.keySet();
     for(var f:RPG.shuffle(new ArrayList<>(features))){
       var frequency=generators.get(f);
@@ -163,13 +170,13 @@ public class LocationGenerator implements Serializable{
 
   long countadjacent(Point p){
     var actors=World.getactors();
-    var s=World.scenario.size;
+    var s=World.SIZE;
     return p.getadjacent().stream()
         .filter(a->a.validate(s,s)&&World.get(a.x,a.y,actors)!=null).count();
   }
 
   void placecontested(){
-    var s=World.scenario.size;
+    var s=World.SIZE;
     var free=Point.getrange(s,s);
     var w=World.getseed();
     for(var a:World.getactors()) free.remove(a.getlocation());
@@ -263,10 +270,11 @@ public class LocationGenerator implements Serializable{
       ArrayList<HashSet<Point>> regions,World w){
     generatetowns(realms,regions);
     var starting=determinestartingtown(w);
-    normalizemap(starting);
     generatefeatures(w,starting);
-    normalizemap(starting);
-    for(Town t:Town.gettowns()) World.scenario.populate(t,t==starting);
+    for(Town t:Town.gettowns()) if(t!=starting){
+      t.setgovernor(new MonsterGovernor(t));
+      t.populate(RPG.r(1,4));
+    }else t.setgovernor(new HumanGovernor(t));
     return starting;
   }
 
@@ -277,7 +285,7 @@ public class LocationGenerator implements Serializable{
     generatestaticlocations();
     for(Class<? extends Actor> feature:generators.keySet())
       generators.get(feature).seed(feature);
-    var target=World.scenario.startingfeatures-Location.count();
+    var target=STARTINGFEATURES-Location.count();
     while(count()<target) spawn(1,true);
   }
 
@@ -297,43 +305,16 @@ public class LocationGenerator implements Serializable{
   }
 
   Town determinestartingtown(World seed){
-    var starton=RPG.r(1,2)==1?Terrain.PLAIN:Terrain.HILL;
-    var towns=Town.gettowns();
-    var starting=World.scenario.easystartingtown?gettown(starton,seed,towns)
-        :RPG.pick(towns);
-    if(Terrain.search(new Point(starting.x,starting.y),Terrain.WATER,2,seed)!=0)
+    var terrain=RPG.pick(List.of(Terrain.PLAIN,Terrain.HILL));
+    var t=gettown(terrain,seed,Town.gettowns());
+    if(Terrain.search(new Point(t.x,t.y),Terrain.WATER,2,seed)!=0)
       throw new RestartWorldGeneration();
-    return starting;
-  }
-
-  /**
-   * Turn whole map into 2 {@link Realm}s only so that there won't be
-   * in-fighting between hostile {@link Town}s.
-   *
-   * @param starting
-   *
-   * @see Scenario#normalizemap
-   */
-  void normalizemap(Town starting){
-    if(!World.scenario.normalizemap) return;
-    var towns=Town.gettowns();
-    towns.remove(starting);
-    var r=towns.get(0).originalrealm;
-    for(Actor a:World.getactors()){
-      var l=a instanceof Location?(Location)a:null;
-      if(l!=null&&l.realm!=null){
-        l.realm=r;
-        if(a instanceof Town t){
-          t.originalrealm=r;
-          t.setgovernor(new MonsterGovernor(t));
-        }
-      }
-    }
+    return t;
   }
 
   void generatetowns(LinkedList<Realm> realms,
       ArrayList<HashSet<Point>> regions){
-    var towns=World.scenario.towns;
+    var towns=Realm.REALMS.size();
     for(var i=0;i<regions.size()&&towns>0;i++){
       var t=WorldGenerator.GENERATIONORDER[i];
       if(!t.equals(Terrain.WATER)){

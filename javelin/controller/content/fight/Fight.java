@@ -16,7 +16,6 @@ import javelin.controller.content.fight.mutator.Friendly;
 import javelin.controller.content.fight.mutator.Mutator;
 import javelin.controller.content.fight.setup.BattleSetup;
 import javelin.controller.content.map.Map;
-import javelin.controller.content.scenario.Scenario;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.EndBattle;

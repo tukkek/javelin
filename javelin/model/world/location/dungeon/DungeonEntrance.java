@@ -30,7 +30,6 @@ public class DungeonEntrance extends Location{
     link=false;
     discard=false;
     impermeable=true;
-    allowedinscenario=false;
     allowentry=false;
     unique=true;
     if(d!=null) set(d);

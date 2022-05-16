@@ -62,174 +62,172 @@ import javelin.view.screen.town.PurchaseOption;
  * @author alex
  */
 public class Caravan extends Actor{
-	static final boolean ALLOW=true;
-	static final Map<Tier,Integer> FREQUENCY=new HashMap<>(4);
+  static final boolean ALLOW=true;
+  static final Map<Tier,Integer> FREQUENCY=new HashMap<>(4);
 
-	static{
-		FREQUENCY.put(Tier.LOW,Calendar.YEAR);
-		FREQUENCY.put(Tier.MID,Calendar.SEASON);
-		FREQUENCY.put(Tier.HIGH,Calendar.MONTH);
-		FREQUENCY.put(Tier.EPIC,Calendar.WEEK);
-	}
+  static{
+    FREQUENCY.put(Tier.LOW,Calendar.YEAR);
+    FREQUENCY.put(Tier.MID,Calendar.SEASON);
+    FREQUENCY.put(Tier.HIGH,Calendar.MONTH);
+    FREQUENCY.put(Tier.EPIC,Calendar.WEEK);
+  }
 
-	class CaravanScreen extends ShoppingScreen{
-		/** Constructor. */
-		public CaravanScreen(){
-			super("You reach a trading caravan:",null);
-		}
+  class CaravanScreen extends ShoppingScreen{
+    /** Constructor. */
+    public CaravanScreen(){
+      super("You reach a trading caravan:",null);
+    }
 
-		@Override
-		protected void afterpurchase(PurchaseOption o){
-			inventory.remove(o.i);
-			o.i.clone().grab();
-		}
+    @Override
+    protected void afterpurchase(PurchaseOption o){
+      inventory.remove(o.i);
+      o.i.clone().grab();
+    }
 
-		@Override
-		protected ItemSelection getitems(){
-			return inventory;
-		}
-	}
+    @Override
+    protected ItemSelection getitems(){
+      return inventory;
+    }
+  }
 
-	/** Selection of {@link Item}s available for purchase. */
-	public ItemSelection inventory=new ItemSelection();
+  /** Selection of {@link Item}s available for purchase. */
+  public ItemSelection inventory=new ItemSelection();
 
-	Town from=null;
-	Point to=null;
-	int level;
+  Town from=null;
+  Point to=null;
+  int level;
 
-	/** Creates a merchant in the world map but doesn't {@link #place()} it. */
-	public Caravan(Point p,int level){
-		allowedinscenario=false;
-		x=p.x;
-		y=p.y;
-		this.level=level;
-		displace();
-		to=determinedestination(Town.gettowns());
-		stock();
-	}
+  /** Creates a merchant in the world map but doesn't {@link #place()} it. */
+  public Caravan(Point p,int level){
+    x=p.x;
+    y=p.y;
+    this.level=level;
+    displace();
+    to=determinedestination(Town.gettowns());
+    stock();
+  }
 
-	/**
-	 * @see Town#getlocation()
-	 * @see Town#population
-	 */
-	public Caravan(Town t){
-		this(t.getlocation(),t.population);
-		from=t;
-		to=determinedestination(Town.gettowns());
-	}
+  /**
+   * @see Town#getlocation()
+   * @see Town#population
+   */
+  public Caravan(Town t){
+    this(t.getlocation(),t.population);
+    from=t;
+    to=determinedestination(Town.gettowns());
+  }
 
-	void stock(){
-		var all=new ArrayList<>(Item.NONPRECIOUS);
-		var t=from==null?Tier.MID:Tier.get(from.population);
-		var size=RPG.randomize(t.maxlevel/2,1,t.maxlevel);
-		while(inventory.size()<size){
-			var level=RPG.r(1,this.level);
-			var min=RewardCalculator.getgold(level-1);
-			var max=RewardCalculator.getgold(level+1);
-			var item=Item.randomize(all).stream()
-					.filter(i->min<=i.price&&i.price<=max).findAny().orElse(null);
-			if(item==null) continue;
-			item.identified=true;
-			inventory.add(item);
-		}
-	}
+  void stock(){
+    var all=new ArrayList<>(Item.NONPRECIOUS);
+    var t=from==null?Tier.MID:Tier.get(from.population);
+    var size=RPG.randomize(t.maxlevel/2,1,t.maxlevel);
+    while(inventory.size()<size){
+      var level=RPG.r(1,this.level);
+      var min=RewardCalculator.getgold(level-1);
+      var max=RewardCalculator.getgold(level+1);
+      var item=Item.randomize(all).stream()
+          .filter(i->min<=i.price&&i.price<=max).findAny().orElse(null);
+      if(item==null) continue;
+      item.identified=true;
+      inventory.add(item);
+    }
+  }
 
-	/** Reflection-friendly constructor. */
-	public Caravan(){
-		this(RPG.pick(Town.gettowns()));
-	}
+  /** Reflection-friendly constructor. */
+  public Caravan(){
+    this(RPG.pick(Town.gettowns()));
+  }
 
-	Point determinedestination(List<Town> towns){
-		if(towns!=null){
-			towns.remove(from);
-			towns=towns.stream().filter(t->!Incursion.crosseswater(this,t.x,t.y))
-					.collect(Collectors.toList());
-			if(!towns.isEmpty()){
-				if(from==null) return RPG.pick(towns).getlocation();
-				towns.sort(new ActorsByDistance(from).reversed());
-				var chances=new WeightedList<>(towns).distribution;
-				return RPG.pick(chances).getlocation();
-			}
-		}
-		while(to==null||Incursion.crosseswater(this,to.x,to.y))
-			to=new Point(RPG.r(0,World.scenario.size-1),
-					RPG.r(0,World.scenario.size-1));
-		return to;
-	}
+  Point determinedestination(List<Town> towns){
+    if(towns!=null){
+      towns.remove(from);
+      towns=towns.stream().filter(t->!Incursion.crosseswater(this,t.x,t.y))
+          .collect(Collectors.toList());
+      if(!towns.isEmpty()){
+        if(from==null) return RPG.pick(towns).getlocation();
+        towns.sort(new ActorsByDistance(from).reversed());
+        var chances=new WeightedList<>(towns).distribution;
+        return RPG.pick(chances).getlocation();
+      }
+    }
+    while(to==null||Incursion.crosseswater(this,to.x,to.y))
+      to=new Point(RPG.r(World.SIZE),RPG.r(World.SIZE));
+    return to;
+  }
 
-	@Override
-	public void turn(long time,WorldScreen world){
-		if(RPG.chancein(2)) move();
-	}
+  @Override
+  public void turn(long time,WorldScreen world){
+    if(RPG.chancein(2)) move();
+  }
 
-	void move(){
-		int x=this.x+calculatedelta(this.x,to.x);
-		int y=this.y+calculatedelta(this.y,to.y);
-		if(Terrain.get(x,y).equals(Terrain.WATER)){
-			to=determinedestination(null);
-			return;
-		}
-		var here=World.get(x,y,World.getactors());
-		this.x=x;
-		this.y=y;
-		place();
-		if(x==to.x&&y==to.y){
-			remove();
-			if(here instanceof Town) arrive((Town)here);
-		}else if(here!=null) move();
-	}
+  void move(){
+    var x=this.x+calculatedelta(this.x,to.x);
+    var y=this.y+calculatedelta(this.y,to.y);
+    if(Terrain.get(x,y).equals(Terrain.WATER)){
+      to=determinedestination(null);
+      return;
+    }
+    var here=World.get(x,y,World.getactors());
+    this.x=x;
+    this.y=y;
+    place();
+    if(x==to.x&&y==to.y){
+      remove();
+      if(here instanceof Town) arrive((Town)here);
+    }else if(here!=null) move();
+  }
 
-	void arrive(Town t){
-		if(from==null||t.population>=from.population||t.ishostile()) return;
-		t.population+=1;
-		MessagePanel.active.clear();
-		var notification="A caravan arrives at "+t+", city grows.";
-		t.events.add(notification);
-	}
+  void arrive(Town t){
+    if(from==null||t.population>=from.population||t.ishostile()) return;
+    t.population+=1;
+    MessagePanel.active.clear();
+    var notification="A caravan arrives at "+t+", city grows.";
+    t.events.add(notification);
+  }
 
-	int calculatedelta(int from,int to){
-		if(to==from) return 0;
-		return to>from?+1:-1;
-	}
+  int calculatedelta(int from,int to){
+    if(to==from) return 0;
+    return to>from?+1:-1;
+  }
 
-	@Override
-	public Boolean destroy(Incursion attacker){
-		return Incursion.fight(attacker.getel(),level);
-	}
+  @Override
+  public Boolean destroy(Incursion attacker){
+    return Incursion.fight(attacker.getel(),level);
+  }
 
-	@Override
-	public boolean interact(){
-		new CaravanScreen().show();
-		return true;
-	}
+  @Override
+  public boolean interact(){
+    new CaravanScreen().show();
+    return true;
+  }
 
-	@Override
-	public Image getimage(){
-		return Images.get(List.of("world","caravan"));
-	}
+  @Override
+  public Image getimage(){
+    return Images.get(List.of("world","caravan"));
+  }
 
-	@Override
-	public List<Combatant> getcombatants(){
-		return null;
-	}
+  @Override
+  public List<Combatant> getcombatants(){
+    return null;
+  }
 
-	@Override
-	public String describe(){
-		return "Caravan.";
-	}
+  @Override
+  public String describe(){
+    return "Caravan.";
+  }
 
-	@Override
-	public Integer getel(){
-		return level;
-	}
+  @Override
+  public Integer getel(){
+    return level;
+  }
 
-	/** To be called daily from every Town. */
-	public static void spawn(Town t){
-		if(!ALLOW||!RPG.chancein(FREQUENCY.get(Tier.get(t.population)))) return;
-		var c=new Caravan(t);
-		c.place();
-		c.displace();
-		if(!t.getdistrict().getsquads().isEmpty())
-			t.events.add(String.format("A caravan leaves %s!",t));
-	}
+  /** To be called daily from every Town. */
+  public static void spawn(Town t){
+    if(!ALLOW||!RPG.chancein(FREQUENCY.get(Tier.get(t.population)))) return;
+    var c=new Caravan(t);
+    c.place();
+    c.displace();
+    if(!t.getdistrict().getsquads().isEmpty())
+      t.events.add(String.format("A caravan leaves %s!",t));
+  }
 }

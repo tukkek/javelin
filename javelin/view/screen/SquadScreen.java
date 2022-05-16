@@ -1,17 +1,22 @@
 package javelin.view.screen;
 
+import static java.util.stream.Collectors.toList;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.MonstersByName;
+import javelin.controller.content.kit.Kit;
+import javelin.controller.content.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
-import javelin.model.world.World;
 import javelin.old.RPG;
 
 /**
@@ -40,6 +45,9 @@ public class SquadScreen extends InfoScreen{
 
       %s
       """;
+  /** Minimum starting party encounter level. */
+  public static final float INITIALEL=ChallengeCalculator
+      .calculateelfromcrs(List.of(1f,1f,1f,1f));
 
   static{
     var candidates=CRS.stream().flatMap(cr->Monster.BYCR.get(cr).stream())
@@ -100,7 +108,7 @@ public class SquadScreen extends InfoScreen{
   }
 
   void print(){
-    while(!World.scenario.checkfullsquad(squad.members)){
+    while(ChallengeCalculator.calculateel(squad.members)<INITIALEL){
       Javelin.app.switchScreen(this);
       var team=String.join("\n",squad.members.stream().map(Combatant::toString)
           .collect(Collectors.toList()));
@@ -115,6 +123,29 @@ public class SquadScreen extends InfoScreen{
     }
   }
 
+  void upgradesquad(Squad s){
+    var members=s.members;
+    var crsum=Math.round(Math.round(
+        members.stream().collect(Collectors.summingDouble(c->c.source.cr))));
+    var boost=1f/members.size();
+    while(ChallengeCalculator.calculateelfromcrs(
+        members.stream().map(c->c.source.cr+c.xp.floatValue())
+            .collect(Collectors.toList()))<INITIALEL)
+      for(var m:members) m.xp=m.xp.add(new BigDecimal(boost));
+    for(var m:members){
+      var classes=Kit.getpreferred(m.source,false).stream()
+          .flatMap(k->k.getupgrades().stream())
+          .filter(u->u instanceof ClassLevelUpgrade).collect(toList());
+      if(classes.isEmpty()) continue;
+      var c=RPG.pick(classes);
+      while(m.xp.floatValue()>=1){
+        c.upgrade(m,true);
+        ChallengeCalculator.calculatecr(m.source);
+      }
+    }
+    s.gold+=RewardCalculator.getgold(4-crsum);
+  }
+
   /**
    * Displays this screen.
    *
@@ -122,7 +153,7 @@ public class SquadScreen extends InfoScreen{
    */
   public Squad open(){
     print();
-    World.scenario.upgradesquad(squad);
+    upgradesquad(squad);
     var gold=squad.members.stream().map(c->c.source.cr-1)
         .filter(level->level>=1)
         .map(level->RewardCalculator.calculatepcequipment(Math.round(level)))

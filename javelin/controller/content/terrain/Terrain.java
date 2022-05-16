@@ -94,11 +94,7 @@ public abstract class Terrain implements Serializable{
   static final int[] STEPS={-1,0,+1};
 
   /** No road. */
-  public Float speedtrackless=null;
-  /** Minor road. */
-  public Float speedroad=null;
-  /** Major road. */
-  public Float speedhighway=null;
+  public Float movement=null;
   /** SRD name. Used to determine tile. */
   public String name=null;
   /**
@@ -147,20 +143,7 @@ public abstract class Terrain implements Serializable{
    * @see Terrain#current()
    */
   public int speed(int mph,int x,int y){
-    return Math.round(mph*getspeed(x,y));
-  }
-
-  /**
-   * @param x {@link World} coordinate.
-   * @param y {@link World} coordinate.
-   * @return A percentage value determining how fast it is to walk here, based
-   *   on road status.
-   * @see World#roads
-   * @see World#highways
-   */
-  public float getspeed(int x,int y){
-    if(!World.seed.roads[x][y]) return speedtrackless;
-    return World.seed.highways[x][y]?speedhighway:speedroad;
+    return Math.round(mph*movement);
   }
 
   /**
@@ -215,7 +198,7 @@ public abstract class Terrain implements Serializable{
    * @return Number of tiles the generated area for this terrain should have.
    */
   protected int getareasize(){
-    return World.scenario.size*World.scenario.size/WorldGenerator.NREGIONS;
+    return World.SIZE*World.SIZE/WorldGenerator.NREGIONS;
   }
 
   /**
@@ -324,9 +307,8 @@ public abstract class Terrain implements Serializable{
    */
   protected HashSet<Point> gettiles(World world){
     var area=new HashSet<Point>();
-    for(var x=0;x<World.scenario.size;x++)
-      for(var y=0;y<World.scenario.size;y++)
-        if(world.map[x][y]==this) area.add(new Point(x,y));
+    for(var x=0;x<World.SIZE;x++) for(var y=0;y<World.SIZE;y++)
+      if(world.map[x][y]==this) area.add(new Point(x,y));
     return area;
   }
 
@@ -349,7 +331,7 @@ public abstract class Terrain implements Serializable{
   }
 
   static int randomaxispoint(){
-    return RPG.r(1,World.scenario.size-2);
+    return RPG.r(1,World.SIZE-2);
   }
 
   /**

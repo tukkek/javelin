@@ -30,9 +30,7 @@ public class Plains extends Terrain{
   public Plains(){
     super("plains",MAPS,new Maps(List.of(PlainsShore.class)));
     difficultycap=-4;
-    speedtrackless=3/4f;
-    speedroad=1f;
-    speedhighway=1f;
+    movement=3/4f;
     visionbonus=+2;
     representation=' ';
     safe=true;

@@ -23,8 +23,6 @@ import javelin.controller.content.map.Map;
 import javelin.controller.content.map.location.town.ShoreTownMap;
 import javelin.controller.content.map.location.town.TownMap;
 import javelin.controller.content.map.terrain.marsh.MarshShore.MarshTown;
-import javelin.controller.content.scenario.Campaign;
-import javelin.controller.content.scenario.Scenario;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.exception.battle.StartBattle;
@@ -61,8 +59,8 @@ import javelin.view.screen.town.TownScreen;
  *
  * Each town has it's own profile which is predetermined.
  *
- * TODO maybe override {@link #getel()} to return at least
- * {@link #population} so that weak {@link Incursion}s won't take big towns
+ * TODO maybe override {@link #getel()} to return at least {@link #population}
+ * so that weak {@link Incursion}s won't take big towns
  *
  * TODO keeping track of city names is pretty bad when it comes to diplomacy -
  * instead just have it be fire hamlet/water city and print their colors on the
@@ -241,8 +239,7 @@ public class Town extends Location{
     var resources=1+this.resources.size()*0.1f;
     var population=this.population;
     for(var l:d.getlocations()) population+=l.work;
-    var labor=population*DAILYLABOR*resources*World.scenario.boost
-        *World.scenario.labormodifier;
+    var labor=population*DAILYLABOR*resources;
     if(randomize) labor+=RPG.randomize(Math.round(labor))/10f;
     return labor;
   }
@@ -407,7 +404,7 @@ public class Town extends Location{
    * @throws StartBattle For some events.
    */
   public void dealevent(){
-    if(!World.scenario.urbanevents||!RPG.chancein(UrbanEvent.CHANCE)) return;
+    if(!UrbanEvents.ENABLED||!RPG.chancein(UrbanEvent.CHANCE)) return;
     var squads=getdistrict().getsquads();
     var s=squads.isEmpty()?null:RPG.pick(squads);
     UrbanEvents.generating=this;

@@ -198,7 +198,6 @@ public class ResourceSite extends Location{
     super(null);
     vision=0;
     link=false;
-    allowedinscenario=false;
     discard=false;
   }
 

@@ -241,8 +241,8 @@ public class Preferences{
 	static void initdebug(){
 		if(Debug.showmap&&BattleScreen.active!=null
 				&&BattleScreen.active.getClass().equals(WorldScreen.class))
-			for(int x=0;x<World.scenario.size;x++)
-			for(int y=0;y<World.scenario.size;y++)
+			for(int x=0;x<World.SIZE;x++)
+			for(int y=0;y<World.SIZE;y++)
 			WorldScreen.discover(x,y);
 		if(World.seed!=null) for(Actor a:World.getall(Squad.class))
 			initsquaddebug((Squad)a);

@@ -11,16 +11,12 @@ import java.util.Map;
 
 import javelin.controller.Point;
 import javelin.controller.content.fight.RandomEncounter;
-import javelin.controller.content.scenario.Campaign;
-import javelin.controller.content.scenario.Scenario;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.generator.WorldGenerator;
 import javelin.controller.generator.feature.LocationGenerator;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.town.labor.expansive.BuildHighway;
-import javelin.model.world.location.town.labor.expansive.BuildRoad;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.world.WorldTile;
 import javelin.view.screen.WorldScreen;
@@ -35,21 +31,18 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class World implements Serializable{
-  /** Ruleset of the current game. */
-  public static Scenario scenario=new Campaign();
+  /** Number of {@link WorldTile}s on both axis. */
+  public static final int SIZE=30;
+
   /**
    * Randomly generated world map.
    *
    * @see #getseed()
    */
   public static World seed=null;
-  /** @see BuildRoad */
-  public boolean[][] roads;
-  /** @see BuildHighway */
-  public boolean[][] highways;
+
   /** Map of terrain tiles by [x][y] coordinates. */
   public Terrain[][] map;
-
   /** Contains all actor instances still in the game. */
   public final HashMap<Class<? extends Actor>,ArrayList<Actor>> actors=new HashMap<>();
   /**
@@ -98,34 +91,23 @@ public class World implements Serializable{
 
   /** Constructor. */
   public World(){
-    map=new Terrain[scenario.size][scenario.size];
-    initroads();
+    map=new Terrain[SIZE][SIZE];
     inittownnames();
     Collections.shuffle(dungeonnames);
-  }
-
-  void initroads(){
-    var size=scenario.size;
-    roads=new boolean[size][size];
-    highways=new boolean[size][size];
-    for(var x=0;x<size;x++) for(var y=0;y<size;y++){
-      roads[x][y]=false;
-      highways[x][y]=false;
-    }
   }
 
   /**
    * @return <code>true</code> if given coordinates are within the world map.
    */
   public static boolean validatecoordinate(int x,int y){
-    return 0<=x&&x<scenario.size&&0<=y&&y<scenario.size;
+    return 0<=x&&x<SIZE&&0<=y&&y<SIZE;
   }
 
   @Override
   public String toString(){
     var s="";
-    for(var y=0;y<scenario.size;y++){
-      for(var x=0;x<scenario.size;x++) s+=map[x][y].representation;
+    for(var y=0;y<SIZE;y++){
+      for(var x=0;x<SIZE;x++) s+=map[x][y].representation;
       s+="\n";
     }
     return s;

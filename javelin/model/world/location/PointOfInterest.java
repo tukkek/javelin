@@ -31,57 +31,56 @@ import javelin.view.Images;
  * @author alex
  */
 public class PointOfInterest extends Actor{
-	/** If <code>false</code>, will not spawn. */
-	public static final boolean ENABLED=false;
-	static final String DESCRIPTION="A point of interest";
+  /** If <code>false</code>, will not spawn. */
+  public static final boolean ENABLED=false;
+  static final String DESCRIPTION="A point of interest";
 
-	WildEvent card=null;
+  WildEvent card=null;
 
-	/** Constructor. */
-	public PointOfInterest(){
-		allowedinscenario=false;
-		impermeable=true;
-	}
+  /** Constructor. */
+  public PointOfInterest(){
+    impermeable=true;
+  }
 
-	@Override
-	public boolean interact(){
-		if(card==null){
-			int el=ChallengeCalculator.calculateel(Squad.active.members);
-			WildEvents.generating=this;
-			card=(WildEvent)WildEvents.instance.generate(Squad.active,el);
-		}
-		try{
-			card.happen(Squad.active);
-		}finally{
-			if(card.remove) remove();
-		}
-		return true;
-	}
+  @Override
+  public boolean interact(){
+    if(card==null){
+      var el=ChallengeCalculator.calculateel(Squad.active.members);
+      WildEvents.generating=this;
+      card=(WildEvent)WildEvents.instance.generate(Squad.active,el);
+    }
+    try{
+      card.happen(Squad.active);
+    }finally{
+      if(card.remove) remove();
+    }
+    return true;
+  }
 
-	@Override
-	public Boolean destroy(Incursion attacker){
-		return null;
-	}
+  @Override
+  public Boolean destroy(Incursion attacker){
+    return null;
+  }
 
-	@Override
-	public List<Combatant> getcombatants(){
-		return null;
-	}
+  @Override
+  public List<Combatant> getcombatants(){
+    return null;
+  }
 
-	@Override
-	public Image getimage(){
-		return Images.get(List.of("world","pointofinterest"));
-	}
+  @Override
+  public Image getimage(){
+    return Images.get(List.of("world","pointofinterest"));
+  }
 
-	@Override
-	public String describe(){
-		var description=DESCRIPTION;
-		if(card!=null) description+=" ("+card.name.toLowerCase()+")";
-		return description+".";
-	}
+  @Override
+  public String describe(){
+    var description=DESCRIPTION;
+    if(card!=null) description+=" ("+card.name.toLowerCase()+")";
+    return description+".";
+  }
 
-	@Override
-	public Integer getel(){
-		return null;
-	}
+  @Override
+  public Integer getel(){
+    return null;
+  }
 }

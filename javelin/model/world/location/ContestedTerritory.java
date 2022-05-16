@@ -259,6 +259,13 @@ public class ContestedTerritory extends Fortification{
     return new TerritoryFight(new Army(0),both,this);
   }
 
+  int negotiate(){
+    var a=attackers.lead();
+    var d=defenders.lead();
+    if(a==null||d==null) return Integer.MAX_VALUE;
+    return 20+Monster.getbonus(Math.max(a.source.charisma,d.source.charisma));
+  }
+
   void prepare(){
     var squad=Squad.active.members;
     var s=new InfoScreen("");
@@ -267,9 +274,7 @@ public class ContestedTerritory extends Fortification{
     var attackodds=Difficulty.describemany(List.of(squad,a),List.of(d));
     var defenddds=Difficulty.describemany(List.of(squad,d),List.of(a));
     var bothodds=Difficulty.describemany(List.of(squad),List.of(a,d));
-    var leadera=attackers.lead().source.charisma;
-    var leaderd=defenders.lead().source.charisma;
-    var diplomacydc=20+Monster.getbonus(Math.max(leadera,leaderd));
+    var diplomacydc=negotiate();
     var diplomat=Squad.active.getbest(Skill.DIPLOMACY);
     var diplomacyodds="impossible";
     if(diplomat!=null)
@@ -311,5 +316,12 @@ public class ContestedTerritory extends Fortification{
     if(ishostile()) prepare();
     else hire();
     return true;
+  }
+
+  @Override
+  protected void captureforai(Incursion attacker){
+    super.captureforai(attacker);
+    defenders=new Army(1);
+    defenders.add(attacker.getcombatants());
   }
 }

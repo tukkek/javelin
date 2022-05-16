@@ -77,9 +77,9 @@ public class IncursionFight extends Fight{
    * @see Combatant#clone()
    * @see Combatant#clonesource()
    */
-  static ArrayList<Combatant> clone(List<Combatant> from){
+  static Combatants clone(List<Combatant> from){
     var size=from.size();
-    var to=new ArrayList<Combatant>(size);
+    var to=new Combatants(size);
     for(var i=0;i<size;i++) to.add(from.get(i).clone().clonesource());
     return to;
   }

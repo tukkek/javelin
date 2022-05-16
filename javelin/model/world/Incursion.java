@@ -3,6 +3,7 @@ package javelin.model.world;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -182,12 +183,12 @@ public class Incursion extends Actor{
       return;
     }
     var el=getel();
-    targets.sort((o1,o2)->Integer.compare(o1.getel(el),o2.getel(el)));
+    targets.sort(Comparator.comparing(Actor::getel));
     for(var a:targets) if(a instanceof Incursion&&realm==a.realm){
       target=a;
       return;
     }
-    for(var a:targets) if(a.getel(el)<el){
+    for(var a:targets) if(a.getel()<el){
       target=a;
       return;
     }
@@ -224,19 +225,22 @@ public class Incursion extends Actor{
   public static void spawn(Incursion i){
     if(Javelin.DEBUG&&!SPAWN) return;
     var size=World.scenario.size;
-    var actors=World.getactors();
-    var p=new Point(i.x,i.y);
-    var tries=0;
-    while(!p.validate(0,0,size,size)||World.get(p.x,p.y,actors)!=null
-        ||Terrain.get(p.x,p.y).equals(Terrain.WATER)){
-      p.displace();
-      tries+=1;
-      if(tries==20){
-        p=new Point(i.x,i.y);
-        tries=0;
-      }
+    var actors=World.getactors().stream().map(Actor::getlocation).toList();
+    var from=new Point(i.x,i.y);
+    Point spawn=null;
+    for(var range=1;range<size;range++){
+      var spawns=from.getadjacent(range);
+      spawns.removeAll(actors);
+      spawns=spawns.stream().filter(
+          a->a.validate(size,size)&&!Terrain.WATER.equals(Terrain.get(a.x,a.y)))
+          .toList();
+      if(!spawns.isEmpty()) spawn=RPG.pick(spawns);
     }
-    i.setlocation(p);
+    if(spawn==null){
+      if(Javelin.DEBUG) throw new RuntimeException("Cannot place Incursion!");
+      return;
+    }
+    i.setlocation(spawn);
     i.place();
   }
 
@@ -257,16 +261,12 @@ public class Incursion extends Actor{
     return null;
   }
 
-  @Override
-  public Integer getel(Integer attackerel){
-    return getel();
-  }
-
   /**
    * @return Encounter level for {@link #squad}.
    * @see ChallengeCalculator#calculateel(List)
    */
-  public int getel(){
+  @Override
+  public Integer getel(){
     return ChallengeCalculator.calculateel(squad);
   }
 

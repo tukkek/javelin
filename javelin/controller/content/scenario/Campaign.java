@@ -79,7 +79,6 @@ public class Campaign extends Scenario{
     simpletroves=false;
     boost=1;
     randomrealms=false;
-    spawnrate=30*2;
     quests=true;
     diplomacy=true;
     urbanevents=UrbanEvents.ENABLED;

@@ -67,7 +67,7 @@ public class ParkedVehicle extends Actor{
   }
 
   @Override
-  public Integer getel(Integer attackerel){
+  public Integer getel(){
     return Integer.MIN_VALUE;
   }
 }

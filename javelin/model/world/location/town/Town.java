@@ -61,7 +61,7 @@ import javelin.view.screen.town.TownScreen;
  *
  * Each town has it's own profile which is predetermined.
  *
- * TODO maybe override {@link #getel(Integer)} to return at least
+ * TODO maybe override {@link #getel()} to return at least
  * {@link #population} so that weak {@link Incursion}s won't take big towns
  *
  * TODO keeping track of city names is pretty bad when it comes to diplomacy -
@@ -437,7 +437,7 @@ public class Town extends Location{
   }
 
   @Override
-  public Integer getel(Integer attackerel){
+  public Integer getel(){
     return population;
   }
 

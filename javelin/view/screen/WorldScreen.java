@@ -13,6 +13,7 @@ import javelin.Javelin.Delay;
 import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.Weather;
+import javelin.controller.challenge.Tier;
 import javelin.controller.content.action.world.WorldAction;
 import javelin.controller.content.action.world.WorldMove;
 import javelin.controller.content.fight.Fight;
@@ -32,6 +33,7 @@ import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.Period;
+import javelin.model.world.Period.Time;
 import javelin.model.world.Season;
 import javelin.model.world.World;
 import javelin.model.world.location.Fortification;
@@ -224,6 +226,13 @@ public class WorldScreen extends BattleScreen{
     }
   }
 
+  void spawn(Actor a){
+    if(a==null||a.realm==null||!(a instanceof Location l)||!l.ishostile())
+      return;
+    var el=l.getel();
+    if(el>=Tier.MID.minlevel&&RPG.chancein(Time.SEASON*el/20)) l.spawn();
+  }
+
   /**
    * Player acts and ends turn, allowing time to pass.
    *
@@ -250,10 +259,7 @@ public class WorldScreen extends BattleScreen{
       actors.removeAll(incursions);
       for(var a:RPG.shuffle(actors)){
         a.turn(time,this);
-        var l=a instanceof Location?(Location)a:null;
-        if(s.spawnrate>0&&RPG.chancein(s.spawnrate)&&l!=null&&l.realm!=null
-            &&l.ishostile()&&!l.garrison.isEmpty())
-          l.spawn();
+        spawn(a);
       }
       dofights(time,incursions);
       if(World.getall(Squad.class).isEmpty()) Javelin.redraw();

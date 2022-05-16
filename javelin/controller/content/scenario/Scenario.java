@@ -226,8 +226,6 @@ public class Scenario implements Serializable{
   public boolean quests=false;
   /** Whether to allow {@link UrbanEvents} in {@link Town}s. */
   public boolean urbanevents=false;
-  /** How many days on average to call {@link Location#spawn()}. 0 = never. */
-  public int spawnrate=30;
 
   /**
    * {@link Upgrade} or not the starting squad after it's been selected.

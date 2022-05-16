@@ -217,8 +217,8 @@ public abstract class Haunt extends Fortification{
 	}
 
 	@Override
-	public Integer getel(Integer attackerel){
-		return ishostile()?super.getel(attackerel):targetel;
+	public Integer getel(){
+		return ishostile()?super.getel():targetel;
 	}
 
 	@Override

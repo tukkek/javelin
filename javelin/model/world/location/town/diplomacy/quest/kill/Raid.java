@@ -27,7 +27,7 @@ public class Raid extends KillQuest{
   static List<? extends Fortification> gettargets(int el){
     return List.of(Haunt.gethaunts(),ContestedTerritory.getall()).stream()
         .flatMap(List::stream)
-        .filter(t->t.ishostile()&&challenge(el,t.getel(el))).toList();
+        .filter(t->t.ishostile()&&challenge(el,t.getel())).toList();
   }
 
   @Override
@@ -56,7 +56,7 @@ public class Raid extends KillQuest{
     var output=new ArrayList<String>(towns.size());
     for(var t:towns){
       var targets=gettargets(t.population);
-      var el=targets.isEmpty()?null:targets.get(0).getel(null);
+      var el=targets.isEmpty()?null:targets.get(0).getel();
       output.add("%s: raid EL %s".formatted(t,el));
     }
     return String.join("\n",output);

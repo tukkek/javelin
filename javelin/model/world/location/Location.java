@@ -167,7 +167,7 @@ public abstract class Location extends Actor{
     if(impermeable||attacker.realm==realm) return Incursion.ignore(attacker);
     if(sacrificeable){
       var el=attacker.getel();
-      return Incursion.fight(el,getel(el));
+      return Incursion.fight(el,getel());
     }
     captureforai(attacker);
     return false;
@@ -348,13 +348,13 @@ public abstract class Location extends Actor{
   public void spawn(){
     Incursion.spawn(new Incursion(x,y,garrison,realm));
     Combatants garrison=null;
-    for(var el=getel(null);garrison==null;el-=1)
+    for(var el=getel();garrison==null;el-=1)
       garrison=EncounterGenerator.generate(el,Terrain.get(x,y));
     this.garrison=garrison;
   }
 
   @Override
-  public Integer getel(Integer attackerel){
+  public Integer getel(){
     return garrison.isEmpty()?Integer.MIN_VALUE
         :ChallengeCalculator.calculateel(garrison);
   }

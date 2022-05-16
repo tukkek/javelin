@@ -219,7 +219,7 @@ public class Caravan extends Actor{
 	}
 
 	@Override
-	public Integer getel(Integer attackerel){
+	public Integer getel(){
 		return level;
 	}
 

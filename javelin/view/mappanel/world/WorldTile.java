@@ -80,7 +80,7 @@ public class WorldTile extends Tile{
     final var l=a instanceof Location?(Location)a:null;
     if(l==null) return;
     if(l.drawgarisson())
-      draw(g,Images.HOSTILE.get(Tier.get(l.getel(Squad.active.getel()))));
+      draw(g,Images.HOSTILE.get(Tier.get(l.getel())));
     if(l.hascrafted()) draw(g,Images.CRAFTING);
     if(l.hasupgraded()) draw(g,Images.UPGRADING);
     if(l.isworking()) draw(g,Images.LABOR);

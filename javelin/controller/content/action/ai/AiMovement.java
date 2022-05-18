@@ -3,172 +3,201 @@ package javelin.controller.content.action.ai;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
+import java.util.Set;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.Audio;
 import javelin.controller.Point;
 import javelin.controller.ai.AiThread;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.content.action.Action;
-import javelin.controller.content.action.ActionCost;
-import javelin.controller.content.fight.Fight;
+import javelin.controller.content.action.Movement;
 import javelin.model.state.BattleState;
-import javelin.model.state.BattleState.Vision;
-import javelin.model.state.MeldCrystal;
 import javelin.model.unit.Combatant;
 import javelin.view.Images;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
 import javelin.view.mappanel.battle.overlay.BattleWalker;
-import javelin.view.mappanel.battle.overlay.BattleWalker.BattleStep;
 
 /**
- * Attempst to offer a more fluid experience than having {@link AiMovement}
- * simple do long step-by-step movement. Tries to move at most .5AP (move
- * action).
+ * Handles {@link BattleAi} {@link Movement}.
+ *
+ * TODO would be cool to take {@link Combatant#calculatevision(BattleState)}
+ * into consideration but that is tricky given that it can return the actual
+ * entire Map and even in almost all cases more than an unit can actually walk.
  *
  * @author alex
  */
 public class AiMovement extends Action implements AiAction{
-	/**
-	 * Target value for number of outcome nodes. We want to limit the number of
-	 * node outcomes so that the AI doesn't become to slow.
-	 */
-	static final int MOVES=4;
-	/** Unique instace of this class. */
-	public static final AiMovement SINGLETON=new AiMovement();
-	/** Image overlay representing movement. */
-	public static final Image MOVEOVERLAY=Images.get(List.of("overlay","move"));
+  /** Image overlay representing movement. */
+  public static final Image MOVEOVERLAY=Images.get(List.of("overlay","move"));
+  /** Unique instace of this class. */
+  public static final AiMovement SINGLETON=new AiMovement();
 
-	class LongMove extends ChanceNode{
-		float score;
+  static final int CULL=2;
 
-		LongMove(Combatant c,BattleStep s,List<Point> steps,BattleWalker mover,
-				MeldCrystal m,BattleState n){
-			super(n,1,getmessage(c,m,s),
-					m==null?Javelin.Delay.WAIT:Javelin.Delay.BLOCK);
-			AiOverlay o=new AiOverlay(steps.subList(0,steps.indexOf(s)));
-			o.affected.add(new Point(mover.from.x,mover.from.y));
-			o.image=AiMovement.MOVEOVERLAY;
-			overlay=o;
-			score=BattleAi.measuredistances(n.getteam(c),n.getopponents(c));
-			audio=new Audio("move",c.source);
-		}
-	}
+  class Moved extends ChanceNode{
+    Combatant moving;
+    Path path;
 
-	private AiMovement(){
-		super("Long move");
-		allowburrowed=true;
-	}
+    Moved(Combatant c,Path p,Delay d,BattleState s){
+      super(s,1,p.message.formatted(c),d);
+      moving=c;
+      path=p;
+      audio=new Audio("move",moving.source);
+      var o=new AiOverlay(p.steps);
+      o.image=AiMovement.MOVEOVERLAY;
+      overlay=o;
+    }
 
-	@Override
-	public List<List<ChanceNode>> getoutcomes(Combatant c,BattleState s){
-		if(c.gettopspeed(s)==0) return Collections.emptyList();
-		ArrayList<List<ChanceNode>> outcomes=new ArrayList<>(MOVES);
-		Point from=c.getlocation();
-		for(Point interest:getpointsofinterest(c,s))
-			if(from.distanceinsteps(interest)<=c.gettopspeed(s)/5)
-				add(move(c,from,interest,s),outcomes);
-		if(outcomes.size()>=MOVES) return outcomes;
-		ArrayList<List<ChanceNode>> extra=new ArrayList<>(MOVES);
-		Random r=AiThread.getrandom();
-		for(var destination:getdestinations(c,s,r))
-			add(move(c,from,destination,s),extra);
-		if(extra.isEmpty()) return outcomes;
-		extra.sort((a,b)->Float.compare(((LongMove)a.get(0)).score,
-				((LongMove)b.get(0)).score));
-		while(outcomes.size()<MOVES&&!extra.isEmpty()){
-			int max=extra.size()-1;
-			int index;
-			for(index=0;index<max&&r.nextBoolean();index++)
-				continue;
-			outcomes.add(extra.remove(index));
-		}
-		return outcomes;
-	}
+    float score(){
+      var s=(BattleState)n;
+      return BattleAi.measuredistances(s.getteam(moving),
+          s.getopponents(moving));
+    }
+  }
 
-	static HashSet<Point> getpointsofinterest(Combatant c,BattleState s){
-		HashSet<Point> interesting=new HashSet<>();
-		for(Combatant enemy:s.getopponents(c))
-			interesting.add(enemy.getlocation());
-		for(MeldCrystal m:s.meld)
-			interesting.add(new Point(m.x,m.y));
-		return interesting;
-	}
+  class Path{
+    String message="%s moves...";
+    List<Point> steps;
+    float ap;
 
-	static void add(ChanceNode n,ArrayList<List<ChanceNode>> outcomes){
-		if(n!=null){
-			ArrayList<ChanceNode> chances=new ArrayList<>();
-			chances.add(n);
-			outcomes.add(chances);
-		}
-	}
+    Path(Combatant c){
+      steps=List.of(c.getlocation());
+      ap=0;
+    }
 
-	LongMove move(Combatant c,Point from,Point to,BattleState s){
-		AiThread.checkinterrupted();
-		BattleWalker mover=new BattleWalker(from,to,c,s);
-		List<Point> steps=mover.walk();
-		if(steps.isEmpty()) return null;
-		BattleStep step=choosestep(steps);
-		s=s.clone();
-		c=s.clone(c);
-		c.ap+=step.totalcost;
-		c.location[0]=step.x;
-		c.location[1]=step.y;
-		MeldCrystal m=s.getmeld(step.x,step.y);
-		if(m!=null){
-			c.meld();
-			s.meld.remove(m);
-		}
-		return new LongMove(c,step,steps,mover,m,s);
-	}
+    Path(Path p){
+      steps=new ArrayList<>(p.steps.size()+1);
+      steps.addAll(p.steps);
+      ap=p.ap;
+    }
 
-	static BattleStep choosestep(List<Point> steps){
-		for(Point p:steps){
-			BattleStep step=(BattleStep)p;
-			if(step.engaged||step.totalcost>=ActionCost.MOVE) return step;
-		}
-		return (BattleStep)steps.get(steps.size()-1);
-	}
+    Point getlast(){
+      return steps.get(steps.size()-1);
+    }
 
-	static List<Point> getdestinations(Combatant c,BattleState s,Random r){
-		var destinations=new HashSet<Point>();
-		var range=s.isengaged(c)?1:c.gettopspeed(s)/5;
-		Point from=c.getlocation();
-		for(var x=from.x-range;x<=from.x+range;x++)
-			for(var y=from.y-range;y<=from.y+range;y++)
-				destinations.add(new Point(x,y));
-		destinations.remove(c.getlocation());
-		var flies=Fight.current.map.flying&&c.source.fly>0;
-		var target=MOVES*MOVES;
-		var result=new ArrayList<Point>(target);
-		var queue=new LinkedList<>(destinations);
-		while(target>0&&!queue.isEmpty()){
-			var point=queue.remove(r.nextInt(queue.size()));
-			if(!point.validate(0,0,s.map.length,s.map[0].length)) continue;
-			if(!flies&&s.map[point.x][point.y].blocked) continue;
-			if(s.getcombatant(point.x,point.y)!=null) continue;
-			MeldCrystal m=s.getmeld(point.x,point.y);
-			if(m!=null&&!m.crystalize(s)) continue;
-			if(s.haslineofsight(c,point)==Vision.BLOCKED) continue;
-			result.add(point);
-			target-=1;
-		}
-		return result;
-	}
+    boolean stop(Combatant c,BattleState s){
+      var l=getlast();
+      return s.getmeld(l.x,l.y)!=null||BattleWalker.engage(c,l,s);
+    }
 
-	@Override
-	public boolean perform(Combatant active){
-		throw new UnsupportedOperationException();
-	}
+    Path step(Combatant c,Point to,BattleState s){
+      if(BattleWalker.block(c,to,s)) return null;
+      var m=s.getmeld(to.x,to.y);
+      if(m!=null&&c.ap+ap<m.meldsat) return null;
+      var p=new Path(this);
+      p.steps.add(to);
+      p.ap+=BattleWalker.getcost(c,to.x,to.y,s);
+      return p;
+    }
+  }
 
-	static String getmessage(Combatant c,MeldCrystal m,BattleStep s){
-		if(m!=null) return c+" powers up!";
-		if(s.engaged) return c+" disengages...";
-		return c+" moves...";
-	}
+  class Search{
+    List<Path> moves=new ArrayList<>();
+    Set<Point> skip=new HashSet<>();
+    Combatant combatant;
+    BattleState state;
+
+    Search(Combatant c,BattleState s){
+      combatant=c;
+      state=s;
+      var combatants=s.getcombatants();
+      combatants.remove(c);
+      skip.addAll(combatants.stream().map(Combatant::getlocation).toList());
+    }
+
+    void move(Path p){
+      AiThread.checkinterrupted();
+      var width=state.map.length;
+      var height=state.map[0].length;
+      for(var step:p.getlast().getadjacent()){
+        if(!step.validate(width,height)||skip.contains(step)) continue;
+        var next=p.step(combatant,step,state);
+        if(next!=null) moves.add(next);
+      }
+    }
+
+    boolean engage(){
+      if(!state.isengaged(combatant)) return false;
+      var ap=Movement.disengage(combatant);
+      for(var m:moves){
+        m.ap=ap;
+        m.message="%s disengages...";
+      }
+      return true;
+    }
+
+    List<Path> search(){
+      move(new Path(combatant));
+      if(engage()||moves.isEmpty()) return moves;
+      var next=moves.get(0);
+      while(next.ap<.5){
+        next=moves.stream().filter(m->!skip.contains(m.getlast()))
+            .min(Comparator.comparing(m->m.ap)).orElse(null);
+        if(next==null) break;
+        skip.add(next.getlast());
+        if(!next.stop(combatant,state)) move(next);
+      }
+      return moves;
+    }
+  }
+
+  AiMovement(){
+    super("Long move");
+    allowburrowed=true;
+  }
+
+  @Override
+  public boolean perform(Combatant active){
+    throw new UnsupportedOperationException();
+  }
+
+  Path maxap=null;//TODO
+
+  Moved act(Combatant c,Path p,BattleState s){
+    s=s.clone();
+    c=s.clone(c);
+    var to=p.getlast();
+    c.setlocation(to);
+    //    if(maxap==null||p.ap>maxap.ap) maxap=p;//TODO
+    System.out.println(List.of(p.ap,p.steps.size()));//TODO
+    c.ap+=p.ap;
+    var m=s.getmeld(to.x,to.y);
+    var d=Javelin.Delay.WAIT;
+    if(m!=null){
+      c.meld();
+      s.meld.remove(m);
+      p.message="%s powers up!";
+      d=Javelin.Delay.BLOCK;
+    }
+    return new Moved(c,p,d,s);
+  }
+
+  //TODO would be neat to perform culling before cloning states in act()
+  List<Moved> cull(List<Moved> moves,BattleState s){
+    var culled=new ArrayList<Moved>(CULL);
+    for(var m:moves){
+      var l=m.path.getlast();
+      if(s.getmeld(l.x,l.y)!=null) culled.add(m);
+    }
+    var byscore=moves.stream().filter(m->!culled.contains(m))
+        .sorted(Comparator.comparing(Moved::score)).limit(CULL+culled.size())
+        .toList();
+    culled.addAll(byscore);
+    return culled;
+  }
+
+  @Override
+  public List<List<ChanceNode>> getoutcomes(Combatant c,BattleState s){
+    if(c.gettopspeed(s)==0) return Collections.emptyList();
+    var moves=new Search(c,s).search().stream().map(path->act(c,path,s));
+    var outcomes=new ArrayList<List<ChanceNode>>(CULL);
+    for(var m:cull(moves.toList(),s)) outcomes.add(List.of(m));
+    return outcomes;
+  }
 }

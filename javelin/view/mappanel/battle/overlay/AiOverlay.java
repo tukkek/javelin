@@ -16,26 +16,26 @@ import javelin.view.mappanel.overlay.Overlay;
  * @author alex
  */
 public class AiOverlay extends Overlay{
-	public Image image=TargetOverlay.TARGET;
+  public Image image=TargetOverlay.TARGET;
 
-	public AiOverlay(int x,int y){
-		affected.add(new Point(x,y));
-	}
+  public AiOverlay(int x,int y){
+    this(new Point(x,y));
+  }
 
-	public AiOverlay(Collection<? extends Point> area){
-		affected.addAll(area);
-	}
+  public AiOverlay(Collection<? extends Point> area){
+    affected.addAll(area);
+  }
 
-	public AiOverlay(Point p){
-		this(p.x,p.y);
-	}
+  public AiOverlay(Point p){
+    affected.add(p);
+  }
 
-	public AiOverlay(Combatant c){
-		this(c.location[0],c.location[1]);
-	}
+  public AiOverlay(Combatant c){
+    this(c.getlocation());
+  }
 
-	@Override
-	public void overlay(Tile t){
-		if(affected.contains(new Point(t.x,t.y))) draw(t,image);
-	}
+  @Override
+  public void overlay(Tile t){
+    if(affected.contains(new Point(t.x,t.y))) draw(t,image);
+  }
 }

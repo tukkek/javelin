@@ -3,7 +3,7 @@ package javelin.controller.ai;
 import java.util.List;
 
 import javelin.controller.ai.valueselector.ValueSelector;
-import javelin.controller.walker.Walker;
+import javelin.controller.content.action.ai.AiMovement;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.condition.Defending;
@@ -14,76 +14,62 @@ import javelin.model.unit.condition.Defending;
  * @author alex
  */
 public class BattleAi extends AlphaBetaSearch{
-	/**
-	 * Ideally should use something that will never be reached by the
-	 * {@link #ratechallenge(List)} but not any higher.
-	 */
-	private static final float LIMIT=Float.MAX_VALUE;
+  /**
+   * Ideally should use something that will never be reached by the
+   * {@link #ratechallenge(List)} but not any higher.
+   */
+  private static final float LIMIT=Float.MAX_VALUE;
 
-	/** Constructor. */
-	public BattleAi(final int aiDepth){
-		super(aiDepth);
-	}
+  /** Constructor. */
+  public BattleAi(final int aiDepth){
+    super(aiDepth);
+  }
 
-	@Override
-	protected Node catchMemoryIssue(final Error e){
-		throw e;
-	}
+  @Override
+  protected Node catchMemoryIssue(final Error e){
+    throw e;
+  }
 
-	@Override
-	public float utility(final Node node){
-		final BattleState state=(BattleState)node;
-		final float redTeam=BattleAi.ratechallenge(state.getredteam());
-		if(redTeam==0f) return LIMIT;
-		final float blueTeam=BattleAi.ratechallenge(state.getblueteam());
-		if(blueTeam==0f) return -LIMIT;
-		return redTeam-measuredistances(state.redteam,state.blueteam)
-				-state.meld.size()-defending(state)
-				-(blueTeam-measuredistances(state.blueteam,state.redteam));
-	}
+  @Override
+  public float utility(final Node node){
+    final var state=(BattleState)node;
+    final var redTeam=BattleAi.ratechallenge(state.getredteam());
+    if(redTeam==0f) return LIMIT;
+    final var blueTeam=BattleAi.ratechallenge(state.getblueteam());
+    if(blueTeam==0f) return -LIMIT;
+    return redTeam-measuredistances(state.redteam,state.blueteam)
+        -state.meld.size()-defending(state)
+        -(blueTeam-measuredistances(state.blueteam,state.redteam));
+  }
 
-	static float defending(BattleState state){
-		int ndefending=0;
-		for(Combatant c:state.redteam)
-			if(c.hascondition(Defending.class)!=null) ndefending+=1;
-		return ndefending;
-	}
+  static float defending(BattleState state){
+    var ndefending=0;
+    for(Combatant c:state.redteam)
+      if(c.hascondition(Defending.class)!=null) ndefending+=1;
+    return ndefending;
+  }
 
-	static private float ratechallenge(final List<Combatant> team){
-		float challenge=0f;
-		for(final Combatant c:team)
-			challenge+=c.source.cr*(1+c.hp/(float)c.maxhp);
-		return challenge;
-	}
+  static private float ratechallenge(final List<Combatant> team){
+    var challenge=0f;
+    for(final Combatant c:team) challenge+=c.source.cr*(1+c.hp/(float)c.maxhp);
+    return challenge;
+  }
 
-	/**
-	 * @return A total score composed of how many steps each unit is from its
-	 *         closest opponent (geometrically). An arbitrary factor is applied to
-	 *         the final result.
-	 */
-	public static float measuredistances(List<Combatant> us,List<Combatant> them){
-		int score=0;
-		for(Combatant mate:us){
-			int minimum=Integer.MAX_VALUE;
-			for(Combatant foe:them){
-				final int distance=Walker.distanceinsteps(mate.location[0],
-						mate.location[1],foe.location[0],foe.location[1]);
-				if(distance<minimum) minimum=distance;
-			}
-			score+=minimum;
-		}
-		return score/125f;
-	}
+  static float measuredistances(List<Combatant> usp,List<Combatant> themp){
+    var us=usp.stream().map(Combatant::getlocation).toList();
+    var them=themp.stream().map(Combatant::getlocation).toList();
+    return AiMovement.score(us,them)/125f;
+  }
 
-	@Override
-	public boolean terminalTest(final Node node){
-		final BattleState state=(BattleState)node;
-		return state.redteam.isEmpty()||state.blueteam.isEmpty();
-	}
+  @Override
+  public boolean terminalTest(final Node node){
+    final var state=(BattleState)node;
+    return state.redteam.isEmpty()||state.blueteam.isEmpty();
+  }
 
-	@Override
-	public ValueSelector getplayer(Node node){
-		BattleState s=(BattleState)node;
-		return s.blueteam.contains(s.next)?minValueSelector:maxValueSelector;
-	}
+  @Override
+  public ValueSelector getplayer(Node node){
+    var s=(BattleState)node;
+    return s.blueteam.contains(s.next)?minValueSelector:maxValueSelector;
+  }
 }

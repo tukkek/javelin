@@ -13,12 +13,15 @@ import javelin.Javelin.Delay;
 import javelin.controller.Audio;
 import javelin.controller.Point;
 import javelin.controller.ai.AiThread;
+import javelin.controller.ai.AlphaBetaSearch;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.content.action.Action;
 import javelin.controller.content.action.Movement;
+import javelin.controller.content.fight.mutator.Meld;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
+import javelin.old.RPG;
 import javelin.view.Images;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
 import javelin.view.mappanel.battle.overlay.BattleWalker;
@@ -52,12 +55,6 @@ public class AiMovement extends Action implements AiAction{
       var o=new AiOverlay(p.steps);
       o.image=AiMovement.MOVEOVERLAY;
       overlay=o;
-    }
-
-    float score(){
-      var s=(BattleState)n;
-      return BattleAi.measuredistances(s.getteam(moving),
-          s.getopponents(moving));
     }
   }
 
@@ -157,15 +154,11 @@ public class AiMovement extends Action implements AiAction{
     throw new UnsupportedOperationException();
   }
 
-  Path maxap=null;//TODO
-
   Moved act(Combatant c,Path p,BattleState s){
     s=s.clone();
     c=s.clone(c);
     var to=p.getlast();
     c.setlocation(to);
-    //    if(maxap==null||p.ap>maxap.ap) maxap=p;//TODO
-    System.out.println(List.of(p.ap,p.steps.size()));//TODO
     c.ap+=p.ap;
     var m=s.getmeld(to.x,to.y);
     var d=Javelin.Delay.WAIT;
@@ -178,26 +171,71 @@ public class AiMovement extends Action implements AiAction{
     return new Moved(c,p,d,s);
   }
 
-  //TODO would be neat to perform culling before cloning states in act()
-  List<Moved> cull(List<Moved> moves,BattleState s){
-    var culled=new ArrayList<Moved>(CULL);
-    for(var m:moves){
-      var l=m.path.getlast();
-      if(s.getmeld(l.x,l.y)!=null) culled.add(m);
+  /**
+   * @return A total score composed of how many steps each unit is away from its
+   *   closest opponent (geometrically).
+   */
+  public static float score(List<Point> allies,List<Point> opponents){
+    var score=0;
+    for(var u:allies){
+      var closest=Integer.MAX_VALUE;
+      for(var t:opponents){
+        final var distance=u.distanceinsteps(t);
+        if(distance<closest) closest=distance;
+      }
+      score+=closest;
     }
-    var byscore=moves.stream().filter(m->!culled.contains(m))
-        .sorted(Comparator.comparing(Moved::score)).limit(CULL+culled.size())
+    return score;
+  }
+
+  float score(Combatant c,Path p,BattleState s){
+    var allies=new ArrayList<>(
+        s.getteam(c).stream().map(Combatant::getlocation).toList());
+    allies.remove(c.getlocation());
+    allies.add(p.getlast());
+    var opponents=s.getopponents(c).stream().map(Combatant::getlocation)
         .toList();
-    culled.addAll(byscore);
-    return culled;
+    return score(allies,opponents);
+  }
+
+  /**
+   * This is a little unintuitive but here are the goals:
+   *
+   * 1. Have at least one {@link Meld} option. The AI will forgo those often
+   * unless it needs healing.
+   *
+   * 2. Have one of the best moves by {@link Moved#score()}. This is the main
+   * reason for the current rewrite, exploring and scoring all the move-space
+   * (because the previous version was very move-spammy and random.
+   *
+   * 3. Have a random choice too. #2 doesn't consider anything like cover or
+   * survivability, stalling or alternative opponents to engage. Having a
+   * literal random option creates new {@link AlphaBetaSearch} search
+   * possibilities consideirng these factors.
+   */
+  List<Path> cull(Combatant c,List<Path> paths,BattleState s){
+    paths=new ArrayList<>(paths);
+    var crystals=new HashSet<>(
+        s.meld.stream().map(m->new Point(m.x,m.y)).toList());
+    var meld=paths.stream().filter(p->crystals.contains(p.getlast())).toList();
+    paths.removeAll(meld);
+    var best=paths.stream().sorted(Comparator.comparing(p->score(c,p,s)))
+        .limit(CULL).toList();
+    paths.removeAll(best);
+    var choices=new ArrayList<Path>(CULL);
+    if(!meld.isEmpty()) choices.add(RPG.pick(meld));
+    if(!best.isEmpty()) choices.add(RPG.pick(best));
+    if(!paths.isEmpty()) choices.add(RPG.pick(paths));
+    while(choices.size()>CULL) choices.remove(RPG.r(choices.size()));
+    return choices;
   }
 
   @Override
   public List<List<ChanceNode>> getoutcomes(Combatant c,BattleState s){
     if(c.gettopspeed(s)==0) return Collections.emptyList();
-    var moves=new Search(c,s).search().stream().map(path->act(c,path,s));
+    var paths=new Search(c,s).search();
     var outcomes=new ArrayList<List<ChanceNode>>(CULL);
-    for(var m:cull(moves.toList(),s)) outcomes.add(List.of(m));
+    for(var p:cull(c,paths,s)) outcomes.add(List.of(act(c,p,s)));
     return outcomes;
   }
 }

@@ -57,278 +57,276 @@ import javelin.old.RPG;
  * @author alex
  */
 public abstract class Kit implements Serializable{
-	/**
-	 * All kits available in game.
-	 *
-	 * @see #validate()
-	 */
-	public static final List<Kit> KITS=List.of(Ninja.INSTANCE,Barbarian.INSTANCE,
-			Bard.INSTANCE,Cleric.INSTANCE,Druid.INSTANCE,Fighter.INSTANCE,
-			Monk.INSTANCE,Paladin.INSTANCE,Ranger.INSTANCE,Rogue.INSTANCE,
-			Transmuter.INSTANCE,Enchanter.INSTANCE,Necromancer.INSTANCE,
-			Conjurer.INSTANCE,Evoker.INSTANCE,Abjurer.INSTANCE,Diviner.INSTANCE,
-			SteelSerpent.INSTANCE,BlackDragoon.INSTANCE,BlueDragoon.INSTANCE,
-			GreenDragoon.INSTANCE,RedDragoon.INSTANCE,WhiteDragoon.INSTANCE);
+  /**
+   * All kits available in game.
+   *
+   * @see #validate()
+   */
+  public static final List<Kit> KITS=List.of(Ninja.INSTANCE,Barbarian.INSTANCE,
+      Bard.INSTANCE,Cleric.INSTANCE,Druid.INSTANCE,Fighter.INSTANCE,
+      Monk.INSTANCE,Paladin.INSTANCE,Ranger.INSTANCE,Rogue.INSTANCE,
+      Transmuter.INSTANCE,Enchanter.INSTANCE,Necromancer.INSTANCE,
+      Conjurer.INSTANCE,Evoker.INSTANCE,Abjurer.INSTANCE,Diviner.INSTANCE,
+      SteelSerpent.INSTANCE,BlackDragoon.INSTANCE,BlueDragoon.INSTANCE,
+      GreenDragoon.INSTANCE,RedDragoon.INSTANCE,WhiteDragoon.INSTANCE);
 
-	/**
-	 * TODO temporaty class to help transtition from {@link UpgradeHandler} to a
-	 * pure {@link Kit}-based system.
-	 *
-	 * @author alex
-	 */
-	protected class BuildSimpleGuild extends BuildAcademy{
-		/** Constructor. */
-		protected BuildSimpleGuild(Rank minimumrank){
-			super(minimumrank);
-		}
+  /**
+   * TODO temporaty class to help transtition from {@link UpgradeHandler} to a
+   * pure {@link Kit}-based system.
+   *
+   * @author alex
+   */
+  protected class BuildSimpleGuild extends BuildAcademy{
+    /** Constructor. */
+    protected BuildSimpleGuild(Rank minimumrank){
+      super(minimumrank);
+    }
 
-		@Override
-		protected Academy generateacademy(){
-			return createguild();
-		}
-	}
+    @Override
+    protected Academy generateacademy(){
+      return createguild();
+    }
+  }
 
-	/**
-	 * TODO temporaty class to help transtition from {@link UpgradeHandler} to a
-	 * pure {@link Kit}-based system.
-	 *
-	 * @author alex
-	 */
-	protected class SimpleGuild extends Guild{
-		/** Constructor. */
-		protected SimpleGuild(String string,Kit k){
-			super(string,k);
-		}
+  /**
+   * TODO temporaty class to help transtition from {@link UpgradeHandler} to a
+   * pure {@link Kit}-based system.
+   *
+   * @author alex
+   */
+  protected class SimpleGuild extends Guild{
+    /** Constructor. */
+    protected SimpleGuild(String string,Kit k){
+      super(string,k);
+    }
 
-		@Override
-		public String getimagename(){
-			return "martialacademy";
-		}
-	}
+    @Override
+    public String getimagename(){
+      return "martialacademy";
+    }
+  }
 
-	/** Name of the kit, also used for {@link #titles}. */
-	public String name;
-	/** @see #define() */
-	public HashSet<Upgrade> basic=new HashSet<>();
-	/** @see #extend() */
-	public HashSet<Upgrade> extension=new HashSet<>();
-	/** Class progression. */
-	public ClassLevelUpgrade classlevel;
-	/**
-	 * Primary ability. A secondary is also taken by the constructor and added to
-	 * {@link #extension} if not <code>null</code>.
-	 */
-	public RaiseAbility ability;
+  /** Name of the kit, also used for {@link #titles}. */
+  public String name;
+  /** @see #define() */
+  public HashSet<Upgrade> basic=new HashSet<>();
+  /** @see #extend() */
+  public HashSet<Upgrade> extension=new HashSet<>();
+  /** Class progression. */
+  public ClassLevelUpgrade classlevel;
+  /**
+   * Primary ability. A secondary is also taken by the constructor and added to
+   * {@link #extension} if not <code>null</code>.
+   */
+  public RaiseAbility ability;
 
-	/**
-	 * One title per {@link Tier}. A $ should be replaced by the
-	 * {@link Monster#name}.
-	 *
-	 * @see #rename(Monster)
-	 */
-	@Deprecated
-	protected String[] titles;
+  /**
+   * One title per {@link Tier}. A $ should be replaced by the
+   * {@link Monster#name}.
+   *
+   * @see #rename(Monster)
+   */
+  @Deprecated
+  protected String[] titles;
 
-	/**
-	 * A prestige kit is usually not suitable for starting characters, but only
-	 * for mid or high level ones.
-	 */
-	public boolean prestige=false;
+  /**
+   * A prestige kit is usually not suitable for starting characters, but only
+   * for mid or high level ones.
+   */
+  public boolean prestige=false;
 
-	/** Constructor. */
-	public Kit(String name,ClassLevelUpgrade classlevel,RaiseAbility primary,
-			RaiseAbility secondary){
-		this.name=name;
-		this.classlevel=classlevel;
-		basic.add(classlevel);
-		ability=primary;
-		basic.add(ability);
-		if(secondary!=null) extension.add(secondary);
-		define();
-		extend();
-		var lower=name.toLowerCase();
-		titles=new String[]{"Inept $ "+lower,"Rookie $ "+lower,"$ "+lower,
-				"Veteran $ "+lower};
-	}
+  /** Constructor. */
+  public Kit(String name,ClassLevelUpgrade classlevel,RaiseAbility primary,
+      RaiseAbility secondary){
+    this.name=name;
+    this.classlevel=classlevel;
+    basic.add(classlevel);
+    ability=primary;
+    basic.add(ability);
+    if(secondary!=null) extension.add(secondary);
+    define();
+    extend();
+    var lower=name.toLowerCase();
+    titles=new String[]{"Inept $ "+lower,"Rookie $ "+lower,"$ "+lower,
+        "Veteran $ "+lower};
+  }
 
-	/**
-	 * Used only for "virtual" kits, ones that should never be used as proper
-	 * kits.
-	 *
-	 * @deprecated
-	 * @see CombatExpertiseDiscipline
-	 */
-	@Deprecated
-	public Kit(){
-	}
+  /**
+   * Used only for "virtual" kits, ones that should never be used as proper
+   * kits.
+   *
+   * @deprecated
+   * @see CombatExpertiseDiscipline
+   */
+  @Deprecated
+  public Kit(){}
 
-	/**
-	 * Registers around 3-5 {@link Upgrade}s that all (or most) members of this
-	 * Kit should share. Usually for CRs around 1-5.
-	 */
-	abstract protected void define();
+  /**
+   * Registers around 3-5 {@link Upgrade}s that all (or most) members of this
+   * Kit should share. Usually for CRs around 1-5.
+   */
+  abstract protected void define();
 
-	/**
-	 * Add any other {@link Upgrade}s that extend this Kit into middle, high and
-	 * epic levels.
-	 */
-	protected abstract void extend();
+  /**
+   * Add any other {@link Upgrade}s that extend this Kit into middle, high and
+   * epic levels.
+   */
+  protected abstract void extend();
 
-	/**
-	 * TODO would be better to have the game concept of Ability as a programming
-	 * unit.
-	 *
-	 * @return The value of the {@link #ability} favored by this class. As such,
-	 *         it can be measured against the highest ability values of a unit to
-	 *         determine if that unit would be a good candidate for this kit.
-	 */
-	public int getpreferredability(Monster m){
-		return ability.getattribute(m);
-	}
+  /**
+   * TODO would be better to have the game concept of Ability as a programming
+   * unit.
+   *
+   * @return The value of the {@link #ability} favored by this class. As such,
+   *   it can be measured against the highest ability values of a unit to
+   *   determine if that unit would be a good candidate for this kit.
+   */
+  public int getpreferredability(Monster m){
+    return ability.getattribute(m);
+  }
 
-	@Override
-	public String toString(){
-		return name;
-	}
+  @Override
+  public String toString(){
+    return name;
+  }
 
-	/**
-	 * @return <code>true</code> if this is a good choice for the given
-	 *         {@link Monster}. The default implementation just compares the two
-	 *         given ability scores to this class
-	 *         {@link #getpreferredability(Monster)}.
-	 */
-	public boolean allow(int bestability,int secondbest,Monster m){
-		int score=getpreferredability(m);
-		return score==bestability||score==secondbest;
-	}
+  /**
+   * @return <code>true</code> if this is a good choice for the given
+   *   {@link Monster}. The default implementation just compares the two given
+   *   ability scores to this class {@link #getpreferredability(Monster)}.
+   */
+  public boolean allow(int bestability,int secondbest,Monster m){
+    var score=getpreferredability(m);
+    return score==bestability||score==secondbest;
+  }
 
-	/**
-	 * @param allowprestige {@link Discipline}s are hardly suited for beginning
-	 *          characters so in some bases you may want not to include those as
-	 *          part of the result.
-	 * @return A list of kits that should be well suited for the given
-	 *         {@link Monster}. Current Kit selection has been set up so that this
-	 *         should never be empty.
-	 */
-	public static List<Kit> getpreferred(Monster m,boolean allowprestige){
-		ArrayList<Integer> attributes=new ArrayList<>(6);
-		attributes.add(m.strength);
-		attributes.add(m.dexterity);
-		attributes.add(m.constitution);
-		attributes.add(m.intelligence);
-		attributes.add(m.wisdom);
-		attributes.add(m.charisma);
-		attributes.sort(null);
-		int[] best=new int[]{attributes.get(4),attributes.get(5)};
-		ArrayList<Kit> preferred=new ArrayList<>(1);
-		for(Kit k:Kit.KITS){
-			if(k.prestige&&!allowprestige) continue;
-			if(k.allow(best[0],best[1],m)) preferred.add(k);
-		}
-		return preferred;
-	}
+  /**
+   * @param allowprestige {@link Discipline}s are hardly suited for beginning
+   *   characters so in some bases you may want not to include those as part of
+   *   the result.
+   * @return A list of kits that should be well suited for the given
+   *   {@link Monster}. Current Kit selection has been set up so that this
+   *   should never be empty.
+   */
+  public static List<Kit> getpreferred(Monster m,boolean allowprestige){
+    if(!m.think(-1)) return List.of(Elite.SINGLETON);
+    var attributes=new ArrayList<Integer>(6);
+    attributes.add(m.strength);
+    attributes.add(m.dexterity);
+    attributes.add(m.constitution);
+    attributes.add(m.intelligence);
+    attributes.add(m.wisdom);
+    attributes.add(m.charisma);
+    attributes.sort(null);
+    int[] best={attributes.get(4),attributes.get(5)};
+    var preferred=new ArrayList<Kit>(1);
+    for(Kit k:Kit.KITS){
+      if(k.prestige&&!allowprestige) continue;
+      if(k.allow(best[0],best[1],m)) preferred.add(k);
+    }
+    return preferred;
+  }
 
-	/**
-	 * @return All upgrades, from {@link #basic} and {@link #extension} on a new
-	 *         set.
-	 */
-	public HashSet<Upgrade> getupgrades(){
-		HashSet<Upgrade> upgrades=new HashSet<>(basic);
-		upgrades.addAll(extension);
-		return upgrades;
-	}
+  /**
+   * @return All upgrades, from {@link #basic} and {@link #extension} on a new
+   *   set.
+   */
+  public HashSet<Upgrade> getupgrades(){
+    var upgrades=new HashSet<>(basic);
+    upgrades.addAll(extension);
+    return upgrades;
+  }
 
-	/**
-	 * Sets {@link Monster#customName} to one of the appropriate {@link #titles}.
-	 */
-	public void rename(Monster m){
-		m.customName=m.name+" "+name.toLowerCase();
-	}
+  /**
+   * Sets {@link Monster#customName} to one of the appropriate {@link #titles}.
+   */
+  public void rename(Monster m){
+    m.customName=m.name+" "+name.toLowerCase();
+  }
 
-	/**
-	 * A {@link District} {@link Location} to learn this kit.
-	 *
-	 * TODO the default implemtation is temporary, see {@link BuildSimpleGuild} -
-	 * move to abstract ASAP
-	 */
-	public Academy createguild(){
-		return new SimpleGuild(name+"s guild",this);
-	}
+  /**
+   * A {@link District} {@link Location} to learn this kit.
+   *
+   * TODO the default implemtation is temporary, see {@link BuildSimpleGuild} -
+   * move to abstract ASAP
+   */
+  public Academy createguild(){
+    return new SimpleGuild(name+"s guild",this);
+  }
 
-	/**
-	 * @deprecated temporaty class to help transtition from {@link UpgradeHandler}
-	 *             to a pure {@link Kit}-based system.
-	 */
-	@Deprecated
-	public Labor buildguild(){
-		return new BuildSimpleGuild(Rank.HAMLET);
-	}
+  /**
+   * @deprecated temporaty class to help transtition from {@link UpgradeHandler}
+   *   to a pure {@link Kit}-based system.
+   */
+  @Deprecated
+  public Labor buildguild(){
+    return new BuildSimpleGuild(Rank.HAMLET);
+  }
 
-	/** Does a few sanity and design checks if in {@link Javelin#DEBUG} mode. */
-	public void validate(){
-		if(!Javelin.DEBUG) return;
-		if(!Kit.KITS.contains(this))
-			throw new RuntimeException("Kit not registered: "+name);
-		var nupgrades=basic.size();
-		if(!(3<=nupgrades&&nupgrades<=7)){
-			String error=name+" has "+nupgrades+" basic upgrades!";
-			throw new RuntimeException(error);
-		}
-		for(var u:getupgrades())
-			if(u==null) throw new RuntimeException("Null upgrade for Kit "+name);
-	}
+  /** Does a few sanity and design checks if in {@link Javelin#DEBUG} mode. */
+  public void validate(){
+    if(!Javelin.DEBUG) return;
+    if(!Kit.KITS.contains(this))
+      throw new RuntimeException("Kit not registered: "+name);
+    var nupgrades=basic.size();
+    if(!(3<=nupgrades&&nupgrades<=7)){
+      var error=name+" has "+nupgrades+" basic upgrades!";
+      throw new RuntimeException(error);
+    }
+    for(var u:getupgrades())
+      if(u==null) throw new RuntimeException("Null upgrade for Kit "+name);
+  }
 
-	/**
-	 * @return All {@link Spell}s that are part of this kit. May be empty.
-	 */
-	@SuppressWarnings("unchecked")
-	public <K extends Upgrade> List<K> filter(Class<K> type){
-		return getupgrades().stream().filter(u->type.isInstance(u)).map(u->(K)u)
-				.collect(Collectors.toList());
-	}
+  /**
+   * @return All {@link Spell}s that are part of this kit. May be empty.
+   */
+  @SuppressWarnings("unchecked")
+  public <K extends Upgrade> List<K> filter(Class<K> type){
+    return getupgrades().stream().filter(u->type.isInstance(u)).map(u->(K)u)
+        .collect(Collectors.toList());
+  }
 
-	/**
-	 * Allows to complete a Kit after any external pendencies are resolved, such
-	 * as {@link Summon} {@link Spell}s.
-	 *
-	 * The default implementation will transfer any Spells with
-	 * {@link Spell#casterlevel} 1 to {@link #basic} from {@link #basic} to
-	 * {@link #extension} so it should be invoked at the end of a subclass'
-	 * implementaion.
-	 *
-	 * @see Summon#setupsummons()
-	 */
-	public void finish(){
-		var transfer=extension.stream().filter(u->u instanceof Spell)
-				.map(u->(Spell)u).filter(s->s.casterlevel==1)
-				.collect(Collectors.toList());
-		extension.removeAll(transfer);
-		basic.addAll(transfer);
-		validate();
-	}
+  /**
+   * Allows to complete a Kit after any external pendencies are resolved, such
+   * as {@link Summon} {@link Spell}s.
+   *
+   * The default implementation will transfer any Spells with
+   * {@link Spell#casterlevel} 1 to {@link #basic} from {@link #basic} to
+   * {@link #extension} so it should be invoked at the end of a subclass'
+   * implementaion.
+   *
+   * @see Summon#setupsummons()
+   */
+  public void finish(){
+    var transfer=extension.stream().filter(u->u instanceof Spell)
+        .map(u->(Spell)u).filter(s->s.casterlevel==1)
+        .collect(Collectors.toList());
+    extension.removeAll(transfer);
+    basic.addAll(transfer);
+    validate();
+  }
 
-	public boolean upgrade(Combatant c,boolean spendxp){
-		for(var u:RPG.shuffle(new ArrayList<>(getupgrades()))){
-			if(!u.upgrade(c,spendxp)) continue;
-			c.postupgradeautomatic();
-			ChallengeCalculator.calculatecr(c.source);
-			c.source.elite=true;
-			return true;
-		}
-		return false;
-	}
+  public boolean upgrade(Combatant c,boolean spendxp){
+    for(var u:RPG.shuffle(new ArrayList<>(getupgrades()))){
+      if(!u.upgrade(c,spendxp)) continue;
+      c.postupgradeautomatic();
+      ChallengeCalculator.calculatecr(c.source);
+      c.source.elite=true;
+      return true;
+    }
+    return false;
+  }
 
-	public boolean upgrade(Combatant c){
-		return upgrade(c,false);
-	}
+  public boolean upgrade(Combatant c){
+    return upgrade(c,false);
+  }
 
-	/**
-	 * Checks that every {@link Monster} in the game has at least one preferred
-	 * Kit.
-	 */
-	public static void test(){
-		for(var m:Monster.ALL)
-			if(Kit.getpreferred(m,true).isEmpty())
-				throw new RuntimeException("No kit for "+m+"!");
-	}
+  /**
+   * Checks that every {@link Monster} in the game has at least one preferred
+   * Kit.
+   */
+  public static void test(){
+    for(var m:Monster.ALL) if(Kit.getpreferred(m,true).isEmpty())
+      throw new RuntimeException("No kit for "+m+"!");
+  }
 }

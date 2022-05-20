@@ -6,7 +6,7 @@ import javelin.Javelin;
 import javelin.model.item.consumable.Ruby;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.world.location.Guild;
+import javelin.model.world.location.academy.Guild;
 import javelin.model.world.location.haunt.Haunt;
 import javelin.view.screen.upgrading.AcademyScreen;
 

@@ -1,4 +1,4 @@
-package javelin.model.world.location;
+package javelin.model.world.location.academy;
 
 import java.util.ArrayList;
 import java.util.HashSet;

@@ -25,7 +25,7 @@ import javelin.model.unit.feat.save.LightningReflexes;
 import javelin.model.unit.feat.skill.Acrobatic;
 import javelin.model.unit.feat.skill.Alertness;
 import javelin.model.unit.skill.Skill;
-import javelin.model.world.location.Guild;
+import javelin.model.world.location.academy.Guild;
 import javelin.model.world.location.town.Town;
 
 /**

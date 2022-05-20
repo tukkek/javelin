@@ -31,10 +31,10 @@ import javelin.model.unit.abilities.discipline.expertise.CombatExpertiseDiscipli
 import javelin.model.unit.abilities.discipline.serpent.SteelSerpent;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
-import javelin.model.world.location.Academy;
-import javelin.model.world.location.Guild;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.Academy.BuildAcademy;
+import javelin.model.world.location.academy.Academy;
+import javelin.model.world.location.academy.Guild;
+import javelin.model.world.location.academy.Academy.BuildAcademy;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Labor;

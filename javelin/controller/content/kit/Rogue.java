@@ -13,7 +13,7 @@ import javelin.model.unit.feat.save.LightningReflexes;
 import javelin.model.unit.feat.skill.Alertness;
 import javelin.model.unit.feat.skill.Deceitful;
 import javelin.model.unit.skill.Skill;
-import javelin.model.world.location.Academy;
+import javelin.model.world.location.academy.Academy;
 import javelin.model.world.location.town.labor.criminal.ThievesGuild;
 
 public class Rogue extends Kit{

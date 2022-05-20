@@ -7,7 +7,7 @@ import javelin.controller.content.upgrade.classes.Aristocrat;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.feat.skill.Alertness;
 import javelin.model.unit.skill.Skill;
-import javelin.model.world.location.Academy;
+import javelin.model.world.location.academy.Academy;
 import javelin.model.world.location.town.labor.cultural.BardsGuild;
 
 /**

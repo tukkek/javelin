@@ -6,7 +6,7 @@ import javelin.Javelin;
 import javelin.controller.content.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.world.location.Academy;
+import javelin.model.world.location.academy.Academy;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.TrainingOrder;
 import javelin.model.world.location.town.Town;

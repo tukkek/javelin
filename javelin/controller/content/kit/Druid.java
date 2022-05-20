@@ -14,7 +14,7 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Monster.MonsterType;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.unit.skill.Skill;
-import javelin.model.world.location.Academy;
+import javelin.model.world.location.academy.Academy;
 import javelin.model.world.location.town.labor.ecological.Henge;
 
 /**

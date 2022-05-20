@@ -1,8 +1,8 @@
 package javelin.model.world.location.unique;
 
 import javelin.controller.content.kit.Ninja;
-import javelin.model.world.location.Academy;
-import javelin.model.world.location.Guild;
+import javelin.model.world.location.academy.Academy;
+import javelin.model.world.location.academy.Guild;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Labor;
 

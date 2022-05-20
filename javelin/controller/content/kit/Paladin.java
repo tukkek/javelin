@@ -19,7 +19,7 @@ import javelin.model.unit.feat.save.GreatFortitude;
 import javelin.model.unit.feat.save.IronWill;
 import javelin.model.unit.feat.skill.Alertness;
 import javelin.model.unit.skill.Skill;
-import javelin.model.world.location.Academy;
+import javelin.model.world.location.academy.Academy;
 import javelin.model.world.location.town.labor.religious.Sanctuary;
 
 public class Paladin extends Kit{

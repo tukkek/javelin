@@ -19,7 +19,7 @@ import javelin.model.unit.feat.skill.Acrobatic;
 import javelin.model.unit.feat.skill.Alertness;
 import javelin.model.unit.feat.skill.Deceitful;
 import javelin.model.unit.skill.Skill;
-import javelin.model.world.location.Academy;
+import javelin.model.world.location.academy.Academy;
 import javelin.model.world.location.unique.NinjaDojo;
 
 /**

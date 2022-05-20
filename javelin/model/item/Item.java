@@ -37,7 +37,7 @@ import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureLightWo
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
-import javelin.model.world.location.Academy;
+import javelin.model.world.location.academy.Academy;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
 import javelin.model.world.location.order.Order;

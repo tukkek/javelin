@@ -24,6 +24,7 @@ import javelin.model.world.location.Outpost;
 import javelin.model.world.location.PointOfInterest;
 import javelin.model.world.location.ResourceSite;
 import javelin.model.world.location.WarlocksTower;
+import javelin.model.world.location.academy.Academy;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonEntrance;
 import javelin.model.world.location.dungeon.DungeonTier;
@@ -48,7 +49,6 @@ import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.governor.HumanGovernor;
 import javelin.model.world.location.town.governor.MonsterGovernor;
-import javelin.model.world.location.town.labor.basic.BasicAcademy;
 import javelin.model.world.location.town.labor.basic.Lodge;
 import javelin.model.world.location.town.labor.basic.Shop;
 import javelin.model.world.location.town.labor.cultural.MagesGuild;
@@ -221,10 +221,12 @@ public class LocationGenerator implements Serializable{
   }
 
   static void generatestartingarea(World w,Town t){
-    var lodge=new Lodge();
-    lodge.impermeable=true;
-    for(var l:RPG.shuffle(new ArrayList<>(List.of(lodge,Shop.newbasic(),
-        new BasicAcademy(),MagesGuild.makebasic()))))
+    //    var lodge=new Lodge();
+    //    lodge.impermeable=true;
+    var s=Shop.makebasic();
+    var a=Academy.makebasic();
+    var m=MagesGuild.makebasicmage();
+    for(var l:RPG.shuffle(new ArrayList<>(List.of(new Lodge(),s,a,m))))
       spawnnear(t,l,w,1,2,true);
     var p=t.getlocation();
     var recruits=RPG.shuffle(Terrain.get(p.x,p.y).getmonsters());

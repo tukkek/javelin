@@ -134,6 +134,7 @@ public class District{
       var neighbors=0;
       for(var x=p.x-1;x<=p.x+1;x++) for(var y=p.y-1;y<=p.y+1;y++){
         if(x==p.x&&y==p.y||!World.validatecoordinate(x,y)
+            ||Terrain.WATER.equals(Terrain.get(x,y))
             ||World.get(x,y,locations)==null)
           continue;
         neighbors+=1;

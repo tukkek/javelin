@@ -8,12 +8,20 @@ import java.util.Set;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.challenge.Tier;
 import javelin.controller.comparator.OptionsByPriority;
 import javelin.controller.content.kit.Kit;
 import javelin.controller.content.terrain.Terrain;
+import javelin.controller.content.upgrade.NaturalArmor;
 import javelin.controller.content.upgrade.Upgrade;
 import javelin.controller.content.upgrade.ability.RaiseAbility;
+import javelin.controller.content.upgrade.ability.RaiseConstitution;
+import javelin.controller.content.upgrade.ability.RaiseDexterity;
+import javelin.controller.content.upgrade.ability.RaiseStrength;
 import javelin.controller.content.upgrade.classes.ClassLevelUpgrade;
+import javelin.controller.content.upgrade.classes.Commoner;
+import javelin.controller.content.upgrade.classes.Expert;
+import javelin.controller.content.upgrade.classes.Warrior;
 import javelin.model.transport.Transport;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -28,6 +36,9 @@ import javelin.model.world.location.order.TrainingOrder;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Build;
+import javelin.model.world.location.town.labor.Labor;
+import javelin.model.world.location.town.labor.basic.Shop;
+import javelin.model.world.location.town.labor.cultural.MagesGuild;
 import javelin.old.RPG;
 import javelin.view.screen.Option;
 import javelin.view.screen.WorldScreen;
@@ -47,7 +58,7 @@ import javelin.view.screen.upgrading.AcademyScreen;
  *
  * @author alex
  */
-public abstract class Academy extends Fortification{
+public class Academy extends Fortification{
   /**
    * Builds one academy of this type. Since cannot have only 1 instance,
    * {@link #generateacademy()} needs to be defined by subclasses.
@@ -198,7 +209,7 @@ public abstract class Academy extends Fortification{
 
   @Override
   public List<Combatant> getcombatants(){
-    var combatants=new ArrayList<Combatant>(garrison);
+    var combatants=new ArrayList<>(garrison);
     for(Order o:training.queue){
       var next=(TrainingOrder)o;
       combatants.add(next.untrained);
@@ -314,5 +325,36 @@ public abstract class Academy extends Fortification{
   @Override
   public void generategarrison(){
     //don't
+  }
+
+  @Override
+  public String getimagename(){
+    var image=descriptionknown;
+    while(image.contains(" ")) image=image.replace(" ","");
+    return image.toLowerCase();
+  }
+
+  /**
+   * Spawned in the starting area of the {@link World}. The {@link Upgrade}s
+   * within are fixed and hand-selected to be of most value for a starting,
+   * low-level player and prevent rerolling Worlds.
+   *
+   * This and {@link MagesGuild#makebasicmage()} serve as a one-size-fits-all
+   * solution for players to upgrade any and all {@link Squad} compositions
+   * until {@link Labor}s start rolling in.
+   *
+   * @see Shop#makebasic()
+   * @author alex
+   */
+  static public Academy makebasic(){
+    var description="Apprentices guild";
+    var from=Tier.LOW.minlevel;
+    var to=Tier.LOW.maxlevel;
+    var a=new Academy(description,description,from,to,Set.of(),null,null);
+    a.upgrades.addAll(Set.of(RaiseStrength.SINGLETON,RaiseDexterity.SINGLETON,
+        RaiseConstitution.SINGLETON,Commoner.SINGLETON,Warrior.SINGLETON,
+        Expert.SINGLETON,NaturalArmor.LEATHER,NaturalArmor.SCALES,
+        NaturalArmor.PLATES));
+    return a;
   }
 }

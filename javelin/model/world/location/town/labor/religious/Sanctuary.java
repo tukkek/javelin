@@ -1,8 +1,6 @@
 package javelin.model.world.location.town.labor.religious;
 
-import java.awt.Image;
 import java.util.ArrayList;
-import java.util.List;
 
 import javelin.controller.content.kit.Cleric;
 import javelin.controller.content.kit.Paladin;
@@ -17,7 +15,6 @@ import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.old.RPG;
-import javelin.view.Images;
 
 /**
  * {@link Academy} for {@link Cleric} and (after upgraded) {@link Paladin}s.
@@ -25,87 +22,81 @@ import javelin.view.Images;
  * @author alex
  */
 public class Sanctuary extends Guild{
-	static final String CATHEDRAL="Cathedral";
-	static final int MAXUPGRADES=15;
+  static final String CATHEDRAL="Cathedral";
+  static final int MAXUPGRADES=15;
 
-	/**
-	 * {@link Town} {@link Labor}.
-	 *
-	 * @author alex
-	 */
-	public static class BuildSanctuary extends BuildAcademy{
-		/** Constructor. */
-		public BuildSanctuary(){
-			super(Rank.VILLAGE);
-		}
+  /**
+   * {@link Town} {@link Labor}.
+   *
+   * @author alex
+   */
+  public static class BuildSanctuary extends BuildAcademy{
+    /** Constructor. */
+    public BuildSanctuary(){
+      super(Rank.VILLAGE);
+    }
 
-		@Override
-		protected Academy generateacademy(){
-			return new Sanctuary();
-		}
-	}
+    @Override
+    protected Academy generateacademy(){
+      return new Sanctuary();
+    }
+  }
 
-	static class UpǵradeSanctuary extends BuildingUpgrade{
-		public UpǵradeSanctuary(Location previous){
-			super(CATHEDRAL,getupgradecost(previous),getupgradecost(previous),
-					previous,Rank.TOWN);
-		}
+  static class UpǵradeSanctuary extends BuildingUpgrade{
+    public UpǵradeSanctuary(Location previous){
+      super(CATHEDRAL,getupgradecost(previous),getupgradecost(previous),
+          previous,Rank.TOWN);
+    }
 
-		static int getupgradecost(Location previous){
-			Sanctuary s=(Sanctuary)previous;
-			return Math.max(MAXUPGRADES,
-					s.upgrades.size()+Paladin.INSTANCE.getupgrades().size());
-		}
+    static int getupgradecost(Location previous){
+      var s=(Sanctuary)previous;
+      return Math.max(MAXUPGRADES,
+          s.upgrades.size()+Paladin.INSTANCE.getupgrades().size());
+    }
 
-		@Override
-		public Location getgoal(){
-			return previous;
-		}
+    @Override
+    public Location getgoal(){
+      return previous;
+    }
 
-		@Override
-		protected void done(Location goal){
-			super.done(goal);
-			Sanctuary s=(Sanctuary)goal;
-			s.upgrade();
-		}
-	}
+    @Override
+    protected void done(Location goal){
+      super.done(goal);
+      var s=(Sanctuary)goal;
+      s.upgrade();
+    }
+  }
 
-	boolean upgraded=false;
+  boolean upgraded=false;
 
-	/** Constructor. */
-	public Sanctuary(){
-		super("Sanctuary",Cleric.INSTANCE);
-	}
+  /** Constructor. */
+  public Sanctuary(){
+    super("Sanctuary",Cleric.INSTANCE);
+  }
 
-	/** Turn sanctuary into cathedral. */
-	public void upgrade(){
-		upgrades.addAll(Paladin.INSTANCE.getupgrades());
-		while(upgrades.size()>MAXUPGRADES){
-			Upgrade u=RPG.pick(new ArrayList<>(upgrades));
-			if(u instanceof ClassLevelUpgrade) continue;
-			upgrades.remove(u);
-		}
-		upgraded=true;
-		descriptionknown=CATHEDRAL;
-		descriptionunknown=CATHEDRAL;
-	}
+  /** Turn sanctuary into cathedral. */
+  public void upgrade(){
+    upgrades.addAll(Paladin.INSTANCE.getupgrades());
+    while(upgrades.size()>MAXUPGRADES){
+      var u=RPG.pick(new ArrayList<>(upgrades));
+      if(u instanceof ClassLevelUpgrade) continue;
+      upgrades.remove(u);
+    }
+    upgraded=true;
+    descriptionknown=CATHEDRAL;
+    descriptionunknown=CATHEDRAL;
+  }
 
-	@Override
-	public ArrayList<Labor> getupgrades(District d){
-		ArrayList<Labor> upgrades=super.getupgrades(d);
-		if(!upgraded) upgrades.add(new UpǵradeSanctuary(this));
-		return upgrades;
-	}
+  @Override
+  public ArrayList<Labor> getupgrades(District d){
+    var upgrades=super.getupgrades(d);
+    if(!upgraded) upgrades.add(new UpǵradeSanctuary(this));
+    return upgrades;
+  }
 
-	@Override
-	public Image getimage(){
-		var image=upgraded?"cathedral":super.getimagename();
-		return Images.get(List.of("world",image));
-	}
-
-	@Override
-	protected void generatehires(){
-		if(upgraded) kit=RPG.chancein(2)?Cleric.INSTANCE:Paladin.INSTANCE;
-		super.generatehires();
-	}
+  @Override
+  protected void generatehires(){
+    if(upgraded) kit=RPG.chancein(2)?Cleric.INSTANCE:Paladin.INSTANCE;
+    super.generatehires();
+  }
 }

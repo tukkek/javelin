@@ -14,7 +14,6 @@ import javelin.model.world.location.academy.Academy;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Labor;
-import javelin.model.world.location.town.labor.basic.Shop;
 import javelin.old.RPG;
 
 /**
@@ -55,7 +54,7 @@ public class MagesGuild extends Academy{
 
     @Override
     protected void extend(){
-      //let extensions be for proper mages only, truly "basic"
+      //truly "basic", let extensions be for proper mages only
     }
   }
 
@@ -79,8 +78,13 @@ public class MagesGuild extends Academy{
     if(maxlevel>10) maxlevel=10;
   }
 
-  /** @see Shop#newbasic() */
-  static public MagesGuild makebasic(){
+  @Override
+  public String getimagename(){
+    return "magesguild";
+  }
+
+  /** @see #makebasic() */
+  static public MagesGuild makebasicmage(){
     return new MagesGuild(new HedgeWizard());
   }
 }

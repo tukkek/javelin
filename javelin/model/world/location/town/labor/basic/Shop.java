@@ -19,9 +19,13 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureLightWounds;
 import javelin.model.unit.abilities.spell.enchantment.compulsion.Bane;
+import javelin.model.unit.abilities.spell.enchantment.compulsion.Bless;
+import javelin.model.unit.abilities.spell.evocation.MagicMissile;
+import javelin.model.unit.abilities.spell.transmutation.Longstrider;
 import javelin.model.world.Period;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.academy.Academy;
 import javelin.model.world.location.order.CraftingOrder;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.OrderQueue;
@@ -308,31 +312,32 @@ public class Shop extends Location{
   }
 
   /**
-   * Same as shop but with a fixed selection of {@link Tier#LOW} items to
-   * prevent players from restarting new games until they end up with a
+   * Starting {@link Location} with a fixed selection of {@link Tier#LOW} items
+   * to prevent players from restarting new games until they end up with a
    * perceived "optimal" choice of items (thus encouraging them to bore
    * theselves, which goes against the DCSS philosophy document). This can still
    * be upgraded as a normal shop later on and as such the initial selection
    * must be kept fairly small.
    *
-   * @see BasicAcademy
+   * TODO ideally have a {@link Potion}, a {@link Scroll}, an {@link Eidolon}
+   * and two other distinct item types (a grenade)... At that point Scroll could
+   * be {@link Bane}, which feels the most "arcane" while now it's a
+   * defensive/offensive pair.
+   *
+   * @see Academy#makebasic()
    */
-  static public Shop newbasic(){
+  static public Shop makebasic(){
+    var eidolons=Item.randomize(Item.NONPRECIOUS.stream()
+        .filter(i->i.price<100&&i instanceof Eidolon).limit(5).toList());
+    var items=new ItemSelection(List.of(RPG.pick(eidolons)));
+    for(var spell:List.of(new CureLightWounds(),new Longstrider()))
+      items.add(new Potion(spell));
+    for(var spell:List.of(new Bless(),new MagicMissile()))
+      items.add(new Scroll(spell));
+    for(var i:items) i.identified=true;
+    items.sort();
     var s=new Shop();
-    s.selection.clear();
-    s.selection.addAll(
-        List.of(new Potion(new CureLightWounds()),new Scroll(new Bane())));
-    var cheap=Item.randomize(Item.NONPRECIOUS.stream().filter(i->i.price<100)
-        .map(Item::clone).limit(5).toList());
-    var eidolons=cheap.stream().filter(c->c instanceof Eidolon).toList();
-    if(!eidolons.isEmpty()){
-      cheap.add(RPG.pick(eidolons));
-      cheap.removeAll(eidolons);
-    }
-    if(s.selection.size()<5) s.selection
-        .addAll(cheap.subList(0,Math.min(5-s.selection.size(),cheap.size())));
-    s.selection.sort();
-    for(var i:s.selection) i.identified=true;
+    s.selection=items;
     return s;
   }
 }

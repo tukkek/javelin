@@ -218,7 +218,7 @@ public abstract class Academy extends Fortification{
    *
    * @param o Training information.
    * @param member Joins a nearby {@link Squad} or becomes a new one.
-   * @param p Place the training was realized.
+   * @param path Place the training was realized.
    * @param member Member to be returned (upgraded or not, in case of cancel).
    * @return The Squad the trainee is now into.
    */

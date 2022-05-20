@@ -1,18 +1,20 @@
 package javelin.model.world.location.town.labor.cultural;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.stream.Collectors;
 
 import javelin.controller.content.kit.Kit;
 import javelin.controller.content.kit.wizard.Wizard;
 import javelin.controller.content.upgrade.Upgrade;
+import javelin.controller.content.upgrade.ability.RaiseCharisma;
+import javelin.controller.content.upgrade.ability.RaiseWisdom;
 import javelin.controller.content.upgrade.classes.Aristocrat;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.location.academy.Academy;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Labor;
+import javelin.model.world.location.town.labor.basic.Shop;
 import javelin.old.RPG;
 
 /**
@@ -40,13 +42,30 @@ public class MagesGuild extends Academy{
     }
   }
 
+  static class HedgeWizard extends Wizard{
+    protected HedgeWizard(){
+      super("Hedge wizard",RaiseWisdom.SINGLETON);
+    }
+
+    @Override
+    protected void define(){
+      basic.add(RaiseCharisma.SINGLETON);
+      basic.addAll(Spell.SPELLS.stream().filter(s->s.level<=1).toList());
+    }
+
+    @Override
+    protected void extend(){
+      //let extensions be for proper mages only, truly "basic"
+    }
+  }
+
   /**
-   * See {@link Academy#Academy(String, String, int, int, HashSet)}.
-   *
-   * @param raiseWisdom
+   * @see Academy#Academy(String, String, int, int, java.util.Set,
+   *   javelin.controller.content.upgrade.ability.RaiseAbility,
+   *   javelin.controller.content.upgrade.classes.ClassLevelUpgrade)
    */
-  public MagesGuild(Wizard kit){
-    super(kit.name+"s guild","Mages guild",0,0,kit.getupgrades(),kit.ability,
+  public MagesGuild(Wizard w){
+    super(w.name+"s guild","Mages guild",0,0,w.getupgrades(),w.ability,
         Aristocrat.SINGLETON);
     while(upgrades.size()>20){
       var u=RPG.pick(upgrades);
@@ -58,5 +77,10 @@ public class MagesGuild extends Academy{
     minlevel=ascending.get(0).casterlevel;
     maxlevel=ascending.get(ascending.size()-1).casterlevel;
     if(maxlevel>10) maxlevel=10;
+  }
+
+  /** @see Shop#newbasic() */
+  static public MagesGuild makebasic(){
+    return new MagesGuild(new HedgeWizard());
   }
 }

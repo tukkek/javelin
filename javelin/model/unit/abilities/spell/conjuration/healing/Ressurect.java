@@ -1,7 +1,5 @@
 package javelin.model.unit.abilities.spell.conjuration.healing;
 
-import java.util.List;
-
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.unit.Combatant;
 
@@ -18,8 +16,7 @@ public class Ressurect extends RaiseDead{
 	}
 
 	@Override
-	public String castpeacefully(Combatant caster,Combatant target,
-			List<Combatant> squad){
+	public String castpeacefully(Combatant caster,Combatant target){
 		target.hp=target.maxhp;
 		return null;
 	}

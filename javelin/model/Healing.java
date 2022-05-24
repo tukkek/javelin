@@ -21,7 +21,7 @@ public interface Healing{
 	 *
 	 * Note that {@link Spell}s implementing this should be able to accept a
 	 * <code>null</code> parameter on
-	 * {@link Spell#castpeacefully(Combatant, Combatant, java.util.List)}.
+	 * {@link Spell#castpeacefully(Combatant, Combatant)}.
 	 *
 	 * @return <code>true</code> if the given {@link Combatant} can be healed.
 	 */

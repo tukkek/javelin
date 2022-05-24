@@ -1,7 +1,5 @@
 package javelin.model.unit.abilities.spell.conjuration.teleportation;
 
-import java.util.List;
-
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.content.action.world.inventory.UseItems;
@@ -46,8 +44,7 @@ public class WordOfRecall extends Spell{
 	}
 
 	@Override
-	public String castpeacefully(Combatant caster,Combatant combatant,
-			List<Combatant> squad){
+	public String castpeacefully(Combatant caster,Combatant combatant){
 		Actor town=Squad.active.lasttown;
 		teleport(town.x,town.y);
 		return null;

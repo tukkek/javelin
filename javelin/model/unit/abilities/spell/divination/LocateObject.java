@@ -1,6 +1,5 @@
 package javelin.model.unit.abilities.spell.divination;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.JavelinApp;
@@ -32,8 +31,7 @@ public class LocateObject extends Spell{
 	}
 
 	@Override
-	public String castpeacefully(Combatant caster,Combatant target,
-			List<Combatant> squad){
+	public String castpeacefully(Combatant caster,Combatant target){
 		Feature closest=find();
 		if(closest==null)
 			return "There doesn't seem to be anything else of interest here...";

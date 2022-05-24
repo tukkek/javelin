@@ -55,8 +55,7 @@ public class CureModerateWounds extends Touch{
 	}
 
 	@Override
-	public String castpeacefully(final Combatant caster,final Combatant combatant,
-			List<Combatant> squad){
+	public String castpeacefully(final Combatant caster,final Combatant combatant){
 		return cast(caster,combatant,false,null,null);
 	}
 

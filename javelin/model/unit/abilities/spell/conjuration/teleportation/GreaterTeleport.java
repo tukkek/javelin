@@ -1,7 +1,6 @@
 package javelin.model.unit.abilities.spell.conjuration.teleportation;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
@@ -44,8 +43,7 @@ public class GreaterTeleport extends Spell{
 	}
 
 	@Override
-	public String castpeacefully(Combatant caster,Combatant target,
-			List<Combatant> squad){
+	public String castpeacefully(Combatant caster,Combatant target){
 		var places=new ArrayList<Actor>();
 		for(var a:World.getactors()){
 			if(!World.seed.discovered.contains(a.getlocation())) continue;

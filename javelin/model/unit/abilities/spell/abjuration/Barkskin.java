@@ -1,7 +1,5 @@
 package javelin.model.unit.abilities.spell.abjuration;
 
-import java.util.List;
-
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.state.BattleState;
@@ -44,8 +42,7 @@ public class Barkskin extends Touch{
 	}
 
 	@Override
-	public String castpeacefully(Combatant caster,Combatant target,
-			List<Combatant> squad){
+	public String castpeacefully(Combatant caster,Combatant target){
 		target.addcondition(new BarkskinCondition(this));
 		return target+" now has an armor class of "+target.getac()+"!";
 	}
@@ -53,6 +50,6 @@ public class Barkskin extends Touch{
 	@Override
 	public String cast(Combatant caster,Combatant target,boolean saved,
 			BattleState s,ChanceNode cn){
-		return castpeacefully(caster,target,null);
+		return castpeacefully(caster,target);
 	}
 }

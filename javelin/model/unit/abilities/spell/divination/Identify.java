@@ -1,6 +1,5 @@
 package javelin.model.unit.abilities.spell.divination;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
@@ -28,8 +27,7 @@ public class Identify extends Spell{
 	}
 
 	@Override
-	public String castpeacefully(Combatant caster,Combatant target,
-			List<Combatant> squad){
+	public String castpeacefully(Combatant caster,Combatant target){
 		var targets=Squad.active.equipment.getall().stream()
 				.filter(i->!i.identified).collect(Collectors.toList());
 		if(targets.isEmpty()) return "You have no unidentified items...";

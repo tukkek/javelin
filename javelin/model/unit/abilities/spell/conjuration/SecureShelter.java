@@ -1,7 +1,5 @@
 package javelin.model.unit.abilities.spell.conjuration;
 
-import java.util.List;
-
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
@@ -24,8 +22,7 @@ public class SecureShelter extends Spell{
 	}
 
 	@Override
-	public String castpeacefully(Combatant caster,Combatant target,
-			List<Combatant> squad){
+	public String castpeacefully(Combatant caster,Combatant target){
 		Lodge.rest(1,Lodge.RESTPERIOD,true,Lodge.LODGE);
 		return null;
 	}

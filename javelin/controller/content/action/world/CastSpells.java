@@ -57,7 +57,7 @@ public class CastSpells extends WorldAction{
 			Javelin.message("Can't cast this spell right now.",Javelin.Delay.BLOCK);
 			return;
 		}
-		String message=s.castpeacefully(caster,target,Squad.active.members);
+		String message=s.castpeacefully(caster,target);
 		if(message!=null){
 			Javelin.app.switchScreen(screen);
 			screen.center();

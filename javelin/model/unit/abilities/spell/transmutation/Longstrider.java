@@ -20,41 +20,41 @@ import javelin.model.world.location.dungeon.DungeonFloor;
  * @author alex
  */
 public class Longstrider extends Spell{
-	class Strider extends Condition{
-		Strider(Spell s){
-			super("striding",s,Float.MAX_VALUE,1,Effect.POSITIVE);
-		}
+  class Strider extends Condition{
+    Strider(Spell s){
+      super("striding",s,Float.MAX_VALUE,1,Effect.POSITIVE);
+    }
 
-		@Override
-		public void start(Combatant c){
-			c.source.walk+=10;
-		}
+    @Override
+    public void start(Combatant c){
+      c.source.walk+=10;
+    }
 
-		@Override
-		public void end(Combatant c){
-			c.source.walk-=10;
-		}
-	}
+    @Override
+    public void end(Combatant c){
+      c.source.walk-=10;
+    }
+  }
 
-	/** Constructor. */
-	public Longstrider(){
-		super("Longstrider",1,ChallengeCalculator.ratespell(1));
-		castinbattle=true;
-		castonallies=false;
-		ispotion=true;
-		isrune=new Strider(this);
-	}
+  /** Constructor. */
+  public Longstrider(){
+    super("Longstrider",1,ChallengeCalculator.ratespell(1));
+    castinbattle=true;
+    castonallies=false;
+    ispotion=true;
+    isrune=new Strider(this);
+  }
 
-	@Override
-	public String cast(Combatant caster,Combatant target,boolean saved,
-			BattleState s,ChanceNode cn){
-		caster.addcondition(new Strider(this));
-		return "Walking speed for "+caster+" is now "+caster.source.walk+"ft!";
-	}
+  @Override
+  public String cast(Combatant caster,Combatant target,boolean saved,
+      BattleState s,ChanceNode cn){
+    target.addcondition(new Strider(this));
+    var format="Walking speed for %s is now %s feet!";
+    return format.formatted(target,target.source.walk);
+  }
 
-	@Override
-	public void filter(Combatant combatant,List<Combatant> targets,
-			BattleState s){
-		targetself(combatant,targets);
-	}
+  @Override
+  public void filter(Combatant combatant,List<Combatant> targets,BattleState s){
+    targetself(combatant,targets);
+  }
 }

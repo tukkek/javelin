@@ -32,7 +32,12 @@ public class Potion extends Item{
 
   /** Constructor. */
   public Potion(Spell s){
-    this("Potion",s,s.level*s.casterlevel*50,true);
+    this("Potion",s,price(s.level,s.casterlevel),true);
+  }
+
+  /** @see Item#price */
+  static protected int price(int level,int casterlevel){
+    return level*casterlevel*50;
   }
 
   @Override
@@ -46,7 +51,7 @@ public class Potion extends Item{
 
   @Override
   public boolean usepeacefully(Combatant user){
-    spell.castpeacefully(user,user,null);
+    spell.castpeacefully(user,user);
     return true;
   }
 }

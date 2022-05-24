@@ -147,7 +147,7 @@ public class EndBattle extends BattleEvent{
     var scroll=findressurectscroll(alive);
     if(scroll!=null) spell=scroll.spell;
     if(spell==null||!spell.validate(null,dead)) return false;
-    spell.castpeacefully(null,dead,originalteam);
+    spell.castpeacefully(null,dead);
     if(scroll==null) spell.used+=1;
     else Squad.active.equipment.remove(scroll);
     return true;

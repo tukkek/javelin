@@ -47,7 +47,7 @@ import javelin.model.world.location.town.labor.religious.Shrine;
  * Spells that can be {@link #castinbattle} and {@link #castoutofbattle} cannot
  * have a {@link #components} cost currently.
  *
- * TODO extract a SpellUpgrade class
+ * TODO extract a SpellUpgrade class if file grows to 500+ lines
  */
 public abstract class Spell extends Upgrade
     implements javelin.model.Cloneable,Healing{
@@ -181,7 +181,9 @@ public abstract class Spell extends Upgrade
   }
 
   /**
-   * Once the spell hits, apply effect.
+   * Once the spell hits, apply effect. Due to several spells being cast by
+   * {@link Item}s, it's entirely possible that some of these parameters will be
+   * <code>null</code>.
    *
    * @param saved <code>true</code> in case the target's saving throw was
    *   successful.
@@ -270,16 +272,12 @@ public abstract class Spell extends Upgrade
   /**
    * @param caster Can be <code>null</code> if being cast from a {@link Shrine}.
    * @param target May be <code>null</code> if no targetting is necessary.
-   * @param squad Usually equivalent to {@link Squad#active} but not necessarily
-   *   (such as in {@link Minigame}s). May be <code>null</code> (such as when
-   *   drinking a {@link Potion}.
    * @return A message to be displayed or <code>null</code> if feedback is
    *   handled internally.
    *
    * @see #isritual
    */
-  public String castpeacefully(Combatant caster,Combatant target,
-      List<Combatant> squad){
+  public String castpeacefully(Combatant caster,Combatant target){
     throw new RuntimeException("Can't be cast peacefully: "+name);
   }
 
@@ -378,7 +376,7 @@ public abstract class Spell extends Upgrade
       if(targeti==-1) return false;
       target=s.members.get(targeti);
     }
-    var message=castpeacefully(c,target,s.members);
+    var message=castpeacefully(c,target);
     if(message!=null) Javelin.message(message,true);
     return true;
   }
@@ -438,7 +436,7 @@ public abstract class Spell extends Upgrade
 
   @Override
   public void heal(Combatant c){
-    castpeacefully(null,c,Squad.active.members);
+    castpeacefully(null,c);
     used+=1;
   }
 

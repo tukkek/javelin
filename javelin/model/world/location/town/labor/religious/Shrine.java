@@ -170,7 +170,7 @@ public class Shrine extends Fortification{
     }
     if(!s.validate(null,target)) return false;
     squad.gold-=price;
-    var message=s.castpeacefully(null,target,squad.members);
+    var message=s.castpeacefully(null,target);
     if(message!=null) Javelin.message(message,true);
     return true;
   }

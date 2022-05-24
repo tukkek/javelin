@@ -1,7 +1,6 @@
 package javelin.model.unit.abilities.spell.transmutation;
 
 import java.util.Arrays;
-import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.Weather;
@@ -29,8 +28,7 @@ public class ControlWeather extends Spell{
 	}
 
 	@Override
-	public String castpeacefully(Combatant caster,Combatant target,
-			List<Combatant> squad){
+	public String castpeacefully(Combatant caster,Combatant target){
 		int to=Javelin.choose("What shall the weather be?",
 				Arrays.asList(new String[]{"Clear","Rain","Storm"}),false,true);
 		if(to==0){

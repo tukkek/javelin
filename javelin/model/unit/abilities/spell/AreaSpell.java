@@ -7,8 +7,11 @@ import java.util.stream.Collectors;
 
 import javelin.controller.Point;
 import javelin.controller.ai.ChanceNode;
+import javelin.controller.content.fight.Fight;
 import javelin.model.state.BattleState;
+import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Combatants;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
 
 /**
@@ -23,7 +26,7 @@ public abstract class AreaSpell extends Spell{
   /** Constructor. */
   public AreaSpell(String name,int level,float cr,int radius){
     super(name,level,cr);
-    this.radius=radius/5;
+    this.radius=radius;
   }
 
   @Override
@@ -33,11 +36,16 @@ public abstract class AreaSpell extends Spell{
 
   /** @return Area of effect. */
   static public Set<Point> getarea(Point origin,int radius){
+    radius/=5;
     var area=new HashSet<Point>(5);
     area.add(origin);
+    var m=Fight.state.map;
+    var width=m.length;
+    var height=m[0].length;
     for(var i=0;i<radius;i++){
       var adjacent=area.stream()
-          .flatMap(a->a.getorthogonallyadjacent().stream()).toList();
+          .flatMap(a->a.getorthogonallyadjacent().stream())
+          .filter(a->a.validate(width,height)).toList();
       area.addAll(adjacent);
     }
     return area;
@@ -49,20 +57,27 @@ public abstract class AreaSpell extends Spell{
 
   /**
    * @param area See {@link #getarea(Point, int)}.
+   * @return All {@link Combatant}s in this area.
+   */
+  static public Combatants getcombatants(Set<Point> area,BattleState s){
+    return new Combatants(s.getcombatants().stream()
+        .filter(c->area.contains(c.getlocation())).toList());
+  }
+
+  /**
+   * @param area See {@link #getarea(Point, int)}.
    * @param caster Can be <code>null</code> (if being cast from an item, etc).
    * @return Description of resulting from casting this spell.
    */
   public String cast(Set<Point> area,Combatant caster,BattleState s){
-    return s.getcombatants().stream()
+    return getcombatants(area,s).stream()
         .filter(c->!offensive||10+casterlevel>=c.source.sr)
-        .filter(c->area.contains(c.getlocation()))
         .map(c->affect(s.clone(c),caster,s)).collect(Collectors.joining(" "));
   }
 
   @Override
   public String cast(Combatant caster,Combatant target,boolean saved,
       BattleState s,ChanceNode cn){
-    radius=4;
     var area=getarea(target.getlocation(),radius);
     cn.overlay=new AiOverlay(area);
     return cast(area,target,s);

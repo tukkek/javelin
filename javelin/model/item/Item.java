@@ -93,7 +93,7 @@ public abstract class Item implements Serializable,Cloneable,Healing{
     for(Spell s:Spell.BYNAME.values()){
       if(s.ispotion){
         new Potion(s);
-        if(Vaporizer.validate(s)) new Vaporizer(s);
+        new Vaporizer(s);
         for(int dailyuses:Flask.VARIATIONS) new Flask(s,dailyuses);
       }
       if(s.iswand) if(s.level<=Wand.MAXLEVEL) new Wand(s);
@@ -426,5 +426,10 @@ public abstract class Item implements Serializable,Cloneable,Healing{
   public boolean identify(Combatant c){
     var spellcraftdc=15+getlevel();
     return c.taketen(Skill.SPELLCRAFT)>=spellcraftdc;
+  }
+
+  /** @return {@link #price} formated as "$1,234". */
+  public String describeprice(){
+    return "$"+Javelin.format(price);
   }
 }

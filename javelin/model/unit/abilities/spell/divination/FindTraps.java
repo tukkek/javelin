@@ -1,7 +1,5 @@
 package javelin.model.unit.abilities.spell.divination;
 
-import java.util.List;
-
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
@@ -52,8 +50,7 @@ public class FindTraps extends Spell{
 	}
 
 	@Override
-	public String castpeacefully(Combatant caster,Combatant target,
-			List<Combatant> squad){
+	public String castpeacefully(Combatant caster,Combatant target){
 		caster.addcondition(new FindingTraps(this));
 		return caster+" is finding traps more easily!";
 	}

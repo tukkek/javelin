@@ -196,6 +196,7 @@ public class BattleScreen extends Screen{
     center(current.location[0],current.location[1]);
     mappanel.refresh();
     statuspanel.repaint();
+    messagepanel.clear();
     Interface.userinterface.waiting=true;
     final var updatableUserAction=callback==null?getUserInput():null;
     if(MapPanel.overlay!=null) MapPanel.overlay.clear();

@@ -2,7 +2,6 @@ package javelin.model.unit.abilities.spell.divination;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
@@ -35,8 +34,7 @@ public class DiscernLocation extends Spell{
 	}
 
 	@Override
-	public String castpeacefully(Combatant caster,Combatant target,
-			List<Combatant> squad){
+	public String castpeacefully(Combatant caster,Combatant target){
 		ArrayList<Actor> towns=World.getall(Town.class);
 		Town closest=null;
 		for(Actor p:towns){

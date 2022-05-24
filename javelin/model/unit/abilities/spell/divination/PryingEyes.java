@@ -1,7 +1,5 @@
 package javelin.model.unit.abilities.spell.divination;
 
-import java.util.List;
-
 import javelin.controller.DungeonMapCrawler;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
@@ -27,8 +25,7 @@ public class PryingEyes extends Spell{
 	}
 
 	@Override
-	public String castpeacefully(Combatant caster,Combatant target,
-			List<Combatant> squad){
+	public String castpeacefully(Combatant caster,Combatant target){
 		var dungeon=Dungeon.active;
 		if(dungeon==null)
 			Outpost.discover(Squad.active.x,Squad.active.y,Outpost.VISIONRANGE);

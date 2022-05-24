@@ -14,54 +14,54 @@ import javelin.model.unit.condition.Condition;
  * @author alex
  */
 public class Rage extends Spell{
-	class Raging extends Condition{
-		Raging(float expireatp,Spell s){
-			super("raging",s,expireatp,Effect.POSITIVE);
-		}
+  class Raging extends Condition{
+    Raging(float expireatp,Spell s){
+      super("raging",s,expireatp,Effect.POSITIVE);
+    }
 
-		@Override
-		public void start(Combatant c){
-			var m=c.source;
-			m.changestrengthmodifier(+1);
-			m.changeconstitutionmodifier(c,+1);
-			m.addwill(+1);
-			c.acmodifier-=2;
-		}
+    @Override
+    public void start(Combatant c){
+      var m=c.source;
+      m.changestrengthmodifier(+1);
+      m.changeconstitutionmodifier(c,+1);
+      m.addwill(+1);
+      c.acmodifier-=2;
+    }
 
-		@Override
-		public void end(Combatant c){
-			var m=c.source;
-			m.changestrengthmodifier(-1);
-			m.changeconstitutionmodifier(c,-1);
-			m.addwill(-1);
-			c.acmodifier+=2;
-		}
-	}
+    @Override
+    public void end(Combatant c){
+      var m=c.source;
+      m.changestrengthmodifier(-1);
+      m.changeconstitutionmodifier(c,-1);
+      m.addwill(-1);
+      c.acmodifier+=2;
+    }
+  }
 
-	/** Constructor. */
-	public Rage(){
-		this("Rage",3,ChallengeCalculator.ratespell(3));
-		ispotion=true;
-		iswand=true;
-		isrune=new Raging(Float.MAX_VALUE,this);
-	}
+  /** Constructor. */
+  public Rage(){
+    this("Rage",3,ChallengeCalculator.ratespell(3));
+    ispotion=true;
+    iswand=true;
+    isrune=new Raging(Float.MAX_VALUE,this);
+  }
 
-	/** Subclass constructor. */
-	protected Rage(String name,int levelp,float incrementcost){
-		super(name,levelp,incrementcost);
-		castinbattle=true;
-		castonallies=true;
-	}
+  /** Subclass constructor. */
+  protected Rage(String name,int levelp,float incrementcost){
+    super(name,levelp,incrementcost);
+    castinbattle=true;
+    castonallies=true;
+  }
 
-	@Override
-	public String cast(Combatant caster,Combatant target,boolean saved,
-			BattleState s,ChanceNode cn){
-		float expiresat=caster.ap+getduration(target);
-		target.addcondition(new Raging(expiresat,this));
-		return target+" is raging!";
-	}
+  @Override
+  public String cast(Combatant caster,Combatant target,boolean saved,
+      BattleState s,ChanceNode cn){
+    var ap=caster==null?target.ap:caster.ap;
+    target.addcondition(new Raging(ap+getduration(target),this));
+    return target+" is raging!";
+  }
 
-	float getduration(Combatant target){
-		return Math.max(1,4+Monster.getbonus(target.source.constitution));
-	}
+  float getduration(Combatant target){
+    return Math.max(1,4+Monster.getbonus(target.source.constitution));
+  }
 }

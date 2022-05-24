@@ -25,7 +25,7 @@ public class ActionMapping{
 	private static final boolean LONGMOVE=true;
 	/** Canonical array of possible battle actions. */
 	public static final Action[] ACTIONS=new Action[]{ //
-			new AutoAttack(),Breath.SINGLETON, // b
+			new AutoAttack(),Breathe.SINGLETON, // b
 			new Charge(), // c
 			Dig.SINGLETON, // d
 			Fire.SINGLETON, // f

@@ -98,9 +98,9 @@ public class DominateMonster extends Ray{
 	}
 
 	@Override
-	public void filtertargets(Combatant combatant,List<Combatant> targets,
+	public void filter(Combatant combatant,List<Combatant> targets,
 			BattleState s){
-		super.filtertargets(combatant,targets,s);
+		super.filter(combatant,targets,s);
 		for(Combatant c:new ArrayList<>(targets))
 			if(c.source.immunitytomind) targets.remove(c);
 	}

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import javelin.Javelin;
 import javelin.model.item.Item;
+import javelin.model.item.Rod;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
 

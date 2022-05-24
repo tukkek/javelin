@@ -8,7 +8,7 @@ import javelin.controller.challenge.RewardCalculator;
 import javelin.model.item.Item;
 import javelin.model.item.consumable.Eidolon;
 import javelin.model.item.consumable.Scroll;
-import javelin.model.item.potion.Potion;
+import javelin.model.item.consumable.potion.Potion;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;

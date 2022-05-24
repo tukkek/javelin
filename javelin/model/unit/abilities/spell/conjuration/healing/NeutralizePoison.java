@@ -60,7 +60,7 @@ public class NeutralizePoison extends Touch{
 	}
 
 	@Override
-	public void filtertargets(Combatant combatant,List<Combatant> targets,
+	public void filter(Combatant combatant,List<Combatant> targets,
 			BattleState s){
 		boolean engaged=s.isengaged(combatant);
 		for(Combatant c:new ArrayList<>(targets)){

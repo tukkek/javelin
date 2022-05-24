@@ -14,7 +14,7 @@ import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.consumable.Eidolon;
 import javelin.model.item.consumable.Scroll;
-import javelin.model.item.potion.Potion;
+import javelin.model.item.consumable.potion.Potion;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureLightWounds;

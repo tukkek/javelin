@@ -2,11 +2,11 @@ package javelin.model.unit.abilities;
 
 import java.io.Serializable;
 
-import javelin.controller.content.action.Breath;
+import javelin.controller.content.action.Breathe;
 import javelin.model.unit.Combatant;
 
 /**
- * @see Breath
+ * @see Breathe
  * @author alex
  */
 public class BreathWeapon implements Serializable,javelin.model.Cloneable{

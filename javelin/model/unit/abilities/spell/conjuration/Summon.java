@@ -161,7 +161,7 @@ public class Summon extends Spell{
 	}
 
 	@Override
-	public void filtertargets(Combatant combatant,List<Combatant> targets,
+	public void filter(Combatant combatant,List<Combatant> targets,
 			BattleState s){
 		targetself(combatant,targets);
 	}

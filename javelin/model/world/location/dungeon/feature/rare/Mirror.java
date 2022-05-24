@@ -40,7 +40,7 @@ public class Mirror extends Feature{
 		}
 
 		@Override
-		public void filtertargets(Combatant combatant,List<Combatant> targets,
+		public void filter(Combatant combatant,List<Combatant> targets,
 				BattleState s){
 			Spell.targetself(combatant,targets);
 		}

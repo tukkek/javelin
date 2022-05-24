@@ -3,7 +3,7 @@ package javelin.controller.content.action.area;
 import java.util.Set;
 
 import javelin.controller.Point;
-import javelin.controller.content.action.Breath;
+import javelin.controller.content.action.Breathe;
 import javelin.controller.content.action.Fire;
 import javelin.model.state.BattleState;
 import javelin.model.state.Square;
@@ -13,7 +13,7 @@ import javelin.model.unit.Combatant;
  * Controller class to fill a certain region of the map by shape and a source
  * point.
  *
- * TODO instead of taking an initial direction make {@link Breath} a
+ * TODO instead of taking an initial direction make {@link Breathe} a
  * {@link Fire} and take a {@link Combatant} as `target`. This would be faster
  * since currently this requires 8 area calculations per turn and it would also
  * allow greater flexibility. For example: {@link Line} would be able to hit any

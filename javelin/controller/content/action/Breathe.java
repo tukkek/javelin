@@ -46,7 +46,7 @@ import javelin.view.mappanel.battle.overlay.BreathOverlay;
  *
  * @author alex
  */
-public class Breath extends Action implements AiAction{
+public class Breathe extends Action implements AiAction{
 	static public class BreathNode extends ChanceNode{
 		public BreathNode(Node n,float chance,String action,Collection<Point> area){
 			super(n,chance,action,Javelin.Delay.BLOCK);
@@ -55,7 +55,7 @@ public class Breath extends Action implements AiAction{
 	}
 
 	/** Unique instance for this class. */
-	public static final Action SINGLETON=new Breath();
+	public static final Action SINGLETON=new Breathe();
 
 	static final HashMap<Integer,Area> BURSTS=new HashMap<>();
 	static final HashMap<Integer,Area> LINES=new HashMap<>();
@@ -79,7 +79,7 @@ public class Breath extends Action implements AiAction{
 		LINES.put(3,new Line(0+1,0-1));
 	}
 
-	private Breath(){
+	private Breathe(){
 		super("Use breath weapon",new String[]{"b"});
 	}
 

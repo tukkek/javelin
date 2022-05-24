@@ -2,10 +2,12 @@ package javelin;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import javelin.Javelin.Delay;
+import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.collection.CountingSet;
+import javelin.controller.content.action.Action;
 import javelin.controller.content.action.Help;
 import javelin.controller.content.event.EventCard;
 import javelin.controller.content.fight.Fight;
@@ -13,7 +15,6 @@ import javelin.controller.content.fight.mutator.Mutator;
 import javelin.controller.content.fight.setup.BattleSetup;
 import javelin.controller.content.kit.Kit;
 import javelin.controller.content.map.Map;
-import javelin.controller.content.scenario.Scenario;
 import javelin.controller.db.Preferences;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.EndBattle;
@@ -32,6 +33,7 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.view.Images;
 import javelin.view.TextWindow;
+import javelin.view.mappanel.overlay.Overlay;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 
@@ -199,8 +201,6 @@ public class Debug{
 
     /** Put Fight.withdrawall(false) on {@link Debug#onbattlestart()}. */
     static void place(Integer times,List<? extends Class<? extends Map>> maps){
-      if(maps==null) maps=Map.getall().stream().map(Map::getClass)
-          .collect(Collectors.toList());
       if(times==null) times=60;
       try{
         EndBattle.skipresultmessage=true;
@@ -237,6 +237,14 @@ public class Debug{
       while(monsters.size()<opponents)
         monsters.add(new Combatant(Monster.get("Orc"),true));
       return monsters;
+    }
+
+    static void test(Overlay o,String message){
+      var n=new ChanceNode(Fight.state,1,message,Delay.BLOCK);
+      n.overlay=o;
+      Action.outcome(List.of(n));
+      Javelin.redraw();
+      Javelin.input();
     }
   }
 
@@ -284,9 +292,7 @@ public class Debug{
 
   }
 
-  /**
-   * Similar to {@link #onworldhelp()} but called from the {@link BattleScreen}.
-   */
+  /** As {@link #onworldhelp()} but called from the {@link BattleScreen}. */
   public static String onbattlehelp(){
     return "";
   }

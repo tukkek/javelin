@@ -1,4 +1,4 @@
-package javelin.model.item.trigger;
+package javelin.model.item;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import javelin.Javelin;
 import javelin.controller.exception.RepeatTurn;
 import javelin.model.item.gear.Gear;
+import javelin.model.item.trigger.TriggerItem;
+import javelin.model.item.trigger.Wand;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Slot;
 import javelin.model.unit.abilities.spell.Spell;
@@ -20,17 +22,17 @@ import javelin.model.unit.abilities.spell.Touch;
  * incentivize endless micro-management on part of the player (such as optimally
  * buffing allies before entering a dungeon, etc).
  *
+ * Anyone who can {@link #equip(Combatant)} it can use the Rod's {@link Spell}.
+ *
  * @see Spell#isrod
  * @author alex
  */
 public class Rod extends Gear{
+  static final String EQUIP="This item needs to be equipped before being used!";
+
   Spell spell;
 
-  /**
-   * Subclass constructor.
-   *
-   * @param register
-   */
+  /** Subclass constructor. */
   protected Rod(String name,int price,Spell s){
     super(Wand.name(name,s),price,Slot.HANDS);
     if(Javelin.DEBUG&&!s.iswand) throw new InvalidParameterException();
@@ -66,8 +68,7 @@ public class Rod extends Gear{
   @Override
   public boolean use(Combatant user){
     if(!user.equipped.contains(this)){
-      Javelin.message("This item needs to be equipped before being used!",
-          false);
+      Javelin.message(EQUIP,false);
       throw new RepeatTurn();
     }
     return TriggerItem.use(spell,user);

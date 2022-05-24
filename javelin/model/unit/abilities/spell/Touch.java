@@ -31,9 +31,9 @@ public abstract class Touch extends Spell{
 	}
 
 	@Override
-	public void filtertargets(Combatant combatant,List<Combatant> targets,
+	public void filter(Combatant combatant,List<Combatant> targets,
 			BattleState s){
-		super.filtertargets(combatant,targets,s);
+		super.filter(combatant,targets,s);
 		for(Combatant target:new ArrayList<>(targets))
 			if(isfar(combatant,target)) targets.remove(target);
 	}

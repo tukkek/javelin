@@ -26,7 +26,7 @@ public class DayLight extends Spell{
 	}
 
 	@Override
-	public void filtertargets(final Combatant combatant,
+	public void filter(final Combatant combatant,
 			final List<Combatant> targets,final BattleState s){
 		targetself(combatant,targets);
 	}

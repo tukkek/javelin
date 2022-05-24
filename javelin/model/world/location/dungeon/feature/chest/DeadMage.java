@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import javelin.model.item.Item;
-import javelin.model.item.trigger.Rod;
+import javelin.model.item.Rod;
 import javelin.model.item.trigger.Staff;
 import javelin.model.item.trigger.Wand;
 import javelin.model.unit.skill.Spellcraft;

@@ -73,7 +73,7 @@ public class DispelMagic extends Spell{
 	}
 
 	@Override
-	public void filtertargets(Combatant combatant,List<Combatant> targets,
+	public void filter(Combatant combatant,List<Combatant> targets,
 			BattleState s){
 		// cast on all targets
 	}

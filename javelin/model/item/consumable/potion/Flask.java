@@ -1,4 +1,4 @@
-package javelin.model.item.potion;
+package javelin.model.item.consumable.potion;
 
 import java.util.List;
 

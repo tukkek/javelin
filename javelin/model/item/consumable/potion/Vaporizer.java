@@ -6,6 +6,7 @@ import javelin.Javelin;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.exception.RepeatTurn;
 import javelin.model.item.Item;
+import javelin.model.item.consumable.Scroll;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
@@ -34,10 +35,26 @@ public class Vaporizer extends Potion{
 
   /** @see Potion#Potion(Spell) */
   public Vaporizer(Spell s){
-    super("Vaporizer",s,price(s.level+4,s.casterlevel+8),true);
+    super("Vaporizer",s,scale(s),true);
     if(!s.ispotion)
       throw new IllegalArgumentException(s.name+" is not a vaporizer!");
     targeted=false;
+  }
+
+  /**
+   * Derived from <a href=
+   * 'https://www.d20pfsrd.com/magic-items/wondrous-items/r-z/volatile-vaporizer'>Volatile
+   * Vaporizer</a>: total (item plus potion price) is equal to one potion 4
+   * levels higher.
+   *
+   * TODO the same scaling could be used to generate "{@link Scroll}s of Mass
+   * Spell" and Pearl of Power-like {@link Item}s that would massify a spell 4
+   * levels lower That might be better approached with metamagic though.
+   *
+   * @return Single-target {@link Item#price}, converted to 10-feet area.
+   */
+  public static int scale(Spell s){
+    return appraise(s.level+4,s.casterlevel+8);
   }
 
   @Override

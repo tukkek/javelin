@@ -100,7 +100,7 @@ public abstract class Item implements Serializable,Cloneable,Healing{
       else new Staff(s);
       else if(s.isscroll) new Scroll(s);
       if(s.isrod) new Rod(s);
-      if(s.isbomb) new Bomb(s);
+      if(s.isbomb||s.isrod||s.iswand) new Bomb(s);
     }
     Gem.generate();
     ArtPiece.generate();

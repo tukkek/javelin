@@ -17,6 +17,7 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.old.messagepanel.MessagePanel;
+import javelin.view.mappanel.overlay.Overlay;
 
 /**
  * Spells with attack rolls are supposed to have critical hits too but for the
@@ -30,7 +31,8 @@ public class CastSpell extends Fire implements AiAction{
   /** Spell for {@link Fire} to perform. */
   public Spell casting;
 
-  CastSpell(){
+  /** Constructor. */
+  protected CastSpell(){
     super("Cast spells","s",'s');
   }
 
@@ -193,13 +195,17 @@ public class CastSpell extends Fire implements AiAction{
       final var s=spells.get(i);
       if(s.provokeaoo&&!active.concentrate(s)&&engaged) continue;
       if(!s.castinbattle||!s.canbecast(active)) continue;
-      final var targets=gameState.gettargets(active,
-          gameState.getcombatants());
+      final var targets=gameState.gettargets(active,gameState.getcombatants());
       s.filter(active,targets,gameState);
       for(Combatant target:targets)
         chances.add(cast(active,target,i,gameState));
       AiThread.checkinterrupted();
     }
     return chances;
+  }
+
+  @Override
+  protected Overlay overlay(Combatant target){
+    return casting.overlay(target);
   }
 }

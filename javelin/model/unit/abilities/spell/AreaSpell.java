@@ -9,10 +9,10 @@ import javelin.controller.Point;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.content.fight.Fight;
 import javelin.model.state.BattleState;
-import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
+import javelin.view.mappanel.overlay.Overlay;
 
 /**
  * Area-of-effect spell.
@@ -27,6 +27,7 @@ public abstract class AreaSpell extends Spell{
   public AreaSpell(String name,int level,float cr,int radius){
     super(name,level,cr);
     this.radius=radius;
+    isbomb=true;
   }
 
   @Override
@@ -81,5 +82,10 @@ public abstract class AreaSpell extends Spell{
     var area=getarea(target.getlocation(),radius);
     cn.overlay=new AiOverlay(area);
     return cast(area,target,s);
+  }
+
+  @Override
+  public Overlay overlay(Combatant target){
+    return new AiOverlay(getarea(target.getlocation(),radius));
   }
 }

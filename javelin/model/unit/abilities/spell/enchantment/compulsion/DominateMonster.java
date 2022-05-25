@@ -26,88 +26,85 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
  * a lot easier.
  */
 public class DominateMonster extends Ray{
-	/**
-	 * A {@link Monster} controlled by {@link HoldMonster}.
-	 *
-	 * @author alex
-	 */
-	public class Dominated extends Condition{
-		Combatant target;
+  /**
+   * A {@link Monster} controlled by {@link HoldMonster}.
+   *
+   * @author alex
+   */
+  public class Dominated extends Condition{
+    Combatant target;
 
-		/** Constructor. */
-		public Dominated(Combatant c,float expireatp,Spell s){
-			super("dominated",s,expireatp,Effect.NEUTRAL);
-			target=c;
-		}
+    /** Constructor. */
+    public Dominated(Combatant c,float expireatp,Spell s){
+      super("dominated",s,expireatp,Effect.NEUTRAL);
+      target=c;
+    }
 
-		@Override
-		public void start(Combatant c){
-			/* can't access here so use #switchteams */
-		}
+    @Override
+    public void start(Combatant c){
+      /* can't access here so use #switchteams */
+    }
 
-		@Override
-		public void end(Combatant c){
-			// see #finish
-		}
+    @Override
+    public void end(Combatant c){
+      // see #finish
+    }
 
-		@Override
-		public void finish(BattleState s){
-			target=s.clone(target);
-			switchteams(target,s);
-		}
-	}
+    @Override
+    public void finish(BattleState s){
+      target=s.clone(target);
+      switchteams(target,s);
+    }
+  }
 
-	/** Constructor. */
-	public DominateMonster(){
-		super("Dominate monster",9,ChallengeCalculator.ratespell(9));
-		automatichit=true;
-		apcost=1;
-		castinbattle=true;
-		apcost=1;
-		iswand=true;
-		isrod=true;
-	}
+  /** Constructor. */
+  public DominateMonster(){
+    super("Dominate monster",9,ChallengeCalculator.ratespell(9));
+    automatichit=true;
+    apcost=1;
+    castinbattle=true;
+    apcost=1;
+    iswand=true;
+    isrod=true;
+  }
 
-	@Override
-	public String cast(Combatant caster,Combatant target,boolean saved,
-			BattleState s,ChanceNode cn){
-		cn.overlay=new AiOverlay(target.getlocation());
-		if(saved) return target+" resists!";
-		switchteams(target,s);
-		var duration=calculateduration(target.source.getwill()+2,caster);
-		var d=new Dominated(target,duration,this);
-		target.addcondition(d);
-		return "Dominated "+target+" for "+duration+" round(s)!";
-	}
+  @Override
+  public String cast(Combatant caster,Combatant target,boolean saved,
+      BattleState s,ChanceNode cn){
+    if(cn!=null) cn.overlay=new AiOverlay(target.getlocation());
+    if(saved) return target+" resists!";
+    switchteams(target,s);
+    var duration=calculateduration(target.source.getwill()+2,caster);
+    var d=new Dominated(target,duration,this);
+    target.addcondition(d);
+    return "Dominated "+target+" for "+duration+" round(s)!";
+  }
 
-	@Override
-	public int save(final Combatant caster,final Combatant target){
-		return getsavetarget(target.source.getwill(),caster);
-	}
+  @Override
+  public int save(final Combatant caster,final Combatant target){
+    return getsavetarget(target.source.getwill(),caster);
+  }
 
-	@Override
-	public float getsavechance(Combatant caster,Combatant target){
-		float first=super.getsavechance(caster,target);
-		if(first==0||first==1) return first;
-		float second=Action.bind(first+.1f);
-		/*
-		 * chance of either passing the first or not passing the first but
-		 * passing the second:
-		 */
-		return first+second-first*second;
-	}
+  @Override
+  public float getsavechance(Combatant caster,Combatant target){
+    var first=super.getsavechance(caster,target);
+    if(first==0||first==1) return first;
+    var second=Action.bind(first+.1f);
+    /* chance of either passing the first or not passing the first but passing
+     * the second: */
+    return first+second-first*second;
+  }
 
-	@Override
-	public void filter(Combatant combatant,List<Combatant> targets,
-			BattleState s){
-		super.filter(combatant,targets,s);
-		for(Combatant c:new ArrayList<>(targets))
-			if(c.source.immunitytomind) targets.remove(c);
-	}
+  @Override
+  public void filter(Combatant combatant,List<Combatant> targets,BattleState s){
+    super.filter(combatant,targets,s);
+    for(Combatant c:new ArrayList<>(targets))
+      if(c.source.immunitytomind) targets.remove(c);
+  }
 
-	static void switchteams(Combatant target,BattleState s){
-		ArrayList<Combatant> from=s.getteam(target);
-		from.remove(target);
-		(from==s.redteam?s.blueteam:s.redteam).add(target);
-	}
+  static void switchteams(Combatant target,BattleState s){
+    var from=s.getteam(target);
+    from.remove(target);
+    (from==s.redteam?s.blueteam:s.redteam).add(target);
+  }
 }

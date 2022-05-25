@@ -31,6 +31,9 @@ import javelin.model.unit.attack.Attack;
 import javelin.model.unit.condition.Condition;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.town.labor.religious.Shrine;
+import javelin.view.mappanel.MapPanel;
+import javelin.view.mappanel.battle.overlay.TargetOverlay;
+import javelin.view.mappanel.overlay.Overlay;
 
 /**
  * Represents a spell-like ability. See the d20 SRD for more info.
@@ -448,5 +451,10 @@ public abstract class Spell extends Upgrade
   @Override
   public boolean showupgrade(){
     return components==0;
+  }
+
+  /** @return Assign during human move to {@link MapPanel#overlay}. */
+  public Overlay overlay(Combatant target){
+    return new TargetOverlay(target.getlocation());
   }
 }

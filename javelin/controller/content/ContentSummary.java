@@ -25,10 +25,12 @@ import javelin.controller.table.dungeon.ChestTable;
 import javelin.controller.table.dungeon.feature.DecorationTable;
 import javelin.model.item.Item;
 import javelin.model.item.Rod;
+import javelin.model.item.consumable.Bomb;
 import javelin.model.item.consumable.Eidolon;
 import javelin.model.item.consumable.Scroll;
 import javelin.model.item.consumable.potion.Flask;
 import javelin.model.item.consumable.potion.Potion;
+import javelin.model.item.consumable.potion.Vaporizer;
 import javelin.model.item.gear.Gear;
 import javelin.model.item.gear.rune.Rune;
 import javelin.model.item.gear.rune.RuneGear;
@@ -61,7 +63,8 @@ public class ContentSummary{
   /** Will catch subclasses too. */
   static final List<Class<? extends Item>> ITEMTYPES=List.of(Potion.class,
       Flask.class,Scroll.class,Wand.class,Staff.class,Rod.class,RuneGear.class,
-      Rune.class,Eidolon.class,ArtPiece.class,Gem.class);
+      Rune.class,Eidolon.class,ArtPiece.class,Gem.class,Bomb.class,
+      Vaporizer.class);
 
   static final Map<Class<? extends Item>,String> NAMES=new HashMap<>();
 
@@ -101,7 +104,7 @@ public class ContentSummary{
       }
       var result=Tier.TIERS.stream().map(t->String.valueOf(count.get(t)))
           .collect(Collectors.joining("|"));
-      print("  "+type.getSimpleName()+" ("+all.size()+": "+result+")");
+      print("  %s: %s (%s)".formatted(type.getSimpleName(),result,all.size()));
     }
     print();
     for(var t:Tier.TIERS){
@@ -109,6 +112,8 @@ public class ContentSummary{
       print(t+"-tier items ("+items.size()+")");
       for(var i:items.sort()){
         if(i instanceof PreciousObject&&!SHOWPRECIOUS) continue;
+        i=i.clone();
+        i.identified=true;
         print(" - "+i+" ($"+Javelin.format(i.price)+")");
       }
       print();

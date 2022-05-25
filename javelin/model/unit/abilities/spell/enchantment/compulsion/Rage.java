@@ -42,7 +42,6 @@ public class Rage extends Spell{
   public Rage(){
     this("Rage",3,ChallengeCalculator.ratespell(3));
     ispotion=true;
-    iswand=true;
     isrune=new Raging(Float.MAX_VALUE,this);
   }
 

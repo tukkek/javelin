@@ -6,49 +6,34 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.Touch;
-import javelin.model.unit.condition.Condition;
+import javelin.model.unit.abilities.spell.transmutation.OverlandFlight.Flight;
 
 /**
  * See the d20 SRD for more info.
  */
 public class Fly extends Touch{
-	class Flying extends Condition{
-		int original;
+  /** Effect description. */
+  public static final String RESULT="%s floats above the ground!";
 
-		/**
-		 * Constructor.
-		 *
-		 * @param casterlevelp
-		 */
-		public Flying(Spell s){
-			super("flying",s,Float.MAX_VALUE,Effect.POSITIVE);
-		}
+  static class Flying extends Flight{
+    public Flying(Spell s){
+      super(60,s,Float.MAX_VALUE,null);
+    }
+  }
 
-		@Override
-		public void start(Combatant c){
-			original=c.source.fly;
-			c.source.fly=60;
-		}
+  /** Constructor. */
+  public Fly(){
+    super("Fly",3,ChallengeCalculator.ratespell(3));
+    castinbattle=true;
+    castonallies=true;
+    ispotion=true;
+    isrune=new Flying(this);
+  }
 
-		@Override
-		public void end(Combatant c){
-			c.source.fly=Math.min(c.source.fly,original);
-		}
-	}
-
-	/** Constructor. */
-	public Fly(){
-		super("Fly",3,ChallengeCalculator.ratespell(3));
-		castinbattle=true;
-		castonallies=true;
-		ispotion=true;
-		isrune=new Flying(this);
-	}
-
-	@Override
-	public String cast(Combatant caster,Combatant target,boolean saved,
-			BattleState s,ChanceNode cn){
-		target.addcondition(new Flying(this));
-		return target+" floats above the ground!";
-	}
+  @Override
+  public String cast(Combatant caster,Combatant target,boolean saved,
+      BattleState s,ChanceNode cn){
+    target.addcondition(new Flying(this));
+    return RESULT.formatted(target);
+  }
 }

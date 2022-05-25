@@ -1,6 +1,5 @@
 package javelin.model.unit.abilities.spell;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -202,18 +201,17 @@ public abstract class Spell extends Upgrade
     throw new RuntimeException("Can't be cast in battle: "+name);
   }
 
-  /**
-   * @param cp Caster.
-   * @param targets Remove from this all unit that should not be considered
-   *   targets.
-   * @param s Current game state.
-   */
-  public void filter(Combatant cp,final List<Combatant> targets,BattleState s){
-    final var iterable=new ArrayList<>(targets);
+  /** @param targets To remove undesirable targets from. */
+  public void filter(Combatant caster,List<Combatant> targets,BattleState s){
+    var allies=s==null?Squad.active.members
+        :targets.stream().filter(t->t.isally(caster,s)).toList();
     if(castonallies){
-      for(Combatant c:iterable) if(!c.isally(cp,s)) targets.remove(c);
-    }else for(Combatant c:iterable)
-      if(c.isally(cp,s)||c.source.sr==Integer.MAX_VALUE) targets.remove(c);
+      targets.retainAll(allies);
+      return;
+    }
+    targets.removeAll(allies);
+    targets.removeAll(
+        targets.stream().filter(t->t.source.sr==Integer.MAX_VALUE).toList());
   }
 
   @Override

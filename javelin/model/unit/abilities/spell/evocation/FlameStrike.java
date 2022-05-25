@@ -20,8 +20,13 @@ public class FlameStrike extends AreaSpell{
   }
 
   @Override
-  protected String affect(Combatant target,Combatant caster,BattleState s){
-    var saved=getsavetarget(target.source.ref,caster)<=10;
+  public int save(Combatant caster,Combatant target){
+    return getsavetarget(target.source.ref,caster);
+  }
+
+  @Override
+  protected String affect(Combatant target,boolean saved,Combatant caster,
+      BattleState s){
     var damage=Math.min(casterlevel,15)*6/2;
     if(saved) damage/=2;
     target.damage(damage/2,target.source.energyresistance,s);

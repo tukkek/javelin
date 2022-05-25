@@ -88,7 +88,8 @@ public class Bomb extends Item{
         var targets=AreaSpell.getcombatants(area,s);
         var effects=new ArrayList<String>(targets.size());
         for(var t:targets){
-          var saved=!t.getlocation().equals(center);
+          var bonus=t.getlocation().equals(center)?-4:+2;
+          var saved=RPG.r(1,20)+bonus<=spell.save(caster,target);
           effects.add(spell.cast(caster,t,saved,s,null));
         }
         result=String.join(" ",effects);

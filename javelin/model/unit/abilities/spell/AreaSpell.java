@@ -1,9 +1,10 @@
 package javelin.model.unit.abilities.spell;
 
+import static java.util.stream.Collectors.joining;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javelin.controller.Point;
 import javelin.controller.ai.ChanceNode;
@@ -53,8 +54,8 @@ public abstract class AreaSpell extends Spell{
   }
 
   /** Affect a {@link Combatant#clone()}. */
-  abstract protected String affect(Combatant target,Combatant caster,
-      BattleState s);
+  abstract protected String affect(Combatant target,boolean saved,
+      Combatant caster,BattleState s);
 
   /**
    * @param area See {@link #getarea(Point, int)}.
@@ -73,7 +74,8 @@ public abstract class AreaSpell extends Spell{
   public String cast(Set<Point> area,Combatant caster,BattleState s){
     return getcombatants(area,s).stream()
         .filter(c->!offensive||10+casterlevel>=c.source.sr)
-        .map(c->affect(s.clone(c),caster,s)).collect(Collectors.joining(" "));
+        .map(c->affect(s.clone(c),save(caster,c)<=10,caster,s))
+        .collect(joining(" "));
   }
 
   @Override
@@ -81,7 +83,7 @@ public abstract class AreaSpell extends Spell{
       BattleState s,ChanceNode cn){
     var area=getarea(target.getlocation(),radius);
     cn.overlay=new AiOverlay(area);
-    return cast(area,target,s);
+    return cast(area,caster,s);
   }
 
   @Override

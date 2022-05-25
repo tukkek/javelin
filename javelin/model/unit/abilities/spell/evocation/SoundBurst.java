@@ -20,10 +20,15 @@ public class SoundBurst extends AreaSpell{
   }
 
   @Override
-  protected String affect(Combatant target,Combatant caster,BattleState s){
+  public int save(Combatant caster,Combatant target){
+    return getsavetarget(target.source.getfortitude(),caster);
+  }
+
+  @Override
+  protected String affect(Combatant target,boolean saved,Combatant caster,
+      BattleState s){
     target.damage(RPG.average(1,8),0,s);
-    if(getsavetarget(target.source.getfortitude(),caster)<=10)
-      return target+" resists.";
+    if(saved) return target+" resists.";
     target.addcondition(new Stunned(target,this));
     return target+" is stunned!";
   }

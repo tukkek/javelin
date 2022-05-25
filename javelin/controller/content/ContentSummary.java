@@ -90,22 +90,26 @@ public class ContentSummary{
     out.println();
   }
 
+  void printtiers(Class<? extends Item> type){
+    var all=Item.ITEMS.stream().filter(i->type==null||type.equals(i.getClass()))
+        .collect(Collectors.toList());
+    var count=new HashMap<Tier,Integer>();
+    for(var t:Tier.TIERS) count.put(t,0);
+    for(var i:all){
+      var t=Tier.get(i.getlevel());
+      count.put(t,count.get(t)+1);
+    }
+    var result=Tier.TIERS.stream().map(t->String.valueOf(count.get(t)))
+        .collect(Collectors.joining("|"));
+    var name=type==null?"Total":type.getSimpleName();
+    print("  %s: %s (%s)".formatted(name,result,all.size()));
+  }
+
   @SuppressWarnings("unused")
   void printitems() throws IOException{
     print("Item type (low|mid|high|epic)");
-    for(var type:ITEMTYPES){
-      var all=Item.ITEMS.stream().filter(i->type.equals(i.getClass()))
-          .collect(Collectors.toList());
-      var count=new HashMap<Tier,Integer>();
-      for(var t:Tier.TIERS) count.put(t,0);
-      for(var i:all){
-        var t=Tier.get(i.getlevel());
-        count.put(t,count.get(t)+1);
-      }
-      var result=Tier.TIERS.stream().map(t->String.valueOf(count.get(t)))
-          .collect(Collectors.joining("|"));
-      print("  %s: %s (%s)".formatted(type.getSimpleName(),result,all.size()));
-    }
+    for(var t:ITEMTYPES) printtiers(t);
+    printtiers(null);
     print();
     for(var t:Tier.TIERS){
       var items=Item.BYTIER.get(t);

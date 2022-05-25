@@ -12,16 +12,19 @@ import javelin.controller.comparator.OptionsByPriority;
 import javelin.model.Realm;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
+import javelin.model.item.consumable.Bomb;
 import javelin.model.item.consumable.Eidolon;
 import javelin.model.item.consumable.Scroll;
 import javelin.model.item.consumable.potion.Potion;
+import javelin.model.item.trigger.Wand;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureLightWounds;
 import javelin.model.unit.abilities.spell.enchantment.compulsion.Bane;
 import javelin.model.unit.abilities.spell.enchantment.compulsion.Bless;
+import javelin.model.unit.abilities.spell.evocation.FlareBurst;
 import javelin.model.unit.abilities.spell.evocation.MagicMissile;
-import javelin.model.unit.abilities.spell.transmutation.Longstrider;
 import javelin.model.world.Period;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
@@ -35,7 +38,6 @@ import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
-import javelin.old.RPG;
 import javelin.view.screen.Option;
 import javelin.view.screen.shopping.ShoppingScreen;
 import javelin.view.screen.town.PurchaseOption;
@@ -327,13 +329,9 @@ public class Shop extends Location{
    * @see Academy#makebasic()
    */
   static public Shop makebasic(){
-    var eidolons=Item.randomize(Item.NONPRECIOUS.stream()
-        .filter(i->i.price<100&&i instanceof Eidolon).limit(5).toList());
-    var items=new ItemSelection(List.of(RPG.pick(eidolons)));
-    for(var spell:List.of(new CureLightWounds(),new Longstrider()))
-      items.add(new Potion(spell));
-    for(var spell:List.of(new Bless(),new MagicMissile()))
-      items.add(new Scroll(spell));
+    var items=new ItemSelection(List.of(new Potion(new CureLightWounds()),
+        new Scroll(new Bless()),new Wand(new MagicMissile(),5),
+        new Bomb(new FlareBurst()),new Eidolon(new Summon("Darkmantle",1),0)));
     for(var i:items) i.identified=true;
     items.sort();
     var s=new Shop();

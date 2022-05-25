@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javelin.controller.content.fight.Fight;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.basic.Growth;
@@ -56,6 +57,8 @@ public class Period
      * {@link Growth} and the length of the {@link Campaign} itself.
      */
     public static final int YEAR=4*SEASON;
+    /** Counted in {@link Combatant#ap}. */
+    public static final float MINUTE=10;
   }
 
   String name;

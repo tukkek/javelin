@@ -73,6 +73,11 @@ public class Wand extends TriggerItem{
     this(s,true);
   }
 
+  public Wand(Spell s,int charges){
+    this(s);
+    define(charges);
+  }
+
   /**
    * Offer a new charge/price for this item instead of always having a fixed
    * price and full charges.

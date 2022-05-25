@@ -18,6 +18,7 @@ import javelin.model.unit.abilities.spell.conjuration.teleportation.GreaterTelep
 import javelin.model.unit.abilities.spell.conjuration.teleportation.WordOfRecall;
 import javelin.model.unit.abilities.spell.evocation.DayLight;
 import javelin.model.unit.abilities.spell.evocation.DeeperDarkness;
+import javelin.model.unit.abilities.spell.evocation.FlareBurst;
 
 /**
  * Conjuration wizard.
@@ -25,38 +26,39 @@ import javelin.model.unit.abilities.spell.evocation.DeeperDarkness;
  * @author alex
  */
 public class Conjurer extends Wizard{
-	/** Healing spells like {@link CureModerateWounds}. */
-	public static final List<Spell> HEALING=List.of(new CureLightWounds(),
-			new CureModerateWounds(),new CureSeriousWounds(),
-			new CureCriticalWounds());
-	/**
-	 * Restoration spells like {@link Ressurect} and {@link LesserRestoration}.
-	 */
-	public static final List<Spell> RESTORATION=List.of(new NeutralizePoison(),
-			new RaiseDead(),new Ressurect(),new LesserRestoration());
-	/** Singleton. */
-	public static final Conjurer INSTANCE=new Conjurer();
+  /** Healing spells like {@link CureModerateWounds}. */
+  public static final List<Spell> HEALING=List.of(new CureLightWounds(),
+      new CureModerateWounds(),new CureSeriousWounds(),
+      new CureCriticalWounds());
+  /**
+   * Restoration spells like {@link Ressurect} and {@link LesserRestoration}.
+   */
+  public static final List<Spell> RESTORATION=List.of(new NeutralizePoison(),
+      new RaiseDead(),new Ressurect(),new LesserRestoration());
+  /** Singleton. */
+  public static final Conjurer INSTANCE=new Conjurer();
 
-	/** Constructor. */
-	public Conjurer(){
-		super("Conjurer",RaiseWisdom.SINGLETON);
-	}
+  /** Constructor. */
+  public Conjurer(){
+    super("Conjurer",RaiseWisdom.SINGLETON);
+  }
 
-	@Override
-	protected void extend(){
-		super.extend();
-		extension.add(new WordOfRecall()); // teleportation
-		extension.add(new GreaterTeleport()); // teleportation
-		extension.add(new SecureShelter()); // teleportation
-		extension.add(new DayLight());// evocation, light
-		extension.add(new DeeperDarkness());// evocation, dark
-		extension.addAll(HEALING);
-		extension.addAll(RESTORATION);
-	}
+  @Override
+  protected void extend(){
+    super.extend();
+    extension.add(new WordOfRecall()); // teleportation
+    extension.add(new GreaterTeleport()); // teleportation
+    extension.add(new SecureShelter()); // teleportation
+    extension.add(new DayLight());// evocation, light
+    extension.add(new DeeperDarkness());// evocation, dark
+    extension.add(new FlareBurst());// evocation, light
+    extension.addAll(HEALING);
+    extension.addAll(RESTORATION);
+  }
 
-	@Override
-	public void finish(){
-		extension.addAll(Summon.select(Summon.SUMMONS,1));
-		super.finish();
-	}
+  @Override
+  public void finish(){
+    extension.addAll(Summon.select(Summon.SUMMONS,1));
+    super.finish();
+  }
 }

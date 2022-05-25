@@ -8,6 +8,8 @@ Covered: an unit that is sitting inside a non-empty terrain square gains cover (
 
 Charge: charging is a special full-round action that allows you to move up to twice your speed and attack. You must move at least 10 feet (2 squares) and may move up to double your speed directly toward the designated opponent. You must have a clear path toward the opponent. After moving, you may make a single melee attack. You get a +2 bonus on the attack roll and take a -2 penalty to your AC until the start of your next turn.
 
+Dazzled: -1 to attack rolls and perception checks.
+
 Defending: +4 bonus to armor class (not cumulative with burrow).
 
 Exhausted: moves at half speed and takes a -6 penalty to strength and dexterity.

@@ -4,6 +4,7 @@ import javelin.Javelin;
 import javelin.controller.Weather;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.unit.condition.Dazzled;
 import javelin.model.unit.feat.skill.Alertness;
 
 /**
@@ -15,17 +16,17 @@ import javelin.model.unit.feat.skill.Alertness;
  * @see Combatant#perceive(boolean, boolean, boolean)
  */
 public class Perception extends Skill{
-	static final String[] NAMES=new String[]{"Perception","listen","spot",
-			"search"};
+  static final String[] NAMES={"Perception","listen","spot","search"};
 
-	Perception(){
-		super(NAMES,Ability.WISDOM);
-	}
+  Perception(){
+    super(NAMES,Ability.WISDOM);
+  }
 
-	@Override
-	public int getbonus(Combatant c){
-		int bonus=super.getbonus(c);
-		if(c.source.hasfeat(Alertness.SINGLETON)) bonus+=Alertness.BONUS;
-		return bonus;
-	}
+  @Override
+  public int getbonus(Combatant c){
+    var bonus=super.getbonus(c);
+    if(c.source.hasfeat(Alertness.SINGLETON)) bonus+=Alertness.BONUS;
+    if(c.hascondition(Dazzled.class)!=null) bonus+=Dazzled.PENALTY;
+    return bonus;
+  }
 }

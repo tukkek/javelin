@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Optional;
@@ -94,7 +95,7 @@ public class StateManager{
         //				writer.writeObject(Miniatures.miniatures);
         writer.flush();
         writer.close();
-        if(to==SAVEFILE) backup(false).ifPresent(SaveThread::hold);
+        if(to==SAVEFILE) backup(false);
       }catch(final IOException e){
         throw new RuntimeException(e);
       }
@@ -115,8 +116,8 @@ public class StateManager{
    */
   public static final WindowAdapter SAVEONCLOSE=new WindowAdapter(){
     @Override
-    public void windowClosing(WindowEvent e){
-      var w=e.getWindow();
+    public void windowClosing(WindowEvent event){
+      var w=event.getWindow();
       try{
         var inbattle=BattleScreen.active!=null
             &&!(BattleScreen.active instanceof WorldScreen);
@@ -127,13 +128,13 @@ public class StateManager{
           return;
         w.dispose();
         if(BattleScreen.active!=null&&BattleScreen.active==WorldScreen.current){
+          backup(true);
           save(true).ifPresent(SaveThread::hold);
-          backup(true).ifPresent(SaveThread::hold);
         }
         System.exit(0);
-      }catch(RuntimeException exception){
+      }catch(RuntimeException e){
         w.dispose();
-        Javelin.app.uncaughtException(Thread.currentThread(),exception);
+        Javelin.app.uncaughtException(Thread.currentThread(),e);
         System.exit(0);
       }
     }
@@ -204,12 +205,11 @@ public class StateManager{
     }
   }
 
-  static Optional<SaveThread> backup(boolean force){
-    if(Preferences.backupinterval==0) return Optional.empty();
+  static void backup(boolean force){
+    if(Preferences.backupinterval==0) return;
     var now=Calendar.getInstance();
     var time=now.getTimeInMillis();
-    if(!force&&time-lastbackup<Preferences.backupinterval*MINUTE)
-      return Optional.empty();
+    if(!force&&time-lastbackup<Preferences.backupinterval*MINUTE) return;
     lastbackup=time;
     var timestamp="";
     timestamp+=now.get(Calendar.YEAR)+"-";
@@ -220,7 +220,11 @@ public class StateManager{
     timestamp+=format(now.get(Calendar.SECOND));
     BACKUPFOLDER.mkdir();
     var backup=new File(BACKUPFOLDER,"%s-%s.save".formatted(PREFIX,timestamp));
-    return save(true,backup);
+    try{
+      Files.copy(SAVEFILE.toPath(),backup.toPath());
+    }catch(IOException e){
+      if(Javelin.DEBUG) throw new RuntimeException(e);
+    }
   }
 
   static String format(int i){

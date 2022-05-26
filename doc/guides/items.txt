@@ -17,8 +17,3 @@ WANDS, STAVES AND RODS
 Each of those items allow certain types of spells to be cast. They have a limited number of uses and become worthless after these charges are spent. Wands can be used at any time straight from the inventory but staves need to be equipped prior to battle. Like scrolls, a unit needs to have enough magical knowledge to be able to use these.
 
 Rods are similar to staves in that they need to be equipped before being used but they don't have a limited number of charges nor they require magical expertise to be used: any unit that can equip them may activate their powers. Note that each squad member can only have one Rod or Staff equipped at any given time.
-
-TRANSPORT
-* Carriage: reduces chance of battle and increases travel speed. Costs $2 per day in upkeep.
-* Ship: very fast on water and can also be transported on land if necessary (albeit extremely slowly).
-* Airship: avoids combat and very fast across all terrain types. Costs $16 per day in upkeep.

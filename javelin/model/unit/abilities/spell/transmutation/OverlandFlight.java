@@ -19,6 +19,9 @@ import javelin.model.unit.feat.Feat;
  * @author alex
  */
 public class OverlandFlight extends Spell{
+  /** An instance of this spell. Do not modify. */
+  public static final OverlandFlight INSTANCE=new OverlandFlight();
+
   static final int SPEED=35;
 
   /** Grants or enhances {@link Monster#fly}. */

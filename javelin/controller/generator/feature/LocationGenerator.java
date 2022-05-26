@@ -1,9 +1,12 @@
 package javelin.controller.generator.feature;
 
+import static java.util.stream.Collectors.maxBy;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -52,6 +55,7 @@ import javelin.model.world.location.town.governor.MonsterGovernor;
 import javelin.model.world.location.town.labor.basic.Lodge;
 import javelin.model.world.location.town.labor.basic.Shop;
 import javelin.model.world.location.town.labor.cultural.MagesGuild;
+import javelin.model.world.location.town.labor.expansive.Docks;
 import javelin.model.world.location.unique.AdventurersGuild;
 import javelin.model.world.location.unique.Arena;
 import javelin.model.world.location.unique.DeepDungeon;
@@ -175,17 +179,25 @@ public class LocationGenerator implements Serializable{
         .filter(a->a.validate(s,s)&&World.get(a.x,a.y,actors)!=null).count();
   }
 
-  void placecontested(){
+  Set<Point> getfree(){
     var s=World.SIZE;
     var free=Point.getrange(s,s);
+    free.removeAll(Town.getdistricts());
+    free.removeAll(World.getactors().stream().map(Actor::getlocation).toList());
+    free.removeAll(free.stream().filter(f->countadjacent(f)>0).toList());
+    return free;
+  }
+
+  void placecontested(){
     var w=World.getseed();
-    for(var a:World.getactors()) free.remove(a.getlocation());
+    var free=getfree();
     for(var t:RPG.shuffle(new ArrayList<>(Arrays.asList(Terrain.STANDARD)))){
       var maps=new ArrayList<>(t.maps);
       maps.addAll(t.shoremaps);
       for(var m:RPG.shuffle(maps)){
-        var locations=free.stream().filter(p->Terrain.get(p.x,p.y).equals(t)
-            &&countadjacent(p)==0&&District.get(p.x,p.y)==null).toList();
+        var locations=free.stream()
+            .filter(p->Terrain.get(p.x,p.y).equals(t)&&countadjacent(p)==0)
+            .toList();
         if(t.shoremaps.contains(m)) locations=locations.stream()
             .filter(p->Terrain.search(p,Terrain.WATER,1,w)>0).toList();
         if(!locations.isEmpty()) try{
@@ -200,8 +212,23 @@ public class LocationGenerator implements Serializable{
     }
   }
 
+  void generatedocks(){
+    var free=getfree();
+    var seed=World.getseed();
+    var shores=free.stream()
+        .filter(p->(!Terrain.WATER.equals(Terrain.get(p.x,p.y))
+            &&Terrain.search(p,Terrain.WATER,1,seed)>0))
+        .toList();
+    var a=RPG.pick(shores);
+    var b=shores.stream()
+        .collect(maxBy(Comparator.comparing(s->s.distanceinsteps(a))))
+        .orElseThrow();
+    for(var extreme:List.of(a,b)) new Docks().place(extreme);
+  }
+
   void generatestaticlocations(){
     var locations=new ArrayList<Location>();
+    generatedocks();
     locations.add(new PillarOfSkulls());
     for(var h:RPG.shuffle(HAUNTS)) try{
       locations.add(h.getConstructor().newInstance());

@@ -175,9 +175,14 @@ public class Shrine extends Fortification{
     return true;
   }
 
+  /** @return Cost for spell to be cast as a service. */
+  static public int price(Spell s){
+    return s.level*s.casterlevel*10+s.components;
+  }
+
   private int price(int i){
     var ritual=rituals.get(i);
-    return ritual.level*ritual.casterlevel*10+ritual.components;
+    return price(ritual);
   }
 
   @Override

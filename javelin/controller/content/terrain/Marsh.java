@@ -8,7 +8,6 @@ import javelin.controller.content.map.Maps;
 import javelin.controller.content.map.terrain.marsh.MarshShore;
 import javelin.controller.content.map.terrain.marsh.Moor;
 import javelin.controller.content.map.terrain.marsh.Swamp;
-import javelin.controller.content.terrain.hazard.Break;
 import javelin.controller.content.terrain.hazard.Cold;
 import javelin.controller.content.terrain.hazard.Flood;
 import javelin.controller.content.terrain.hazard.GettingLost;
@@ -49,10 +48,7 @@ public class Marsh extends Terrain{
     var hazards=super.gethazards(special);
     hazards.add(new GettingLost(10));
     hazards.add(new Cold());
-    if(special){
-      hazards.add(new Flood());
-      hazards.add(new Break());
-    }
+    if(special) hazards.add(new Flood());
     return hazards;
   }
 }

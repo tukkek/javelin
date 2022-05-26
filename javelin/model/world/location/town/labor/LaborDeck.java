@@ -30,7 +30,8 @@ import javelin.model.world.location.town.labor.cultural.RuneShop.BuildRuneShop;
 import javelin.model.world.location.town.labor.ecological.ArcheryRange.BuildArcheryRange;
 import javelin.model.world.location.town.labor.ecological.Henge.BuildHenge;
 import javelin.model.world.location.town.labor.ecological.MeadHall.BuildMeadHall;
-import javelin.model.world.location.town.labor.expansive.Hub.BuildTransportHub;
+import javelin.model.world.location.town.labor.expansive.Docks.BuildAirdock;
+import javelin.model.world.location.town.labor.expansive.Docks.BuildDocks;
 import javelin.model.world.location.town.labor.military.Monastery.BuildMonastery;
 import javelin.model.world.location.town.labor.productive.Deforestate;
 import javelin.model.world.location.town.labor.productive.Mine.BuildMine;
@@ -54,8 +55,8 @@ public class LaborDeck extends ArrayList<Labor>{
   public static final List<Trait> TRAITS=new ArrayList<>(7);
   static final boolean DEBUG=false;
 
-  static final Labor[] BASE={/* new BuildDwelling(), */new BuildLodge(),
-      new Cancel(),new Growth(),new Redraw(),new BuildShop(),new BuildMine()};
+  static final Labor[] BASE={/* TODO new BuildDwelling(), */new BuildLodge(),
+      new Cancel(),new Growth(),new Redraw(),new BuildShop()};
   static final Labor[] CRIMINAL={new BuildNinjaDojo(),new BuildSewers(),
       new BuildSlums(),new BuildThievesGuild(),
       BlackDragoon.INSTANCE.buildguild()};
@@ -64,11 +65,11 @@ public class LaborDeck extends ArrayList<Labor>{
   static final Labor[] NATURAL={new BuildHenge(),new BuildArcheryRange(),
       new BuildMeadHall(),SteelSerpent.LABOR,GreenDragoon.INSTANCE.buildguild(),
       BlueDragoon.INSTANCE.buildguild(),WhiteDragoon.INSTANCE.buildguild()};
-  static final Labor[] EXPANSIVE={new BuildTransportHub()};
+  static final Labor[] EXPANSIVE={new BuildDocks(),new BuildAirdock()};
   static final Labor[] MILITARY={new BuildMercenariesGuild(),
       new BuildMonastery(),Fighter.INSTANCE.buildguild(),
       RedDragoon.INSTANCE.buildguild()};
-  static final Labor[] MERCANTILE={new Deforestate()};
+  static final Labor[] MERCANTILE={new Deforestate(),new BuildMine()};
   static final Labor[] RELIGIOUS={new BuildShrine(),new BuildSanctuary()};
 
   /** List of {@link LaborDeck}s by {@link Trait} names. */

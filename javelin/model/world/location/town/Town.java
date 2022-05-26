@@ -440,8 +440,12 @@ public class Town extends Location{
 
   /** Displays relevant town news. */
   public void report(){
-    if(!ishostile())
-      for(var e:events) Javelin.message("News from "+this+"!\n"+e,true);
+    if(!ishostile()){
+      var events=this.events;
+      if(events.size()>9) events=events.subList(events.size()-9,events.size());
+      for(var e:events)
+        Javelin.message("News from %s:\n%s".formatted(this,e),true);
+    }
     events.clear();
   }
 

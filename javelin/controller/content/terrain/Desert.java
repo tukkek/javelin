@@ -13,7 +13,6 @@ import javelin.controller.content.map.terrain.desert.RockyDesert;
 import javelin.controller.content.map.terrain.desert.Ruins;
 import javelin.controller.content.map.terrain.desert.SandyDesert;
 import javelin.controller.content.map.terrain.desert.Tundra;
-import javelin.controller.content.terrain.hazard.Break;
 import javelin.controller.content.terrain.hazard.Cold;
 import javelin.controller.content.terrain.hazard.Dehydration;
 import javelin.controller.content.terrain.hazard.GettingLost;
@@ -76,7 +75,6 @@ public class Desert extends Terrain{
     hazards.add(new Heat());
     hazards.add(new Cold());
     hazards.add(new GettingLost(describeweather()==SANDSTORM?24:14));
-    if(special) hazards.add(new Break());
     return hazards;
   }
 

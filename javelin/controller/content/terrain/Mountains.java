@@ -14,7 +14,6 @@ import javelin.controller.content.map.terrain.mountain.MountainPath;
 import javelin.controller.content.map.terrain.mountain.MountainShore;
 import javelin.controller.content.map.terrain.mountain.MountainsOfMadness;
 import javelin.controller.content.map.terrain.mountain.Ridge;
-import javelin.controller.content.terrain.hazard.Break;
 import javelin.controller.content.terrain.hazard.Cold;
 import javelin.controller.content.terrain.hazard.Hazard;
 import javelin.controller.content.terrain.hazard.Rockslide;
@@ -53,10 +52,7 @@ public class Mountains extends Terrain{
   public Set<Hazard> gethazards(boolean special){
     var hazards=super.gethazards(special);
     hazards.add(new Cold());
-    if(special){
-      hazards.add(new Rockslide());
-      hazards.add(new Break());
-    }
+    if(special) hazards.add(new Rockslide());
     return hazards;
   }
 }

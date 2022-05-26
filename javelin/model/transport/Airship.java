@@ -2,14 +2,14 @@ package javelin.model.transport;
 
 /** Flies overland. */
 public class Airship extends Transport{
-	/** Constructor. */
-	public Airship(){
-		super("Airship",100,100,16,50000,(50000-Ship.PRICE)/Carriage.PRICE);
-		flies=true;
-	}
+  /** Constructor. */
+  public Airship(){
+    super("Airship",100,100,16,50000);
+    flies=true;
+  }
 
-	@Override
-	public boolean battle(){
-		return false;
-	}
+  @Override
+  public boolean battle(){
+    return false;
+  }
 }

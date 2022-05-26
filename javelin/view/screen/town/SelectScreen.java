@@ -60,7 +60,7 @@ public abstract class SelectScreen extends InfoScreen{
   @Override
   public void show(){
     text=showtitle?title:"";
-    final var options=getoptions();
+    final var options=new ArrayList<>(getoptions());
     options.addAll(getfixedoptions());
     if(options.isEmpty()) stayopen=false;
     else{

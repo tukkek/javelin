@@ -23,6 +23,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.basic.Shop;
 import javelin.old.RPG;
 import javelin.old.messagepanel.MessagePanel;
@@ -58,6 +59,8 @@ import javelin.view.screen.town.PurchaseOption;
  * loot. It should be a {@link Difficulty#DEADLY} fight in realtion to even
  * {@link #level} but if they win, they take all of the {@link #inventory} and
  * probably some bad relations with the {@link Town} it was originally from.
+ *
+ * TODO could become a {@link Labor}
  *
  * @author alex
  */

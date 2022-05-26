@@ -11,7 +11,6 @@ import javelin.controller.content.map.terrain.forest.ForestPath;
 import javelin.controller.content.map.terrain.forest.ForestShore;
 import javelin.controller.content.map.terrain.forest.MediumForest;
 import javelin.controller.content.map.terrain.forest.SparseForest;
-import javelin.controller.content.terrain.hazard.Break;
 import javelin.controller.content.terrain.hazard.FallingTrees;
 import javelin.controller.content.terrain.hazard.GettingLost;
 import javelin.controller.content.terrain.hazard.Hazard;
@@ -45,10 +44,7 @@ public class Forest extends Terrain{
   public Set<Hazard> gethazards(boolean special){
     var hazards=super.gethazards(special);
     hazards.add(new GettingLost(16));
-    if(special){
-      hazards.add(new FallingTrees());
-      hazards.add(new Break());
-    }
+    if(special) hazards.add(new FallingTrees());
     return hazards;
   }
 }

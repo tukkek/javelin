@@ -10,7 +10,6 @@ import javelin.controller.content.terrain.Terrain;
 import javelin.controller.exception.RepeatTurn;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.world.Actor;
 import javelin.model.world.ParkedVehicle;
 import javelin.model.world.World;
 
@@ -20,8 +19,6 @@ import javelin.model.world.World;
  * @see Squad#transport
  */
 public class Transport implements Serializable{
-  /** See {@link Carriage}. */
-  public static final Transport CARRIAGE=new Carriage();
   /** See {@link Ship}. */
   public static final Transport SHIP=new Ship();
   /** See {@link Airship}. */
@@ -35,8 +32,6 @@ public class Transport implements Serializable{
   public int capacity;
   /** Daily upkeep. */
   public int maintenance;
-  /** Price for researching. */
-  public int research;
   /** Price of a new transport. */
   public int price;
   /** <code>true</code> if able to move on water for any reason. */
@@ -49,14 +44,12 @@ public class Transport implements Serializable{
    */
   public boolean parkeable=true;
 
-  Transport(String namep,int speedp,int capacityp,int maintenancep,int price,
-      int researchcost){
+  Transport(String namep,int speedp,int capacityp,int maintenancep,int price){
     name=namep;
     speed=speedp;
     capacity=capacityp;
     maintenance=maintenancep;
     this.price=price;
-    research=researchcost;
   }
 
   /**
@@ -83,7 +76,7 @@ public class Transport implements Serializable{
   }
 
   ArrayList<Combatant> gettrailing(ArrayList<Combatant> tripulation){
-    var trailing=new ArrayList<Combatant>(tripulation);
+    var trailing=new ArrayList<>(tripulation);
     for(Combatant c:tripulation)
       if(c.gettopspeed(null)*WorldMove.NORMALMARCH>=speed) trailing.remove(c);
     trailing.sort((o1,o2)->o1.gettopspeed(null)-o2.gettopspeed(null));

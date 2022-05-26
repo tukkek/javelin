@@ -35,7 +35,7 @@ public class Vaporizer extends Potion{
 
   /** @see Potion#Potion(Spell) */
   public Vaporizer(Spell s){
-    super("Vaporizer",s,scale(s),true);
+    super("Vaporizer",s,appraise(scale(s)),true);
     if(!s.ispotion)
       throw new IllegalArgumentException(s.name+" is not a vaporizer!");
     targeted=false;
@@ -53,8 +53,11 @@ public class Vaporizer extends Potion{
    *
    * @return Single-target {@link Item#price}, converted to 10-feet area.
    */
-  public static int scale(Spell s){
-    return appraise(s.level+4,s.casterlevel+8);
+  public static Spell scale(Spell s){
+    s=s.clone();
+    s.level+=4;
+    s.casterlevel+=8;
+    return s;
   }
 
   @Override

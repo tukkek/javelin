@@ -117,7 +117,8 @@ public class Bomb extends Item{
   }
 
   static int price(Spell s){
-    return s.isbomb?Potion.appraise(s.level,s.casterlevel):Vaporizer.scale(s);
+    if(!s.isbomb) s=Vaporizer.scale(s);
+    return Potion.appraise(s);
   }
 
   @Override

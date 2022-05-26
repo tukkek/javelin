@@ -86,7 +86,7 @@ public abstract class Spell extends Upgrade
    * @see #hit(Combatant, Combatant, BattleState)
    */
   public boolean automatichit=false;
-  /** Rituals are cast by NPCs in Shrines. */
+  /** @see Shrine */
   public boolean isritual=false;
   /** When not {@link #iswand}, is {@link Scroll} by default. */
   public boolean isscroll=true;

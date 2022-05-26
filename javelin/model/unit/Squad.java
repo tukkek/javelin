@@ -699,4 +699,11 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
     for(var c:this) if(i.identify(c)) return true;
     return false;
   }
+
+  /** @return <code>true</code> if can and has paid the given price. */
+  public boolean pay(int price){
+    if(price>gold) return false;
+    gold-=price;
+    return true;
+  }
 }

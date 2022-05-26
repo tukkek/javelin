@@ -1,12 +1,21 @@
 package javelin.model.world.location.town.labor.religious;
 
+import static java.util.stream.Collectors.joining;
+
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.model.item.consumable.potion.Potion;
+import javelin.model.item.consumable.potion.Vaporizer;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.unit.abilities.spell.enchantment.compulsion.Bless;
+import javelin.model.unit.abilities.spell.transmutation.ControlWeather;
+import javelin.model.world.World;
 import javelin.model.world.location.Fortification;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;
@@ -19,12 +28,56 @@ import javelin.old.RPG;
 import javelin.view.screen.InfoScreen;
 
 /**
- * Will cast Rituals (certain {@link Spell}s) for gold.
+ * Casts rituals as a service, which are target-less spells
+ * ({@link ControlWeather}) or ones that affect the entire party at once
+ * ({@link Bless}). Typical rituals are either instantaneous or long-lasting, as
+ * anything in-between is going to be wasted while moving around the
+ * {@link World#map}.
  *
- * @see Spell#isritual
+ * If a {@link Spell#isritual} is also a {@link Potion} (single target), it will
+ * be included as a {@link Vaporizer} (area of effect).
+ *
  * @author alex
  */
 public class Shrine extends Fortification{
+  static final String MENU="""
+      You enter a shrine. "What can we do for you today?", says the %s.
+
+      %s
+      q - Quit
+
+      You have $%s.
+      """.trim();
+  static final List<Ritual> RITUALS=Spell.SPELLS.stream().filter(s->s.isritual)
+      .map(Shrine::toritual).toList();
+  static final int CAPACITY=12;
+
+  static class Ritual implements Serializable{
+    Spell spell;
+    int price;
+
+    Ritual(Spell s){
+      spell=s;
+      price=price(s);
+    }
+
+    String perform(){
+      return spell.castpeacefully(null,null);
+    }
+  }
+
+  static class MassRitual extends Ritual{
+    MassRitual(Spell s){
+      super(Vaporizer.scale(s));
+    }
+
+    @Override
+    String perform(){
+      return Squad.active.members.stream().map(m->spell.castpeacefully(null,m))
+          .collect(joining(" "));
+    }
+  }
+
   class UpgradeShrine extends BuildingUpgrade{
     public UpgradeShrine(Shrine s){
       super("",5,+5,s,Rank.VILLAGE);
@@ -45,22 +98,7 @@ public class Shrine extends Fortification{
     }
   }
 
-  /**
-   * Spells that are castable on shrines.
-   *
-   * @see Spell#isritual
-   */
-  public static final List<Spell> RITUALS=new ArrayList<>();
-
-  static{
-    for(var s:Spell.SPELLS) if(s.isritual) RITUALS.add(s);
-  }
-
-  /**
-   * {@link Town} {@link Labor}.
-   *
-   * @author alex
-   */
+  /** {@link Town} {@link Labor}. */
   public static class BuildShrine extends Build{
     Shrine s;
 
@@ -85,18 +123,13 @@ public class Shrine extends Fortification{
     public boolean validate(District d){
       return super.validate(d)
           &&d.getlocationtype(Shrine.class).size()<d.town.getrank().rank
-          &&s.rituals.get(0).casterlevel<=d.town.population;
+          &&s.rituals.get(0).spell.casterlevel<=d.town.population;
     }
   }
 
   /** Rituals are spells that this shrine will cast for a fee. */
-  public ArrayList<Spell> rituals=new ArrayList<>(2);
+  List<Ritual> rituals=new ArrayList<>(2);
   int level=1;
-
-  /** Constructor. */
-  public Shrine(){
-    this(2);
-  }
 
   /** Constructor. */
   public Shrine(int level){
@@ -107,82 +140,67 @@ public class Shrine extends Fortification{
     fill();
   }
 
-  void update(){
-    var cl=rituals.get(0).casterlevel;
-    if(level==1){
-      minlevel=maxlevel=cl;
-      descriptionknown="A shrine ("+rituals.get(0).name.toLowerCase()+")";
-      return;
-    }
-    if(price(0)>price(1)){
-      var swap=new ArrayList<Spell>();
-      swap.add(rituals.get(1));
-      swap.add(rituals.get(0));
-      rituals.clear();
-      rituals.addAll(swap);
-    }
-    minlevel=cl;
-    maxlevel=rituals.get(1).casterlevel;
-    descriptionknown="A shrine ("+rituals.get(0).name.toLowerCase()+", "
-        +rituals.get(1).name.toLowerCase()+")";
+  /** Constructor. */
+  public Shrine(){
+    this(2);
   }
 
   void fill(){
     while(rituals.size()<level){
-      var ritual=RPG.pick(RITUALS);
-      if(!rituals.contains(ritual)) rituals.add(ritual);
+      var r=RPG.pick(RITUALS);
+      if(!rituals.contains(r)) rituals.add(r);
     }
-    update();
+    minlevel=rituals.get(0).spell.casterlevel;
+    maxlevel=minlevel;
+    if(level>1){
+      rituals.sort(Comparator.comparing(r->r.price));
+      maxlevel=rituals.get(1).spell.casterlevel;
+    }
+    var names=rituals.stream().map(r->r.spell.name.toLowerCase())
+        .collect(joining(", "));
+    descriptionknown="A shrine (%s)".formatted(names);
+  }
+
+  boolean service(int slot){
+    var r=rituals.get(slot);
+    if(!r.spell.validate(null,null)||!Squad.active.pay(r.price)) return false;
+    var message=r.perform();
+    if(message==null) message="The ritual of %s is performed!"
+        .formatted(r.spell.name.toLowerCase());
+    Javelin.message(message,true);
+    return true;
+  }
+
+  boolean processinput(){
+    char input=InfoScreen.feedback();
+    if(input=='q') return true;
+    if(input=='1') return service(0);
+    if(input=='2'&&level>1) return service(1);
+    return false;
   }
 
   @Override
   public boolean interact(){
     if(!super.interact()) return false;
-    var output="You enter a shrine. \"What can we do for you today?\", says the "
-        +(RPG.r(1,2)==1?"priest":"priestess")+".\n";
-    output+="\n1 - "+rituals.get(0).name+" ($"+price(0)+")";
-    if(level>1) output+="\n2 - "+rituals.get(1).name+" ($"+price(1)+")";
-    output+="\nq - Quit for now ";
-    output+="\n\nSelect an option.";
-    var screen=new InfoScreen(output);
-    Javelin.app.switchScreen(screen);
-    processinput();
-    return true;
-  }
-
-  void processinput(){
-    char input=InfoScreen.feedback();
-    if(input=='1') service(0);
-    else if(input=='2'&&level>1) service(1);
-    else if(input=='q'){}else processinput();
-  }
-
-  boolean service(int slot){
-    var price=price(slot);
-    var s=rituals.get(slot);
-    var squad=Squad.active;
-    if(price>squad.gold) return false;
-    Combatant target=null;
-    if(s.castonallies){
-      var i=Javelin.choose("Cast on who?",squad.members,true,false);
-      if(i==-1) return false;
-      target=squad.members.get(i);
+    if(Squad.active.members.size()>CAPACITY){
+      var crowded="Only a dozen people will fit inside the shrine at once...";
+      Javelin.message(crowded,false);
+      return false;
     }
-    if(!s.validate(null,target)) return false;
-    squad.gold-=price;
-    var message=s.castpeacefully(null,target);
-    if(message!=null) Javelin.message(message,true);
+    var priest=x%1==0?"priest":"priestess";
+    var rituals=this.rituals.stream()
+        .map(r->"%s - %s ($%s)".formatted(this.rituals.indexOf(r)+1,
+            r.spell.name,Javelin.format(r.price)))
+        .collect(joining("\n"));
+    var m=MENU.formatted(priest,rituals,Javelin.format(Squad.active.gold));
+    Javelin.app.switchScreen(new InfoScreen(m));
+    while(!processinput()) continue;
     return true;
   }
 
   /** @return Cost for spell to be cast as a service. */
   static public int price(Spell s){
     return s.level*s.casterlevel*10+s.components;
-  }
-
-  private int price(int i){
-    var ritual=rituals.get(i);
-    return price(ritual);
   }
 
   @Override
@@ -195,5 +213,10 @@ public class Shrine extends Fortification{
     var upgrades=super.getupgrades(d);
     if(level==1) upgrades.add(new UpgradeShrine(this));
     return upgrades;
+  }
+
+  /** @return Proper ritual implementation, for testing. */
+  public static Ritual toritual(Spell s){
+    return s.ispotion?new MassRitual(s):new Ritual(s);
   }
 }

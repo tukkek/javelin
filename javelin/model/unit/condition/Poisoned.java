@@ -19,51 +19,50 @@ import javelin.model.unit.skill.Skill;
  * @author alex
  */
 public class Poisoned extends Condition{
-	int secondary;
-	int dc;
-	/** See {@link Neutralized}. */
-	public boolean neutralized;
+  int secondary;
+  int dc;
+  /** See {@link Neutralized}. */
+  public boolean neutralized;
 
-	/**
-	 * Constructor.
-	 *
-	 * @param secondary The positive amount of secondary damage to cause.
-	 * @param dcp DC for a {@link Heal} check to ignore secondary effects of the
-	 *          poison.
-	 * @param casterlevelp
-	 *
-	 * @see Monster#changeconstitutionmodifier(Combatant, int)
-	 */
-	public Poisoned(Combatant c,int secondary,int dcp,Spell s){
-		super("poisoned",s,Float.MAX_VALUE,1,Effect.NEGATIVE);
-		this.secondary=secondary;
-		dc=dcp;
-		neutralized=c.hascondition(Neutralized.class)!=null;
-	}
+  /**
+   * Constructor.
+   *
+   * @param secondary The positive amount of secondary damage to cause.
+   * @param dcp DC for a {@link Heal} check to ignore secondary effects of the
+   *   poison.
+   * @param casterlevelp
+   *
+   * @see Monster#changeconstitutionmodifier(Combatant, int)
+   */
+  public Poisoned(Combatant c,int secondary,int dcp,Spell s){
+    super("poisoned",s,Float.MAX_VALUE,1,Effect.NEGATIVE);
+    this.secondary=secondary;
+    dc=dcp;
+    neutralized=c.hascondition(Neutralized.class)!=null;
+  }
 
-	@Override
-	public void start(Combatant c){
-		if(neutralized)
-			c.removecondition(this);
-		else
-			damage(c,3);
-	}
+  @Override
+  public void start(Combatant c){
+    if(neutralized) c.removecondition(this);
+    else damage(c,3);
+  }
 
-	void damage(Combatant c,int d){
-		d=d*2;
-		int original=c.source.constitution;
-		c.source.changeconstitutionscore(c,-d);
-		c.source.poison+=original-c.source.constitution;
-	}
+  /** Poisons this unit. */
+  public static void damage(Combatant c,int d){
+    d=d*2;
+    var original=c.source.constitution;
+    c.source.changeconstitutionscore(c,-d);
+    c.source.poison+=original-c.source.constitution;
+  }
 
-	@Override
-	public void end(Combatant c){
-		int heal=Fight.current==null?Squad.active.heal():c.taketen(Skill.HEAL);
-		if(!neutralized&&heal<dc) damage(c,secondary);
-	}
+  @Override
+  public void end(Combatant c){
+    var heal=Fight.current==null?Squad.active.heal():c.taketen(Skill.HEAL);
+    if(!neutralized&&heal<dc) damage(c,secondary);
+  }
 
-	@Override
-	public void dispel(){
-		neutralized=true;
-	}
+  @Override
+  public void dispel(){
+    neutralized=true;
+  }
 }

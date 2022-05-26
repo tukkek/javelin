@@ -23,9 +23,9 @@ public class DispelMagic extends Spell{
     super("Greater dispel magic",6,ChallengeCalculator.ratespell(6));
     castoutofbattle=true;
     castinbattle=true;
-    isritual=true;
     ispotion=true;
     iswand=true;
+    isritual=true;
   }
 
   @Override

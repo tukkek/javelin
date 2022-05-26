@@ -275,7 +275,9 @@ public class Debug{
    * One example is using <code>if(something) Debug.breakpoint()</code>, which
    * is a one-line hack and much faster than conditional breakpoints in Eclipse.
    */
-  public static void breakpoint(){}
+  public static void breakpoint(){
+
+  }
 
   /** Called every time a game starts (before player interaction). */
   public static void oninit(){

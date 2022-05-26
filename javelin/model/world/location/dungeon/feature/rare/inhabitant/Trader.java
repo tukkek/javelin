@@ -13,7 +13,10 @@ import javelin.controller.comparator.ItemsByPrice;
 import javelin.model.item.Item;
 import javelin.model.item.precious.PreciousObject;
 import javelin.model.unit.Squad;
+import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
+import javelin.model.world.location.dungeon.branch.Branch;
+import javelin.model.world.location.dungeon.feature.chest.Chest;
 import javelin.model.world.location.town.labor.basic.Shop;
 import javelin.old.RPG;
 import javelin.view.screen.BattleScreen;
@@ -24,6 +27,9 @@ import javelin.view.screen.BattleScreen;
  * inventory.
  *
  * TODO allow players to attack the trader and get his stuff as reward
+ *
+ * TODO should stock based on {@link Dungeon}- or {@link Branch}-based
+ * {@link Chest}s.
  *
  * @author alex
  */

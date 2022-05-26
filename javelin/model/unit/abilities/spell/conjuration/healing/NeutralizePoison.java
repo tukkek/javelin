@@ -51,7 +51,6 @@ public class NeutralizePoison extends Touch{
   public NeutralizePoison(){
     super("Neutralize poison",4,ChallengeCalculator.ratespell(4));
     ispotion=true;
-    isritual=true;
     castinbattle=true;
     castoutofbattle=true;
     castonallies=true;
@@ -92,7 +91,7 @@ public class NeutralizePoison extends Touch{
   void neutralize(ArrayList<AttackSequence> attacks){
     for(AttackSequence sequence:attacks) for(Attack a:sequence){
       var effect=a.geteffect();
-      if((effect instanceof Poison)) effect=null;
+      if(effect instanceof Poison) effect=null;
     }
   }
 

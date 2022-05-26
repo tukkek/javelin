@@ -34,8 +34,8 @@ public class LesserRestoration extends Touch{
     ispotion=true;
     castinbattle=true;
     castoutofbattle=true;
-    isritual=true;
     castonallies=true;
+    isritual=true;
   }
 
   @Override

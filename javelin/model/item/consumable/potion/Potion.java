@@ -32,12 +32,12 @@ public class Potion extends Item{
 
   /** Constructor. */
   public Potion(Spell s){
-    this("Potion",s,appraise(s.level,s.casterlevel),true);
+    this("Potion",s,appraise(s),true);
   }
 
   /** @see Item#price */
-  static public int appraise(int level,int casterlevel){
-    return level*casterlevel*50;
+  static public int appraise(Spell s){
+    return s.level*s.casterlevel*50;
   }
 
   @Override

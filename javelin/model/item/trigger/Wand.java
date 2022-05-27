@@ -9,7 +9,6 @@ import javelin.model.item.Recharger;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.Touch;
-import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.town.labor.basic.Shop;
 import javelin.old.RPG;
 
@@ -90,7 +89,7 @@ public class Wand extends TriggerItem{
 
   @Override
   public boolean use(Combatant user){
-    return decipher(user)&&super.use(user)&&discharge();
+    return canuse(user)==null&&super.use(user)&&discharge();
   }
 
   /** @return <code>true</code> if empty. */
@@ -100,29 +99,16 @@ public class Wand extends TriggerItem{
     return charges==0;
   }
 
-  boolean decipher(Combatant user){
-    failure=null;
-    if(user.taketen(Skill.USEMAGICDEVICE)>=20||user.decipher(spell))
-      return true;
-    failure="Can't decipher";
-    return false;
-  }
-
   @Override
   public boolean usepeacefully(Combatant user){
-    if(!decipher(user)) return false;
+    if(canuse(user)!=null) return false;
     spell.castpeacefully(user);
     return discharge();
   }
 
   @Override
   public String toString(){
-    return name+" ["+charges+"]";
-  }
-
-  @Override
-  public String canuse(Combatant c){
-    return c.decipher(spell)?null:"Can't decipher";
+    return identified?"%s [%s]".formatted(name,charges):super.toString();
   }
 
   @Override

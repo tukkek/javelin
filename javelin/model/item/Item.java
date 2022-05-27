@@ -30,11 +30,13 @@ import javelin.model.item.precious.ArtPiece;
 import javelin.model.item.precious.Gem;
 import javelin.model.item.precious.PreciousObject;
 import javelin.model.item.trigger.Staff;
+import javelin.model.item.trigger.TriggerItem;
 import javelin.model.item.trigger.Wand;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureLightWounds;
+import javelin.model.unit.abilities.spell.divination.DetectMagic;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
@@ -151,10 +153,10 @@ public abstract class Item implements Serializable,Cloneable,Healing{
    */
   public double sellvalue=.5f;
   /**
-   * <code>true</code> by default, only one-use {@link #consumable} items should
-   * use this mechanic, as they can still be used with their true identity
-   * hidden by {@link #toString()} and it won't ever lock the player away
-   * regardless of game-state circumstances.
+   * {@link Scroll}s and {@link TriggerItem} needs to be deciphered before use
+   * but other than that, only one-use {@link #consumable}s should use this
+   * mechanic, as they can still be used with their true identity hidden by
+   * {@link #toString()} and it won't ever lock the player away from content..
    *
    * {@link #toString()} will use the class name as a guess for what to call
    * non-identified items but subclasses should provide their method override
@@ -201,9 +203,10 @@ public abstract class Item implements Serializable,Cloneable,Healing{
     return clone();
   }
 
+  /** @return Around 1 for $10 {@link #price} and 20 for $60,000. */
   public int getlevel(){
-    final var level=Math.pow(price/7.5,1.0/3.0);
-    return Math.max(1,Math.round(Math.round(level)));
+    final var level=Math.round(Math.round(Math.pow(price/7.5,1.0/3.0)));
+    return level>=1?level:1;
   }
 
   @Override
@@ -424,8 +427,8 @@ public abstract class Item implements Serializable,Cloneable,Healing{
 
   /** @see #identified */
   public boolean identify(Combatant c){
-    var spellcraftdc=15+getlevel();
-    return c.taketen(Skill.SPELLCRAFT)>=spellcraftdc;
+    var s=Skill.SPELLCRAFT.getranks(c);
+    return s>=10&&20+s>=DetectMagic.DC+getlevel()+10;
   }
 
   /** @return {@link #price} formated as "$1,234". */

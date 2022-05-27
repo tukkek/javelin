@@ -1,10 +1,15 @@
 package javelin.model.unit.skill;
 
-public class Spellcraft extends Skill{
-	static final String[] NAMES=new String[]{"Spellcraft","Scry"};
+import javelin.model.item.consumable.Scroll;
+import javelin.model.unit.abilities.spell.Spell;
 
-	public Spellcraft(){
-		super(NAMES,Ability.INTELLIGENCE);
-		intelligent=true;
-	}
+/** TODO can be used to learn {@link Spell}s from a {@link Scroll} */
+public class Spellcraft extends Skill{
+  static final String[] NAMES={"Spellcraft","Scry"};
+
+  /** Constructor. */
+  public Spellcraft(){
+    super(NAMES,Ability.INTELLIGENCE);
+    intelligent=true;
+  }
 }

@@ -24,10 +24,10 @@ Perception: Allows opponent and defending army units to be revealed. Allows you 
 
 Sense motive: sets the DC for Bluff rolls by taking-ten or 10+BAB+Wisdom bonus, whichever is higher.
 
-Spellcraft: helps learn spells earlier than normal, allows using spell-completion magic items (like scrolls and wands) and identifies consumable items when resting. Individual roll.
+Spellcraft: identifies items when casting the Detect Magic spell (see item guide). With enough training, will also work passively without requiring that spell to be cast.
 
 Stealth: Allows you to avoid enemy groups. Also used as a resistance skill to Perception. Individual roll (usually the worst ally rolls for the entire group).
 
 Survival: for each 4 ranks finds daily food to sustain one of your units. Allows a squad to evade some terrain-specific hazards and find their way in the wild.
 
-Use magic device: DC 20 to use a wand or staff; DC 10 + caster level to read a scroll; or DC 15 + spell level to help decipher either instead. Individual roll.
+Use magic device: circumvents several limitations on using magic items, allowing a unit to identify or activate items it normally wouldn't be able to for various reasons.

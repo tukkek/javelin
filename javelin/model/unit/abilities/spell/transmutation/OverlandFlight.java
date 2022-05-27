@@ -59,7 +59,6 @@ public class OverlandFlight extends Spell{
     castonallies=true;
     castoutofbattle=true;
     ispotion=true;
-    isscroll=true;
     isritual=true;
   }
 

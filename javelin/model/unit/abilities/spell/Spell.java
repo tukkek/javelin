@@ -21,6 +21,7 @@ import javelin.model.item.consumable.Scroll;
 import javelin.model.item.consumable.potion.Potion;
 import javelin.model.item.gear.rune.RuneGear;
 import javelin.model.item.trigger.Staff;
+import javelin.model.item.trigger.TriggerItem;
 import javelin.model.item.trigger.Wand;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
@@ -159,19 +160,27 @@ public abstract class Spell extends Upgrade
     return "Currently can cast this "+count(m)+" times before resting";
   }
 
+  /**
+   * As {@link TriggerItem#enable(Spell, Combatant)} plus "level" check.
+   *
+   * TODO check Adept only
+   */
+  public static boolean enable(Spell s,Combatant c){
+    return TriggerItem.enable(s,c)&&c.source.hd.count()>=s.casterlevel;
+  }
+
   @Override
   public boolean apply(Combatant c){
-    if(components>0) return false;
+    if(components>0||!enable(this,c)) return false;
     var hd=c.source.hd.count();
-    var maxlevel=Math.max(hd,Skill.SPELLCRAFT.getbonus(c)/2);
-    if(casterlevel>maxlevel||c.spells.size()>=hd) //design parameter
+    if(c.spells.size()>=hd) //design parameter
       return false;
     var s=c.spells.get(this);
     if(s==null){
       s=clone();
       s.name=s.name.replaceAll("Spell: ","");
       c.spells.add(s);
-    }else if(s.perday>=5||casterlevel==maxlevel) return false;
+    }else if(s.perday>=5||casterlevel==hd) return false;
     else s.perday+=1;
     c.source.spellcr+=s.cr;
     return true;
@@ -308,10 +317,8 @@ public abstract class Spell extends Upgrade
    *   {@link Monster#intelligence}, {@link Monster#wisdom} and
    *   {@link Monster#charisma}.
    */
-  public static int getabilitymodifier(Monster m){
-    var abilities=IntStream.of(m.wisdom,m.intelligence,m.charisma);
-    return Monster.getbonus(abilities.max().orElseThrow());
-
+  public static int getability(Monster m){
+    return IntStream.of(m.wisdom,m.intelligence,m.charisma).max().orElseThrow();
   }
 
   /**
@@ -331,7 +338,7 @@ public abstract class Spell extends Upgrade
   public int getsavetarget(final int savingthrow,final Combatant caster){
     if(savingthrow==Integer.MAX_VALUE) return Integer.MIN_VALUE;
     var dc=10+level;
-    if(caster!=null) dc+=Spell.getabilitymodifier(caster.source);
+    if(caster!=null) dc+=Monster.getbonus(Spell.getability(caster.source));
     return dc-savingthrow;
   }
 

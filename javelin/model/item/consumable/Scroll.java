@@ -12,81 +12,90 @@ import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.skill.Skill;
 
 /**
- * {@link Scroll}s are a catch-all, spell-completion item type for
- * non-{@link #iswand} {@link Spell}s. Scrolls provoke attacks of opportunity
- * and require spell-completion capabilities.
+ * A catch-all spell-completion item type. Reading scrolls provoke attacks of
+ * opportunity and as such are prohibited while engaged.
+ *
+ * In Javelin, for all intents and purposes {@link #identify(Combatant)} and
+ * "decipher" are the same thing (it's not that different in the OGL rules too,
+ * except it's on a personal basis with minor quirks). The canonical rules
+ * regarding magic-item-activation-requirements are very convoluted and this
+ * greatly simplifies this aspect, while also hitting basically every gameplay
+ * and aesthetic note. Impact on balance is minimal, with a roughly equal amount
+ * of very minor pluses and minuses to account for (especially considering this
+ * is only the first step to actually activating a scroll successfully).
  *
  * @author alex
  */
 public class Scroll extends Item{
-	/** Contains one instance of each type of spell. */
-	public static final HashSet<Scroll> SCROLLS=new HashSet<>();
-	/** Spell this scroll can cast once. */
-	public final Spell spell;
+  /** Contains one instance of each type of spell. */
+  public static final HashSet<Scroll> SCROLLS=new HashSet<>();
+  /** Spell this scroll can cast once. */
+  public final Spell spell;
 
-	/**
-	 * @param s The Spell this scroll casts.
-	 * @see Item#Item(String, int, ItemSelection)
-	 */
-	public Scroll(final Spell s){
-		super("Scroll of "+s.name.toLowerCase(),
-				s.level*s.casterlevel*50+s.components,true);
-		if(Javelin.DEBUG&&!s.isscroll&&!s.provokeaoo)
-			throw new InvalidParameterException();
-		spell=s.clone();
-		usedinbattle=s.castinbattle;
-		usedoutofbattle=s.castoutofbattle;
-		apcost=0;
-		identified=false;
-		SCROLLS.add(this);
-	}
+  /**
+   * @param s The Spell this scroll casts.
+   * @see Item#Item(String, int, ItemSelection)
+   */
+  public Scroll(final Spell s){
+    super("Scroll of "+s.name.toLowerCase(),
+        s.level*s.casterlevel*50+s.components,true);
+    if(Javelin.DEBUG&&!s.isscroll&&!s.provokeaoo)
+      throw new InvalidParameterException();
+    spell=s.clone();
+    usedinbattle=s.castinbattle;
+    usedoutofbattle=s.castoutofbattle;
+    apcost=0;
+    identified=false;
+    SCROLLS.add(this);
+  }
 
-	@Override
-	public boolean use(Combatant user){
-		CastSpell.SINGLETON.cast(spell,user);
-		return true;
-	}
+  @Override
+  public boolean use(Combatant user){
+    CastSpell.SINGLETON.cast(spell,user);
+    return true;
+  }
 
-	@Override
-	public boolean usepeacefully(Combatant c){
-		failure=null;
-		if(!read(c)){
-			failure=c+" needs more experience before reading this scroll.";
-			return false;
-		}
-		if(!spell.validate(c,null)) return false;
-		spell.castpeacefully(c);
-		return true;
-	}
+  @Override
+  public String canuse(Combatant c){
+    if(!identified) return "can't read";
+    if(Spell.enable(spell,c)) return null;
+    var umd=c.taketen(Skill.USEMAGICDEVICE);
+    if(umd>=20+spell.casterlevel) return null;
+    return "can't activate";
+  }
 
-	@Override
-	public boolean equals(Object obj){
-		return super.equals(obj)&&name.equals(((Scroll)obj).name);
-	}
+  @Override
+  public boolean usepeacefully(Combatant c){
+    failure=null;
+    var use=canuse(c);
+    if(use!=null){
+      failure=use;
+      return false;
+    }
+    if(!spell.validate(c,null)) return false;
+    spell.castpeacefully(c);
+    return true;
+  }
 
-	@Override
-	public String describefailure(){
-		return failure==null?super.describefailure():failure;
-	}
+  @Override
+  public boolean equals(Object obj){
+    return super.equals(obj)&&name.equals(((Scroll)obj).name);
+  }
 
-	@Override
-	public String canuse(Combatant c){
-		return read(c)?null:"can't read";
-	}
+  @Override
+  public String describefailure(){
+    return failure==null?super.describefailure():failure;
+  }
 
-	/**
-	 * @return <code>true</code> if can read a {@link Spell} from a
-	 *         {@link Scroll}.
-	 */
-	public boolean read(Combatant c){
-		if(c.taketen(Skill.USEMAGICDEVICE)>=10+spell.casterlevel) return true;
-		int spellcraft=Skill.SPELLCRAFT.getranks(c);
-		return c.decipher(spell)
-				&&10+c.source.hd.count()+spellcraft/2>=spell.casterlevel+1;
-	}
-
-	@Override
-	public boolean identify(Combatant c){
-		return read(c)||super.identify(c);
-	}
+  @Override
+  public boolean identify(Combatant c){
+    if(super.identify(c)) return true;
+    if(!c.source.think(-2)) return false;
+    var s=20+Skill.SPELLCRAFT.getbonus(c);
+    var dc=20+spell.level;
+    if(s>=dc) return true;
+    var umd=20+Skill.USEMAGICDEVICE.getbonus(c);
+    if(umd>=dc+5) return true;
+    return false;
+  }
 }

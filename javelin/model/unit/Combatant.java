@@ -31,10 +31,8 @@ import javelin.controller.generator.SpellbookGenerator;
 import javelin.controller.walker.Walker;
 import javelin.model.TeamContainer;
 import javelin.model.item.Item;
-import javelin.model.item.consumable.Scroll;
 import javelin.model.item.gear.Gear;
 import javelin.model.item.gear.rune.RuneGear;
-import javelin.model.item.trigger.Wand;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
 import javelin.model.state.Square;
@@ -620,7 +618,9 @@ public class Combatant implements Serializable,Cloneable{
     var toy=Math.min(here.y+range,map[0].length-1);
     for(var x=fromx;x<=tox;x++) for(var y=fromy;y<=toy;y++){
       var p=new Point(x,y);
-      if(seen.contains(p)||(s.haslineofsight(here,p,range,perception)==Vision.BLOCKED)) continue;
+      if(seen.contains(p)
+          ||s.haslineofsight(here,p,range,perception)==Vision.BLOCKED)
+        continue;
       seen.add(p);
       if(BattleState.lineofsight!=null) seen.addAll(BattleState.lineofsight);
     }
@@ -837,6 +837,8 @@ public class Combatant implements Serializable,Cloneable{
    * retrying is possible. We don't want players to bore/game/grind themselves
    * by retrying an action 20 times until they reach the best possible result.
    *
+   * TODO move to {@link Skill} TODO add taketwenty()
+   *
    * @return Takes an automatic 10 on a d20 ("take 10" rule) and adds the given
    *   {@link Skill#getbonus(Combatant)}. Returns 0 if cannot use this skill.
    *
@@ -844,19 +846,6 @@ public class Combatant implements Serializable,Cloneable{
    */
   public int taketen(Skill s){
     return s.canuse(this)?10+s.getbonus(this):0;
-  }
-
-  /**
-   * @return <code>true</code> if can decioher a {@link Spell} from a
-   *   {@link Scroll} or {@link Wand}.
-   */
-  public boolean decipher(Spell s){
-    if(taketen(Skill.USEMAGICDEVICE)>=15+s.level) return true;
-    if(!source.think(-2)) return false;
-    var spellcraft=Skill.SPELLCRAFT.getranks(this);
-    var ability=Math.max(source.intelligence,source.wisdom);
-    ability=Math.max(ability,source.charisma);
-    return ability+spellcraft/2>=10+s.level;
   }
 
   public boolean concentrate(Spell s){

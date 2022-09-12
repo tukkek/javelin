@@ -23,6 +23,7 @@ public class Connect extends FindQuest{
     r.removeAll(t.resources);
     if(r.isEmpty()) return;
     var targets=ResourceSite.getall();
+    if(targets.isEmpty()) return;
     var site=select(targets);
     target=site.type;
     name="Connect %s".formatted(target.name.toLowerCase());

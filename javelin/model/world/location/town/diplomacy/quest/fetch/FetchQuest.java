@@ -1,7 +1,6 @@
 package javelin.model.world.location.town.diplomacy.quest.fetch;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.comparator.ActorsByDistance;
@@ -13,6 +12,7 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonEntrance;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.Wilderness;
+import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.diplomacy.quest.Quest;
@@ -36,11 +36,9 @@ public abstract class FetchQuest extends Quest{
     type=goal;
   }
 
-  static DungeonFloor search(Class<? extends Chest> type,int el,Town t){
+  static DungeonFloor search(Class<? extends Feature> type,int el,Town t){
     var sort=new ActorsByDistance(t);
-    var floors=List
-        .of(DungeonEntrance.getdungeons(),Wilderness.getwildernesses()).stream()
-        .flatMap(List::stream).sorted(sort::compare)
+    var floors=DungeonEntrance.getfixed().stream().sorted(sort::compare)
         .flatMap(d->d.dungeon.floors.stream())
         .filter(f->el+Difficulty.VERYEASY<f.level&&f.level<el+Difficulty.DEADLY
             &&f.features.get(type)!=null)

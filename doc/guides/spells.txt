@@ -22,14 +22,18 @@ The schools of magic
 * Necromancy: spells manipulate the power of death, including the summoning of undead allies!
 * Transmutation: school focused on changing the properties of creatures and objects.
 
+Level 0 (caster level 1):
+  Read magic: identifies all scrolls in inventory.
+
 Level 1 (caster level 1)
   Bane: all enemies have -1 to attack rolls.
   Barbarian rage: shorter-lived version of the Rage spell (level 3), targets self only.
   Bless: all allies gain +1 to attack rolls.
   Cure light wounds: cures 5 hit points. Touch.
+  Detect magic: allows you to make a Spellcraft skill check to identify a single item.
   Doom: shakens an enemy.
   Flare burst: makes creatures in a 10-feet radius dazzled for 10 rounds.
-  Identify: reveals the function of a consumable magic item.
+  Identify: reveals the function of an unidentfied magic item.
   Inflict light wounds: causes 5 points of damage. Touch, safe.
   Longstrider: increases caster's walking speed by 10 feet per round.
   Magic missile: deals 1d4+1 of force damage, always hits.
@@ -92,3 +96,4 @@ Level 8 (caster level 15)
   
 Level 9 (caster level 17)
   Dominate monster: brings an enemy to your team for the duration of the battle.
+  Kill: kills an enemy with 100 hit points or less left.

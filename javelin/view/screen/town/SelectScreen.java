@@ -30,6 +30,7 @@ public abstract class SelectScreen extends InfoScreen{
    */
   static final char[] KEYS="1234567890abcdefghijklmnoprstuvxwyz/*-+.!@#$%&()_=[]{}<>;:\"\\|"
       .toCharArray();
+
   /** Current town or <code>null</code>. */
   protected final Town town;
   /** If <code>true</code> will show {@link #title}. */

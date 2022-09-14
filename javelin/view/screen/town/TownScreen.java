@@ -26,7 +26,7 @@ public class TownScreen extends PurchaseScreen{
   static final Option SETTLE=new Option("Settle worker",0,'s');
   static final Option RENAME=new Option("Rename town",0,'r');
   static final Option TREATISE=new Option("Claim treaty",0,'t');
-  static final String REPUTATION="Reputation: %s (%s%%).";
+  static final String REPUTATION="Reputation: %s.";
 
   class Manage extends ScreenOption{
     public Manage(Town town){
@@ -177,8 +177,7 @@ public class TownScreen extends PurchaseScreen{
     var reputation=d.getstatus();
     if(reputation<0) reputation=0;
     else if(reputation>1) reputation=1;
-    info.add(String.format(REPUTATION,d.describestatus().toLowerCase(),
-        Math.round(100*reputation)));
+    info.add(String.format(REPUTATION,d.describestatus().toLowerCase()));
     return String.join("\n\n",info);
   }
 

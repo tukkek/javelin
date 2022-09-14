@@ -74,7 +74,6 @@ public class Diplomacy implements Serializable{
 
   /** To be called once per day per instance. */
   public void turn(){
-    reputation-=town.population/400f;
     validate();
     if(town.ishostile()) return;
     updatequests();
@@ -93,10 +92,7 @@ public class Diplomacy implements Serializable{
     }
   }
 
-  /**
-   * @return A percentage, where 0 is zero {@link #reputation} and 1 is
-   *   {@link #reputation} == {@link Town#population}.
-   */
+  /** @return A {@link #reputation} percentage of {@link Town#population}. */
   public float getstatus(){
     return reputation/(float)town.population;
   }

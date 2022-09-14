@@ -205,7 +205,6 @@ public abstract class Quest implements Serializable{
    */
   public void cancel(){
     town.diplomacy.quests.remove(this);
-    town.diplomacy.reputation-=1;
     town.events.add("Quest expired: "+name+".");
   }
 
@@ -237,8 +236,7 @@ public abstract class Quest implements Serializable{
   public void claim(){
     update(false);
     if(!completed) return;
-    var p=town.population;
-    town.diplomacy.reputation+=RPG.randomize(p/town.getrank().rank,0,p);
+    town.diplomacy.reputation+=town.population;
     Javelin.message(message(),true);
     if(gold>0) Squad.active.gold+=gold;
     if(item!=null) item.grab();

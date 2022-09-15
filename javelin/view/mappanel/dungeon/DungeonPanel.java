@@ -3,64 +3,56 @@ package javelin.view.mappanel.dungeon;
 import java.util.HashSet;
 
 import javelin.controller.db.Preferences;
-import javelin.controller.generator.dungeon.template.FloorTile;
-import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.Tile;
 
 public class DungeonPanel extends MapPanel{
-	DungeonFloor dungeon;
-	HashSet<Tile> skip=new HashSet<>();
+  DungeonFloor dungeon;
+  HashSet<Tile> skip=new HashSet<>();
 
-	public DungeonPanel(DungeonFloor d){
-		super(d.size,d.size,Preferences.KEYTILEDUNGEON);
-		dungeon=d;
-	}
+  public DungeonPanel(DungeonFloor d){
+    super(d.size,d.size,Preferences.KEYTILEDUNGEON);
+    dungeon=d;
+  }
 
-	@Override
-	protected Mouse getmouselistener(){
-		return new DungeonMouse(this);
-	}
+  @Override
+  protected Mouse getmouselistener(){
+    return new DungeonMouse(this);
+  }
 
-	@Override
-	protected int gettilesize(){
-		return Preferences.tilesizedungeons;
-	}
+  @Override
+  protected int gettilesize(){
+    return Preferences.tilesizedungeons;
+  }
 
-	@Override
-	protected Tile newtile(int x,int y){
-		return new DungeonTile(x,y,this);
-	}
+  @Override
+  protected Tile newtile(int x,int y){
+    return new DungeonTile(x,y,this);
+  }
 
-	@Override
-	public void setup(){
-		super.setup();
-		scroll.setVisible(false);
-	}
+  @Override
+  public void setup(){
+    super.setup();
+    scroll.setVisible(false);
+  }
 
-	@Override
-	public void refresh(){
-		repaint();
-	}
+  @Override
+  public void refresh(){
+    repaint();
+  }
 
-	@Override
-	public void repaint(){
-		super.repaint();
-		var p=scroll.getScrollPosition();
-		var s=scroll.getViewportSize();
-		for(Tile[] tiles:tiles)
-			for(Tile tile:tiles){
-				var t=(DungeonTile)tile;
-				if(!t.discovered) continue;
-				if(!(p.x<=t.x*tilesize&&(t.x+1)*tilesize<=p.x+s.width)
-						||!(p.y<=t.y*tilesize&&(t.y+1)*tilesize<=p.y+s.height))
-					continue;
-				if(Dungeon.active.map[t.x][t.y]==FloorTile.WALL
-						&&Dungeon.active.features.get(t.x,t.y)==null&&!skip.add(t))
-					continue;
-				t.repaint();
-			}
-	}
+  @Override
+  public void repaint(){
+    super.repaint();
+    var p=scroll.getScrollPosition();
+    var s=scroll.getViewportSize();
+    for(Tile[] tiles:tiles) for(Tile tile:tiles){
+      var t=(DungeonTile)tile;
+      if(t.discovered&&p.x<=t.x*tilesize&&(t.x+1)*tilesize<=p.x+s.width
+          &&p.y<=t.y*tilesize&&(t.y+1)*tilesize<=p.y+s.height)
+        t.repaint();
+    }
+  }
 }

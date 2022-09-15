@@ -3,6 +3,7 @@ package javelin.view.screen;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -100,19 +101,17 @@ public class WorldScreen extends BattleScreen{
   static boolean welcome=true;
   public boolean firstdraw=true;
 
-  /**
-   * Constructor.
-   *
-   * @param open
-   */
+  /** * Constructor. */
   public WorldScreen(boolean open){
     super(false,open);
   }
 
   @Override
   void open(){
-    super.open();
+    JavelinApp.context=this;
+    BattleScreen.active=this;
     WorldScreen.current=this;
+    super.open();
     var tiles=gettiles();
     if(Debug.showmap) for(Tile[] ts:tiles) for(Tile t:ts) t.discovered=true;
     else showdiscovered(tiles);
@@ -181,7 +180,7 @@ public class WorldScreen extends BattleScreen{
 
   @Override
   public void turn(){
-    if(WorldScreen.welcome) saywelcome();
+    if(WorldScreen.welcome) welcome();
     else Javelin.lose();
     endday();
     if(World.getall(Squad.class).isEmpty()) return;
@@ -369,9 +368,8 @@ public class WorldScreen extends BattleScreen{
     return Math.round(Math.floor(WorldScreen.lastday));
   }
 
-  private void saywelcome(){
+  void welcome(){
     if(Dungeon.active==null) Squad.updatevision();
-    Javelin.redraw();
     Javelin.message(Javelin.welcome(),Javelin.Delay.NONE);
     WorldScreen.current.center();
     InfoScreen.feedback();
@@ -502,12 +500,12 @@ public class WorldScreen extends BattleScreen{
 
   public void adddiscovered(HashSet<Point> discovered){
     discovered.clear();
-    for(Tile[] ts:current.mappanel.tiles)
-      for(Tile t:ts) if(t.discovered) discovered.add(new Point(t.x,t.y));
+    discovered.addAll(Arrays.stream(mappanel.tiles).flatMap(Arrays::stream)
+        .filter(t->t.discovered).map(t->new Point(t.x,t.y)).toList());
   }
 
   void showdiscovered(Tile[][] tiles){
-    for(Point p:getdiscovered()) tiles[p.x][p.y].discovered=true;
+    for(var d:getdiscovered()) tiles[d.x][d.y].discovered=true;
   }
 
   /**

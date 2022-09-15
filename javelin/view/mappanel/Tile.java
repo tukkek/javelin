@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.util.HashMap;
 
-import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.model.state.Square;
 import javelin.view.screen.BattleScreen;
@@ -17,58 +16,46 @@ import javelin.view.screen.BattleScreen;
  * @author alex
  */
 public abstract class Tile{
+  /** Scaled image cache. */
   public static HashMap<Image,Image> cache=new HashMap<>();
 
+  /** Position on X axis. */
   public final int x;
+  /** Position on Y axis. */
   public final int y;
+  /** <code>true</code> if tile has been seen already. */
   public boolean discovered;
 
+  /** Constructor. */
   public Tile(final int xp,final int yp,final boolean discoveredp){
     x=xp;
     y=yp;
     discovered=discoveredp;
   }
 
+  /** Draws the tile. */
   abstract public void paint(Graphics c);
 
-  synchronized protected void draw(final Graphics g,final Image i){
+  /** Scales, caches and renders image. */
+  protected void draw(final Graphics g,final Image i){
     var size=MapPanel.tilesize;
-    try{
-      var scaled=cache.get(i);
-      if(scaled==null){
-        scaled=i.getScaledInstance(size,size,Image.SCALE_DEFAULT);
-        cache.put(i,scaled);
-      }
-      var p=getposition();
-      g.drawImage(scaled,p.x,p.y,size,size,null);
-    }catch(NullPointerException e){
-      /**
-       * On Windows 8 this method can raise a "NullPointerException: HDC for
-       * component", which seems to be a system or JDK error. It's not clear how
-       * to fix it but another project seems to just ignore it so that's what
-       * I'm trying too.
-       *
-       * More info https://netbeans.org/bugzilla/show_bug.cgi?id=165867
-       */
-      //			e.printStackTrace();
-      //			System.out.println("Image: "+i);
-      //			System.out.println("Tile size: "+size);
-      System.out
-          .println("NPE: javelin.view.mappanel.Tile.draw(Graphics,Image)");
+    var scaled=cache.get(i);
+    if(scaled==null){
+      scaled=i.getScaledInstance(size,size,Image.SCALE_DEFAULT);
+      cache.put(i,scaled);
     }
+    var p=getposition();
+    g.drawImage(scaled,p.x,p.y,size,size,null);
   }
 
+  /** Sets as not-{@link #discovered}. */
   public void cover(){
     discovered=false;
   }
 
+  /** Redraws. */
   public void repaint(){
-    try{
-      var p=BattleScreen.active.mappanel;
-      if(p!=null) paint(p.getdrawgraphics());
-    }catch(NullPointerException e){
-      if(Javelin.DEBUG) throw e;
-    }
+    paint(BattleScreen.active.mappanel.getdrawgraphics());
   }
 
   /**
@@ -78,6 +65,7 @@ public abstract class Tile{
     return new Point(x*MapPanel.tilesize,y*MapPanel.tilesize);
   }
 
+  /** Fills with black. */
   protected void drawcover(final Graphics g){
     if(g==null) return;
     var p=getposition();

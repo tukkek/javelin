@@ -59,6 +59,7 @@ import javelin.view.mappanel.battle.overlay.BattleWalker;
  * @author alex
  */
 public class BattleScreen extends Screen{
+  static public Float lastaicheck=-Float.MAX_VALUE;
   /**
    * Active {@link BattleScreen} implementation.
    *
@@ -66,9 +67,6 @@ public class BattleScreen extends Screen{
    * @see DungeonScreen
    */
   public static BattleScreen active;
-
-  static Runnable callback=null;
-
   /**
    * Keeps track of human {@link Movement} steps using the keyboard. We want to
    * allow them to move up to a {@link ActionCost#MOVE} action without
@@ -85,20 +83,20 @@ public class BattleScreen extends Screen{
    */
   public static float partialmove=0;
 
-  /** Visual representation of a {@link BattleState}. */
-  public MapPanel mappanel;
+  static Runnable callback=null;
+
   /** Text output component. */
   public MessagePanel messagepanel;
   /** Unit info component. */
   public StatusPanel statuspanel;
+  /** Visual representation of a {@link BattleState}. */
+  public MapPanel mappanel;
 
+  Combatant lastaimove;
+  private boolean addsidebar;
   boolean maprevealed=false;
   Combatant current=null;
-
-  Combatant lastwascomputermove;
   boolean jointurns;
-  private boolean addsidebar;
-  static public Float lastaicheck=-Float.MAX_VALUE;
 
   /**
    * @param addsidebar If <code>true</code> will add a {@link StatusPanel} to
@@ -119,26 +117,24 @@ public class BattleScreen extends Screen{
     mappanel=getmappanel();
     mappanel.setup();
     add(mappanel,"Center");
-    final var cp=new Panel();
-    cp.setLayout(new BorderLayout());
-    add("East",cp);
+    var p=new Panel();
+    p.setLayout(new BorderLayout());
+    add("East",p);
     statuspanel=new StatusPanel();
-    if(addsidebar) cp.add("Center",statuspanel);
+    if(addsidebar) p.add("Center",statuspanel);
     setFont(QuestApp.mainfont);
     Javelin.app.switchScreen(this);
     BattleScreen.active=this;
     Javelin.delayblock=false;
     partialmove=0;
-    var p=getsquadlocation();
+    var l=getsquadlocation();
     mappanel.scroll.setSize(mappanel.getBounds().getSize());
-    mappanel.zoom(0,p.x,p.y);
-    mappanel.center(p.x,p.y,true);
+    mappanel.zoom(0,l.x,l.y);
+    mappanel.center(l.x,l.y,true);
     mappanel.scroll.setVisible(true);
   }
 
-  /**
-   * @return Map panel implementation for this screen.
-   */
+  /** @return Map panel implementation for this screen. */
   protected MapPanel getmappanel(){
     return new BattlePanel(Fight.state);
   }
@@ -162,18 +158,18 @@ public class BattleScreen extends Screen{
   /** Routine for human interaction. */
   protected void turn(){
     try{
-      for(Combatant c:Fight.state.getcombatants()) c.refresh();
+      for(var c:Fight.state.getcombatants()) c.refresh();
       Fight.state.next();
       current=Fight.state.next;
       Examine.lastlooked=null;
       partialmove=0;
       checkai();
       if(Fight.state.redteam.contains(current)||current.automatic){
-        lastwascomputermove=current;
+        lastaimove=current;
         computermove();
       }else{
         humanmove();
-        lastwascomputermove=null;
+        lastaimove=null;
         jointurns=false;
       }
       updatescreen();
@@ -186,17 +182,13 @@ public class BattleScreen extends Screen{
   }
 
   synchronized void humanmove(){
-    lastaicheck=Fight.state.next.ap;
-    //		Javelin.app.switchScreen(BattleScreen.active);
-    if(current==null||current.automatic||Fight.state.fleeing.contains(
-        current)) /** fled or set an unit as automatic during its turn */
-      return;
+    var s=Fight.state;
+    lastaicheck=s.next.ap;
+    if(current==null||current.automatic||s.fleeing.contains(current)) return;
     if(MapPanel.overlay!=null) MapPanel.overlay.clear();
     BattlePanel.current=current;
     center(current.location[0],current.location[1]);
-    mappanel.refresh();
-    statuspanel.repaint();
-    messagepanel.clear();
+    updatescreen();
     Interface.userinterface.waiting=true;
     final var updatableUserAction=callback==null?getUserInput():null;
     if(MapPanel.overlay!=null) MapPanel.overlay.clear();
@@ -317,7 +309,7 @@ public class BattleScreen extends Screen{
     BattlePanel.current=current;
     final var s=(BattleState)state.n;
     Fight.state=s;
-    if(lastwascomputermove==null) Javelin.redraw();
+    if(lastaimove==null) Javelin.redraw();
     var delay=state.delay;
     if(enableoverrun&&delay==Javelin.Delay.WAIT
         &&(s.redteam.contains(s.next)||s.next.automatic)){

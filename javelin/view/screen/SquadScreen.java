@@ -9,13 +9,9 @@ import java.util.stream.Collectors;
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
-import javelin.controller.comparator.CombatantByCr;
 import javelin.controller.comparator.MonstersByName;
 import javelin.controller.content.kit.Kit;
-import javelin.controller.content.upgrade.Upgrade;
-import javelin.controller.content.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.old.RPG;
@@ -29,7 +25,8 @@ public class SquadScreen extends InfoScreen{
   /** All units suitable for a starting {@link Squad}. */
   public static final ArrayList<Monster> CANDIDATES=new ArrayList<>();
 
-  static final List<Float> CRS=List.of(1f,1.25f,1.5f);
+  static final List<Float> CRS=ChallengeCalculator.FRACTIONAL.stream()
+      .filter(cr->1<=cr&&cr<=1.75).toList();
   static final String KEYS="abcdefghijklmnopqrstuvwxy0123456789";
   static final String ENTRY=" %s - %s";
   static final String FORMAT="""
@@ -124,32 +121,25 @@ public class SquadScreen extends InfoScreen{
     }
   }
 
-  void upgrade(Squad s){
-    var advancement=new HashMap<Combatant,Upgrade>(s.members.size());
-    for(var m:s.members){
-      var kits=Kit.getpreferred(m.source,false).stream()
-          .flatMap(k->k.getupgrades().stream())
-          .filter(u->u instanceof ClassLevelUpgrade).toList();
-      advancement.put(m,RPG.pick(kits));
-    }
-    while(s.getel()<EL){
-      var members=new Combatants(s.members);
-      members.sort(CombatantByCr.SINGLETON);
-      var m=members.get(0);
-      advancement.get(m).upgrade(m);
-      ChallengeCalculator.calculatecr(m.source);
+  void upgrade(){
+    var members=squad.members;
+    var advancement=new HashMap<Combatant,Kit>(members.size());
+    for(var m:members)
+      advancement.put(m,RPG.pick(Kit.getpreferred(m.source,false)));
+    while(squad.getel()<EL){
+      var w=members.getweakest();
+      advancement.get(w).upgrade(w);
     }
     var base=RewardCalculator.calculatepcequipment(1);
-    squad.gold=squad.members.stream().mapToInt(
-        m->RewardCalculator.calculatepcequipment(Math.round(m.source.cr))-base)
-        .sum();
-    squad.gold=Javelin.round(squad.gold);
+    var gold=members.stream().mapToInt(
+        m->RewardCalculator.calculatepcequipment(Math.round(m.source.cr))-base);
+    squad.gold=Javelin.round(gold.sum());
   }
 
   /** @return Units selected by the player. */
   public Squad open(){
     print();
-    if(squad.getel()<EL) upgrade(squad);
+    if(squad.getel()<EL) upgrade();
     squad.sort();
     return squad;
   }

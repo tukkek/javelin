@@ -1,26 +1,21 @@
 package javelin.view.mappanel.battle;
 
 import java.awt.Graphics;
-import java.util.ConcurrentModificationException;
 import java.util.HashSet;
+import java.util.Set;
 
 import javelin.controller.Point;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.content.fight.mutator.Meld;
 import javelin.controller.db.Preferences;
 import javelin.model.state.BattleState;
-import javelin.model.state.MeldCrystal;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Period;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.Tile;
 
-/**
- * TODO remove {@link BattleMap} and rename this hierarchy
- *
- * @author alex
- */
+/** @author alex */
 public class BattlePanel extends MapPanel{
   /** Active unit. */
   static public Combatant current=null;
@@ -28,7 +23,8 @@ public class BattlePanel extends MapPanel{
   /** If <code>true</code>, all {@link BattleTile}s are visible. */
   public boolean daylight;
 
-  BattleState previousstate=null;
+  Set<Point> seen=new HashSet<>();
+  BattleState previous=null;
   BattleState state=null;
 
   /** Constructor. */
@@ -50,73 +46,58 @@ public class BattlePanel extends MapPanel{
 
   @Override
   public synchronized void refresh(){
-    try{
-      updatestate();
-      var s=Fight.state;
-      if(s==null) return;
-      var update=new HashSet<Point>(s.redteam.size()+s.blueteam.size());
-      for(var c:s.getcombatants())
-        update.add(new Point(c.location[0],c.location[1]));
-      for(var c:previousstate.getcombatants())
-        update.add(new Point(c.location[0],c.location[1]));
-      updatestate();
-      for(var c:s.getcombatants())
-        update.add(new Point(c.location[0],c.location[1]));
-      if(!daylight) calculatevision(update);
-      if(overlay!=null) update.addAll(overlay.affected);
-      if(Fight.current.has(Meld.class)!=null)
-        for(MeldCrystal m:s.meld) update.add(new Point(m.x,m.y));
-      for(var p:update) tiles[p.x][p.y].repaint();
-    }catch(ConcurrentModificationException e){
-      /* I have no idea why this is being thrown since the HashSet is local and
-       * the method is synchronized on top of it. */
-      refresh();
-    }
+    //    try{
+    updatestate();
+    var s=Fight.state;
+    //    if(s==null) return;
+    var update=new HashSet<Point>(s.redteam.size()+s.blueteam.size());
+    for(var c:s.getcombatants()) update.add(c.getlocation());
+    for(var c:previous.getcombatants()) update.add(c.getlocation());
+    updatestate();
+    for(var c:s.getcombatants()) update.add(c.getlocation());
+    calculatevision();
+    update.addAll(seen);
+    if(overlay!=null) update.addAll(overlay.affected);
+    if(Fight.current.has(Meld.class)!=null)
+      for(var m:s.meld) update.add(new Point(m.x,m.y));
+    for(var p:update) tiles[p.x][p.y].repaint();
   }
 
   @Override
   public void paint(Graphics g){
     updatestate();
-    if(!daylight) calculatevision(null);
+    calculatevision();
     super.paint(g);
   }
 
-  private void calculatevision(final HashSet<Point> update){
-    var active=Fight.state.clone().clone(current);
-    if(active==null) return;
-    final var seen=active.calculatevision(Fight.state);
-    for(Point p:seen){ // seen
-      var t=(BattleTile)tiles[p.x][p.y];
-      if(update!=null&&(!t.discovered||t.shrouded)) update.add(p);
+  synchronized void calculatevision(){
+    if(daylight||state.getteam(current)==state.redteam) return;
+    for(var s:seen){
+      var t=(BattleTile)tiles[s.x][s.y];
+      t.shrouded=true;
+    }
+    var vision=current.calculatevision(state);
+    for(var v:vision){ // seen
+      var t=(BattleTile)tiles[v.x][v.y];
+      seen.add(v);
       t.discovered=true;
       t.shrouded=false;
-    }
-    for(var x=0;x<tiles.length;x++) for(var y=0;y<tiles[0].length;y++){
-      final var t=(BattleTile)tiles[x][y];
-      if(!t.discovered||t.shrouded) continue;
-      final var p=new Point(x,y);
-      if(!seen.contains(p)){
-        t.shrouded=true;
-        if(update!=null) update.add(p);
-      }
     }
   }
 
   void updatestate(){
-    previousstate=state;
-    if(Fight.state==null) return;
+    previous=state;
     state=Fight.state.clonedeeply();
-    if(previousstate==null) previousstate=state;
+    current=state.clone(current);
     BattleTile.panel=this;
-    daylight=state.period.equals(Period.MORNING)
-        ||state.period.equals(Period.AFTERNOON);
-    if(state.period!=previousstate.period){
-      for(Tile[] tiles:tiles) for(Tile t:tiles){
-        ((BattleTile)t).shrouded=!daylight;
-        t.repaint();
+    var p=state.period;
+    daylight=p.equals(Period.MORNING)||p.equals(Period.AFTERNOON);
+    if(previous==null||p!=previous.period)
+      for(var tiles:tiles) for(var t:tiles){
+        var bt=(BattleTile)t;
+        bt.shrouded=!daylight;
+        if(daylight) seen.add(new Point(t.x,t.y));
       }
-      if(!daylight) calculatevision(null);
-    }
   }
 
   @Override

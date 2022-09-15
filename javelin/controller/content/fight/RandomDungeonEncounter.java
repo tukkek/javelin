@@ -7,6 +7,7 @@ import javelin.controller.content.terrain.Terrain;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
+import javelin.model.world.Period;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.old.RPG;
@@ -25,6 +26,7 @@ public class RandomDungeonEncounter extends RandomEncounter{
     set(Terrain.UNDERGROUND);
     mutators.add(new Meld());
     encounter=RPG.pick(f.encounters);
+    period=Period.NIGHT;
   }
 
   /** Picks a random map to use from this pool. */

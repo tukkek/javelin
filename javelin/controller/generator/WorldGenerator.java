@@ -1,9 +1,9 @@
 package javelin.controller.generator;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
@@ -29,14 +29,14 @@ import javelin.old.RPG;
 import javelin.view.screen.InfoScreen;
 
 /**
- * Mulit-threaded {@link World} generation. Also does
- * {@link Dungeon#generate(javelin.model.world.location.dungeon.Dungeon.GenerationReport)}
+ * Mulit-threaded {@link World} generation. Also does {@link Dungeon#generate()}
  * once a valid world is generated.
  *
  * @see World#seed
  * @author alex
  */
 public class WorldGenerator extends Thread{
+  /** {@link Terrain} generation steps. */
   public static final Terrain[] GENERATIONORDER={Terrain.MOUNTAINS,
       Terrain.MOUNTAINS,Terrain.DESERT,Terrain.PLAIN,Terrain.HILL,Terrain.WATER,
       Terrain.WATER,Terrain.MARSH,Terrain.FOREST};
@@ -45,16 +45,16 @@ public class WorldGenerator extends Thread{
   /** @see Debug */
   public static final CountingSet RESETS=Javelin.DEBUG?new CountingSet():null;
 
-  static final int MAXRETRIES=1000*2;
-  static final int NOISEAMOUNT=World.SIZE*World.SIZE/10;
   static final Terrain[] NOISE={Terrain.PLAIN,Terrain.HILL,Terrain.FOREST,
       Terrain.MOUNTAINS};
-  static final int REFRESH=100;
   static final String PROGRESSHEADER="Building world, using %S thread(s)...";
-  static final String PROGRESS="%s: %s%%...";
   static final int NTHREADS=Math.max(1,Preferences.maxthreads);
   static final List<WorldGenerator> WORLDTHREADS=new ArrayList<>(NTHREADS);
+  static final int NOISEAMOUNT=World.SIZE*World.SIZE/10;
+  static final String PROGRESS="%s: %s%%...";
+  static final int MAXRETRIES=1000*2;
   static final boolean DEBUG=false;
+  static final int REFRESH=100;
 
   /** Where to place first {@link Squad}. */
   public static Location start;
@@ -87,8 +87,10 @@ public class WorldGenerator extends Thread{
     }
   }
 
-  public int retries=0;
+  /** {@link World#seed} being generated. */
   public World world;
+
+  int retries=0;
 
   @Override
   public final void run(){
@@ -104,53 +106,44 @@ public class WorldGenerator extends Thread{
     retries=0;
     world=new World();
     var realms=RPG.shuffle(new LinkedList<>(Realm.REALMS));
-    var regions=new ArrayList<HashSet<Point>>(realms.size());
-    generategeography(realms,regions,world);
+    var regions=new ArrayList<Set<Point>>(realms.size());
+    generategeography(regions,world);
     world.featuregenerator=new LocationGenerator();
     var start=world.featuregenerator.generate(realms,regions,world);
     finish(start,world);
   }
 
-  public synchronized void finish(Location start,World w){
+  synchronized void finish(Location start,World w){
     if(World.seed!=null) return;
     World.seed=w;
     RandomEncounter.generate(w);
     WorldGenerator.start=start;
   }
 
-  /**
-   * Handles when {@link World} generation is taking too long.
-   *
-   * @throws RestartWorldGeneration
-   */
-  public synchronized final void bumpretry(){
-    if(World.seed!=null) throw new RestartWorldGeneration();
+  /** Handles when {@link World} generation is taking too long. */
+  synchronized final void bumpretry(){
+    if(Thread.interrupted()) return;
     retries+=1;
-    if(retries>=MAXRETRIES||Thread.interrupted()){
-      retries=0;
-      discarded+=1;
-      if(DEBUG){
-        var e=new RuntimeException("Reset");
-        e.fillInStackTrace();
-        RESETS.add(JavelinApp.printstacktrace(e));
-      }
-      throw new RestartWorldGeneration();
+    if(retries<MAXRETRIES) return;
+    retries=0;
+    discarded+=1;
+    if(DEBUG){
+      var e=new RuntimeException("Reset");
+      e.fillInStackTrace();
+      RESETS.add(JavelinApp.printstacktrace(e));
     }
+    throw new RestartWorldGeneration();
   }
 
+  /** Calls {@link #bumpretry()} on {@link Thread#currentThread()}. */
   public static void retry(){
-    var t=Thread.currentThread();
     if(!working) return;
-    if(t instanceof WorldGenerator){
-      if(World.seed!=null) throw new RestartWorldGeneration();
-      var builder=(WorldGenerator)t;
-      builder.bumpretry();
-    }else //TODO
-      if(RPG.chancein(MAXRETRIES)) throw new RestartWorldGeneration();
+    if(World.seed!=null) throw new RestartWorldGeneration();
+    var t=(WorldGenerator)Thread.currentThread();
+    t.bumpretry();
   }
 
-  protected void generategeography(LinkedList<Realm> realms,
-      ArrayList<HashSet<Point>> regions,World w){
+  void generategeography(List<Set<Point>> regions,World w){
     var size=World.SIZE;
     for(var i=0;i<size;i++) for(var j=0;j<size;j++) w.map[i][j]=Terrain.FOREST;
     for(Terrain t:WorldGenerator.GENERATIONORDER) regions.add(t.generate(w));
@@ -261,7 +254,9 @@ public class WorldGenerator extends Thread{
       s.fix();
       generatedungeons("Generating dungeons",s);
       generatedungeons("Generating branches",s);
-      while(generatedungeons("Generating more branches",s)){}
+      while(generatedungeons("Generating more branches",s)){
+        //continue
+      }
       working=false;
       return;
     }catch(Exception e){

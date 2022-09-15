@@ -1,6 +1,5 @@
 package javelin.controller.generator.dungeon;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -8,25 +7,30 @@ import java.util.LinkedList;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.exception.GaveUp;
-import javelin.controller.generator.WorldGenerator;
+import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.generator.dungeon.template.FloorTile;
 import javelin.controller.generator.dungeon.template.StaticTemplate;
 import javelin.controller.generator.dungeon.template.corridor.StraightCorridor;
 import javelin.controller.table.dungeon.FloorTileTable;
+import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.old.RPG;
 import javelin.view.screen.town.SelectScreen;
 
+/** Generates a {@link Dungeon} map. */
 public class DungeonGenerator{
   static final boolean DEBUGROOMS=true;
+  static final int MAXATTEMPTS=100000;
   static final int DEBUGSIZE=1;
-  static final int MAXATTEMPTS=9*10000;
 
+  /** Relative map. */
   public VirtualMap map=new VirtualMap();
-  public char[][] grid;
-  public String ascii;
   /** Floor being mapped. */
   public DungeonFloor floor;
+  /** Fixed map. */
+  public char[][] grid;
+  /** Visual representation. */
+  public String ascii;
 
   LinkedList<Segment> segments=new LinkedList<>();
   ArrayList<FloorTile> pool=new ArrayList<>();
@@ -48,6 +52,7 @@ public class DungeonGenerator{
     floor=f;
   }
 
+  /** Generates {@link Dungeon} map. */
   public void start() throws GaveUp{
     pool.addAll(floor.gettable(FloorTileTable.class).gettemplates());
     for(var t:pool) templatesused+=t.getClass().getSimpleName()+" ";
@@ -64,9 +69,7 @@ public class DungeonGenerator{
     return t;
   }
 
-  /**
-   * TODO doesn't need necesarily to create only based on rooms
-   */
+  /** TODO doesn't need necesarily to create only based on rooms */
   void createconnection(){
     var r=RPG.pick(map.rooms);
     var d=Direction.getrandom();
@@ -100,6 +103,7 @@ public class DungeonGenerator{
     }
   }
 
+  /** Generates {@link #ascii} and {@link #grid}. */
   public void finish(){
     ascii=map.rasterize(true).replaceAll(" ",
         Character.toString(FloorTile.WALL));
@@ -117,8 +121,10 @@ public class DungeonGenerator{
     while(nrooms>0&&!segments.isEmpty()){
       attempts+=1;
       if(attempts>=MAXATTEMPTS){
-        if(Javelin.DEBUG)
-          System.out.println("Max dungeon generation attempts reached");
+        if(Javelin.DEBUG){
+          var x="Max dungeon generation attempts reached";
+          System.out.println(x);
+        }
         throw new GaveUp();
       }
       var s=RPG.pick(segments);
@@ -178,28 +184,32 @@ public class DungeonGenerator{
   }
 
   /**
+   * @param min Minimum number of rooms.
+   * @param max Maximum number of rooms.
    * @return A dungeon map, ready for drawing.
    * @see VirtualMap#rooms
    */
-  public static DungeonGenerator generate(int minrooms,int maxrooms,
-      DungeonFloor f){
+  public static DungeonGenerator generate(int min,int max,DungeonFloor f){
     StaticTemplate.load();
     DungeonGenerator dungeon=null;
+    var attempts=0;
     while(dungeon==null) try{
-      dungeon=new DungeonGenerator(minrooms,maxrooms,f);
+      dungeon=new DungeonGenerator(min,max,f);
       dungeon.start();
       var size=dungeon.map.rooms.size();
-      if(!(minrooms<=size&&size<=maxrooms)){
-        WorldGenerator.retry();
+      if(!(min<=size&&size<=max)){
+        attempts+=1;
+        if(attempts>MAXATTEMPTS) throw new GaveUp();
         dungeon=null;
       }
     }catch(GaveUp e){
-      WorldGenerator.retry();
+      throw new RestartWorldGeneration();
     }
     return dungeon;
   }
 
-  public static void main(String[] args) throws IOException{
+  /** Unit-test helper. */
+  public static void main(String[] args){
     var minrooms=3;
     var maxrooms=7;
     minrooms=13;

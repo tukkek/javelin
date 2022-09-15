@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -248,8 +247,6 @@ public class LocationGenerator implements Serializable{
   }
 
   static void generatestartingarea(World w,Town t){
-    //    var lodge=new Lodge();
-    //    lodge.impermeable=true;
     var s=Shop.makebasic();
     var a=Academy.makebasic();
     var m=MagesGuild.makebasicmage();
@@ -295,8 +292,8 @@ public class LocationGenerator implements Serializable{
    *
    * @see Terrain
    */
-  public Location generate(LinkedList<Realm> realms,
-      ArrayList<HashSet<Point>> regions,World w){
+  public Location generate(LinkedList<Realm> realms,List<Set<Point>> regions,
+      World w){
     generatetowns(realms,regions);
     var starting=determinestartingtown(w);
     generatefeatures(w,starting);
@@ -341,8 +338,7 @@ public class LocationGenerator implements Serializable{
     return t;
   }
 
-  void generatetowns(LinkedList<Realm> realms,
-      ArrayList<HashSet<Point>> regions){
+  void generatetowns(LinkedList<Realm> realms,List<Set<Point>> regions){
     var towns=Realm.REALMS.size();
     for(var i=0;i<regions.size()&&towns>0;i++){
       var t=WorldGenerator.GENERATIONORDER[i];

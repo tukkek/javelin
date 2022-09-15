@@ -1,5 +1,7 @@
 package javelin.controller.content.kit.wizard;
 
+import java.util.List;
+
 import javelin.controller.content.quality.perception.Vision;
 import javelin.controller.content.upgrade.ability.RaiseWisdom;
 import javelin.model.unit.abilities.spell.divination.DiscernLocation;
@@ -14,22 +16,20 @@ import javelin.model.unit.abilities.spell.divination.PryingEyes;
  * @author alex
  */
 public class Diviner extends Wizard{
-	/** Singleton. */
-	public static final Diviner INSTANCE=new Diviner();
+  /** Singleton. */
+  public static final Diviner INSTANCE=new Diviner();
 
-	/** Constructor. */
-	public Diviner(){
-		super("Diviner",RaiseWisdom.SINGLETON);
-		basic.add(Vision.LOWLIGHTVISION);
-	}
+  /** Constructor. */
+  public Diviner(){
+    super("Diviner",RaiseWisdom.SINGLETON);
+    basic.add(Vision.LOWLIGHTVISION);
+  }
 
-	@Override
-	protected void extend(){
-		super.extend();
-		extension.add(new LocateObject());
-		extension.add(new PryingEyes());
-		extension.add(new DiscernLocation());
-		extension.add(new FindTraps());
-		extension.add(new Identify());
-	}
+  @Override
+  protected void extend(){
+    super.extend();
+    extension.addAll(List.of(new LocateObject(),new PryingEyes(),
+        new DiscernLocation(),new FindTraps(),new Identify()));
+    //    TODO extension.addAll(List.of(new ReadMagic(),new DetectMagic()));
+  }
 }

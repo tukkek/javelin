@@ -106,8 +106,8 @@ public class Dungeon implements Serializable{
   /** {@link RPG#chancein(int)} chance to {@link Branch}. */
   protected int branchchance=4;
   /** Placed once per dungeon for the benefit of {@link FetchQuest}s. */
-  protected List<Class<? extends Chest>> goals=List.of(ArtDisplay.class,RecipeBookcase.class);
-  
+  protected List<Class<? extends Chest>> goals=List.of(ArtDisplay.class,
+      RecipeBookcase.class);
 
   /**
    * Top-level floor constructor.
@@ -138,7 +138,9 @@ public class Dungeon implements Serializable{
       var suffix=branches.get(1).suffix.toLowerCase();
       return String.format("%s %s %s",prefix,base,suffix);
     }
-    if(Javelin.DEBUG) if(getClass()!=Dungeon.class&&getClass()!=Wilderness.class) throw new RuntimeException(getClass().getSimpleName());
+    if(Javelin.DEBUG)
+      if(getClass()!=Dungeon.class&&getClass()!=Wilderness.class)
+        throw new RuntimeException(getClass().getSimpleName());
     try{
       var name=World.getseed().dungeonnames.pop();
       name=name.substring(name.lastIndexOf(" ")+1,name.length());
@@ -190,22 +192,22 @@ public class Dungeon implements Serializable{
     index.merge(modified);
     return List.of(index);
   }
-  
+
   void generategoals(){
     if(goals==null) return;
-    try {
+    try{
       for(var g:goals) while(RPG.chancein(2)){
         var f=RPG.pick(floors);
-        var chest=g.getConstructor(Integer.class,DungeonFloor.class).
-            newInstance(RewardCalculator.getgold(f.level),f);
+        var chest=g.getConstructor(Integer.class,DungeonFloor.class)
+            .newInstance(RewardCalculator.getgold(f.level),f);
         var u=f.getunnocupied();
         if(u!=null&&chest.generateitem()) chest.place(f,u);
       }
-    }catch(ReflectiveOperationException e) {
+    }catch(ReflectiveOperationException e){
       if(Javelin.DEBUG) throw new RuntimeException(e);
     }
   }
-  
+
   /**
    * Calls {@link #generate()} on all floors; then {@link Feature#define()} on
    * each floor's {@link #features}; then generates {@link Lore}.
@@ -222,7 +224,6 @@ public class Dungeon implements Serializable{
     name=baptize(name);
     if(entrance!=null) entrance.set(this);
   }
-
 
   /**
    * If there are {@link #branches}, pick between them and the base image for
@@ -257,11 +258,12 @@ public class Dungeon implements Serializable{
     var entrances=new ArrayList<Feature>(floors.stream().sequential()
         .flatMap(f->f.features.getall(Passage.class).stream())
         .filter(p->p.destination==null&&p.found).collect(Collectors.toList()));
-    var top=floors.get(0);
-    if(entrances.isEmpty()) return top;
+    var top=floors.get(0); 
     var stairs=top.features.get(StairsUp.class);
     entrances.add(0,stairs);
-    var choice=Javelin.choose("Use which entrance?",entrances,true,false);
+    var choice=0;
+    if(entrances.size()>1)
+      choice=Javelin.choose("Use which entrance?",entrances,true,false);
     if(choice<0) throw new RepeatTurn();
     if(choice==0){
       top.squadlocation=stairs.getlocation();

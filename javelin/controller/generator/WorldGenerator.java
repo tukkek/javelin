@@ -25,7 +25,6 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonEntrance;
 import javelin.model.world.location.dungeon.feature.BranchPortal;
-import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
 import javelin.view.screen.InfoScreen;
 
@@ -57,6 +56,10 @@ public class WorldGenerator extends Thread{
   static final List<WorldGenerator> WORLDTHREADS=new ArrayList<>(NTHREADS);
   static final boolean DEBUG=false;
 
+  /** Where to place first {@link Squad}. */
+  public static Location start;
+
+  static boolean working=false;
   static int discarded=0;
 
   static class ProgressScreen extends InfoScreen{
@@ -64,8 +67,11 @@ public class WorldGenerator extends Thread{
 
     public ProgressScreen(String header){
       super(header);
-      reports.add(header);
-      reports.add("");
+      reports.addAll(List.of(header,""));
+      fix();
+    }
+
+    void fix(){
       reports.add(null);
     }
 
@@ -76,8 +82,8 @@ public class WorldGenerator extends Thread{
       super.print(String.join("\n",reports));
     }
 
-    void fix(){
-      reports.add(null);
+    void reset(){
+      while(reports.size()>3) reports.remove(3);
     }
   }
 
@@ -108,12 +114,8 @@ public class WorldGenerator extends Thread{
   public synchronized void finish(Location start,World w){
     if(World.seed!=null) return;
     World.seed=w;
-    Squad.active.x=start.x;
-    Squad.active.y=start.y;
-    Squad.active.displace();
-    Squad.active.place();
-    if(start instanceof Town) Squad.active.lasttown=(Town)start;
     RandomEncounter.generate(w);
+    WorldGenerator.start=start;
   }
 
   /**
@@ -138,11 +140,13 @@ public class WorldGenerator extends Thread{
 
   public static void retry(){
     var t=Thread.currentThread();
+    if(!working) return;
     if(t instanceof WorldGenerator){
       if(World.seed!=null) throw new RestartWorldGeneration();
       var builder=(WorldGenerator)t;
       builder.bumpretry();
-    }
+    }else //TODO
+      if(RPG.chancein(MAXRETRIES)) throw new RestartWorldGeneration();
   }
 
   protected void generategeography(LinkedList<Realm> realms,
@@ -193,6 +197,7 @@ public class WorldGenerator extends Thread{
         t.join();
       }
     }catch(InterruptedException e){
+      for(var t:WORLDTHREADS) t.interrupt();
       throw new RuntimeException(e);
     }
   }
@@ -226,6 +231,7 @@ public class WorldGenerator extends Thread{
       var progress=100.0*(i+1)/ndungeons;
       s.print(String.format(PROGRESS,label,Math.round(progress)));
     }catch(Exception e){
+      pool.shutdownNow();
       throw new RuntimeException(e);
     }
     s.fix();
@@ -249,10 +255,19 @@ public class WorldGenerator extends Thread{
   public static void build(){
     var header=String.format(PROGRESSHEADER,NTHREADS);
     var s=new ProgressScreen(header);
-    generateworld(s);
-    s.fix();
-    generatedungeons("Generating dungeons",s);
-    generatedungeons("Generating branches",s);
-    while(generatedungeons("Generating more branches",s)){}
+    working=true;
+    while(true) try{
+      generateworld(s);
+      s.fix();
+      generatedungeons("Generating dungeons",s);
+      generatedungeons("Generating branches",s);
+      while(generatedungeons("Generating more branches",s)){}
+      working=false;
+      return;
+    }catch(Exception e){
+      World.seed=null;
+      s.reset();
+      continue;
+    }
   }
 }

@@ -155,17 +155,11 @@ public class Door extends Feature{
 
   boolean usekey(){
     Key key=null;
-    for(var k:Squad.active.equipment.getall(this.key))
-      if(k.dungeon==Dungeon.active){
-        key=k;
-        break;
-      }
-    if(key!=null){
-      var message="You unlock the door with the "+key.toString().toLowerCase()
-          +"!";
-      Javelin.message(message,false);
-      return true;
+    for(var k:Squad.active.equipment.getall(this.key)) if(k.f==Dungeon.active){
+      key=k;
+      break;
     }
+    if(key!=null) return true;
     key=Squad.active.equipment.get(MasterKey.class);
     if(key!=null&&Javelin.prompt(SPENDMASTERKEY)=='\n'){
       key.expend();

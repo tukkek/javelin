@@ -263,7 +263,7 @@ public class LocationGenerator implements Serializable{
       return difference>0?1:-1;
     });
     spawnnear(t,new AdventurersGuild(),w,2,3,true).reveal();
-    spawnnear(t,new Arena(t),w,2,3,false).reveal();
+    spawnnear(t,new Arena(),w,2,3,false).reveal();
     var r=District.RADIUSMAX/2;
     spawnnear(t,new WarlocksTower(),w,r+1,(int)Math.round(r*1.5),false)
         .reveal();

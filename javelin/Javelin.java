@@ -193,11 +193,10 @@ public class Javelin{
         ||World.getactors().stream().filter(Actor::hold).findAny().isPresent())
       return false;
     Javelin.app.switchScreen(BattleScreen.active);
-    StateManager.clear();
     BattleScreen.active.messagepanel.clear();
+    message("Please wait...",Delay.NONE);
+    StateManager.clear();
     message("You have lost all your units! Game over T_T",true);
-    //		while(InfoScreen.feedback()!='\n')
-    //			continue;
     System.exit(0);
     return true;
   }

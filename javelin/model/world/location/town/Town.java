@@ -372,6 +372,8 @@ public class Town extends Location{
   }
 
   /**
+   * TODO move to {@link District}
+   *
    * @return All Points in the game World that are districts.
    */
   public static HashSet<Point> getdistricts(){

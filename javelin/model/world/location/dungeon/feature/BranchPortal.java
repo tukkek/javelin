@@ -35,7 +35,7 @@ public class BranchPortal extends Feature{
     if(maxfloors<1) maxfloors=1;
     var floors=1;
     while(floors<maxfloors&&RPG.chancein(NEWFLOORCHANCE)) floors+=1;
-    var level=f.level+1;
+    var level=f.level;
     while(RPG.chancein(2)) level+=1;
     destination=new Dungeon("Branch",level,floors);
     destination.branches.addAll(f.gettable(BranchTable.class).rollaffixes());

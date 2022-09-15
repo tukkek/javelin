@@ -39,13 +39,15 @@ import javelin.view.screen.WorldScreen;
 
 /**
  * A collection of methods that can be altered to facilitate testing the game.
+ *
  * Entry-points start with "on", such as {@link #oncampaignstart()} and should
  * never be called from other parts of the game unless {@link Javelin#DEBUG} is
- * <code>true</code>. Other methods are helpers to be used within the class,
- * such as {@link #grab(Item[])}.
+ * <code>true</code>.
  *
- * Ideally changes to this class should never be commited unless when expanding
- * debug functionalities (such adding new entry or helper methods).
+ * {@link Helpers} are utility code to be utilized inside the entrypoints.
+ *
+ * Ideally changes to this class should never be commited unless expanding the
+ * debug functionalities themselves (such adding new entry or helper methods).
  *
  * @author alex
  */
@@ -203,7 +205,6 @@ public class Debug{
     static void place(Integer times,List<? extends Class<? extends Map>> maps){
       if(times==null) times=60;
       try{
-        EndBattle.skipresultmessage=true;
         var measures=new ArrayList<Long>(times*maps.size());
         var passes=new CountingSet();
         var opponents=makearmy(100);
@@ -212,6 +213,7 @@ public class Debug{
           var f=new DebugFight(opponents);
           f.avoid=false;
           f.map=map.getConstructor().newInstance();
+          f.skipresult=true;
           Fight.current=f;
           var clock=System.currentTimeMillis();
           try{
@@ -227,8 +229,6 @@ public class Debug{
             +measures.get(measures.size()/2)+"ms");
       }catch(ReflectiveOperationException e){
         throw new RuntimeException(e);
-      }finally{
-        EndBattle.skipresultmessage=false;
       }
     }
 
@@ -276,22 +276,22 @@ public class Debug{
    * is a one-line hack and much faster than conditional breakpoints in Eclipse.
    */
   public static void breakpoint(){
-
+    //
   }
 
   /** Called every time a game starts (before player interaction). */
   public static void oninit(){
-
+    //
   }
 
   /** @see StartBattle */
   public static void onbattlestart(){
-
+    //
   }
 
-  /** Called only once when a {@link Scenario} is initialized. */
+  /** Called once every new playthrough. */
   public static void oncampaignstart(){
-
+    //
   }
 
   /** As {@link #onworldhelp()} but called from the {@link BattleScreen}. */

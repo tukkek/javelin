@@ -15,32 +15,31 @@ import javelin.model.unit.Monster;
  * @author alex
  */
 public abstract class Touch extends Spell{
-	/** Constructor. */
-	public Touch(String name,int level,float incrementcost){
-		super(name,level,incrementcost);
-		castinbattle=true;
-	}
+  /** Constructor. */
+  public Touch(String name,int level,float incrementcost){
+    super(name,level,incrementcost);
+    castinbattle=true;
+  }
 
-	@Override
-	public int hit(Combatant active,Combatant target,BattleState s){
-		if(castonallies&&active.isally(target,s)) return Integer.MIN_VALUE;
-		int touchac=target.gettouchac();
-		int attackbonus=active.source.getbab()
-				-Monster.getbonus(active.source.strength);
-		return touchac-attackbonus;
-	}
+  @Override
+  public int hit(Combatant active,Combatant target,BattleState s){
+    if(castonallies&&active.isally(target,s)) return Integer.MIN_VALUE;
+    var touchac=target.gettouchac();
+    var attackbonus=active.source.getbab()
+        -Monster.getbonus(active.source.strength);
+    return touchac-attackbonus;
+  }
 
-	@Override
-	public void filter(Combatant combatant,List<Combatant> targets,
-			BattleState s){
-		super.filter(combatant,targets,s);
-		for(Combatant target:new ArrayList<>(targets))
-			if(isfar(combatant,target)) targets.remove(target);
-	}
+  @Override
+  public void filter(Combatant combatant,List<Combatant> targets,BattleState s){
+    super.filter(combatant,targets,s);
+    if(s!=null) for(Combatant target:new ArrayList<>(targets))
+      if(isfar(combatant,target)) targets.remove(target);
+  }
 
-	public static boolean isfar(Combatant combatant,Combatant target){
-		Point a=combatant.getlocation();
-		Point b=target.getlocation();
-		return a.distanceinsteps(b)>1;
-	}
+  public static boolean isfar(Combatant combatant,Combatant target){
+    var a=combatant.getlocation();
+    var b=target.getlocation();
+    return a.distanceinsteps(b)>1;
+  }
 }

@@ -296,6 +296,8 @@ public class Combatant implements Serializable,Cloneable{
 
   /**
    * % are against AC only, no bonuses included except attack bonus
+   *
+   * TODO show hit chance
    */
   public AttackSequence chooseattack(List<AttackSequence> attacks){
     if(attacks.size()==1) return attacks.get(0);
@@ -566,16 +568,15 @@ public class Combatant implements Serializable,Cloneable{
    *   this receives a modifier (1 modifier = 2 ability points).
    */
   public void detox(int detox){
-    if(detox>0&&source.poison>0){
-      detox=Math.min(detox*2,source.poison);
-      source.poison-=detox;
-      var p=hascondition(Poisoned.class);
-      if(source.poison<=0&&p!=null){
-        p.neutralized=true;
-        removecondition(p);
-      }
-      source.changeconstitutionscore(this,+detox);
+    if(source.poison<=0||detox<=0) return;
+    detox=Math.min(detox*2,source.poison);
+    source.poison-=detox;
+    var p=hascondition(Poisoned.class);
+    if(source.poison<=0&&p!=null){
+      p.neutralized=true;
+      removecondition(p);
     }
+    source.changeconstitutionscore(this,+detox);
   }
 
   /**
@@ -722,17 +723,17 @@ public class Combatant implements Serializable,Cloneable{
     return true;
   }
 
-  public String printstatus(BattleState state){
-    var statuslist=liststatus(state);
-    var output=new ArrayList<String>();
+  /** @return Readable version of {@link #liststatus(BattleState)}. */
+  public String printstatus(BattleState s){
+    var statuslist=liststatus(s);
+    var output=new ArrayList<>(List.of(getstatus()));
     var count=new CountingSet();
-    for(var s:statuslist) count.add(s);
+    for(var status:statuslist) count.add(status);
     for(var status:count.getelements()){
       var n=count.getcount(status);
       if(n>1) status+=" (x"+n+")";
       output.add(status);
     }
-    output.add(0,getstatus());
     return String.join(", ",output);
   }
 
@@ -978,5 +979,20 @@ public class Combatant implements Serializable,Cloneable{
    */
   public int gettouchac(){
     return getac()-source.armor;
+  }
+
+  /**
+   * Applies one rest period to this unit.
+   *
+   * @param factor 1 (or higher if using {@link Skill#HEAL} for example).
+   * @param hours Usually 8 or 12 for one rest period.
+   */
+  public void rest(int factor,int hours){
+    var hp=source.hd.count()*factor;
+    if(hp<1) hp=1;
+    heal(hp,false);
+    for(Spell sp:spells) sp.used=0;
+    if(RPG.chancein(2)) detox(1);
+    terminateconditions(hours);
   }
 }

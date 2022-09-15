@@ -14,6 +14,7 @@ import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.comparator.CombatantByCr;
 import javelin.controller.comparator.CombatantHealthComparator;
 import javelin.controller.comparator.CombatantsByNameAndMercenary;
 import javelin.controller.content.action.world.WorldMove;
@@ -112,9 +113,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
     updateavatar();
   }
 
-  /**
-   * Updates {@link Actor#visual}, taking {@link #transport} into account.
-   */
+  /** Updates {@link #image}, possible using {@link #transport}. */
   public void updateavatar(){
     if(members.isEmpty()) return;
     if(transport!=null&&Dungeon.active==null){
@@ -122,12 +121,15 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
       image=Images.get(List.of("world","transport",file));
       return;
     }
-    ArrayList<Combatant> squad=new Combatants(members);
-    squad.removeAll(getmercenaries());
-    if(squad.isEmpty()) squad=members;
-    Combatant leader=null;
-    for(Combatant c:squad)
-      if(leader==null||c.source.cr>leader.source.cr) leader=c;
+    var members=new Combatants(this.members);
+    var mercenaries=getmercenaries();
+    if(mercenaries.size()<members.size()) members.removeAll(mercenaries);
+    members.sort(CombatantByCr.SINGLETON.reversed());
+    var leader=members.get(0);
+    for(var m:members) if(m.source.think(-1)){
+      leader=m;
+      break;
+    }
     image=Images.get(List.of("monster",leader.source.avatarfile));
   }
 

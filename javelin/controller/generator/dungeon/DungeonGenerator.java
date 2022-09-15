@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.exception.GaveUp;
+import javelin.controller.generator.WorldGenerator;
 import javelin.controller.generator.dungeon.template.FloorTile;
 import javelin.controller.generator.dungeon.template.StaticTemplate;
 import javelin.controller.generator.dungeon.template.corridor.StraightCorridor;
@@ -19,7 +20,7 @@ import javelin.view.screen.town.SelectScreen;
 public class DungeonGenerator{
   static final boolean DEBUGROOMS=true;
   static final int DEBUGSIZE=1;
-  static final int MAXATTEMPTS=9*1000;
+  static final int MAXATTEMPTS=9*10000;
 
   public VirtualMap map=new VirtualMap();
   public char[][] grid;
@@ -184,19 +185,16 @@ public class DungeonGenerator{
       DungeonFloor f){
     StaticTemplate.load();
     DungeonGenerator dungeon=null;
-    var tries=0;
     while(dungeon==null) try{
       dungeon=new DungeonGenerator(minrooms,maxrooms,f);
       dungeon.start();
       var size=dungeon.map.rooms.size();
       if(!(minrooms<=size&&size<=maxrooms)){
+        WorldGenerator.retry();
         dungeon=null;
-        if(Javelin.DEBUG) System.out.println("Wrong size: "+size);
-        tries+=1;
-        if(tries%3==0) f.gettable(FloorTileTable.class).modify();
       }
     }catch(GaveUp e){
-      continue;
+      WorldGenerator.retry();
     }
     return dungeon;
   }

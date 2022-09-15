@@ -70,7 +70,7 @@ public class Passage extends Feature{
 		else if(destination.floor==floor)
 			to="to another part of this level";
 		else
-			to="to level "+destination.floor.getfloor();
+			to="to level "+destination.floor.getdepth();
 		if(Javelin.prompt(
 				"Do you want to journey through this "+description+" leading "+to+"?\n"
 						+"Press ENTER to confirm or any other key to cancel...")!='\n')
@@ -102,6 +102,6 @@ public class Passage extends Feature{
 
 	@Override
 	public String toString(){
-		return Javelin.capitalize(description)+" on level "+floor.getfloor();
+		return Javelin.capitalize(description)+" on level "+floor.getdepth();
 	}
 }

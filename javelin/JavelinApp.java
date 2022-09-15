@@ -24,6 +24,7 @@ import javelin.controller.generator.WorldGenerator;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.town.Town;
 import javelin.old.QuestApp;
 import javelin.old.RPG;
 import javelin.view.screen.SquadScreen;
@@ -90,7 +91,6 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
       else Dungeon.active.enter();
       while(true){
         Javelin.app.switchScreen(context);
-        Javelin.redraw();
         JavelinApp.context.turn();
       }
     }catch(StartBattle e){
@@ -136,12 +136,18 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
   }
 
   void startcampaign(){
-    Squad.active=new SquadScreen().open();
     WorldGenerator.build();
+    var start=WorldGenerator.start;
+    var s=new SquadScreen().open();
+    s.setlocation(start.getlocation());
+    s.displace();
+    s.place();
+    if(start instanceof Town t) s.lasttown=t;
+    Squad.active=s;
     if(Javelin.DEBUG){
       new ContentSummary().generate();
       Debug.oncampaignstart();
-      StateManager.save(true);
+      StateManager.save(true).get().hold();
     }
   }
 

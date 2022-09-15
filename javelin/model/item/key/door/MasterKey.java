@@ -11,13 +11,13 @@ import javelin.model.world.location.dungeon.feature.rare.inhabitant.Prisoner;
  * @author alex
  */
 public class MasterKey extends Key{
-	/** Constructor. */
-	public MasterKey(DungeonFloor d){
-		this();
-	}
+  /** Constructor. */
+  public MasterKey(DungeonFloor d){
+    this();
+  }
 
-	/** Constructor. */
-	public MasterKey(){
-		super("Master key",null);
-	}
+  /** Constructor. */
+  public MasterKey(){
+    super("Master",null);
+  }
 }

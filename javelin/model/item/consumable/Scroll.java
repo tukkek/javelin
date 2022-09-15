@@ -44,6 +44,7 @@ public class Scroll extends Item{
     spell=s.clone();
     usedinbattle=s.castinbattle;
     usedoutofbattle=s.castoutofbattle;
+    provokesaoo=s.provokeaoo;
     apcost=0;
     identified=false;
     SCROLLS.add(this);

@@ -163,7 +163,7 @@ public class DungeonFloor implements Serializable{
 
   /** @return Floor above this one or <code>null</code> if top floor. */
   protected DungeonFloor getparent(){
-    var floor=getfloor()-1;
+    var floor=getdepth()-1;
     return floor==0?null:dungeon.floors.get(floor-1);
   }
 
@@ -439,10 +439,9 @@ public class DungeonFloor implements Serializable{
       return;
     }
     WorldMove.abort=true;
-    JavelinApp.context=new WorldScreen(true);
-    BattleScreen.active=JavelinApp.context;
-    Squad.active.place();
     Dungeon.active=null;
+    Javelin.app.switchScreen(new WorldScreen(true));
+    Squad.active.place();
   }
 
   /** @see StairsUp */
@@ -518,17 +517,18 @@ public class DungeonFloor implements Serializable{
    *   for the one below that)...
    * @see Dungeon#floors
    */
-  public int getfloor(){
+  public int getdepth(){
     return dungeon.floors.indexOf(this)+1;
   }
 
   @Override
   public String toString(){
-    return dungeon.name+" (floor "+getfloor()+")";
+    return dungeon.name+" (floor "+getdepth()+")";
   }
 
   /** Enters thsi particular floor. */
   public void enter(){
+    if(BattleScreen.active instanceof DungeonScreen s&&s.floor==this) return;
     Dungeon.active=this;
     JavelinApp.context=new DungeonScreen(this);
     BattleScreen.active=JavelinApp.context;

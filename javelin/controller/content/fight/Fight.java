@@ -91,6 +91,8 @@ public abstract class Fight{
   public List<Mutator> mutators=new ArrayList<>(0);
   /** {@link #map} fallback. See {@link #getdefaultterrains()}. */
   public List<Terrain> terrains=getdefaultterrains();
+  /** Set to <code>true</code> to mute {@link EndBattle#resolve()}. */
+  public boolean skipresult=false;
 
   /** Will multiply gold reward. */
   protected double goldbonus=1;
@@ -145,7 +147,7 @@ public abstract class Fight{
 
   /**
    * Called when a battle ends but before {@link EndBattle} clean-ups.
-   * {@link EndBattle#showcombatresult()} is called by the default
+   * {@link EndBattle#resolve()} is called by the default
    * implementation, which calls {@link #reward()}.
    *
    * @return If <code>true</code> will perform a bunch of post-battle clean-ups,
@@ -155,7 +157,7 @@ public abstract class Fight{
   public boolean onend(){
     state.blueteam.addAll(state.getfleeing(Fight.originalblueteam));
     for(var m:mutators) m.end(this);
-    EndBattle.showcombatresult();
+    EndBattle.resolve();
     for(var m:mutators) m.after(this);
     return true;
   }

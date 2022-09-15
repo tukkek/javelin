@@ -38,6 +38,6 @@ public class StairsUp extends Feature{
 
 	@Override
 	public String toString(){
-		return "Stairs to level "+floor.getfloor();
+		return "Stairs to level "+floor.getdepth();
 	}
 }

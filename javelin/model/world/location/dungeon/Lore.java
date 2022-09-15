@@ -81,7 +81,7 @@ public class Lore implements Serializable{
 
 	/** @return Generates {@link DungeonFloor#lore} for the given floor. */
 	public static HashSet<Lore> generate(DungeonFloor floor){
-		var prefix="On floor "+floor.getfloor()+": ";
+		var prefix="On floor "+floor.getdepth()+": ";
 		var lore=new HashSet<Lore>();
 		var monsters=floor.encounters.stream().flatMap(e->e.stream())
 				.map(c->c.source).filter(m->!m.elite).collect(Collectors.toList());

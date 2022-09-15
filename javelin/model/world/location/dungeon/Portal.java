@@ -14,6 +14,7 @@ import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.branch.Branch;
+import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
 import javelin.view.screen.WorldScreen;
 
@@ -60,10 +61,11 @@ public class Portal extends DungeonEntrance{
   /** @return <code>true</code> if succesfully placed a portal. */
   public static Portal create(){
     var size=World.getseed().map.length;
-    var free=Point.getrange(0,0,size,size);
+    var free=Point.getrange(size,size);
     var actors=World.getactors().stream().map(Actor::getlocation)
         .collect(Collectors.toList());
     free.removeAll(actors);
+    free.removeAll(Town.getdistricts());
     var terrains=new HashSet<Terrain>(6);
     var locations=new ArrayList<Point>(6);
     for(var f:RPG.shuffle(new ArrayList<>(free))){

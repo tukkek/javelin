@@ -106,4 +106,10 @@ public class DungeonEntrance extends Location{
     return World.getactors().stream().filter(a->a instanceof DungeonEntrance)
         .map(a->(DungeonEntrance)a).collect(Collectors.toList());
   }
+
+  /** @return Non-{@link Portal} {@link Dungeon}s. */
+  public static List<DungeonEntrance> getfixed(){
+    var fixed=getall().stream().filter(e->!(e instanceof Portal));
+    return new ArrayList<>(fixed.toList());
+  }
 }

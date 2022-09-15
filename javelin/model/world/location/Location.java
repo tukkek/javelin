@@ -396,6 +396,6 @@ public abstract class Location extends Actor{
     var wait=open.get(0).from-Period.gethour();
     if(wait<0) wait+=24;
     Squad.active.delay(wait);
-    return false;
+    return true;
   }
 }

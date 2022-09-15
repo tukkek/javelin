@@ -65,7 +65,7 @@ public class StartBattle extends BattleEvent{
     difficulty+=RPG.randomize(2);
     var resourcesused=ChallengeCalculator.useresources(difficulty);
     var report="Battle report:\n\n";
-    var blueteam=new ArrayList<Combatant>(Squad.active.members);
+    var blueteam=new ArrayList<>(Squad.active.members);
     var damage=damage(blueteam,resourcesused);
     for(var i=0;i<blueteam.size();i++)
       report+=strategicdamage(blueteam.get(i),damage.get(i))+"\n\n";

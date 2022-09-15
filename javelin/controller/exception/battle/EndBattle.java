@@ -6,23 +6,20 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.ai.ThreadManager;
 import javelin.controller.ai.cache.AiCache;
-import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.content.fight.mutator.Friendly;
 import javelin.controller.content.terrain.Terrain;
-import javelin.controller.content.wish.Ressurect;
-import javelin.model.item.consumable.Scroll;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
-import javelin.model.unit.abilities.spell.Spell;
-import javelin.model.unit.abilities.spell.conjuration.healing.RaiseDead;
+import javelin.model.unit.abilities.spell.conjuration.healing.raise.Ressurect;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.BattleScreen;
+import javelin.view.screen.ReviveScreen;
 
 /**
  * A victory or defeat condition has been achieved.
@@ -30,9 +27,6 @@ import javelin.view.screen.BattleScreen;
  * @author alex
  */
 public class EndBattle extends BattleEvent{
-  /** For debugging purposes. Reset manually. */
-  public static boolean skipresultmessage=false;
-
   /** Start after-{@link Fight} cleanup. */
   public static void end(){
     var f=Fight.current;
@@ -57,42 +51,32 @@ public class EndBattle extends BattleEvent{
     for(Combatant c:Fight.state.getcombatants()) c.finishconditions(s,screen);
   }
 
-  /**
-   * Prints combat info (rewards, etc).
-   *
-   * @param prefix
-   */
-  public static void showcombatresult(){
+  /** * Prints combat info (rewards, etc). */
+  public static void resolve(){
     MessagePanel.active.clear();
-    String combatresult;
+    var result="";
     var s=Fight.state;
     var f=Fight.current;
-    if(Fight.victory) combatresult=f.reward();
-    else if(f.has(Friendly.class)!=null&&!s.blueteam.isEmpty())
-      combatresult="You lost!";
-    else if(s.getfleeing(Fight.originalblueteam).isEmpty()){
-      Squad.active.disband();
-      combatresult="You lost!";
-    }else{
-      var xp="No awards received.";
-      var vanquished=new Combatants(Fight.state.dead);
-      vanquished.retainAll(Fight.originalredteam);
-      if(!vanquished.isEmpty())
-        xp=RewardCalculator.rewardxp(Fight.originalblueteam,vanquished,1);
-      combatresult="Fled from combat. "+xp;
-      if(!Fight.victory&&s.fleeing.size()!=Fight.originalblueteam.size()){
-        combatresult+="\nFallen allies left behind are lost!";
-        for(Combatant abandoned:s.dead) abandoned.hp=Combatant.DEADATHP;
+    if(Fight.victory) result=f.reward();
+    else
+      if(f.has(Friendly.class)!=null&&!s.blueteam.isEmpty()) result="You lost!";
+      else if(s.getfleeing(Fight.originalblueteam).isEmpty()){
+        Squad.active.disband();
+        result="You lost!";
+      }else{
+        result="Fled from combat. No awards received.";
+        if(!Fight.victory&&s.fleeing.size()!=Fight.originalblueteam.size()){
+          result+="\nFallen allies left behind are lost!";
+          for(Combatant abandoned:s.dead) abandoned.hp=Combatant.DEADATHP;
+        }
+        if(Squad.active.transport!=null&&Dungeon.active==null
+            &&!Terrain.current().equals(Terrain.WATER)){
+          result+=" Vehicle lost!";
+          Squad.active.transport=null;
+          Squad.active.updateavatar();
+        }
       }
-      if(Squad.active.transport!=null&&Dungeon.active==null
-          &&!Terrain.current().equals(Terrain.WATER)){
-        combatresult+=" Vehicle lost!";
-        Squad.active.transport=null;
-        Squad.active.updateavatar();
-      }
-    }
-    if(combatresult!=null&&!skipresultmessage)
-      Javelin.message(combatresult,true);
+    if(result!=null&&!f.skipresult) Javelin.message(result,true);
   }
 
   static void updateoriginal(List<Combatant> originalteam){
@@ -115,8 +99,8 @@ public class EndBattle extends BattleEvent{
   }
 
   /**
-   * Tries to {@link #revive(Combatant)} the combatant. If can't, remove him
-   * from the game.
+   * Tries to {@link #show(Combatant)} the combatant. If can't, remove him from
+   * the game.
    *
    * TODO isn't updating {@link Ressurect#dead} when the entire Squad dies! this
    * probably isn't being called
@@ -127,46 +111,12 @@ public class EndBattle extends BattleEvent{
       if(c.hp>Combatant.DEADATHP&&c.source.constitution>0){
         c.hp=1;
         Fight.state.blueteam.add(c);
-      }else if(!Fight.victory||!revive(c,originalteam)){
+      }else if(!Fight.victory||!new ReviveScreen(originalteam).show(c)){
         originalteam.remove(c);
         c.bury();
       }
     }
     Fight.state.dead.clear();
-  }
-
-  /**
-   * TODO this doesnt let you select between spell or scroll, between which
-   * instance of nay of those nor between which characters to use it with. In
-   * short, we need a screen for all that.
-   */
-  static boolean revive(Combatant dead,List<Combatant> originalteam){
-    var alive=new ArrayList<>(originalteam);
-    alive.removeAll(Fight.state.dead);
-    var spell=castrevive(alive);
-    var scroll=findressurectscroll(alive);
-    if(scroll!=null) spell=scroll.spell;
-    if(spell==null||!spell.validate(null,dead)) return false;
-    spell.castpeacefully(null,dead);
-    if(scroll==null) spell.used+=1;
-    else Squad.active.equipment.remove(scroll);
-    return true;
-  }
-
-  static Scroll findressurectscroll(List<Combatant> alive){
-    List<Scroll> ressurectscrolls=new ArrayList<>();
-    for(Scroll s:Squad.active.equipment.getall(Scroll.class))
-      if(s.spell instanceof RaiseDead) ressurectscrolls.add(s);
-    if(ressurectscrolls.isEmpty()) return null;
-    for(Combatant c:alive)
-      for(Scroll s:ressurectscrolls) if(s.canuse(c)==null) return s;
-    return null;
-  }
-
-  static Spell castrevive(List<Combatant> alive){
-    for(Combatant c:alive)
-      for(Spell s:c.spells) if(s instanceof RaiseDead&&!s.exhausted()) return s;
-    return null;
   }
 
   static void end(Combatants originalteam){

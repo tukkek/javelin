@@ -1,80 +1,113 @@
 package javelin.view.screen.upgrading;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.content.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.world.location.Location;
 import javelin.model.world.location.academy.Academy;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.TrainingOrder;
 import javelin.model.world.location.town.Town;
+import javelin.view.screen.Option;
 
 /**
- * @see MartialAcademy
+ * @see Academy
  * @author alex
  */
 public class AcademyScreen extends UpgradingScreen{
-	protected Academy academy;
+  static final Option WAIT=new Option(
+      "Wait until current training is completed",0,'w',2);
 
-	/** Constructor. */
-	public AcademyScreen(Academy academy,Town t){
-		super(academy.descriptionknown,t);
-		this.academy=academy;
-		stayopen=true;
-		//TODO skip confirmation since it's always 1 hero
-	}
+  /** {@link Location} being represented. */
+  protected Academy academy;
 
-	@Override
-	protected void registertrainee(Order trainee){
-		academy.training.add(trainee);
-		Combatant c=((TrainingOrder)trainee).trained;
-		Squad.active.equipment.remove(c);
-		Squad.active.remove(c);
-	}
+  /** Constructor. */
+  public AcademyScreen(Academy academy,Town t){
+    super(academy.descriptionknown,t);
+    this.academy=academy;
+    stayopen=true;
+    //TODO skip confirmation since it's always 1 hero
+  }
 
-	@Override
-	protected void onexit(ArrayList<TrainingOrder> trainees){
-		if(Squad.active.members.size()==trainees.size()){
-			academy.stash+=Squad.active.gold;
-			if(academy.parking==null
-					||Squad.active.transport.price>academy.parking.price)
-				academy.parking=Squad.active.transport;
-		}
-	}
+  @Override
+  protected void registertrainee(Order trainee){
+    academy.training.add(trainee);
+    var c=((TrainingOrder)trainee).trained;
+    Squad.active.equipment.remove(c);
+    Squad.active.remove(c);
+  }
 
-	@Override
-	protected ArrayList<Upgrade> getupgrades(){
-		return new ArrayList<>(academy.upgrades);
-	}
+  @Override
+  protected void onexit(ArrayList<TrainingOrder> trainees){
+    if(Squad.active.members.size()==trainees.size()){
+      academy.stash+=Squad.active.gold;
+      if(academy.parking==null
+          ||Squad.active.transport.price>academy.parking.price)
+        academy.parking=Squad.active.transport;
+    }
+  }
 
-	@Override
-	public String printinfo(){
-		String training=academy.training.queue.isEmpty()?""
-				:"Currently training: "+academy.training+".";
-		return "Your squad currently has $"+Javelin.format(Squad.active.gold)+". "
-				+training;
-	}
+  @Override
+  protected ArrayList<Upgrade> getupgrades(){
+    return new ArrayList<>(academy.upgrades);
+  }
 
-	@Override
-	public TrainingOrder createorder(Combatant c,Combatant original,float xpcost){
-		return new TrainingOrder(c,Squad.active.equipment.get(c),c.toString(),
-				xpcost,original);
-	}
+  @Override
+  public String printinfo(){
+    var g="Your squad currently has $%s."
+        .formatted(Javelin.format(Squad.active.gold));
+    var training="";
+    if(!academy.training.queue.isEmpty())
+      training="Currently training: %s.".formatted(academy.training);
+    return "%s %s".formatted(g,training);
+  }
 
-	@Override
-	public ArrayList<Combatant> gettrainees(){
-		return Squad.active.members;
-	}
+  @Override
+  public TrainingOrder createorder(Combatant c,Combatant original,float xpcost){
+    return new TrainingOrder(c,Squad.active.equipment.get(c),c.toString(),
+        xpcost,original);
+  }
 
-	@Override
-	public int getgold(){
-		return Squad.active.gold;
-	}
+  @Override
+  public ArrayList<Combatant> gettrainees(){
+    return Squad.active.members;
+  }
 
-	@Override
-	public void pay(int goldpieces){
-		Squad.active.gold-=goldpieces;
-	}
+  @Override
+  public int getgold(){
+    return Squad.active.gold;
+  }
+
+  @Override
+  public void pay(int goldpieces){
+    Squad.active.gold-=goldpieces;
+  }
+
+  @Override
+  public List<Option> getoptions(){
+    var options=super.getoptions();
+    if(!academy.training.isempty()){
+      WAIT.key='w';
+      if(options.stream().filter(o->o.key==WAIT.key).findAny().isPresent())
+        WAIT.key='W';
+      options.add(WAIT);
+    }
+    return options;
+  }
+
+  @Override
+  public boolean select(Option op){
+    if(op==WAIT){
+      var done=academy.training.last().completionat;
+      var s=Squad.active;
+      s.delay(done-s.gettime());
+      stayopen=false;
+      return true;
+    }
+    return super.select(op);
+  }
 }

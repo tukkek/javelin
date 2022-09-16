@@ -25,7 +25,6 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.PointOfInterest;
 import javelin.model.world.location.ResourceSite;
-import javelin.model.world.location.WarlocksTower;
 import javelin.model.world.location.academy.Academy;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonEntrance;
@@ -59,6 +58,7 @@ import javelin.model.world.location.unique.AdventurersGuild;
 import javelin.model.world.location.unique.Arena;
 import javelin.model.world.location.unique.DeepDungeon;
 import javelin.model.world.location.unique.PillarOfSkulls;
+import javelin.model.world.location.unique.WarlocksTower;
 import javelin.old.RPG;
 
 /**

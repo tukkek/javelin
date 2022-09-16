@@ -20,13 +20,13 @@ import javelin.controller.table.dungeon.feature.CommonFeatureTable;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.world.location.WarlocksTower;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.feature.BranchPortal;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
 import javelin.model.world.location.dungeon.feature.common.Campfire;
+import javelin.model.world.location.unique.WarlocksTower;
 
 /**
  * Branches are as much content (both pre- and

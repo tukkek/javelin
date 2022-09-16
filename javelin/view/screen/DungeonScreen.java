@@ -11,7 +11,7 @@ import javelin.controller.walker.Walker;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.DungeonFloor;
-import javelin.model.world.location.dungeon.feature.door.Door;
+import javelin.model.world.location.dungeon.feature.common.Brazier;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.dungeon.DungeonPanel;
 
@@ -61,27 +61,10 @@ public class DungeonScreen extends WorldScreen{
     floor.squadlocation.y=y;
   }
 
-  //TODO can use Brazier's walked (check for door there too)
-  boolean checkclear(Point hero,Point target){
-    var p=new Point(hero);
-    while(!p.equals(target)){
-      if(p.x!=target.x) p.x+=p.x>target.x?-1:+1;
-      if(p.y!=target.y) p.y+=p.y>target.y?-1:+1;
-      if(p.equals(target)) break;
-      if(floor.map[p.x][p.y]==FloorTile.WALL
-          ||floor.features.get(p.x,p.y) instanceof Door)
-        return false;
-    }
-    return true;
-  }
-
   @Override
   public void view(int xp,int yp){
-    var v=floor.dungeon.vision;
-    var s=floor.squadlocation;
-    for(var x=s.x-v;x<=s.x+v;x++) for(var y=s.y-v;y<=s.y+v;y++)
-      if(validatepoint(x,y)&&checkclear(s,new Point(x,y)))
-        floor.setvisible(x,y);
+    for(var p:Brazier.reveal(floor.squadlocation,floor.dungeon.vision))
+      floor.setvisible(p.x,p.y);
   }
 
   @Override

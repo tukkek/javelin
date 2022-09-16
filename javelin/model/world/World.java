@@ -213,12 +213,9 @@ public class World implements Serializable{
    * TODO make sure this is only being used where necessary, to avoid the
    * overhead
    *
-   * @return If {@link #building}, the thread-relevant world instance, otherwise
-   *   {@link #seed}.
+   * @return Active {@link WorldGenerator} instance or {@link #seed}.
    */
   public static World getseed(){
-    var t=Thread.currentThread();
-    if(t instanceof WorldGenerator) return ((WorldGenerator)t).world;
-    return seed;
+    return Thread.currentThread() instanceof WorldGenerator g?g.world:seed;
   }
 }

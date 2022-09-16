@@ -153,11 +153,11 @@ public class Town extends Location{
    * @param list Selects a valid location from there.
    * @throws RestartWorldGeneration If no valid location is found.
    */
-  public Town(HashSet<Point> list,Realm r){
+  public Town(Set<Point> list,Realm r){
     this(getvalidlocation(list),r);
   }
 
-  static Point getvalidlocation(HashSet<Point> region){
+  static Point getvalidlocation(Set<Point> region){
     var list=new ArrayList<>(region);
     Collections.shuffle(list);
     var maxradius=Rank.CITY.getradius();

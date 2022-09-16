@@ -20,7 +20,7 @@ import javelin.view.screen.town.SelectScreen;
 /** Generates a {@link Dungeon} map. */
 public class DungeonGenerator{
   static final boolean DEBUGROOMS=true;
-  static final int MAXATTEMPTS=100000;
+  static final int MAXATTEMPTS=10000;
   static final int DEBUGSIZE=1;
 
   /** Relative map. */

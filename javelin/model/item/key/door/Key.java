@@ -1,40 +1,41 @@
 package javelin.model.item.key.door;
 
+import java.util.List;
+
 import javelin.model.item.Item;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.DungeonZoner;
 import javelin.model.world.location.dungeon.feature.door.Door;
-import javelin.model.world.location.dungeon.feature.door.IronDoor;
 
 /**
- * Keys open {@link DungeonFloor} {@link Door}s. Like in Resident Evil games, a
- * single key can open all the doors of the given type - reducing item
- * management and making a bigger deal out of finding an individual key.
+ * Keys open {@link Door}s. Like in Resident Evil games, a single key can open
+ * all the doors of the given type - reducing item management and making finding
+ * it more impactful.
  *
- * The particular Key subtype and {@link #dungeon} define what doors it can
- * open. For example, an {@link IronKey} found at level 1 of the
- * {@link Megadungeon} will open any {@link IronDoor}s in that particular level.
+ * Keys are limited to a single {@link DungeonFloor}.
  *
- * @see MasterKey
  * @see DungeonZoner
  * @author alex
  */
 public class Key extends Item{
-	/** Particular dungeon floor this key is tied to. */
-	public DungeonFloor dungeon;
+  DungeonFloor floor;
 
-	/** Constructor. */
-	public Key(String name,DungeonFloor d){
-		super(name,0,false);
-		usedinbattle=false;
-		usedoutofbattle=false;
-		dungeon=d;
-	}
+  /** Constructor. */
+  public Key(String type,DungeonFloor d){
+    super(type+" key",0,false);
+    usedinbattle=false;
+    usedoutofbattle=false;
+    floor=d;
+  }
 
-	@Override
-	public String toString(){
-		var s=super.toString();
-		if(dungeon!=null) s+=", "+dungeon;
-		return s;
-	}
+  @Override
+  public String toString(){
+    var d=floor.dungeon.toString();
+    return String.join(", ",List.of(name,d,"floor "+floor.getdepth()));
+  }
+
+  /** @return <code>true</code> if same {@link #floor}. */
+  public boolean open(DungeonFloor f){
+    return f==floor;
+  }
 }

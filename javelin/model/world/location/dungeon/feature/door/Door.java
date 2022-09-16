@@ -1,10 +1,11 @@
 package javelin.model.world.location.dungeon.feature.door;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javelin.Debug;
 import javelin.Javelin;
@@ -12,13 +13,13 @@ import javelin.controller.Point;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.generator.dungeon.template.FloorTile;
+import javelin.controller.table.dungeon.door.DoorType;
 import javelin.controller.table.dungeon.door.HiddenDoor;
 import javelin.controller.table.dungeon.door.LockedDoor;
 import javelin.controller.table.dungeon.door.StuckDoor;
 import javelin.controller.table.dungeon.door.TrappedDoor;
 import javelin.controller.table.dungeon.feature.FeatureModifierTable;
 import javelin.model.item.key.door.Key;
-import javelin.model.item.key.door.MasterKey;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -34,9 +35,8 @@ import javelin.model.world.location.dungeon.feature.door.trap.HoldPortal;
 import javelin.old.RPG;
 
 /**
- * A {@link DungeonFloor} door, which may be {@link #locked}, {@link #stuck},
- * contain a {@link #trap} or not. If none of these are true, it may as well be
- * discarded.
+ * A {@link Dungeon} door, which may be {@link #locked}, {@link #stuck}, contain
+ * a {@link #trap} or not. If none of these are true, it may be discarded.
  *
  * @see Key
  * @author alex
@@ -44,8 +44,6 @@ import javelin.old.RPG;
 public class Door extends Feature{
   static final List<DoorTrap> TRAPS=Arrays.asList(Alarm.INSTANCE,
       ArcaneLock.INSTANCE,HoldPortal.INSTANCE);
-  static final String SPENDMASTERKEY="Do you want to spend a master key to open this door?\n"
-      +"Press ENTER to confirm or any other key to cancel...";
   static final String FORCE="""
       The door is stuck (difficulty: %s)... Do you want to force it?
 
@@ -54,26 +52,19 @@ public class Door extends Feature{
   static final String BEYONDSTUCK="This door is stuck beyond hope of being budged by %s...";
   static final String FORCED="%s breaks the door down!";
   static final String FORCEFAIL="%s could not break the door...";
+  static final String TOOCOMPLEX="The lock is too complex for %s to pick...";
+  /** TODO switch instead of map */
   static final Map<Character,Integer> ATTEMPTS=new HashMap<>();
-  static final List<Class<? extends Door>> TYPES=new ArrayList<>();
 
-  static void registerdoortype(Class<? extends Door> d,int chances){
-    for(var i=0;i<chances;i++) TYPES.add(d);
-  }
+  record Outcome(Combatant opener,boolean open,String messsage){}
 
   static{
     ATTEMPTS.put('\n',1);
     ATTEMPTS.put('b',Integer.MAX_VALUE);
-    registerdoortype(WoodenDoor.class,3);
-    registerdoortype(GoodWoodenDoor.class,2);
-    registerdoortype(ExcellentWoodenDoor.class,2);
-    registerdoortype(StoneDoor.class,1);
-    registerdoortype(IronDoor.class,1);
   }
 
   /** DC of {@link DisableDevice} to unlock. */
   public int unlockdc;
-
   /** Used if {@link #hidden}. TODO */
   public int searchdc=RPG.r(20,30);
   /** DC of {@link Monster#strength} to break down. */
@@ -107,17 +98,30 @@ public class Door extends Feature{
     draw=!hidden;
   }
 
-  boolean force(Combatant forcer,int strength){
-    if(breakdc>20+strength){
+  Combatant getunlocker(){
+    var expert=Squad.active.getbest(Skill.DISABLEDEVICE);
+    return expert.taketen(Skill.DISABLEDEVICE)>=unlockdc?expert:null;
+  }
+
+  Combatant getforcer(){
+    return Squad.active.members.stream()
+        .collect(Collectors.maxBy(Comparator.comparing(c->c.source.strength)))
+        .orElseThrow();
+  }
+
+  Outcome force(){
+    var forcer=getforcer();
+    var s=Monster.getbonus(forcer.source.strength);
+    if(20+s<breakdc){
       Javelin.message(BEYONDSTUCK.formatted(forcer),true);
-      return false;
+      return new Outcome(forcer,false,null);
     }
-    var prompt=FORCE.formatted(Javelin.describe(strength,breakdc));
+    var prompt=FORCE.formatted(Javelin.describe(s,breakdc));
     var attempts=ATTEMPTS.getOrDefault(Javelin.prompt(prompt),0);
-    if(attempts==0) return false;
+    if(attempts==0) return new Outcome(forcer,false,null);
     Fight f=null;
     for(var i=0;i<attempts&&stuck&&f==null;i++){
-      if(10+strength>=breakdc||RPG.r(1,20)+strength>=breakdc) stuck=false;
+      if(10+s>=breakdc||RPG.r(1,20)+s>=breakdc) stuck=false;
       if(RPG.chancein(10)) f=Dungeon.active.dungeon.fight();
     }
     Javelin.message((stuck?FORCEFAIL:FORCED).formatted(forcer),false);
@@ -125,66 +129,48 @@ public class Door extends Feature{
       Javelin.message("The noise draws someone's attention!",true);
       throw new StartBattle(f);
     }
-    return !stuck;
+    return new Outcome(forcer,!stuck,null);
+  }
+
+  Outcome open(){
+    var u=getunlocker();
+    if(u!=null) return new Outcome(u,true,u+" unlocks the door!");
+    var f=getforcer();
+    if(10+Monster.getbonus(f.source.strength)>breakdc)
+      return new Outcome(f,true,f+" forces the lock!");
+    var keys=Squad.active.equipment.getall(key);
+    var key=keys.stream().filter(k->k.open(Dungeon.active)).findAny();
+    if(key.isPresent()) return new Outcome(null,true,null);
+    return new Outcome(u,false,TOOCOMPLEX.formatted(u));
   }
 
   @Override
   public boolean activate(){
     if(Debug.bypassdoors) return true;
     if(hidden&&!draw) return false;
-    var unlocker=getunlocker();
-    var forcer=getforcer();
-    var strength=Monster.getbonus(forcer.source.strength);
-    if(locked)
-      if(unlocker!=null) Javelin.message(unlocker+" unlocks the door!",false);
-      else if(10+strength>breakdc)
-        Javelin.message(forcer+" forces the lock!",false);
-      else if(usekey()){
-        //fall through
-      }else{
-        Javelin.message("The lock is too complex to pick...",false);
-        return false;
-      }
+    Combatant opening=null;
+    if(locked){
+      var outcome=open();
+      if(outcome.messsage!=null) Javelin.message(outcome.messsage,false);
+      if(!outcome.open) return false;
+      opening=outcome.opener;
+    }
     locked=false;
-    if(stuck&&!force(forcer,strength)) return false;
+    if(stuck){
+      var outcome=force();
+      if(!outcome.open) return false;
+      opening=outcome.opener;
+    }
     enter=true;
     remove();
-    spring(unlocker==null?forcer:unlocker);
+    if(trap!=null) spring(opening);
     return true;
   }
 
-  boolean usekey(){
-    Key key=null;
-    for(var k:Squad.active.equipment.getall(this.key)) if(k.f==Dungeon.active){
-      key=k;
-      break;
-    }
-    if(key!=null) return true;
-    key=Squad.active.equipment.get(MasterKey.class);
-    if(key!=null&&Javelin.prompt(SPENDMASTERKEY)=='\n'){
-      key.expend();
-      return true;
-    }
-    return false;
-  }
-
   void spring(Combatant opening){
-    if(trap==null) return;
-    if(opening==null) for(Combatant c:Squad.active.members)
-      if(opening==null||c.hp>opening.hp) opening=c;
+    if(opening==null) opening=Squad.active.members.stream()
+        .collect(Collectors.maxBy(Comparator.comparing(c->c.hp))).orElseThrow();
     trap.activate(opening);
-  }
-
-  Combatant getunlocker(){
-    var expert=Squad.active.getbest(Skill.DISABLEDEVICE);
-    return expert.taketen(Skill.DISABLEDEVICE)>=unlockdc?expert:null;
-  }
-
-  Combatant getforcer(){
-    var strongest=Squad.active.members.get(0);
-    for(Combatant c:Squad.active.members)
-      if(c.source.strength>strongest.source.strength) strongest=c;
-    return strongest;
   }
 
   /**
@@ -192,9 +178,10 @@ public class Door extends Feature{
    * @param p Position of the door.
    * @return A randomly-chosen type of door.
    */
+  @SuppressWarnings("unchecked")
   public static Door generate(DungeonFloor f,Point p){
     try{
-      var type=RPG.pick(TYPES);
+      var type=(Class<? extends Door>)f.gettable(DoorType.class).roll();
       var d=type.getDeclaredConstructor(DungeonFloor.class).newInstance(f);
       if(!d.stuck&&!d.locked&&!(d.trap instanceof Alarm)) return null;
       d.x=p.x;
@@ -231,6 +218,6 @@ public class Door extends Feature{
   @Override
   public void remove(){
     super.remove();
-    Dungeon.active.map[x][y]=FloorTile.FLOOR; //make sure path is clear
+    Dungeon.active.map[x][y]=FloorTile.FLOOR;
   }
 }

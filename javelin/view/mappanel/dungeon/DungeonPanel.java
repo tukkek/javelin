@@ -40,12 +40,6 @@ public class DungeonPanel extends MapPanel{
 
   @Override
   public void refresh(){
-    repaint();
-  }
-
-  @Override
-  public void repaint(){
-    super.repaint();
     var p=scroll.getScrollPosition();
     var s=scroll.getViewportSize();
     for(Tile[] tiles:tiles) for(Tile tile:tiles){

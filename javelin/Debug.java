@@ -97,7 +97,7 @@ public class Debug{
       }
     }
 
-    static void healopponenets(){
+    static void healopponents(){
       if(Fight.state==null) return;
       for(Combatant c:Fight.state.redteam) c.hp=c.maxhp;
     }

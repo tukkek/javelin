@@ -47,7 +47,7 @@ public class RPG{
   }
 
   public static boolean chancein(int x){
-    return RPG.r(1,x)==1;
+    return x>0&&RPG.r(1,x)==1;
   }
 
   /**
@@ -167,5 +167,11 @@ public class RPG{
   /** @return Highest of two calls to {@link #r(int, int)}. */
   public static int high(int from,int to){
     return Math.max(r(from,to),r(from,to));
+  }
+
+  public static <K> List<K> shuffle(List<K> list,boolean clone){
+    list=new ArrayList<>(list);
+    shuffle(list);
+    return list;
   }
 }

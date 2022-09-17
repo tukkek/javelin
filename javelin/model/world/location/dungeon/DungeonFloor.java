@@ -145,7 +145,7 @@ public class DungeonFloor implements Serializable{
    *
    * @see #stepsperencounter
    */
-  public void generate(List<EncounterIndex> index){
+  public void generate(EncounterIndex index){
     if(map!=null) return;
     var p=getparent();
     if(p==null) p=dungeon.exit;
@@ -184,7 +184,7 @@ public class DungeonFloor implements Serializable{
   }
 
   /** * Defines {@link #encounters}. */
-  protected void generateencounters(List<EncounterIndex> index){
+  protected void generateencounters(EncounterIndex index){
     var p=getparent();
     if(p!=null){
       encounters=new ArrayList<>(p.encounters);
@@ -196,7 +196,7 @@ public class DungeonFloor implements Serializable{
     var target=DungeonTier.TIERS.indexOf(gettier())+RPG.randomize(6,4,7);
     for(var i=0;encounters.size()<target;i++){
       var el=level+Difficulty.get();
-      var e=EncounterGenerator.generatebyindex(el,index);
+      var e=EncounterGenerator.generatebyindex(el,List.of(index));
       if(e!=null) encounters.add(e);
       if(i>ENCOUNTERATTEMPTS){
         if(!Javelin.DEBUG) return;

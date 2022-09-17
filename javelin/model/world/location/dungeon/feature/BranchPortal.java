@@ -28,18 +28,28 @@ public class BranchPortal extends Feature{
   public Dungeon destination;
 
   /** Constructor. */
-  public BranchPortal(DungeonFloor f){
+  public BranchPortal(DungeonFloor f,Dungeon d){
     super("portal");
     remove=false;
+    destination=d;
+    destination.exit=f;
+  }
+
+  /** Reflecttive constructor. */
+  public BranchPortal(DungeonFloor f){
+    this(f,connect(f));
+  }
+
+  static Dungeon connect(DungeonFloor f){
     var maxfloors=f.dungeon.floors.size()-1;
     if(maxfloors<1) maxfloors=1;
     var floors=1;
     while(floors<maxfloors&&RPG.chancein(NEWFLOORCHANCE)) floors+=1;
     var level=f.level;
     while(RPG.chancein(2)) level+=1;
-    destination=new Dungeon("Branch",level,floors);
-    destination.branches.addAll(f.gettable(BranchTable.class).rollaffixes());
-    destination.exit=f;
+    var d=new Dungeon("Branch",level,floors);
+    d.branches.addAll(f.gettable(BranchTable.class).rollaffixes());
+    return d;
   }
 
   @Override

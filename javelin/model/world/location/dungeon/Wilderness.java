@@ -160,12 +160,12 @@ public class Wilderness extends Dungeon{
     }
 
     @Override
-    protected void generateencounters(List<EncounterIndex> index){
+    protected void generateencounters(EncounterIndex index){
       var target=RPG.randomize(6,1,Integer.MAX_VALUE);
       var easy=Difficulty.EASY;
       while(encounters.size()<target){
         var el=level+Difficulty.get()+easy;
-        var e=EncounterGenerator.generatebyindex(el,index);
+        var e=EncounterGenerator.generatebyindex(el,List.of(index));
         if(e==null) easy+=1;
         else encounters.add(e);
       }

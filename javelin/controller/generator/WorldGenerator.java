@@ -219,13 +219,15 @@ public class WorldGenerator extends Thread{
     var ndungeons=dungeons.size();
     var tasks=new ArrayList<Future<?>>(ndungeons);
     for(var d:dungeons) tasks.add(pool.submit(()->d.generate()));
-    for(var i=0;i<ndungeons;i++) try{
-      tasks.get(i).get();
-      var progress=100.0*(i+1)/ndungeons;
-      s.print(String.format(PROGRESS,label,Math.round(progress)));
+    try{
+      for(var i=0;i<ndungeons;i++){
+        tasks.get(i).get();
+        var progress=100.0*(i+1)/ndungeons;
+        s.print(String.format(PROGRESS,label,Math.round(progress)));
+      }
     }catch(Exception e){
       pool.shutdownNow();
-      throw new RuntimeException(e);
+      throw e instanceof RuntimeException re?re:new RuntimeException(e);
     }
     s.fix();
     pool.shutdown();
@@ -260,6 +262,7 @@ public class WorldGenerator extends Thread{
       working=false;
       return;
     }catch(Exception e){
+      if(Javelin.DEBUG&&!(e instanceof RestartWorldGeneration)) throw e;
       World.seed=null;
       s.reset();
       continue;

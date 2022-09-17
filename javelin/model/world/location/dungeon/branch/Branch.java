@@ -13,7 +13,6 @@ import javelin.controller.content.fight.mutator.Mutator;
 import javelin.controller.content.template.Template;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.db.EncounterIndex;
-import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.generator.dungeon.template.FloorTile;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.table.dungeon.feature.CommonFeatureTable;
@@ -116,14 +115,13 @@ public class Branch implements Serializable{
   }
 
   /**
-   * A utility function to transform {@link #terrains} into {@link Encounter}s
-   * but which also allows custom Encounters and {@link Monster}s to be added or
-   * replaced instead.
+   * Use {@link #terrains} as a fallback if the index is empty.
+   *
+   * @return {@link Encounter}s.
+   *
+   * @see Terrain#getencounters()
    */
   public EncounterIndex getencounters(){
-    var i=new EncounterIndex();
-    for(var t:terrains)
-      i.merge(Organization.ENCOUNTERSBYTERRAIN.get(t.toString()));
-    return i;
+    return new EncounterIndex();
   }
 }

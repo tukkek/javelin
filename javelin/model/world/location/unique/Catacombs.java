@@ -17,14 +17,15 @@ import javelin.controller.db.EncounterIndex;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.NpcGenerator;
 import javelin.controller.generator.encounter.EncounterGenerator;
+import javelin.controller.table.dungeon.BranchTable;
 import javelin.controller.table.dungeon.feature.DecorationTable;
 import javelin.model.item.Item;
+import javelin.model.item.consumable.Ruby;
 import javelin.model.item.key.door.IronKey;
 import javelin.model.item.key.door.StoneKey;
 import javelin.model.item.key.door.WoodenKey;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.Monster.MonsterType;
 import javelin.model.world.Period;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -34,11 +35,13 @@ import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.DungeonZoner;
 import javelin.model.world.location.dungeon.Wilderness;
 import javelin.model.world.location.dungeon.branch.Branch;
+import javelin.model.world.location.dungeon.branch.CatacombBranch;
+import javelin.model.world.location.dungeon.feature.BranchPortal;
 import javelin.model.world.location.dungeon.feature.Decoration;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.StairsUp;
+import javelin.model.world.location.dungeon.feature.chest.SpecialChest;
 import javelin.model.world.location.dungeon.feature.common.Campfire;
-import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.model.world.location.dungeon.feature.door.ExcellentWoodenDoor;
 import javelin.model.world.location.dungeon.feature.door.IronDoor;
 import javelin.model.world.location.dungeon.feature.door.StoneDoor;
@@ -64,14 +67,45 @@ public class Catacombs extends Wilderness{
       new Point(6,9),new Point(6,6));
   static final Image WALL=Images.get(List.of("dungeon","wallcatacombs"));
 
+  class Catacomb extends Dungeon{
+    Item goal;
+
+    Catacomb(Tier t,Item i){
+      super("Catacomb",t.minlevel,5);
+      goal=i;
+      branches.add(CatacombBranch.INSTANCE);
+      branchchance=0;
+    }
+
+    @Override
+    protected synchronized String baptize(String base){
+      return base;
+    }
+
+    @Override
+    protected Feature generatespecialchest(DungeonFloor f){
+      if(f==floors.getLast()) return new SpecialChest(f,goal);
+      return super.generatespecialchest(f);
+    }
+
+    Catacomb place(Point p){
+      var f=Catacombs.this.floors.get(0);
+      new BranchPortal(f,this).place(f,p);
+      return this;
+    }
+
+    void set(Branch b){
+      branches.add(b);
+      name+=" "+b.suffix.toLowerCase();
+    }
+  }
+
   class Entrance extends DungeonEntrance{
     Entrance(Dungeon d){
       super(d);
       var el=1+Difficulty.DIFFICULT;
       try{
-        var undead=Monster.ALL.stream()
-            .filter(m->MonsterType.UNDEAD.equals(m.type)).toList();
-        garrison=EncounterGenerator.generate(el,new EncounterIndex(undead));
+        garrison=EncounterGenerator.generate(el,CatacombBranch.MONSTERS);
       }catch(GaveUp e){
         garrison=EncounterGenerator.generate(el,Terrain.UNDERGROUND);
       }
@@ -86,14 +120,14 @@ public class Catacombs extends Wilderness{
     protected Fight fight(){
       var s=new Siege(this);
       s.period=Period.NIGHT;
-      s.map=new LocationMap("catacombs"){
+      s.map=new LocationMap("Catacombs"){
         @Override
         public void generate(){
           super.generate();
           for(var d:DOORS) map[d.x][d.y].blocked=true;
           var plants=floors.get(0).features.getall(Decoration.class);
-          obstacle=Images
-              .get(List.of("dungeon","decoration",plants.get(0).avatarfile));
+          var f=plants.get(0).avatarfile;
+          obstacle=Images.get(List.of("dungeon","decoration",f));
           for(var d:plants) map[d.x][d.y].obstructed=true;
         }
       };
@@ -164,40 +198,44 @@ public class Catacombs extends Wilderness{
       return super.map(m);
     }
 
-    @Override
-    protected void populate(){
-      var openings=new LinkedList<>(DOORS.subList(1,DOORS.size()));
+    void close(){
       var doors=List.of(new ExcellentWoodenDoor(this),new StoneDoor(this),
           new IronDoor(this));
-      for(var door:doors) door.place(this,openings.pop());
-      for(var d:features.getall(Door.class)){
+      var openings=new LinkedList<>(DOORS.subList(1,4));
+      for(var d:doors){
         d.locked=true;
         d.stuck=false;
         d.draw=true;
+        d.place(this,openings.pop());
       }
-      new WoodenKey(this);
-      new StoneKey(this);
-      new IronKey(this);
-      //TODO Branches
+    }
+
+    @Override
+    protected void populate(){
+      close();
+      var portals=List.of(
+          new Catacomb(Tier.LOW,new WoodenKey(this)).place(new Point(28,4)),
+          new Catacomb(Tier.MID,new StoneKey(this)).place(new Point(28,11)),
+          new Catacomb(Tier.HIGH,new IronKey(this)).place(new Point(6,11)),
+          new Catacomb(Tier.EPIC,new Ruby()).place(new Point(6,4)));
+      var branches=RPG.shuffle(BranchTable.BRANCHES,true);
+      branches.remove(CatacombBranch.INSTANCE);
+      for(var i=0;i<4;i++) portals.get(i).set(branches.get(i));
       var camp=new Point(17,8);
       new Camp(this).place(this,camp);
       new Guide(this).place(this,RPG.pick(camp.getadjacent(2)));
-      //      var stones=RPG.high(1,8);
       for(var s:STONES)
         if(RPG.chancein(2)) new LearningStone(this).place(this,s);
-      //        else new Decoration(DecorationTable.ROCK.roll(),this).place(this,s);
       var s=features.get(StairsUp.class).getlocation();
       var free=new LinkedList<>(new DungeonZoner(this,s).zones.get(0).area);
       var features=this.features.getall();
       free.removeAll(features.stream().map(Feature::getlocation).toList());
-      //      RPG.shuffle(free);
-      //      for(var i=0;i<stones;i++) new LearningStone(this).place(this,free.pop());
       var p=DecorationTable.PLANT.roll();
       for(var a:free) if(RPG.chancein(4)) new Decoration(p,this).place(this,a);
     }
 
     @Override
-    protected void generateencounters(List<EncounterIndex> index){
+    protected void generateencounters(EncounterIndex index){
       encounters.add(null);
     }
   }

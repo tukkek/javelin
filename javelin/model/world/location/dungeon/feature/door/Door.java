@@ -90,6 +90,7 @@ public class Door extends Feature{
     stuck=f.gettable(StuckDoor.class).rollboolean();
     locked=f.gettable(LockedDoor.class).rollboolean();
     hidden=f.gettable(HiddenDoor.class).rollboolean();
+    hidden=false;//TODO disable until map or lore can reveal all in level
     breakdc=locked?breakdclocked:breakdcstuck;
     breakdc=Math.max(2,breakdc+RPG.randomize(5));
     unlockdc=RPG.r(20,30)+f.gettable(FeatureModifierTable.class).roll();

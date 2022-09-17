@@ -164,17 +164,22 @@ public class Dungeon implements Serializable{
     }
   }
 
-  List<EncounterIndex> indexencounters(){
+  EncounterIndex indexencounters(){
     var index=new EncounterIndex();
-    for(var t:terrains)
-      index.merge(Organization.ENCOUNTERSBYTERRAIN.get(t.toString()));
     for(var b:branches) index.merge(b.getencounters());
+    if(index.isEmpty()){
+      var terrains=new HashSet<>(this.terrains);
+      for(var b:branches) terrains.addAll(b.terrains);
+      index=RPG.pick(terrains).getencounters();
+    }
     var templates=branches.stream().flatMap(b->b.templates.stream())
         .collect(Collectors.toList());
-    if(templates.isEmpty()) return List.of(index);
+    if(templates.isEmpty()) return index;
     index=index.filter(level);
-    for(var encounters:index.values()) for(var e:new ArrayList<>(encounters))
-      if(!validate(e.group)) encounters.remove(e);
+    for(var encounters:index.values()){
+      var invalid=encounters.stream().filter(e->!validate(e.group)).toList();
+      encounters.removeAll(invalid);
+    }
     index=index.limit(9);
     var modified=new EncounterIndex();
     var total=0;
@@ -186,11 +191,11 @@ public class Dungeon implements Serializable{
           total+=1;
         }
       }
-      if(total>=TEMPLATEENCOUNTERS) return List.of(modified);
+      if(total>=TEMPLATEENCOUNTERS) return modified;
     }
     //TODO if TEMPLATEENCOUNTERS is done away with, remove this:
     index.merge(modified);
-    return List.of(index);
+    return index;
   }
 
   void generategoals(){

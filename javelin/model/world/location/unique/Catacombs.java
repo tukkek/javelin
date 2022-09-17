@@ -1,16 +1,22 @@
 package javelin.model.world.location.unique;
 
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import javelin.controller.Point;
+import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.challenge.Tier;
+import javelin.controller.content.fight.Fight;
+import javelin.controller.content.fight.Siege;
 import javelin.controller.content.map.location.LocationMap;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.db.EncounterIndex;
+import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.NpcGenerator;
+import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.table.dungeon.feature.DecorationTable;
 import javelin.model.item.Item;
 import javelin.model.item.key.door.IronKey;
@@ -18,6 +24,9 @@ import javelin.model.item.key.door.StoneKey;
 import javelin.model.item.key.door.WoodenKey;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.Monster.MonsterType;
+import javelin.model.world.Period;
+import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonEntrance;
 import javelin.model.world.location.dungeon.DungeonFloor;
@@ -51,10 +60,50 @@ public class Catacombs extends Wilderness{
       new Point(30,11),new Point(30,10),new Point(4,10),new Point(4,11),
       new Point(8,11),new Point(8,10),new Point(4,5),new Point(4,4),
       new Point(8,4),new Point(8,5));
+  static final List<Point> DOORS=List.of(new Point(28,6),new Point(28,9),
+      new Point(6,9),new Point(6,6));
+  static final Image WALL=Images.get(List.of("dungeon","wallcatacombs"));
 
   class Entrance extends DungeonEntrance{
     Entrance(Dungeon d){
       super(d);
+      var el=1+Difficulty.DIFFICULT;
+      try{
+        var undead=Monster.ALL.stream()
+            .filter(m->MonsterType.UNDEAD.equals(m.type)).toList();
+        garrison=EncounterGenerator.generate(el,new EncounterIndex(undead));
+      }catch(GaveUp e){
+        garrison=EncounterGenerator.generate(el,Terrain.UNDERGROUND);
+      }
+    }
+
+    @Override
+    public boolean interact(){
+      return garrison.isEmpty()?super.interact():Location.interact(this);
+    }
+
+    @Override
+    protected Fight fight(){
+      var s=new Siege(this);
+      s.period=Period.NIGHT;
+      s.map=new LocationMap("catacombs"){
+        @Override
+        public void generate(){
+          super.generate();
+          for(var d:DOORS) map[d.x][d.y].blocked=true;
+          var plants=floors.get(0).features.getall(Decoration.class);
+          obstacle=Images
+              .get(List.of("dungeon","decoration",plants.get(0).avatarfile));
+          for(var d:plants) map[d.x][d.y].obstructed=true;
+        }
+      };
+      s.map.wall=WALL;
+      return s;
+    }
+
+    @Override
+    public Integer getel(){
+      return garrison.getel();
     }
 
     @Override
@@ -111,15 +160,16 @@ public class Catacombs extends Wilderness{
     @Override
     protected char[][] map(){
       var m=new LocationMap("Catacombs");
-      m.wall=Images.get(List.of("dungeon","wallcatacombs"));
+      m.wall=WALL;
       return super.map(m);
     }
 
     @Override
     protected void populate(){
-      new ExcellentWoodenDoor(this).place(this,new Point(28,9));
-      new StoneDoor(this).place(this,new Point(6,9));
-      new IronDoor(this).place(this,new Point(6,6));
+      var openings=new LinkedList<>(DOORS.subList(1,DOORS.size()));
+      var doors=List.of(new ExcellentWoodenDoor(this),new StoneDoor(this),
+          new IronDoor(this));
+      for(var door:doors) door.place(this,openings.pop());
       for(var d:features.getall(Door.class)){
         d.locked=true;
         d.stuck=false;

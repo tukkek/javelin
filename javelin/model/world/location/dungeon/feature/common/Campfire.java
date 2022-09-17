@@ -17,25 +17,31 @@ import javelin.old.RPG;
  * @author alex
  */
 public class Campfire extends Feature{
-	static final String PROMPT="This room seems safe to rest in. Do you want to set up camp?\n"
-			+"Press ENTER to camp, any other key to cancel...";
+  static final String PROMPT="This room seems safe to rest in. Do you want to set up camp?\n"
+      +"Press ENTER to camp, any other key to cancel...";
 
-	/** Constructor. */
-	public Campfire(DungeonFloor f){
-		super("campfire");
-		remove=false;
-	}
+  /** Constructor. */
+  public Campfire(DungeonFloor f){
+    super("campfire");
+    remove=false;
+  }
 
-	@Override
-	public boolean activate(){
-		if(Javelin.prompt(PROMPT)!='\n') return false;
-		WorldMove.abort=true;
-		if(RPG.chancein(20)){
-			remove();
-			Javelin.message("This safe resting spot has been compromised!",true);
-			throw new StartBattle(Dungeon.active.dungeon.fight());
-		}
-		Lodge.rest(1,Lodge.RESTPERIOD,true,Lodge.LODGE);
-		return true;
-	}
+  /** @return If <code>true</code>, will {@link #remove()}. */
+  protected boolean compromise(){
+    return RPG.chancein(20);
+  }
+
+  @Override
+  public boolean activate(){
+    if(Javelin.prompt(PROMPT)!='\n') return false;
+    WorldMove.abort=true;
+    if(compromise()){
+      remove();
+      Javelin.message("This safe resting spot has been compromised!",true);
+      throw new StartBattle(Dungeon.active.dungeon.fight());
+    }
+    Lodge.rest(1,Lodge.RESTPERIOD,true,Lodge.LODGE);
+    return true;
+  }
+
 }

@@ -109,7 +109,7 @@ public class Wilderness extends Dungeon{
     }
   }
 
-  class WildernessFloor extends DungeonFloor{
+  public class WildernessFloor extends DungeonFloor{
     public WildernessFloor(Integer level,Dungeon d){
       super(level,d);
     }
@@ -134,7 +134,11 @@ public class Wilderness extends Dungeon{
 
     @Override
     protected char[][] map(){
-      var m=RPG.pick(dungeon.terrains).getmap();
+      return map(RPG.pick(dungeon.terrains).getmap());
+    }
+
+    /** Can be used from {@link #map()} to provide map. */
+    protected char[][] map(Map m){
       m.generate();
       var width=m.map.length;
       var height=m.map[0].length;
@@ -194,7 +198,8 @@ public class Wilderness extends Dungeon{
       for(var i=0;i<nfeatures;i++){
         var p=z.getpoint();
         if(p==null) break;
-        generatefeature().place(this,p);
+        var f=generatefeature();
+        if(f!=null) f.place(this,p);
       }
       generatepaths();
       var pool=RewardCalculator.getgold(level);

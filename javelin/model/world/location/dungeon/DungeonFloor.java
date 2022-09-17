@@ -113,7 +113,7 @@ public class DungeonFloor implements Serializable{
   int knownfeatures=0;
   Tables tables;
 
-  transient Integer nrooms=null;
+  transient Integer nrooms=1;
 
   /** Constructor for top floor. */
   public DungeonFloor(Integer level,Dungeon d){

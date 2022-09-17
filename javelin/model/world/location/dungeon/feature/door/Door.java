@@ -141,7 +141,7 @@ public class Door extends Feature{
     var keys=Squad.active.equipment.getall(key);
     var key=keys.stream().filter(k->k.open(Dungeon.active)).findAny();
     if(key.isPresent()) return new Outcome(null,true,null);
-    return new Outcome(u,false,TOOCOMPLEX.formatted(u));
+    return new Outcome(u,false,TOOCOMPLEX.formatted(f));
   }
 
   @Override

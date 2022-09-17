@@ -49,12 +49,17 @@ public class Trader extends Inhabitant{
   /** Reflection-friendly constructor. */
   public Trader(DungeonFloor f){
     super(f.level+Difficulty.DIFFICULT,f.level+Difficulty.DEADLY,"trader",f);
-    var nitems=1;
-    while(RPG.chancein(2)) nitems+=1;
     var pool=RewardCalculator.getgold(inhabitant.source.cr);
     if(pool<50) pool=50;
-    inventory=RewardCalculator.generateloot(pool,nitems,Item.NONPRECIOUS);
+    inventory=stock(pool);
     Collections.sort(inventory,ItemsByPrice.SINGLETON);
+  }
+
+  /** @return Items to be sold. */
+  protected List<Item> stock(int goldpool){
+    var nitems=1;
+    while(RPG.chancein(2)) nitems+=1;
+    return RewardCalculator.generateloot(goldpool,nitems,Item.NONPRECIOUS);
   }
 
   @Override

@@ -56,6 +56,7 @@ import javelin.model.world.location.town.labor.cultural.MagesGuild;
 import javelin.model.world.location.town.labor.expansive.Docks;
 import javelin.model.world.location.unique.AdventurersGuild;
 import javelin.model.world.location.unique.Arena;
+import javelin.model.world.location.unique.Catacombs;
 import javelin.model.world.location.unique.DeepDungeon;
 import javelin.model.world.location.unique.PillarOfSkulls;
 import javelin.model.world.location.unique.WarlocksTower;
@@ -262,8 +263,9 @@ public class LocationGenerator implements Serializable{
     spawnnear(t,new AdventurersGuild(),w,2,3,true).reveal();
     spawnnear(t,new Arena(),w,2,3,false).reveal();
     var r=District.RADIUSMAX/2;
-    spawnnear(t,new WarlocksTower(),w,r+1,(int)Math.round(r*1.5),false)
-        .reveal();
+    var farther=(int)Math.round(r*1.5);
+    spawnnear(t,new WarlocksTower(),w,r+1,farther,false).reveal();
+    spawnnear(t,new Catacombs().entrance,w,r+1,farther,false).reveal();
     placedeepdungeon(w,t);
     w.discovered.addAll(t.getdistrict().getarea());
   }

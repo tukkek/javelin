@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javelin.controller.Point;
-import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.challenge.Tier;
 import javelin.controller.content.fight.Fight;
@@ -14,9 +13,7 @@ import javelin.controller.content.fight.Siege;
 import javelin.controller.content.map.location.LocationMap;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.db.EncounterIndex;
-import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.NpcGenerator;
-import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.table.dungeon.BranchTable;
 import javelin.controller.table.dungeon.feature.DecorationTable;
 import javelin.model.item.Item;
@@ -49,6 +46,7 @@ import javelin.model.world.location.dungeon.feature.rare.LearningStone;
 import javelin.model.world.location.dungeon.feature.rare.inhabitant.Trader;
 import javelin.old.RPG;
 import javelin.view.Images;
+import javelin.view.screen.WorldScreen;
 
 /**
  * A horror-themed {@link Dungeon} minigame. It has a static hub (main floor)
@@ -103,12 +101,6 @@ public class Catacombs extends Wilderness{
   class Entrance extends DungeonEntrance{
     Entrance(Dungeon d){
       super(d);
-      var el=1+Difficulty.DIFFICULT;
-      try{
-        garrison=EncounterGenerator.generate(el,CatacombBranch.MONSTERS);
-      }catch(GaveUp e){
-        garrison=EncounterGenerator.generate(el,Terrain.UNDERGROUND);
-      }
     }
 
     @Override
@@ -143,6 +135,21 @@ public class Catacombs extends Wilderness{
     @Override
     public String getimagename(){
       return "catacombs";
+    }
+
+    @Override
+    public void turn(long time,WorldScreen world){
+      super.turn(time,world);
+      var features=floors.get(0).features;
+      Tier t;
+      if(features.get(IronDoor.class)==null) t=Tier.EPIC;
+      else if(features.get(StoneDoor.class)==null) t=Tier.HIGH;
+      else if(features.get(ExcellentWoodenDoor.class)==null) t=Tier.MID;
+      else t=Tier.LOW;
+      var encounters=features.getall(BranchPortal.class).stream()
+          .flatMap(p->p.destination.floors.stream())
+          .filter(f->f.level==t.minlevel).findAny().orElseThrow().encounters;
+      entrance.garrison=RPG.pick(encounters);
     }
   }
 

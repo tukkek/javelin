@@ -255,6 +255,7 @@ public class Shop extends Location{
     var items=Item.randomize(Item.BYTIER.get(tier));
     for(var i:filter(items)){
       if(selection.size()>=tier.maxlevel) break;
+      i.identified=true;
       selection.add(i);
     }
   }

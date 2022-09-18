@@ -260,6 +260,7 @@ public class WarlocksTower extends Location{
         index.merge(b.getencounters());
       }
       if(t==null) t=RPG.pick(Terrain.NONWATER);
+      if(index.isEmpty()) index=t.getencounters();
       map=t.getmap();
       //      var mobs=t.getmonsters();
       //      monsters.addAll(index.getall());

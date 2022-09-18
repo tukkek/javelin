@@ -285,6 +285,17 @@ public class BattleScreen extends Screen{
     mappanel.center(x,y,false);
   }
 
+  boolean first=true;
+
+  /** TODO black screen bug, hopefully this helps */
+  public void fix(){
+    //    if(!first) return;
+    //    first=false;
+    //    var s=BattleScreen.active.mappanel.getSize();
+    //    var p=BattleScreen.active.mappanel.getPreferredSize();
+    //    if(!s.equals(p)) BattleScreen.active.mappanel.setSize(p);
+  }
+
   /** Redraws screen. */
   protected void updatescreen(){
     var current=Fight.state.clone(this.current);

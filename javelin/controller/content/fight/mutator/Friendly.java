@@ -18,38 +18,38 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public class Friendly extends Mutator{
-	static final String REMOVED="%s is removed from the battlefield!";
+  static final String REMOVED="%s is removed from the battlefield!";
 
-	/** @see Combatant#getnumericstatus() */
-	public int removeat;
+  /** @see Combatant#getnumericstatus() */
+  public int removeat;
 
-	/** Constructor. */
-	public Friendly(int removeat){
-		this.removeat=removeat;
-	}
+  /** Constructor. */
+  public Friendly(int removeat){
+    this.removeat=removeat;
+  }
 
-	@Override
-	public void endturn(Fight f){
-		super.endturn(f);
-		var s=Fight.state;
-		for(var t:List.of(s.blueteam,s.redteam))
-			for(var c:new ArrayList<>(t)){
-				if(c.getnumericstatus()>removeat) continue;
-				t.remove(c);
-				if(t==s.blueteam) s.fleeing.add(c);
-				if(s.next==c) s.next();
-				Javelin.redraw();
-				Javelin.message(String.format(REMOVED,c),true);
-			}
-	}
+  @Override
+  public void endturn(Fight f){
+    super.endturn(f);
+    var s=Fight.state;
+    for(var t:List.of(s.blueteam,s.redteam)) for(var c:new ArrayList<>(t)){
+      if(c.getnumericstatus()>removeat) continue;
+      t.remove(c);
+      if(t==s.blueteam) s.fleeing.add(c);
+      else if(t==s.redteam) s.dead.add(c);
+      if(s.next==c) s.next();
+      Javelin.redraw();
+      Javelin.message(String.format(REMOVED,c),true);
+    }
+  }
 
-	@Override
-	public void end(Fight f){
-		super.end(f);
-		var s=Fight.state;
-		var survivors=s.dead.stream().filter(d->d.hp>Combatant.DEADATHP)
-				.collect(Collectors.toList());
-		s.dead.removeAll(survivors);
-		s.blueteam.addAll(survivors);
-	}
+  @Override
+  public void end(Fight f){
+    super.end(f);
+    var s=Fight.state;
+    var survivors=s.dead.stream().filter(d->d.hp>Combatant.DEADATHP)
+        .collect(Collectors.toList());
+    s.dead.removeAll(survivors);
+    s.blueteam.addAll(survivors);
+  }
 }

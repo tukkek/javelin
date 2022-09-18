@@ -60,7 +60,7 @@ public abstract class Fight{
 
   /** Global fight state. */
   public static BattleState state=null;
-  /** @see #win(BattleScreen) */
+  /** @see #win() */
   public static Boolean victory;
   /** Red team at the moment the {@link Fight} begins. */
   public static Combatants originalredteam;
@@ -68,6 +68,8 @@ public abstract class Fight{
   public static Combatants originalblueteam;
   /** Active fight or <code>null</code>. */
   public static Fight current=null;
+  /** Last {@link #reward()} gold prize. */
+  public static int gold;
 
   /** Map to generate. If <code>null</code>, choose from {@link #terrains}. */
   public Map map=null;
@@ -132,23 +134,24 @@ public abstract class Fight{
    * @return Reward description.
    */
   public String reward(){
-    var rewards="Congratulations! ";
+    var rewards=new ArrayList<String>(3);
+    rewards.add("Congratulations!");
     var r=Fight.originalredteam;
     if(rewardxp)
-      rewards+=RewardCalculator.rewardxp(Fight.originalblueteam,r,xpbonus);
+      rewards.add(RewardCalculator.rewardxp(Fight.originalblueteam,r,xpbonus));
     if(rewardgold){
-      var gold=RewardCalculator.receivegold(r)*goldbonus;
-      gold=Javelin.round(Math.max(gold,Squad.active.eat()/2));
+      gold=RewardCalculator.receivegold(r);
+      gold=Javelin.round(Math.max(gold*goldbonus,Squad.active.eat()/2));
       Squad.active.gold+=gold;
-      rewards+=" Party receives $"+Javelin.format(gold)+"!";
+      rewards.add("Party receives $%s!".formatted(Javelin.format(gold)));
     }
-    return rewards+"\n";
+    return String.join(" ",rewards)+"\n";
   }
 
   /**
    * Called when a battle ends but before {@link EndBattle} clean-ups.
-   * {@link EndBattle#resolve()} is called by the default
-   * implementation, which calls {@link #reward()}.
+   * {@link EndBattle#resolve()} is called by the default implementation, which
+   * calls {@link #reward()}.
    *
    * @return If <code>true</code> will perform a bunch of post-battle clean-ups,
    *   usually required only for typical {@link Scenario} battles but not for

@@ -68,6 +68,11 @@ public abstract class QuestApp extends Applet implements Runnable{
   // switches to a new screen, discarding the old one
   public void switchScreen(final Component s){
     if(mainComponent==s) return;
+    try{
+      Thread.sleep(400);
+    }catch(InterruptedException e){
+      //do nothing
+    }
     setVisible(false);
     MapPanel.overlay=null;
     if(mainComponent instanceof Screen) ((Screen)mainComponent).close();

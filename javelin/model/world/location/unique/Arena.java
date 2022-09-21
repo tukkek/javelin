@@ -80,6 +80,8 @@ import javelin.view.screen.WorldScreen;
  * unique NPC units are generated - making it more like a MOBA teamfight (no
  * allies for those)?
  *
+ * TODO last balance test: level 10 in 300 days
+ *
  * @author alex
  */
 public class Arena extends UniqueLocation{
@@ -236,8 +238,7 @@ public class Arena extends UniqueLocation{
       if(RPG.chancein(size()==1?Time.WEEK:Time.SEASON)) hire();
       else if(RPG.chancein(upgrade)){
         var t=(Town)a.findclosest(Town.class);
-        var el=t.population;
-        upgrade(el);
+        upgrade(t.population+4);
       }
     }
   }

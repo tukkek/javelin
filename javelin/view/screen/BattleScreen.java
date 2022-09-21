@@ -315,21 +315,23 @@ public class BattleScreen extends Screen{
    *   let the next automaric unit think instead.
    */
   public void setstate(final ChanceNode state,boolean enableoverrun){
-    if(MapPanel.overlay!=null) MapPanel.overlay.clear();
-    MapPanel.overlay=state.overlay;
-    BattlePanel.current=current;
-    final var s=(BattleState)state.n;
-    Fight.state=s;
-    if(lastaimove==null) Javelin.redraw();
-    var delay=state.delay;
-    if(enableoverrun&&delay==Javelin.Delay.WAIT
-        &&(s.redteam.contains(s.next)||s.next.automatic)){
-      delay=Javelin.Delay.NONE;
-      jointurns=true;
+    synchronized(MapPanel.PAINTER){
+      if(MapPanel.overlay!=null) MapPanel.overlay.clear();
+      MapPanel.overlay=state.overlay;
+      BattlePanel.current=current;
+      final var s=(BattleState)state.n;
+      Fight.state=s;
+      if(lastaimove==null) Javelin.redraw();
+      var delay=state.delay;
+      if(enableoverrun&&delay==Javelin.Delay.WAIT
+          &&(s.redteam.contains(s.next)||s.next.automatic)){
+        delay=Javelin.Delay.NONE;
+        jointurns=true;
+      }
+      messagepanel.clear();
+      statuspanel.repaint();
+      Javelin.message(state.action,delay);
     }
-    messagepanel.clear();
-    statuspanel.repaint();
-    Javelin.message(state.action,delay);
   }
 
   /**

@@ -40,13 +40,15 @@ public class DungeonPanel extends MapPanel{
 
   @Override
   public void refresh(){
-    var p=scroll.getScrollPosition();
-    var s=scroll.getViewportSize();
-    for(Tile[] tiles:tiles) for(Tile tile:tiles){
-      var t=(DungeonTile)tile;
-      if(t.discovered&&p.x<=t.x*tilesize&&(t.x+1)*tilesize<=p.x+s.width
-          &&p.y<=t.y*tilesize&&(t.y+1)*tilesize<=p.y+s.height)
-        t.repaint();
+    synchronized(PAINTER){
+      var p=scroll.getScrollPosition();
+      var s=scroll.getViewportSize();
+      for(Tile[] tiles:tiles) for(Tile tile:tiles){
+        var t=(DungeonTile)tile;
+        if(t.discovered&&p.x<=t.x*tilesize&&(t.x+1)*tilesize<=p.x+s.width
+            &&p.y<=t.y*tilesize&&(t.y+1)*tilesize<=p.y+s.height)
+          t.repaint();
+      }
     }
   }
 }

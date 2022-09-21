@@ -1,6 +1,5 @@
 package javelin.view.mappanel.battle;
 
-import java.awt.Graphics;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,32 +44,26 @@ public class BattlePanel extends MapPanel{
   }
 
   @Override
-  public synchronized void refresh(){
-    //    try{
-    updatestate();
-    var s=Fight.state;
-    //    if(s==null) return;
-    var update=new HashSet<Point>(s.redteam.size()+s.blueteam.size());
-    for(var c:s.getcombatants()) update.add(c.getlocation());
-    for(var c:previous.getcombatants()) update.add(c.getlocation());
-    updatestate();
-    for(var c:s.getcombatants()) update.add(c.getlocation());
-    calculatevision();
-    update.addAll(seen);
-    if(overlay!=null) update.addAll(overlay.affected);
-    if(Fight.current.has(Meld.class)!=null)
-      for(var m:s.meld) update.add(new Point(m.x,m.y));
-    for(var p:update) tiles[p.x][p.y].repaint();
+  public void refresh(){
+    synchronized(PAINTER){
+      updatestate();
+      var s=Fight.state;
+      var update=new HashSet<Point>(s.redteam.size()+s.blueteam.size());
+      for(var c:s.getcombatants()) update.add(c.getlocation());
+      if(previous!=null)
+        for(var c:previous.getcombatants()) update.add(c.getlocation());
+      updatestate();
+      for(var c:s.getcombatants()) update.add(c.getlocation());
+      calculatevision();
+      update.addAll(seen);
+      if(overlay!=null) update.addAll(overlay.affected);
+      if(Fight.current.has(Meld.class)!=null)
+        for(var m:s.meld) update.add(new Point(m.x,m.y));
+      for(var p:update) tiles[p.x][p.y].repaint();
+    }
   }
 
-  @Override
-  public void paint(Graphics g){
-    updatestate();
-    calculatevision();
-    super.paint(g);
-  }
-
-  synchronized void calculatevision(){
+  void calculatevision(){
     if(daylight||state.getteam(current)==state.redteam) return;
     for(var s:seen){
       var t=(BattleTile)tiles[s.x][s.y];

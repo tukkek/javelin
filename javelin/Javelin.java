@@ -361,10 +361,12 @@ public class Javelin{
 
   /** Updates the {@link MapPanel} and {@link MessagePanel}. */
   public static void redraw(){
-    var b=BattleScreen.active;
-    b.mappanel.refresh();
-    if(b.statuspanel!=null) b.statuspanel.repaint();
-    MessagePanel.active.repaint();
+    synchronized(MapPanel.PAINTER){
+      var b=BattleScreen.active;
+      b.mappanel.refresh();
+      if(b.statuspanel!=null) b.statuspanel.repaint();
+      MessagePanel.active.repaint();
+    }
   }
 
   public static KeyEvent input(){

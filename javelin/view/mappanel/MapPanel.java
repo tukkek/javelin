@@ -6,6 +6,8 @@ import java.awt.Panel;
 import java.awt.ScrollPane;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javelin.controller.db.Preferences;
 import javelin.view.mappanel.overlay.Overlay;
@@ -20,6 +22,8 @@ public abstract class MapPanel extends Panel{
   public static int tilesize=Preferences.tilesizeworld;
   /** Produces a temporary overlay effect on-screen. */
   public static Overlay overlay=null;
+  /** Semaphore to block painting. */
+  public static final Object PAINTER=new Object();
 
   /** Scrollbar functionality. */
   public ScrollPane scroll=new ScrollPane(ScrollPane.SCROLLBARS_ALWAYS);
@@ -27,9 +31,20 @@ public abstract class MapPanel extends Panel{
   public Tile[][] tiles=null;
   /** Main component for panel. */
   public Canvas canvas=new Canvas(){
+    boolean first=true;
+
     @Override
     public void paint(Graphics g){
       refresh();
+      if(first){
+        first=false;
+        new Timer().schedule(new TimerTask(){
+          @Override
+          public void run(){
+            refresh();
+          }
+        },200);
+      }
     }
   };
   Panel container=new Panel();

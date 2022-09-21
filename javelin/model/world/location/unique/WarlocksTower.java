@@ -59,7 +59,7 @@ import javelin.view.screen.town.SelectScreen;
  * {@link Fight}s {@link Map}s are based on a random {@link Terrain}, while
  * {@link Branch}es are used to make each Fight more interesting and unique.
  *
- * TODO Other {@link Branch} stuff ({@link Mutator}s, etc)
+ * TODO Other {@link Branch} stuff ({@link Mutator}s, etc) TODO
  *
  * @author alex
  */

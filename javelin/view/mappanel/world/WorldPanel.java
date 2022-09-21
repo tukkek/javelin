@@ -48,7 +48,9 @@ public class WorldPanel extends MapPanel{
 
   @Override
   public void refresh(){
-    updateactors();
-    for(var ts:tiles) for(var t:ts) t.repaint();
+    synchronized(PAINTER){
+      updateactors();
+      for(var ts:tiles) for(var t:ts) t.repaint();
+    }
   }
 }

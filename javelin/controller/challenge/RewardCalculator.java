@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 import javelin.Javelin;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Combatants;
+import javelin.model.unit.Monster;
 import javelin.old.RPG;
 
 /**
@@ -109,8 +111,7 @@ public class RewardCalculator{
    */
   public static int getgold(final float cr){
     if(cr<=0) return 0;
-    var gold=cr*cr*cr*7.5f;
-    return Math.round(gold);
+    return Math.round(cr*cr*cr*7.5f);
   }
 
   /**
@@ -242,5 +243,16 @@ public class RewardCalculator{
       max=cr+RPG.r(1,variance);
     }
     return Javelin.round(RPG.r(getgold(min),getgold(max)));
+  }
+
+  /** @return Minimum CR whose reward could afford this. */
+  public static Object getlevel(int gold){
+    for(var cr=1;true;cr+=1) if(gold<=getgold(cr)) return cr;
+  }
+
+  /** @return Sum of {@link #getgold(float)} with {@link Monster#cr}. */
+  public static int getgold(Combatants encounter){
+    return encounter.stream().mapToInt(c->RewardCalculator.getgold(c.source.cr))
+        .sum();
   }
 }

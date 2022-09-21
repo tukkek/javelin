@@ -14,13 +14,19 @@ import javelin.view.Images;
  * @author alex
  */
 public class SpecialChest extends Chest{
-	/** Constructor. */
-	public SpecialChest(DungeonFloor f,Item i){
-		super(i,f);
-	}
+  /** Constructor. */
+  public SpecialChest(List<Item> items,DungeonFloor f){
+    super(f);
+    this.items.addAll(items);
+  }
 
-	@Override
-	public Image getimage(){
-		return Images.get(List.of("dungeon","chest","special"));
-	}
+  /** Constructor. */
+  public SpecialChest(DungeonFloor f,Item i){
+    this(List.of(i),f);
+  }
+
+  @Override
+  public Image getimage(){
+    return Images.get(List.of("dungeon","chest","special"));
+  }
 }

@@ -7,6 +7,7 @@ import javelin.controller.content.terrain.Terrain;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
+import javelin.model.unit.Monster;
 import javelin.model.world.Period;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
@@ -19,7 +20,8 @@ import javelin.old.RPG;
  * @author alex
  */
 public class RandomDungeonEncounter extends RandomEncounter{
-  Combatants encounter;
+  /** {@link Monster}s to be fought. */
+  public Combatants encounter;
 
   /** {@link Dungeon} constructor. */
   public RandomDungeonEncounter(DungeonFloor f){

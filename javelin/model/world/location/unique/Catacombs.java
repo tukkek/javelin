@@ -82,8 +82,10 @@ public class Catacombs extends Wilderness{
 
     @Override
     protected Feature generatespecialchest(DungeonFloor f){
-      if(f==floors.getLast()) return new SpecialChest(f,goal);
-      return super.generatespecialchest(f);
+      if(f!=floors.getLast()) return super.generatespecialchest(f);
+      var g=RewardCalculator.getgold(f.level);
+      var r=CatacombBranch.reward(g,CatacombBranch.EIDOLONS);
+      return new SpecialChest(List.of(r,goal),f);
     }
 
     Catacomb place(Point p){

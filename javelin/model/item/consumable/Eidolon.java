@@ -31,21 +31,24 @@ public class Eidolon extends CommandItem{
   Recharger charges=null;
   Monster m;
 
-  /** Constructor. */
-  public Eidolon(Summon s,int charges){
+  /** Inheritance constructor. */
+  protected Eidolon(Summon s,int charges,boolean register){
     super("Eidolon",s.level*s.casterlevel*(charges==0?50:2000/(5.0/charges)),
-        true);
+        register);
     m=Monster.get(s.monstername);
-    if(charges==0) name="Minor "+name.toLowerCase();
-    else{
+    if(charges>0){
       this.charges=new Recharger(charges);
       consumable=false;
     }
-    name+=" ["+m.name.toLowerCase()+"]";
     targeted=false;
     usedoutofbattle=false;
     waste=true;
     if(charges==0) identified=false;
+  }
+
+  /** Public constructor. */
+  public Eidolon(Summon s,int charges){
+    this(s,charges,true);
   }
 
   @Override
@@ -60,9 +63,11 @@ public class Eidolon extends CommandItem{
 
   @Override
   public String toString(){
-    if(!identified) return "Unidentified minor eidolon";
+    if(!identified) return "Unidentified minor "+name.toLowerCase();
     var name=super.toString();
-    return charges==null?name:name+" "+charges;
+    if(charges==null||charges.capacity==0)
+      return "Minor %s [%s]".formatted(name.toLowerCase(),m.name.toLowerCase());
+    return "%s [%s] %s".formatted(name,m.name.toLowerCase(),charges);
   }
 
   @Override

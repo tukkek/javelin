@@ -1,7 +1,6 @@
 package javelin.model.world.location.dungeon.feature.rare.inhabitant;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javelin.Javelin;
@@ -44,7 +43,8 @@ public class Trader extends Inhabitant{
     }
   }
 
-  List<Item> inventory;
+  /** Stock. */
+  protected List<Item> inventory;
 
   /** Reflection-friendly constructor. */
   public Trader(DungeonFloor f){
@@ -52,7 +52,12 @@ public class Trader extends Inhabitant{
     var pool=RewardCalculator.getgold(inhabitant.source.cr);
     if(pool<50) pool=50;
     inventory=stock(pool);
-    Collections.sort(inventory,ItemsByPrice.SINGLETON);
+    sort();
+  }
+
+  /** @see List#sort(java.util.Comparator) */
+  protected void sort(){
+    inventory.sort(ItemsByPrice.SINGLETON);
   }
 
   /** @return Items to be sold. */
@@ -65,8 +70,8 @@ public class Trader extends Inhabitant{
   @Override
   public boolean activate(){
     var name=inhabitant.toString().toLowerCase();
-    var s=Squad.active;
     var prompt="This "+name+" has a few items to offer.\n\n";
+    var s=Squad.active;
     prompt+="You have $"+Javelin.format(s.gold)+" gold.";
     var options=new ArrayList<String>(inventory.size());
     for(var item:inventory){
@@ -81,14 +86,17 @@ public class Trader extends Inhabitant{
     if(choice<0) return true;
     if(options.get(choice)==attack) throw new StartBattle(new TraderFight());
     var item=inventory.get(choice);
-    if(item.price<=s.gold){
-      s.gold-=item.price;
-      inventory.remove(item);
-      item.grab();
-    }else{
+    if(Squad.active.pay(item.price)) sell(item);
+    else{
       Javelin.app.switchScreen(BattleScreen.active);
       Javelin.message("Too expensive...",false);
     }
     return true;
+  }
+
+  /** Removes item from stock and gives to {@link Squad}. */
+  protected void sell(Item i){
+    inventory.remove(i);
+    i.grab();
   }
 }

@@ -8,6 +8,7 @@ import java.util.List;
 import javelin.controller.Point;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.challenge.Tier;
+import javelin.controller.comparator.ItemsByPrice;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.content.fight.Siege;
 import javelin.controller.content.map.location.LocationMap;
@@ -64,6 +65,7 @@ public class Catacombs extends Wilderness{
   static final List<Point> DOORS=List.of(new Point(28,6),new Point(28,9),
       new Point(6,9),new Point(6,6));
   static final Image WALL=Images.get(List.of("dungeon","wallcatacombs"));
+  static final int STOCK=20;
 
   class Catacomb extends Dungeon{
     Item goal;
@@ -177,21 +179,27 @@ public class Catacombs extends Wilderness{
       return NpcGenerator.generate(m,Math.round(m.cr+10));
     }
 
+    List<Item> getpool(){
+      var pool=Item.randomize(Item.NONPRECIOUS);
+      pool.sort(ItemsByPrice.SINGLETON);
+      return pool;
+    }
+
     @Override
     protected List<Item> stock(int goldpool){
-      var stock=new ArrayList<Item>(20);
-      for(var t:Tier.TIERS){
-        var from=RewardCalculator.getgold(t.minlevel);
-        var to=RewardCalculator.getgold(t.maxlevel);
-        var tier=new ArrayList<>(Item.NONPRECIOUS.stream()
-            .filter(i->from<=i.price&&i.price<=to).toList());
-        for(var i:RPG.shuffle(tier).subList(0,5)){
-          i=i.clone();
-          i.identified=true;
-          stock.add(i);
-        }
-      }
+      var stock=new ArrayList<Item>(STOCK);
+      var pool=getpool();
+      while(stock.size()<STOCK)
+        stock.add(pool.remove(RPG.low(0,pool.size()-1)));
       return stock;
+    }
+
+    @Override
+    protected void sell(Item i){
+      super.sell(i);
+      var p=getpool();
+      inventory.add(p.get(RPG.high(0,p.size()-1)));
+      sort();
     }
   }
 

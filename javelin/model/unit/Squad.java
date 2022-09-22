@@ -675,14 +675,14 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
   }
 
   /**
-   * @return Time, used as game clock for each Squad, not only determining who
-   *   should act first and for how long but also current {@link World} time.
+   * @return Time in hours, used as game clock, not only determining who should
+   *   act first and for how long but also current {@link World} time.
    */
   public long gettime(){
     return time;
   }
 
-  /** @param Advances time by this many hours. */
+  /** @param hours Advances time by this many hours. */
   public void delay(long hours){
     if(hours<=0) return;
     time+=hours;

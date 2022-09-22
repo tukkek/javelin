@@ -24,6 +24,7 @@ import javelin.model.item.key.door.StoneKey;
 import javelin.model.item.key.door.WoodenKey;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.Squad;
 import javelin.model.world.Period;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -169,8 +170,15 @@ public class Catacombs extends Wilderness{
   }
 
   class Guide extends Trader{
+    long restock;
+
     Guide(DungeonFloor f){
       super(f);
+      restock=delay();
+    }
+
+    int delay(){
+      return RPG.rolldice(2,6)*24;
     }
 
     @Override
@@ -194,12 +202,21 @@ public class Catacombs extends Wilderness{
       return stock;
     }
 
-    @Override
-    protected void sell(Item i){
-      super.sell(i);
+    void restock(){
+      var t=Squad.active.gettime();
+      if(t<restock) return;
+      restock=t+delay();
+      if(inventory.size()>=STOCK) return;
       var p=getpool();
-      inventory.add(p.get(RPG.high(0,p.size()-1)));
+      while(inventory.size()<STOCK)
+        inventory.add(p.remove(RPG.high(0,p.size()-1)));
       sort();
+    }
+
+    @Override
+    public boolean activate(){
+      restock();
+      return super.activate();
     }
   }
 

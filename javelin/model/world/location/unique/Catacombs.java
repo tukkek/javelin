@@ -161,6 +161,7 @@ public class Catacombs extends Wilderness{
   class Camp extends Campfire{
     public Camp(DungeonFloor f){
       super(f);
+      enter=false;
     }
 
     @Override
@@ -175,6 +176,7 @@ public class Catacombs extends Wilderness{
     Guide(DungeonFloor f){
       super(f);
       restock=delay();
+      enter=false;
     }
 
     int delay(){
@@ -197,8 +199,11 @@ public class Catacombs extends Wilderness{
     protected List<Item> stock(int goldpool){
       var stock=new ArrayList<Item>(STOCK);
       var pool=getpool();
-      while(stock.size()<STOCK)
-        stock.add(pool.remove(RPG.low(0,pool.size()-1)));
+      while(stock.size()<STOCK){
+        var item=pool.remove(RPG.low(0,pool.size()-1));
+        item.identified=true;
+        stock.add(item);
+      }
       return stock;
     }
 
@@ -208,8 +213,11 @@ public class Catacombs extends Wilderness{
       restock=t+delay();
       if(inventory.size()>=STOCK) return;
       var p=getpool();
-      while(inventory.size()<STOCK)
-        inventory.add(p.remove(RPG.high(0,p.size()-1)));
+      while(inventory.size()<STOCK){
+        var item=p.remove(RPG.high(0,p.size()-1));
+        item.identified=true;
+        inventory.add(item);
+      }
       sort();
     }
 

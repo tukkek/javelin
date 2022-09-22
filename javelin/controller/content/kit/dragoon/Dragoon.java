@@ -42,40 +42,40 @@ import javelin.model.world.location.town.Town;
  * @author alex
  */
 public abstract class Dragoon extends Kit{
-	/** Constructor. */
-	protected Dragoon(String subtype,BreathWeapon breath,int naturalarmor,
-			int walk,int flight,DamageEffect effect){
-		super(subtype+" dragoon",Warrior.SINGLETON,RaiseStrength.SINGLETON,
-				RaiseDexterity.SINGLETON);
-		basic.add(new WalkingSpeed(subtype+" dragon speed",walk));
-		extension.add(
-				new NaturalArmor(subtype.toLowerCase()+" dragon scales",naturalarmor));
-		extension.add(new BreathUpgrade(breath));
-		extension.add(new Flying(subtype+" dragon flight",flight));
-		if(effect!=null) extension.add(new EffectUpgrade(effect));
-		prestige=true;
-	}
+  /** Constructor. */
+  protected Dragoon(String subtype,BreathWeapon breath,int naturalarmor,
+      int walk,int flight,DamageEffect effect){
+    super("Dragoon",Warrior.SINGLETON,RaiseStrength.SINGLETON,
+        RaiseDexterity.SINGLETON);
+    basic.add(new WalkingSpeed(subtype+" dragon speed",walk));
+    extension.add(
+        new NaturalArmor(subtype.toLowerCase()+" dragon scales",naturalarmor));
+    extension.add(new BreathUpgrade(breath));
+    extension.add(new Flying(subtype+" dragon flight",flight));
+    if(effect!=null) extension.add(new EffectUpgrade(effect));
+    prestige=true;
+  }
 
-	@Override
-	protected void define(){
-		basic.add(MeleeFocus.UPGRADE.toupgrade());
-		basic.add(Skill.ACROBATICS.getupgrade());
-		basic.add(ImprovedInitiative.SINGLETON.toupgrade());
-	}
+  @Override
+  protected void define(){
+    basic.add(MeleeFocus.UPGRADE.toupgrade());
+    basic.add(Skill.ACROBATICS.getupgrade());
+    basic.add(ImprovedInitiative.SINGLETON.toupgrade());
+  }
 
-	@Override
-	protected void extend(){
-		extension.add(Toughness.SINGLETON.toupgrade());
-		extension.add(MeleeDamage.INSTANCE);
-		extension.add(LightningReflexes.SINGLETON.toupgrade());
-		extension.add(Acrobatic.SINGLETON.toupgrade());
-		extension.add(Alertness.SINGLETON.toupgrade());
-		extension.add(ParalysisImmunity.UPGRADE);
-		extension.add(Skill.PERCEPTION.getupgrade());
-	}
+  @Override
+  protected void extend(){
+    extension.add(Toughness.SINGLETON.toupgrade());
+    extension.add(MeleeDamage.INSTANCE);
+    extension.add(LightningReflexes.SINGLETON.toupgrade());
+    extension.add(Acrobatic.SINGLETON.toupgrade());
+    extension.add(Alertness.SINGLETON.toupgrade());
+    extension.add(ParalysisImmunity.UPGRADE);
+    extension.add(Skill.PERCEPTION.getupgrade());
+  }
 
-	@Override
-	public boolean allow(int bestability,int secondbest,Monster m){
-		return super.allow(bestability,secondbest,m)&&m.body.equals(Body.HUMANOID);
-	}
+  @Override
+  public boolean allow(int bestability,int secondbest,Monster m){
+    return super.allow(bestability,secondbest,m)&&m.body.equals(Body.HUMANOID);
+  }
 }

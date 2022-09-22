@@ -2,11 +2,13 @@ package javelin.view.mappanel.dungeon;
 
 import java.util.HashSet;
 
+import javelin.Javelin;
 import javelin.controller.db.Preferences;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.Tile;
+import javelin.view.screen.BattleScreen;
 
 public class DungeonPanel extends MapPanel{
   DungeonFloor dungeon;

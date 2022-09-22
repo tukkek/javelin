@@ -253,18 +253,13 @@ public class Javelin{
       MessagePanel.active.clear();
       Javelin.message(prompt,Delay.NONE);
     }
-    try{
-      while(true) try{
-        var c=InfoScreen.feedback();
-        if(!forceselection&&c==InfoScreen.ESCAPE) return -1;
-        var selected=SelectScreen.convertkeytoindex(c);
-        if(0<=selected&&selected<names.size()) return selected;
-      }catch(Exception e){
-        continue;
-      }
-    }finally{
-      if(fullscreen) app.switchScreen(BattleScreen.active);
+    var i=-1;
+    while(!(0<=i&&i<names.size())){
+      var f=InfoScreen.feedback();
+      if(f==InfoScreen.ESCAPE&&!forceselection) return -1;
+      i=SelectScreen.convertkeytoindex(f);
     }
+    return i;
   }
 
   /**

@@ -11,6 +11,7 @@ import java.util.TimerTask;
 
 import javelin.controller.db.Preferences;
 import javelin.view.mappanel.overlay.Overlay;
+import javelin.view.screen.BattleScreen;
 
 /**
  * Game map view, either in or out of battle.
@@ -41,7 +42,7 @@ public abstract class MapPanel extends Panel{
         new Timer().schedule(new TimerTask(){
           @Override
           public void run(){
-            refresh();
+            if(BattleScreen.active.mappanel==MapPanel.this) refresh();
           }
         },200);
       }

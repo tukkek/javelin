@@ -22,34 +22,34 @@ import javelin.view.Images;
  * @author alex
  */
 public class Fountain extends Feature{
-	static final String PROMPT="Do you want to drink from the fountain?\n"
-			+"Press ENTER to drink or any other key to cancel...";
+  static final String PROMPT="Do you want to drink from the fountain?\n"
+      +"Press ENTER to drink or any other key to cancel...";
 
-	/** Constructor. */
-	public Fountain(DungeonFloor f){
-		super("fountain");
-	}
+  /** Constructor. */
+  public Fountain(DungeonFloor f){
+    super("fountain");
+  }
 
-	@Override
-	public boolean activate(){
-		if(Javelin.prompt(PROMPT)!='\n') return false;
-		for(Combatant c:Squad.active.members)
-			heal(c);
-		Squad.active.equipment.refresh(24);
-		Javelin.message("Party fully recovered!",false);
-		return true;
-	}
+  @Override
+  public boolean activate(){
+    if(Javelin.prompt(PROMPT)!='\n') return false;
+    for(Combatant c:Squad.active.members) heal(c);
+    Squad.active.equipment.refresh(24);
+    Javelin.message("Party fully recovered!",false);
+    return true;
+  }
 
-	public static void heal(Combatant c){
-		c.detox(c.source.poison);
-		c.heal(c.maxhp,true);
-		for(var s:c.spells)
-			s.used=0;
-	}
+  public static void heal(Combatant c){
+    c.detox(c.source.poison);
+    c.heal(c.maxhp,true);
+    for(var s:c.spells) s.used=0;
+    if(Squad.active.members.contains(c))
+      for(var e:Squad.active.equipment.get(c)) e.refresh(24);
+  }
 
-	@Override
-	public Image getimage(){
-		var i=Dungeon.active.dungeon.images.get(DungeonImages.FOUNTAIN);
-		return Images.get(List.of("dungeon","fountain",i));
-	}
+  @Override
+  public Image getimage(){
+    var i=Dungeon.active.dungeon.images.get(DungeonImages.FOUNTAIN);
+    return Images.get(List.of("dungeon","fountain",i));
+  }
 }

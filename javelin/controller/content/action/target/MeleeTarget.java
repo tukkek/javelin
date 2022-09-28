@@ -21,26 +21,26 @@ import javelin.view.mappanel.battle.BattleMouse;
  * @author alex
  */
 public class MeleeTarget extends RangedTarget{
-	public MeleeTarget(Attack a,AttackSequence sequence,char confirmkey,
-			AbstractAttack action){
-		super(a,sequence,confirmkey,action);
-	}
+  public MeleeTarget(Attack a,AttackSequence sequence,char confirmkey,
+      AbstractAttack action){
+    super(a,sequence,confirmkey,action);
+  }
 
-	@Override
-	protected boolean checkengaged(BattleState state,Combatant c){
-		return false;
-	}
+  @Override
+  protected boolean checkengaged(BattleState state,Combatant c){
+    return false;
+  }
 
-	@Override
-	protected void filtertargets(Combatant active,List<Combatant> targets,
-			BattleState s){
-		for(Combatant target:new ArrayList<>(targets))
-			if(!active.isadjacent(target)||active.isally(target,s))
-				targets.remove(target);
-	}
+  @Override
+  protected void filtertargets(Combatant active,List<Combatant> targets,
+      BattleState s){
+    for(Combatant target:new ArrayList<>(targets))
+      if(!active.isadjacent(target)||active.isally(target,s))
+        targets.remove(target);
+  }
 
-	@Override
-	public int prioritize(Combatant c,BattleState state,Combatant target){
-		return target.getnumericstatus();
-	}
+  @Override
+  public int prioritize(Combatant c,Combatant target){
+    return target.getnumericstatus();
+  }
 }

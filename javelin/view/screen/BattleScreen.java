@@ -294,23 +294,15 @@ public class BattleScreen extends Screen{
 
   boolean first=true;
 
-  /** TODO black screen bug, hopefully this helps */
-  public void fix(){
-    //    if(!first) return;
-    //    first=false;
-    //    var s=BattleScreen.active.mappanel.getSize();
-    //    var p=BattleScreen.active.mappanel.getPreferredSize();
-    //    if(!s.equals(p)) BattleScreen.active.mappanel.setSize(p);
-  }
-
   /** Redraws screen. */
   protected void updatescreen(){
     var current=Fight.state.clone(this.current);
     if(current!=null){
-      var x=current.location[0];
-      var y=current.location[1];
-      center(x,y);
-      view(x,y);
+      var l=current.getlocation();
+      if(mappanel.tiles[l.x][l.y].discovered){
+        center(l.x,l.y);
+        view(l.x,l.y);
+      }
     }
     statuspanel.repaint();
     Javelin.redraw();

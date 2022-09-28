@@ -73,7 +73,7 @@ public class BattleTile extends Tile{
     var isblue=Fight.state.blueteam.contains(c);
     var s=MapPanel.tilesize;
     var p=getposition();
-    if(c.equals(BattlePanel.current)){
+    if(BattlePanel.current!=null&&BattlePanel.current.equals(c)){
       g.setColor(isblue?Color.GREEN:Color.ORANGE);
       g.fillRect(p.x,p.y,s,s);
     }

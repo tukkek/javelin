@@ -80,7 +80,9 @@ public class WarlocksTower extends Location{
 
       %s
 
-      Press the assigned keys to change what to learn, ENTER to confirm or q to quit without learning anything...
+      Press the assigned keys to cycle between upgrades.
+      Press q to quit without spending experience points.
+      Press ENTER to confirm.
       """;
   static final List<Character> UPGRADEKEYS=SelectScreen.filterkeys("q");
   static final int ELMODIFIER=-1;
@@ -364,27 +366,28 @@ public class WarlocksTower extends Location{
         kits.put(s,preferred);
       }
       var upgrades=choose(squad,kits);
+      var blue=Fight.state.blueteam;
       if(upgrades!=null) for(var s:squad){
         var kit=upgrades.get(s);
-        if(kit!=null)
+        if(kit!=null){
           AdventurersGuild.train(s,kit.getupgrades(),s.xp.floatValue());
+          blue.set(blue.indexOf(s),s);
+        }
       }
     }
 
     @Override
     public boolean onend(){
       super.onend();
-      if(!Fight.victory) return true;
       var s=Fight.state;
-      if(!s.fleeing.isEmpty()) return true;
+      var dead=new ArrayList<>(s.dead);
+      dead.retainAll(Fight.originalblueteam);
+      s.blueteam.addAll(dead);
+      for(var b:s.blueteam) Fountain.heal(b);
+      if(!Fight.victory||!s.fleeing.isEmpty()) return true;
       Javelin.message("\"You... have won?\"",true);
       for(var a:waves.allies) a.source.elite=false;
-      //        Squad.active.add(a);
-      //        Fight.originalblueteam.add(a);
-      var d=new ArrayList<>(s.dead);
-      d.retainAll(Fight.originalblueteam);
-      s.blueteam.addAll(d);
-      for(var b:s.blueteam) Fountain.heal(b);
+      for(var d:dead) Fountain.heal(d);
       loot();
       upgrade();
       return true;

@@ -44,7 +44,7 @@ public abstract class MapPanel extends Panel{
           public void run(){
             if(BattleScreen.active.mappanel==MapPanel.this) refresh();
           }
-        },200);
+        },500);
       }
     }
   };

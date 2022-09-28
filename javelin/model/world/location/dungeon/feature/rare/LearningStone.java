@@ -71,18 +71,16 @@ public class LearningStone extends Feature{
     WorldMove.abort=true;
     var options=Squad.active.members.stream().filter(c->!c.mercenary)
         .map(c->c+" ("+c.gethumanxp()+")").collect(Collectors.toList());
-    options.add(TAKE);
+    if(remove) options.add(TAKE);
     var prompt="This is a "+getname()+". Who will touch it?";
     var choice=Javelin.choose(prompt,options,true,false);
-    if(choice<0) return true;
+    if(choice<0) return false;
     if(choice==options.indexOf(TAKE)){
       new InertLearningStone().grab();
-      remove();
       return true;
     }
     var student=Squad.active.members.get(choice);
-    if(AdventurersGuild.train(student,upgrades,student.xp.floatValue()))
-      remove();
+    AdventurersGuild.train(student,upgrades,student.xp.floatValue());
     return true;
   }
 

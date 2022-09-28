@@ -13,7 +13,6 @@ import javelin.controller.content.fight.Fight;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.walker.Walker;
 import javelin.model.state.BattleState;
-import javelin.model.state.BattleState.Vision;
 import javelin.model.unit.Combatant;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.mappanel.MapPanel;
@@ -42,8 +41,8 @@ public abstract class Target extends Action{
 
     @Override
     public int compare(Combatant o1,Combatant o2){
-      var priority1=action.prioritize(c,state,o1);
-      var priority2=action.prioritize(c,state,o2);
+      var priority1=action.prioritize(c,o1);
+      var priority2=action.prioritize(c,o2);
       if(priority1!=priority2) return priority1>priority2?-1:1;
       var distance1=Walker.distance(o1,c)*10;
       var distance2=Walker.distance(o2,c)*10;
@@ -196,10 +195,7 @@ public abstract class Target extends Action{
   }
 
   /** @return Higher value means earlier in {@link Target} order. */
-  public int prioritize(Combatant c,BattleState state,Combatant target){
-    var priority=target.getlocation().distanceinsteps(c.getlocation());
-    if(state.haslineofsight(c,target)==Vision.COVERED) priority-=10;
-    if(state.isengaged(target)) priority-=100;
-    return priority;
+  public int prioritize(Combatant c,Combatant target){
+    return -target.getlocation().distanceinsteps(c.getlocation());
   }
 }

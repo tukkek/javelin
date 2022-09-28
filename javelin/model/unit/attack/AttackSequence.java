@@ -16,43 +16,41 @@ import javelin.view.screen.StatisticsScreen;
  * @author alex
  */
 public class AttackSequence extends CloneableList<Attack>{
-	static final Comparator<Attack> ATTACKSBYDESCENDINGBONUS=(a,b)->b.bonus
-			-a.bonus;
+  static final Comparator<Attack> ATTACKSBYDESCENDINGBONUS=(a,b)->b.bonus
+      -a.bonus;
 
-	/** @see PowerAttack */
-	public boolean powerful=false;
-	/** @see RapidShot */
-	public boolean rapid=false;
+  /** @see PowerAttack */
+  public boolean powerful=false;
+  /** @see RapidShot */
+  public boolean rapid=false;
 
-	/** Constructor. */
-	public AttackSequence(){
-		super();
-	}
+  /** Constructor. */
+  public AttackSequence(){}
 
-	/** Copy constructor. */
-	public AttackSequence(Collection<Attack> attacks){
-		super(attacks);
-	}
+  /** Copy constructor. */
+  public AttackSequence(Collection<Attack> attacks){
+    super(attacks);
+  }
 
-	@Override
-	public String toString(){
-		return toString(null);
-	}
+  @Override
+  public String toString(){
+    return toString(null);
+  }
 
-	@Override
-	public AttackSequence clone(){
-		return (AttackSequence)super.clone();
-	}
+  @Override
+  public AttackSequence clone(){
+    return (AttackSequence)super.clone();
+  }
 
-	public String toString(Combatant target){
-		String line="";
-		for(Attack a:this)
-			line+=StatisticsScreen.capitalize(a.toString(target))+", ";
-		return line.substring(0,line.length()-2);
-	}
+  public String toString(Combatant target){
+    var line="";
+    for(Attack a:this)
+      line+=StatisticsScreen.capitalize(a.toString(target))+", ";
+    return line.substring(0,line.length()-2);
+  }
 
-	/** Guarantees that attacks are sorted by descending {@link Attack#bonus}. */
-	public void sort(){
-		sort(ATTACKSBYDESCENDINGBONUS);
-	}
+  /** Guarantees that attacks are sorted by descending {@link Attack#bonus}. */
+  public void sort(){
+    sort(ATTACKSBYDESCENDINGBONUS);
+  }
 }

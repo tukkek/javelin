@@ -12,6 +12,7 @@ import java.util.List;
 import javelin.controller.collection.CountingSet;
 import javelin.controller.content.action.Examine;
 import javelin.controller.content.fight.Fight;
+import javelin.model.item.Item;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.discipline.Maneuver;
@@ -73,17 +74,14 @@ public class StatusPanel extends TPanel{
   }
 
   private String itemdata(Combatant combatant){
+    var bag=Fight.current.getbag(combatant).stream()
+        .filter(i->i.usedinbattle&&i.canuse(combatant)==null).map(Item::shorten)
+        .toList();
     var count=new CountingSet();
-    var bag=Fight.current.getbag(combatant);
-    bag.stream().filter(i->i.usedinbattle&&i.canuse(combatant)==null)
-        .forEach(i->{
-          var name=i.toString().replaceAll("Potion of","");
-          if(name.length()>19) name=name.substring(0,19).trim();
-          count.add(name);
-        });
+    count.addall(bag);
     var items=count.getelements();
     var listing=new ArrayList<String>(items.size());
-    for(String i:items){
+    for(var i:items){
       var n=count.getcount(i);
       if(n>1){
         if(i.length()>15) i=i.substring(0,15);

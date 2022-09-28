@@ -47,6 +47,7 @@ import javelin.model.world.location.order.TrainingOrder;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.basic.Lodge;
 import javelin.old.RPG;
+import javelin.view.StatusPanel;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -355,11 +356,9 @@ public abstract class Item implements Serializable,Cloneable,Healing{
     return randomized;
   }
 
-  /**
-   * @return <code>true</code> if this item can be currently sold.
-   */
+  /** @return <code>true</code> if this item can be currently sold. */
   public boolean sell(){
-    return sellvalue>0;
+    return sellvalue>0&&price>0;
   }
 
   /** @return A human-readable description of this item. */
@@ -431,5 +430,20 @@ public abstract class Item implements Serializable,Cloneable,Healing{
   /** @return {@link #price} formated as "$1,234". */
   public String describeprice(){
     return "$"+Javelin.format(price);
+  }
+
+  /**
+   * @return Short-form name to fit in something like {@link StatusPanel}.
+   *   Usualy just the name of the {@link Spell} provided by a {@link Potion} or
+   *   {@link Wand}, etc.
+   */
+  public String shorten(){
+    var name=toString();
+    var of=name.indexOf(" of ");
+    if(of>=0) name=name.substring(of+4);
+    var charge=name.indexOf(" [");
+    if(charge>=0) name=name.substring(0,charge);
+    if(name.length()>19) name=name.substring(0,19).trim();
+    return name;
   }
 }

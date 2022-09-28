@@ -49,7 +49,7 @@ public class DungeonPanel extends MapPanel{
         if(!tile.discovered) continue;
         var t=(DungeonTile)tile;
         if(p.x<=t.x*tilesize&&(t.x+1)*tilesize<=p.x+w&&p.y<=(t.y+1)*tilesize
-            &&(t.y+1)*tilesize<=p.y+h)
+            &&t.y*tilesize<=p.y+h)
           t.repaint();
       }
     }

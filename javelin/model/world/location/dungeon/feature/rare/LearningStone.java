@@ -46,11 +46,16 @@ public class LearningStone extends Feature{
     }
   }
 
+  /**
+   * <code>false</code> before {@link Feature#activate()} so that
+   * {@link #toString()} won't spoil the {@link Kit} from far away.
+   */
+  protected boolean revealed=false;
+
+  List<Upgrade> upgrades=new ArrayList<>();
+  final String type;
   /** {@link Difficulty#MODERATE} value in gold. */
   int gold;
-  List<Upgrade> upgrades=new ArrayList<>();
-  boolean revealed=false;
-  final String type;
 
   /** Constructor. */
   public LearningStone(DungeonFloor f){

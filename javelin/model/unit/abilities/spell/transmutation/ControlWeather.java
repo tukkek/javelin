@@ -8,6 +8,7 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.content.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.world.location.dungeon.Dungeon;
 
 /**
  * http://www.d20srd.org/srd/spells/controlWeather.htm
@@ -18,28 +19,34 @@ import javelin.model.unit.abilities.spell.Spell;
  * @author alex
  */
 public class ControlWeather extends Spell{
-	/** Constructor. */
-	public ControlWeather(){
-		super("Control weather",7,ChallengeCalculator.ratespell(7));
-		isritual=true;
-		castinbattle=false;
-		castonallies=false;
-		castoutofbattle=true;
-	}
+  /** Constructor. */
+  public ControlWeather(){
+    super("Control weather",7,ChallengeCalculator.ratespell(7));
+    isritual=true;
+    castinbattle=false;
+    castonallies=false;
+    castoutofbattle=true;
+  }
 
-	@Override
-	public String castpeacefully(Combatant caster,Combatant target){
-		int to=Javelin.choose("What shall the weather be?",
-				Arrays.asList(new String[]{"Clear","Rain","Storm"}),false,true);
-		if(to==0){
-			Weather.current=Weather.CLEAR;
-			return "The sky clears!";
-		}
-		if(to==1){
-			Weather.current=Weather.RAIN;
-			return "A light drizzle begins...";
-		}
-		Weather.current=Weather.STORM;
-		return "A mighty thunder roars!";
-	}
+  @Override
+  public String castpeacefully(Combatant caster,Combatant target){
+    var to=Javelin.choose("What shall the weather be?",
+        Arrays.asList("Clear","Rain","Storm"),false,true);
+    if(to==0){
+      Weather.current=Weather.CLEAR;
+      return "The sky clears!";
+    }
+    if(to==1){
+      Weather.current=Weather.RAIN;
+      return "A light drizzle begins...";
+    }
+    Weather.current=Weather.STORM;
+    return "A mighty thunder roars!";
+  }
+
+  @Override
+  public boolean validate(Combatant caster,Combatant target){
+    if(!super.validate(caster,target)) return false;
+    return Dungeon.active!=null;
+  }
 }

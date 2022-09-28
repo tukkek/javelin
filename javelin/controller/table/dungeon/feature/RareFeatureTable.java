@@ -9,6 +9,7 @@ import javelin.controller.table.Table;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.DungeonTier;
 import javelin.model.world.location.dungeon.Wilderness;
+import javelin.model.world.location.dungeon.feature.Altar;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.rare.CorruptedAltar;
 import javelin.model.world.location.dungeon.feature.rare.DungeonMap;
@@ -49,7 +50,8 @@ public class RareFeatureTable extends Table implements DungeonFeatureTable{
       LearningStone.class,Spirit.class,Broker.class,Prisoner.class,
       Trader.class);
   static final List<Class<? extends Feature>> FEW=List.of(Mirror.class,
-      Throne.class,Leader.class,DungeonMap.class,CorruptedAltar.class);
+      Throne.class,Leader.class,DungeonMap.class,CorruptedAltar.class,
+      Altar.class);
   static final Class<? extends Feature> DEBUG=null;
 
   static{

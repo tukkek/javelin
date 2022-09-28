@@ -24,6 +24,7 @@ import javelin.model.unit.Monster.MonsterType;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
+import javelin.model.world.location.dungeon.feature.Altar;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.unique.Catacombs;
 import javelin.old.RPG;
@@ -165,7 +166,7 @@ public class CatacombBranch extends Branch{
   CatacombBranch(){
     super("Catacomb","of the dead","floorcatacombs","wallcatacombs");
     terrains.add(Terrain.UNDERGROUND);
-    features.addAll(List.of(Nest.class,Sarcophagus.class));
+    features.addAll(List.of(Nest.class,Sarcophagus.class,Altar.class));
   }
 
   @Override

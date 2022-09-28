@@ -40,6 +40,10 @@ import javelin.view.screen.InfoScreen;
  * @author alex
  */
 public class Shrine extends Fortification{
+  /** @see Spell#isritual */
+  public static final List<Ritual> RITUALS=Spell.SPELLS.stream()
+      .filter(s->s.isritual).map(Shrine::toritual).toList();
+
   static final String MENU="""
       You enter a shrine. "What can we do for you today?", says the %s.
 
@@ -48,21 +52,33 @@ public class Shrine extends Fortification{
 
       You have $%s.
       """.trim();
-  static final List<Ritual> RITUALS=Spell.SPELLS.stream().filter(s->s.isritual)
-      .map(Shrine::toritual).toList();
   static final int CAPACITY=12;
 
-  static class Ritual implements Serializable{
-    Spell spell;
-    int price;
+  /** @see Spell#isritual */
+  public static class Ritual implements Serializable{
+    /** Ritual effect. */
+    public Spell spell;
+    /** Value of {@link #spell} cast as a service. */
+    public int price;
 
     Ritual(Spell s){
       spell=s;
       price=price(s);
     }
 
-    String perform(){
+    /** @see Spell#castpeacefully(Combatant, Combatant) */
+    public String perform(){
       return spell.castpeacefully(null,null);
+    }
+
+    /** @see Spell#validate(Combatant, Combatant) */
+    public boolean validate(){
+      return spell.validate(null,null);
+    }
+
+    @Override
+    public String toString(){
+      return "Ritual: "+spell.name.toLowerCase();
     }
   }
 
@@ -72,7 +88,7 @@ public class Shrine extends Fortification{
     }
 
     @Override
-    String perform(){
+    public String perform(){
       return Squad.active.members.stream().map(m->spell.castpeacefully(null,m))
           .collect(joining(" "));
     }
@@ -163,7 +179,7 @@ public class Shrine extends Fortification{
 
   boolean service(int slot){
     var r=rituals.get(slot);
-    if(!r.spell.validate(null,null)||!Squad.active.pay(r.price)) return false;
+    if(!r.validate()||!Squad.active.pay(r.price)) return false;
     var message=r.perform();
     if(message==null) message="The ritual of %s is performed!"
         .formatted(r.spell.name.toLowerCase());

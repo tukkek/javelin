@@ -228,6 +228,15 @@ public class Catacombs extends Wilderness{
     }
   }
 
+  class CatacombStone extends LearningStone{
+    CatacombStone(DungeonFloor f){
+      super(f);
+      remove=false;
+      enter=false;
+      revealed=true;
+    }
+  }
+
   class Hub extends WildernessFloor{
     Hub(){
       super(1,Catacombs.this);
@@ -267,7 +276,7 @@ public class Catacombs extends Wilderness{
       new Camp(this).place(this,camp);
       new Guide(this).place(this,RPG.pick(camp.getadjacent(2)));
       for(var s:STONES)
-        if(RPG.chancein(2)) new LearningStone(this).place(this,s);
+        if(RPG.chancein(2)) new CatacombStone(this).place(this,s);
       var s=features.get(StairsUp.class).getlocation();
       var free=new LinkedList<>(new DungeonZoner(this,s).zones.get(0).area);
       var features=this.features.getall();
@@ -290,6 +299,7 @@ public class Catacombs extends Wilderness{
     entrance=new Entrance(this);
     terrains.clear();
     terrains.add(Terrain.MARSH);
+    goals=List.of();
   }
 
   /** @see DungeonEntrance#place(Point) */

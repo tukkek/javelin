@@ -57,7 +57,7 @@ public class Trader extends Inhabitant{
 
   /** @see List#sort(java.util.Comparator) */
   protected void sort(){
-    inventory.sort(ItemsByPrice.SINGLETON);
+    inventory.sort(ItemsByPrice.SINGLETON.reversed());
   }
 
   /** @return Items to be sold. */

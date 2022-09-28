@@ -2,13 +2,11 @@ package javelin.view.mappanel.dungeon;
 
 import java.util.HashSet;
 
-import javelin.Javelin;
 import javelin.controller.db.Preferences;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.Tile;
-import javelin.view.screen.BattleScreen;
 
 public class DungeonPanel extends MapPanel{
   DungeonFloor dungeon;
@@ -45,10 +43,13 @@ public class DungeonPanel extends MapPanel{
     synchronized(PAINTER){
       var p=scroll.getScrollPosition();
       var s=scroll.getViewportSize();
+      var w=s.width;
+      var h=s.height;
       for(Tile[] tiles:tiles) for(Tile tile:tiles){
+        if(!tile.discovered) continue;
         var t=(DungeonTile)tile;
-        if(t.discovered&&p.x<=t.x*tilesize&&(t.x+1)*tilesize<=p.x+s.width
-            &&p.y<=t.y*tilesize&&(t.y+1)*tilesize<=p.y+s.height)
+        if(p.x<=t.x*tilesize&&(t.x+1)*tilesize<=p.x+w&&p.y<=(t.y+1)*tilesize
+            &&(t.y+1)*tilesize<=p.y+h)
           t.repaint();
       }
     }

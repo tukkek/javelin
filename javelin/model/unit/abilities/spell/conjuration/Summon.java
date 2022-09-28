@@ -1,10 +1,12 @@
 package javelin.model.unit.abilities.spell.conjuration;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javelin.controller.Point;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.content.kit.Kit;
@@ -12,14 +14,12 @@ import javelin.controller.content.kit.wizard.Conjurer;
 import javelin.controller.content.upgrade.Upgrade;
 import javelin.controller.db.reader.MonsterReader;
 import javelin.model.state.BattleState;
-import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Monster.MonsterType;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.location.town.labor.ecological.Henge;
 import javelin.model.world.location.unique.SummoningCircle;
-import javelin.old.RPG;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
 
 /**
@@ -47,177 +47,174 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
  * {@link MonsterType} summon spells, such as the {@link SummoningCircle} and
  * the {@link Henge}.
  *
- * @see Conjurer#SUMMONS
  * @author alex
  */
 public class Summon extends Spell{
-	static final int[] DISPLACE=new int[]{-1,0,+1};
-	static final float CRFACTOR=5f;
+  /**
+   * Every summoning {@link Spell}, for each {@link Monster} available.
+   *
+   * Since we don't want these to completely overwhelm the kit, only one per
+   * {@link Spell#casterlevel} is registered with the kit iself. More can be
+   * accessed through {@link SummoningCircle}s.
+   */
+  public static final List<Summon> SUMMONS=new ArrayList<>();
 
-	/**
-	 * Summoned {@link Monster#name}. Since this can come from XML,
-	 * {@link String#equalsIgnoreCase(String)} is recommended with it.
-	 */
-	public String monstername;
-	float chance;
-	/**
-	 * Every summoning {@link Spell}, for each {@link Monster} available.
-	 *
-	 * Since we don't want these to completely overwhelm the kit, only one per
-	 * {@link Spell#casterlevel} is registered with the kit iself. More can be
-	 * accessed through {@link SummoningCircle}s.
-	 */
-	public static final List<Summon> SUMMONS=new ArrayList<>();
+  static final int[] DISPLACE={-1,0,+1};
+  static final float CRFACTOR=5f;
 
-	/** Constructor. */
-	public Summon(String monstername,float chance){
-		super("Summon "+monstername.toLowerCase(),0,0);
-		if(chance!=1) throw new RuntimeException("Cannot be a Spell if random!");
-		this.monstername=monstername;
-		this.chance=chance;
-		castinbattle=true;
-		if(!Monster.BYCR.isEmpty()) postloadmonsters();
-		isscroll=false;
-	}
+  /**
+   * Summoned {@link Monster#name}. Since this can come from XML,
+   * {@link String#equalsIgnoreCase(String)} is recommended with it.
+   */
+  public String monstername;
 
-	/**
-	 * Chance is applied as a normal %.
-	 *
-	 * TODO isn't taking into account summoning a group.
-	 */
-	public static float ratechallenge(Monster m,float chance){
-		float cr=m.cr/((5+2)/2f);
-		return chance*cr;
-	}
+  float chance;
 
-	@Override
-	public String cast(Combatant caster,Combatant target,boolean saved,
-			BattleState s,ChanceNode cn){
-		var m=Monster.get(monstername);
-		var summoned=summon(m,caster,s);
-		cn.overlay=new AiOverlay(summoned.getlocation());
-		return "";// default message is enough
-	}
+  /** Constructor. */
+  public Summon(String monstername,float chance){
+    super("Summon "+monstername.toLowerCase(),0,0);
+    if(chance!=1) throw new RuntimeException("Cannot be a Spell if random!");
+    this.monstername=monstername;
+    this.chance=chance;
+    castinbattle=true;
+    if(!Monster.BYCR.isEmpty()) postloadmonsters();
+    isscroll=false;
+  }
 
-	/**
-	 * Summons a {@link Monster} near the caster. Does not provide player
-	 * feedback.
-	 *
-	 * @return The location the monster was summone at.
-	 */
-	static public Combatant summon(Monster m,Combatant caster,BattleState s){
-		List<Combatant> team=caster.getteam(s);
-		m.customName="Summoned "+m.name.toLowerCase();
-		Combatant summoned=new Combatant(m,true);
-		place(caster,summoned,team,s);
-		return summoned;
-	}
+  /**
+   * Chance is applied as a normal %.
+   *
+   * TODO isn't taking into account summoning a group.
+   */
+  public static float ratechallenge(Monster m,float chance){
+    var cr=m.cr/((5+2)/2f);
+    return chance*cr;
+  }
 
-	static public void place(Combatant summoner,Combatant summoned,
-			List<Combatant> team,BattleState s){
-		team.add(summoned);
-		summoned.summoned=true;
-		summoned.automatic=true;
-		summoned.rollinitiative(summoner.ap);
-		final Square[][] map=s.map;
-		int x=summoner.location[0];
-		int y=summoner.location[1];
-		while(s.isblocked(x,y)){
-			x+=DISPLACE[RPG.r(DISPLACE.length)];
-			y+=DISPLACE[RPG.r(DISPLACE.length)];
-			if(x<0||y<0||x>=map.length||y>=map.length){
-				x=summoner.location[0];
-				y=summoner.location[1];
-			}
-		}
-		summoned.location[0]=x;
-		summoned.location[1]=y;
-	}
+  @Override
+  public String cast(Combatant caster,Combatant target,boolean saved,
+      BattleState s,ChanceNode cn){
+    var m=Monster.get(monstername);
+    var summoned=summon(m,caster,s);
+    cn.overlay=new AiOverlay(summoned.getlocation());
+    return "";
+  }
 
-	@Override
-	public int hit(Combatant active,Combatant target,BattleState state){
-		return Integer.MIN_VALUE;
-	}
+  /**
+   * Summons a {@link Monster} near the caster. Does not provide player
+   * feedback.
+   *
+   * @return The location the monster was summone at.
+   */
+  static public Combatant summon(Monster m,Combatant caster,BattleState s){
+    var team=caster.getteam(s);
+    m.customName="Summoned "+m.name.toLowerCase();
+    var summoned=new Combatant(m,true);
+    place(caster,summoned,team,s);
+    return summoned;
+  }
 
-	@Override
-	public boolean apply(Combatant c){
-		Monster m=Monster.get(monstername);
-		if(m==null) throw new RuntimeException("Unknown summon: "+monstername);
-		return ChallengeCalculator.calculatecr(c.source)>=m.cr&&super.apply(c);
-	}
+  /** Spawns summoned {@link Combatant} next to caster. */
+  static public void place(Combatant c,Combatant summon,List<Combatant> team,
+      BattleState s){
+    team.add(summon);
+    summon.summoned=true;
+    summon.automatic=true;
+    summon.rollinitiative(c.ap);
+    var skip=new HashSet<Point>(8);
+    Point p=null;
+    for(var i=1;p==null;i++){
+      var adjacent=c.getlocation().getadjacent(i);
+      adjacent.removeAll(skip);
+      p=adjacent.stream().filter(a->!s.isblocked(a.x,a.y)).findAny()
+          .orElse(null);
+      if(p==null) skip.addAll(adjacent);
+    }
+    summon.setlocation(p);
+  }
 
-	@Override
-	public boolean canbecast(Combatant c){
-		return !c.summoned&&super.canbecast(c);
-	}
+  @Override
+  public int hit(Combatant active,Combatant target,BattleState state){
+    return Integer.MIN_VALUE;
+  }
 
-	@Override
-	public void postloadmonsters(){
-		var m=Monster.get(monstername);
-		cr=ratechallenge(m,chance);
-		level=Math.round(m.cr/2f);
-		if(level<1) level=1;
-		casterlevel=getcasterlevel(level);
-	}
+  @Override
+  public boolean apply(Combatant c){
+    var m=Monster.get(monstername);
+    if(m==null) throw new RuntimeException("Unknown summon: "+monstername);
+    return ChallengeCalculator.calculatecr(c.source)>=m.cr&&super.apply(c);
+  }
 
-	@Override
-	public void filter(Combatant combatant,List<Combatant> targets,
-			BattleState s){
-		targetself(combatant,targets);
-	}
+  @Override
+  public boolean canbecast(Combatant c){
+    return !c.summoned&&super.canbecast(c);
+  }
 
-	@Override
-	public boolean equals(Object obj){
-		return super.equals(obj)&&monstername.equals(((Summon)obj).monstername);
-	}
+  @Override
+  public void postloadmonsters(){
+    var m=Monster.get(monstername);
+    cr=ratechallenge(m,chance);
+    level=Math.round(m.cr/2f);
+    if(level<1) level=1;
+    casterlevel=getcasterlevel(level);
+  }
 
-	@Override
-	public int hashCode(){
-		return name.hashCode();
-	}
+  @Override
+  public void filter(Combatant combatant,List<Combatant> targets,BattleState s){
+    targetself(combatant,targets);
+  }
 
-	/**
-	 * Since there's one {@link Summon} per {@link Monster} in the game, this
-	 * method helps summoning kits to offer a sensible amount of spell choices.
-	 *
-	 * @param pool What pool of Summons to choose from - usually
-	 *          {@link Summon#ALLSUMMONS} or a filtered version of it.
-	 * @param perlevel How many spell instances to return, for each level. Note
-	 *          that this is the maximum limit, as it may not find enough (or any)
-	 *          spells to fulfill this target.
-	 * @param casterlevel Only gather summons of this given
-	 *          {@link Spell#casterlevel}.
-	 *
-	 * @see Stream#filter(java.util.function.Predicate)
-	 */
-	public static List<Summon> select(List<Summon> pool,int perlevel,
-			final int casterlevel){
-		var tier=pool.stream().filter(s->s.level==casterlevel)
-				.collect(Collectors.toList());
-		return tier.subList(0,Math.min(perlevel,tier.size()));
-	}
+  @Override
+  public boolean equals(Object obj){
+    return super.equals(obj)&&monstername.equals(((Summon)obj).monstername);
+  }
 
-	/**
-	 * @return The result of calling {@link #select(List, int, int)} with
-	 *         {@link Spell#casterlevel} 1 through 9.
-	 */
-	public static ArrayList<Summon> select(List<Summon> pool,int perlevel){
-		var summons=new ArrayList<Summon>(9*perlevel);
-		for(var casterlevel=1;casterlevel<=9;casterlevel++)
-			summons.addAll(select(pool,perlevel,casterlevel));
-		return summons;
-	}
+  @Override
+  public int hashCode(){
+    return name.hashCode();
+  }
 
-	/**
-	 * Unlike most {@link Upgrade}s, {@link Summon} {@link Spell}s need to be
-	 * created after all {@link Monster}s are loaded.
-	 *
-	 * @see MonsterReader
-	 */
-	public static void setupsummons(){
-		SUMMONS.addAll(Monster.ALL.stream().filter(m->!m.passive)
-				.map(m->new Summon(m.name,1)).collect(Collectors.toList()));
-		for(var k:Kit.KITS)
-			k.finish();
-	}
+  /**
+   * Since there's one {@link Summon} per {@link Monster} in the game, this
+   * method helps summoning kits to offer a sensible amount of spell choices.
+   *
+   * @param pool What pool of Summons to choose from - usually {@link #SUMMONS}
+   *   or a filtered version of it.
+   * @param perlevel How many spell instances to return, for each level. Note
+   *   that this is the maximum limit, as it may not find enough (or any) spells
+   *   to fulfill this target.
+   * @param casterlevel Only gather summons of this given
+   *   {@link Spell#casterlevel}.
+   *
+   * @see Stream#filter(java.util.function.Predicate)
+   */
+  public static List<Summon> select(List<Summon> pool,int perlevel,
+      final int casterlevel){
+    var tier=pool.stream().filter(s->s.level==casterlevel)
+        .collect(Collectors.toList());
+    return tier.subList(0,Math.min(perlevel,tier.size()));
+  }
+
+  /**
+   * @return The result of calling {@link #select(List, int, int)} with
+   *   {@link Spell#casterlevel} 1 through 9.
+   */
+  public static ArrayList<Summon> select(List<Summon> pool,int perlevel){
+    var summons=new ArrayList<Summon>(9*perlevel);
+    for(var casterlevel=1;casterlevel<=9;casterlevel++)
+      summons.addAll(select(pool,perlevel,casterlevel));
+    return summons;
+  }
+
+  /**
+   * Unlike most {@link Upgrade}s, {@link Summon} {@link Spell}s need to be
+   * created after all {@link Monster}s are loaded.
+   *
+   * @see MonsterReader
+   */
+  public static void setupsummons(){
+    SUMMONS.addAll(Monster.ALL.stream().filter(m->!m.passive)
+        .map(m->new Summon(m.name,1)).collect(Collectors.toList()));
+    for(var k:Kit.KITS) k.finish();
+  }
 }

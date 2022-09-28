@@ -15,7 +15,6 @@ import javelin.controller.walker.Walker;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.condition.Charging;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.battle.overlay.TargetOverlay;
@@ -196,18 +195,11 @@ public abstract class Target extends Action{
     return target+" ("+String.join(", ",status)+")";
   }
 
-  /**
-   * A higher value means this should be selected first while browsing targets.
-   *
-   * TODO turn into dynamic instead?
-   */
+  /** @return Higher value means earlier in {@link Target} order. */
   public int prioritize(Combatant c,BattleState state,Combatant target){
-    var priority=-target.surprise();
-    if(state.haslineofsight(c,target)==Vision.COVERED) priority-=4;
-    /* TODO take into account relevant feats */
-    if(state.isengaged(target)) priority-=4;
-    if(target.hascondition(Charging.class)!=null) priority+=2;
+    var priority=target.getlocation().distanceinsteps(c.getlocation());
+    if(state.haslineofsight(c,target)==Vision.COVERED) priority-=10;
+    if(state.isengaged(target)) priority-=100;
     return priority;
   }
-
 }

@@ -71,7 +71,7 @@ Level 4 (caster level 7)
   Inflict critical wounds: causes 26 points of damage. Touch, safe.
   Neutralize poison: disables natural poison on an enemy or grants poison immunity to ally for an hour. Safe.
   Resist energy: grants energy resistance 20 for 1 hour to an ally.
-  Secure shelter: lets you rest in the wilderness.
+  Secure shelter: lets you rest safely (when not in a dungeon or wilderness location).
   
 Level 5 (caster level 9)
   Flame strike: produces a vertical column of divine fire with a 10 foot radius.

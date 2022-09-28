@@ -182,6 +182,12 @@ public class BattleScreen extends Screen{
   }
 
   synchronized void humanmove(){
+    if(first) try{
+      first=false;
+      Thread.sleep(1000);
+    }catch(InterruptedException e){
+      //ignore
+    }
     var s=Fight.state;
     lastaicheck=s.next.ap;
     if(current==null||current.automatic||s.fleeing.contains(current)) return;
@@ -207,6 +213,7 @@ public class BattleScreen extends Screen{
   }
 
   void computermove(){
+    first=false;
     if(jointurns) jointurns=false;
     else{
       BattlePanel.current=current;

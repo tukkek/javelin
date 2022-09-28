@@ -50,7 +50,7 @@ public class Difficulty{
     if(delta==MODERATE) return "moderate";
     if(delta<=DIFFICULT) return "difficult";
     if(delta<=DEADLY) return "deadly";
-    return "impossible";
+    return "overwhelming";
   }
 
   /**

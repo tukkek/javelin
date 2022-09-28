@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import javelin.Javelin;
 import javelin.controller.challenge.Tier;
 import javelin.controller.content.action.UseItem;
-import javelin.controller.content.action.world.inventory.EquipGear;
 import javelin.controller.content.action.world.inventory.UseItems;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.model.Healing;
@@ -287,12 +286,10 @@ public abstract class Item implements Serializable,Cloneable,Healing{
    */
   public void grab(Squad s){
     identified=s.identify(this);
-    var action=this instanceof Gear?EquipGear.INSTANCE:UseItems.INSTANCE;
-    var list=action.listitems(null,false)+"\n";
     var name=toString();
     if(!(this instanceof Artifact)) name=name.toLowerCase();
-    list+="Who will take the "+name+"?";
-    s.equipment.get(UseItems.selectmember(s.members,this,list)).add(this);
+    var prompt="Who will take the "+name+"?";
+    s.equipment.get(UseItems.selectmember(s.members,this,prompt)).add(this);
   }
 
   /**

@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import javelin.Debug;
 import javelin.Javelin;
 import javelin.controller.Point;
-import javelin.controller.content.fight.Fight;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.generator.dungeon.template.FloorTile;
 import javelin.controller.table.dungeon.door.DoorType;
@@ -120,16 +119,14 @@ public class Door extends Feature{
     var prompt=FORCE.formatted(Javelin.describe(s,breakdc));
     var attempts=ATTEMPTS.getOrDefault(Javelin.prompt(prompt),0);
     if(attempts==0) return new Outcome(forcer,false,null);
-    Fight f=null;
-    for(var i=0;i<attempts&&stuck&&f==null;i++){
+    for(var i=0;i<attempts&&stuck;i++){
+      if(RPG.chancein(10)){
+        Javelin.message("The noise draws unwanted attention!",true);
+        throw new StartBattle(Dungeon.active.dungeon.fight());
+      }
       if(10+s>=breakdc||RPG.r(1,20)+s>=breakdc) stuck=false;
-      if(RPG.chancein(10)) f=Dungeon.active.dungeon.fight();
     }
     Javelin.message((stuck?FORCEFAIL:FORCED).formatted(forcer),false);
-    if(f!=null){
-      Javelin.message("The noise draws someone's attention!",true);
-      throw new StartBattle(f);
-    }
     return new Outcome(forcer,!stuck,null);
   }
 

@@ -262,7 +262,11 @@ public class WorldGenerator extends Thread{
       working=false;
       return;
     }catch(Exception e){
-      if(Javelin.DEBUG&&!(e instanceof RestartWorldGeneration)) throw e;
+      if(Javelin.DEBUG){
+        Throwable t=e;
+        while(t.getCause()!=null) t=t.getCause();
+        if(!(t instanceof RestartWorldGeneration)) throw e;
+      }
       World.seed=null;
       s.reset();
       continue;

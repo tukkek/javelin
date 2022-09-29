@@ -345,4 +345,10 @@ public abstract class Actor implements Serializable{
   public boolean cansee(){
     return World.seed.discovered.contains(getlocation());
   }
+
+  /** {@link #setlocation(Point)} and {@link #place()}. */
+  public void place(Point p){
+    setlocation(p);
+    place();
+  }
 }

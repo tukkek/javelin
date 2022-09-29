@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javelin.Javelin;
 import javelin.controller.Calendar;
 import javelin.controller.Point;
 import javelin.controller.challenge.Difficulty;
@@ -200,6 +201,11 @@ public class Caravan extends Actor{
 
   @Override
   public boolean interact(){
+    if(inventory.isEmpty()){
+      var m="This caravan no longer has anything useful to sell you...";
+      Javelin.message(m,false);
+      return true;
+    }
     new CaravanScreen().show();
     return true;
   }

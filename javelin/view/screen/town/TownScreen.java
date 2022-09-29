@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.model.unit.Combatant;
+import javelin.controller.challenge.RewardCalculator;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.location.town.Town;
@@ -23,9 +23,9 @@ import javelin.view.screen.town.option.TournamentScreenOption;
  */
 public class TownScreen extends PurchaseScreen{
   static final boolean DEBUGMANAGEMENT=false;
-  static final Option SETTLE=new Option("Settle worker",0,'s');
   static final Option RENAME=new Option("Rename town",0,'r');
   static final Option TREATISE=new Option("Claim treaty",0,'t');
+  static final Option DONATE=new Option("Donate",0,'t');
   static final String REPUTATION="Reputation: %s.";
 
   class Manage extends ScreenOption{
@@ -99,6 +99,13 @@ public class TownScreen extends PurchaseScreen{
     }
   }
 
+  int donate(){
+    var r=town.diplomacy.reputation;
+    if(r==0) r=1;
+    var p=town.population;
+    return Javelin.round(RewardCalculator.getgold(p)*p/r);
+  }
+
   @Override
   public boolean select(final Option o){
     if(o instanceof ScreenOption){
@@ -113,22 +120,15 @@ public class TownScreen extends PurchaseScreen{
       title=title(town)+"\n\n";
       return true;
     }
-    if(o==SETTLE) return retire(town);
-    if(o==TREATISE) new SelectTreaty().show();
+    if(o==DONATE){
+      if(Squad.active.pay(donate())){
+        var d=town.diplomacy;
+        d.reputation=town.population;
+        var m="%s becomes %s!".formatted(town,d.describestatus());
+        Javelin.message(m,true);
+      }else Javelin.message("You don't have that much gold!",false);
+    }else if(o==TREATISE) new SelectTreaty().show();
     stayopen=false;
-    return true;
-  }
-
-  boolean retire(Town town){
-    List<Combatant> retirees=new ArrayList<>();
-    for(Combatant c:Squad.active.members) if(!c.mercenary) retirees.add(c);
-    if(retirees.isEmpty()) return false;
-    var choice=Javelin.choose(
-        "Which member should retire and become local labor?",retirees,true,
-        false);
-    if(choice<0) return false;
-    Squad.active.remove(retirees.get(choice));
-    town.population+=1;
     return true;
   }
 
@@ -137,8 +137,11 @@ public class TownScreen extends PurchaseScreen{
     final var list=new ArrayList<Option>();
     list.add(new Manage(town));
     list.add(RENAME);
-    list.add(SETTLE);
-    if(town.diplomacy.claim()) list.add(TREATISE);
+    var d=town.diplomacy;
+    if(d.getstatus()<1){
+      DONATE.name="Donate ($%s)".formatted(Javelin.format(donate()));
+      list.add(DONATE);
+    }else if(!d.treaties.isEmpty()) list.add(TREATISE);
     if(town.ishosting())
       list.add(new TournamentScreenOption("Enter tournament",town,'e'));
     return list;

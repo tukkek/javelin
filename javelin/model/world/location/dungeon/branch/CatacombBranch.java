@@ -135,7 +135,7 @@ public class CatacombBranch extends Branch{
       var e=new RandomDungeonEncounter(Dungeon.active);
       e.bribe=false;
       e.hide=false;
-      e.encounter=encounter;
+      e.enemies=encounter;
       e.rewardgold=false;
       e.mutators.add(new Mutator(){
         @Override

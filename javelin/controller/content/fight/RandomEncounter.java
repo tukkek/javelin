@@ -8,7 +8,6 @@ import javelin.JavelinApp;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.Tier;
 import javelin.controller.comparator.EncountersByEl;
-import javelin.controller.content.action.ai.Flee;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.generator.encounter.Encounter;
@@ -61,11 +60,28 @@ public class RandomEncounter extends Fight{
   static final int REFRESHCHANCE=Math
       .round((1+REFRESHDIE)/2*2*Season.SEASONDURATION/ENCOUNTERS);
 
-  @Override
-  public Combatants generate(ArrayList<Combatant> blueteam){
+  /** Foes. */
+  public Combatants enemies;
+
+  /** Internal constructor. */
+  protected RandomEncounter(Combatants c){
+    enemies=c;
+  }
+
+  /** Constructor. */
+  public RandomEncounter(){
+    this(generate());
+  }
+
+  static Combatants generate(){
     var encounters=World.seed.encounters.get(Terrain.current());
     var e=encounters.get(RPG.low(0,encounters.size()-1));
-    return skip(e)?null:new Combatants(e);
+    return new Combatants(e);
+  }
+
+  @Override
+  public Combatants generate(ArrayList<Combatant> blueteam){
+    return enemies.generate();
   }
 
   @Override
@@ -73,22 +89,19 @@ public class RandomEncounter extends Fight{
     return foes==null||super.avoid(foes);
   }
 
-  /**
-   * TODO better strategic skip
-   *
-   * @return <code>true</code> if encounter is too easy to bother the player
-   *   with - skip it.
-   */
-  public static boolean skip(Combatants c){
-    return Difficulty.calculate(Squad.active.members,c)<=Flee.FLEEAT;
+  @Override
+  public Integer getel(int teamel){
+    return enemies.getel();
   }
 
   /** @param chance % chance of starting a battle. */
   static public void encounter(double chance){
-    if(!Debug.disablecombat&&RPG.random()<chance){
-      var f=JavelinApp.context.encounter();
-      if(f!=null) throw new StartBattle(f);
-    }
+    if(Debug.disablecombat||RPG.random()>=chance) return;
+    var f=JavelinApp.context.encounter();
+    if(f==null) return;
+    var el=Squad.active.getel();
+    if(Difficulty.calculate(el,f.getel(el))>Difficulty.VERYEASY)
+      throw new StartBattle(f);
   }
 
   static void generate(List<Combatants> encounters,int target,Terrain t){

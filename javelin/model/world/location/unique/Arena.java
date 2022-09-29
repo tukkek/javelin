@@ -86,7 +86,7 @@ import javelin.view.screen.WorldScreen;
  */
 public class Arena extends UniqueLocation{
   static final String NONEELIGIBLE="Only gladiators in good health are allowed to fight in the arena!";
-  static final String CONFIRM="Begin an Arena match?\n"
+  static final String CONFIRM="Begin an Arena match?\n\n"
       +"Press ENTER to confirm or any other key to cancel...\n\n";
   static final String DESCRIPTION="The Arena";
   static final EncounterIndex GLADIATORS=new EncounterIndex(Monster.ALL.stream()

@@ -19,8 +19,8 @@ import javelin.view.screen.Option;
  * @author alex
  */
 public class AcademyScreen extends UpgradingScreen{
-  static final Option WAIT=new Option(
-      "Wait until current training is completed",0,'w',2);
+  static final Option WAIT=new Option("Wait until next training is completed",0,
+      'w',100);
 
   /** {@link Location} being represented. */
   protected Academy academy;
@@ -102,7 +102,7 @@ public class AcademyScreen extends UpgradingScreen{
   @Override
   public boolean select(Option op){
     if(op==WAIT){
-      var done=academy.training.last().completionat;
+      var done=academy.training.next().completionat;
       var s=Squad.active;
       s.delay(done-s.gettime());
       stayopen=false;

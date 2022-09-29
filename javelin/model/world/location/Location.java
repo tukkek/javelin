@@ -59,8 +59,8 @@ public abstract class Location extends Actor{
    * square-steps.
    */
   static final int CLOSE=4;
-  static final String CLOSED="%s is closed. Come back from %s to %s...\n"
-      +"Press w to wait or any other key to continue...";
+  static final String CLOSED="%s is closed. Come back from %s to %s...\n\n"
+      +"Press ENTER to wait or any other key to continue...";
 
   /**
    * If <code>false</code> will make sure no {@link Squad} occupies the same
@@ -392,7 +392,7 @@ public abstract class Location extends Actor{
     var message=String.format(CLOSED,l,from,var);
     Javelin.message(message,Delay.NONE);
     /* TODO this could easily be refactored into Squad#waitfor(Period) */
-    if(Javelin.input().getKeyChar()!='w') throw new RepeatTurn();
+    if(Javelin.input().getKeyChar()!='\n') throw new RepeatTurn();
     var wait=open.get(0).from-Period.gethour();
     if(wait<0) wait+=24;
     Squad.active.delay(wait);

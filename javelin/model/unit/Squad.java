@@ -101,8 +101,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 
   /** Removes this squad from the game. */
   public void disband(){
-    var squads=World.getall(Squad.class);
-    squads.remove(this);
+    remove();
     Javelin.lose();
     if(Dungeon.active!=null) Dungeon.active.leave();
   }

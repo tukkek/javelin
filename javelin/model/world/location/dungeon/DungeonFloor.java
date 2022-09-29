@@ -441,7 +441,7 @@ public class DungeonFloor implements Serializable{
     WorldMove.abort=true;
     Dungeon.active=null;
     Javelin.app.switchScreen(new WorldScreen(true));
-    Squad.active.place();
+    if(Squad.getsquads().contains(Squad.active)) Squad.active.place();
   }
 
   /** @see StairsUp */

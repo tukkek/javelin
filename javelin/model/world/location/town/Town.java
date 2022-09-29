@@ -213,7 +213,7 @@ public class Town extends Location{
     if(ishosting()) exhibitions.remove(0);
     work();
     diplomacy.turn();
-    Caravan.spawn(this);
+    Caravan.spawn(this,false);
   }
 
   void work(){

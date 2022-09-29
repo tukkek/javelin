@@ -66,7 +66,6 @@ import javelin.view.screen.town.PurchaseOption;
  * @author alex
  */
 public class Caravan extends Actor{
-  static final boolean ALLOW=true;
   static final Map<Tier,Integer> FREQUENCY=new HashMap<>(4);
 
   static{
@@ -231,8 +230,8 @@ public class Caravan extends Actor{
   }
 
   /** To be called daily from every Town. */
-  public static void spawn(Town t){
-    if(!ALLOW||!RPG.chancein(FREQUENCY.get(Tier.get(t.population)))) return;
+  public static void spawn(Town t,boolean force){
+    if(!force&&!RPG.chancein(FREQUENCY.get(Tier.get(t.population)))) return;
     var c=new Caravan(t);
     c.place();
     c.displace();

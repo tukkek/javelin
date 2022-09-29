@@ -82,6 +82,12 @@ public class StateManager{
       try(var writer=new ObjectOutputStream(new FileOutputStream(to))){
         if(WorldScreen.current!=null) WorldScreen.current.savediscovered();
         writer.writeBoolean(abandoned);
+        var s=Squad.active;
+        if(s!=null){
+          var squads=World.seed.actors.get(Squad.class);
+          squads.remove(s);
+          squads.add(0,s);
+        }
         writer.writeObject(World.seed);
         writer.writeObject(Dungeon.active);
         writer.writeObject(Incursion.currentel);
@@ -92,7 +98,6 @@ public class StateManager{
         writer.writeObject(OpenJournal.content);
         writer.writeObject(WildEvents.instance);
         writer.writeObject(UrbanEvents.instance);
-        //				writer.writeObject(Miniatures.miniatures);
         writer.flush();
         writer.close();
         if(to==SAVEFILE) backup(false);
@@ -184,6 +189,7 @@ public class StateManager{
       Javelin.act();
       for(ArrayList<Actor> instances:World.getseed().actors.values())
         for(Actor p:instances) p.place();
+      Squad.active=(Squad)World.seed.actors.get(Squad.class).get(0);
       Dungeon.active=(DungeonFloor)stream.readObject();
       Incursion.currentel=(Integer)stream.readObject();
       Weather.read((Integer)stream.readObject());
@@ -193,7 +199,6 @@ public class StateManager{
       OpenJournal.content=(String)stream.readObject();
       WildEvents.instance=(EventDealer)stream.readObject();
       UrbanEvents.instance=(UrbanEvents)stream.readObject();
-      //			Miniatures.miniatures=(ArrayList<Monster>)stream.readObject();
       stream.close();
       filestream.close();
       return true;

@@ -147,9 +147,9 @@ public class Arena extends UniqueLocation{
       var from=d.describestatus();
       var chance=RewardCalculator.getgold(20)/(Fight.gold*t.population);
       if(chance<1) chance=1;
-      if(Javelin.DEBUG)
-        r+="(Reputation increase chance: 1/%s).\n".formatted(chance);
-      if(RPG.chancein(chance)) d.reputation+=1;
+      //      if(Javelin.DEBUG)
+      //        r+="(Reputation increase chance: 1/%s).\n".formatted(chance);
+      if(RPG.chancein(chance)) d.reputation+=2;
       var to=d.describestatus();
       if(to!=from)
         r+="Reputation in %s increases to %s!\n".formatted(t,to.toLowerCase());

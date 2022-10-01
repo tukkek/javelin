@@ -1,7 +1,8 @@
 SHELL=/bin/bash
 .SILENT:
 
-JLINK=jlink
+JLINK=build/jdk/linux/bin/jlink
+JAVADOC=build/jdk/linux/bin/javadoc
 
 define jlink
 	echo "Building Javelin for $(1)..."
@@ -17,7 +18,7 @@ default: checkdirty askversion javadoc windows mac linux
 javadoc:
 	echo "Generating Javadoc..."
 	if [ -d doc/javadoc ]; then rm -r doc/javadoc; fi
-	javadoc -d doc/javadoc/ javelin  -subpackages javelin &>/dev/null
+	-$(JAVADOC) -d doc/javadoc/ javelin  -subpackages javelin &>/dev/null
 	
 checkdirty:
 	echo "Checking for dirty preferences.properties..."

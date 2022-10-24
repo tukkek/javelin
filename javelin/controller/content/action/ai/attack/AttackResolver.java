@@ -12,8 +12,10 @@ import javelin.Javelin.Delay;
 import javelin.controller.Audio;
 import javelin.controller.ai.AiThread;
 import javelin.controller.ai.ChanceNode;
+import javelin.controller.collection.CountingSet;
 import javelin.controller.content.action.Action;
 import javelin.controller.content.action.ActionCost;
+import javelin.controller.content.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -38,303 +40,325 @@ import javelin.view.screen.StatisticsScreen;
  * @author alex
  */
 public class AttackResolver{
-	class DamageNode extends ChanceNode{
-		DamageNode(Combatant attacker,Combatant target,BattleState state,
-				float chance,String message,boolean hit){
-			super(state,chance,message,hit?Delay.BLOCK:Delay.WAIT);
-			overlay=new AiOverlay(target);
-			var action=AttackResolver.this.action;
-			audio=target.hp<=0?new Audio("die",target)
-					:new Audio(hit?action.soundhit:action.soundmiss,attacker);
-		}
+  class DamageNode extends ChanceNode{
+    DamageNode(Combatant attacker,Combatant target,BattleState state,
+        float chance,String message,boolean hit){
+      super(state,chance,message,hit?Delay.BLOCK:Delay.WAIT);
+      overlay=new AiOverlay(target);
+      var action=AttackResolver.this.action;
+      audio=target.hp<=0?new Audio("die",target)
+          :new Audio(hit?action.soundhit:action.soundmiss,attacker);
+    }
 
-		@Override
-		public boolean equals(Object o){
-			var r=o instanceof DamageNode?(DamageNode)o:null;
-			return r!=null&&action.equals(r.action);
-		}
+    @Override
+    public boolean equals(Object o){
+      var r=o instanceof DamageNode?(DamageNode)o:null;
+      return r!=null&&action.equals(r.action);
+    }
 
-		@Override
-		public int hashCode(){
-			return action.hashCode();
-		}
-	}
+    @Override
+    public int hashCode(){
+      return action.hashCode();
+    }
+  }
 
-	enum Outcome{
-		MISS,
-		/**
-		 * Inspired by (but deals minimum damage instead of half)
-		 * https://dnd-wiki.org/wiki/Graze_Damage_(3.5e_Variant_Rule)#dynamic_user_navbox
-		 *
-		 * Found the link when looking for a less miss-prone variant combat rules.
-		 */
-		GRAZE,HIT,CRITICAL_UNCONFIRMED,CRITICAL
-	}
+  enum Outcome{
+    MISS,
+    /**
+     * Inspired by (but deals minimum damage instead of half)
+     * https://dnd-wiki.org/wiki/Graze_Damage_(3.5e_Variant_Rule)#dynamic_user_navbox
+     *
+     * Found the link when looking for a less miss-prone variant combat rules.
+     */
+    GRAZE,HIT,CRITICAL_UNCONFIRMED,CRITICAL
+  }
 
-	class SequenceResult implements Cloneable{
-		ArrayList<Outcome> outcomes;
-		ArrayList<String> chances;
+  class SequenceResult implements Cloneable{
+    ArrayList<Outcome> outcomes;
+    ArrayList<String> chances;
 
-		public SequenceResult(){
-			var size=sequence.size();
-			outcomes=new ArrayList<>(size);
-			chances=new ArrayList<>(size);
-		}
+    public SequenceResult(){
+      var size=sequence.size();
+      outcomes=new ArrayList<>(size);
+      chances=new ArrayList<>(size);
+    }
 
-		@Override
-		public boolean equals(Object o){
-			var r=o instanceof SequenceResult?(SequenceResult)o:null;
-			return r!=null&&outcomes.equals(r.outcomes);
-		}
+    @Override
+    public boolean equals(Object o){
+      var r=o instanceof SequenceResult?(SequenceResult)o:null;
+      return r!=null&&outcomes.equals(r.outcomes);
+    }
 
-		@Override
-		public int hashCode(){
-			var exponent=Outcome.values().length;
-			var hash=0;
-			for(int i=0;i<outcomes.size();i++)
-				hash+=(outcomes.get(i).ordinal()+1)*Math.pow(exponent,i);
-			return hash;
-		}
+    @Override
+    public int hashCode(){
+      var exponent=Outcome.values().length;
+      var hash=0;
+      for(var i=0;i<outcomes.size();i++)
+        hash+=(outcomes.get(i).ordinal()+1)*Math.pow(exponent,i);
+      return hash;
+    }
 
-		@Override
-		public String toString(){
-			return outcomes.toString();
-		}
+    @Override
+    public String toString(){
+      return outcomes.toString();
+    }
 
-		@Override
-		public SequenceResult clone(){
-			try{
-				var clone=(SequenceResult)super.clone();
-				clone.outcomes=new ArrayList<>(outcomes);
-				clone.chances=new ArrayList<>(chances);
-				return clone;
-			}catch(CloneNotSupportedException e){
-				throw new RuntimeException(e);
-			}
-		}
-	}
+    @Override
+    public SequenceResult clone(){
+      try{
+        var clone=(SequenceResult)super.clone();
+        clone.outcomes=new ArrayList<>(outcomes);
+        clone.chances=new ArrayList<>(chances);
+        return clone;
+      }catch(CloneNotSupportedException e){
+        throw new RuntimeException(e);
+      }
+    }
+  }
 
-	/**
-	 * Bonus to applied to all {@link Attack}s. Not a preview, previews are
-	 * calculated by also adding the first {@link Attack#bonus} of the
-	 * {@link #sequence}.
-	 */
-	public int attackbonus=0;
-	/** @see Attack#damage */
-	public int damagebonus=0;
-	/** @see #preview(Combatant, AttackSequence) */
-	public Float misschance=null;
-	/** @see #preview(Combatant, AttackSequence) */
-	public Float hitchance=null;
-	/** Human-text preview, see {@link #attackbonus}. */
-	public String chance=null;
-	/** Can be overriden to force a particular {@link ActionCost}. */
-	public Float ap=null;
+  /**
+   * Bonus to applied to all {@link Attack}s. Not a preview, previews are
+   * calculated by also adding the first {@link Attack#bonus} of the
+   * {@link #sequence}.
+   */
+  public int attackbonus=0;
+  /** @see Attack#damage */
+  public int damagebonus=0;
+  /** @see #preview(Combatant, AttackSequence) */
+  public Float misschance=null;
+  /** @see #preview(Combatant, AttackSequence) */
+  public Float hitchance=null;
+  /** Human-text preview, see {@link #attackbonus}. */
+  public String chance=null;
+  /** Can be overriden to force a particular {@link ActionCost}. */
+  public Float ap=null;
 
-	List<String> effects=new ArrayList<>(0);
-	AttackSequence sequence;
-	AbstractAttack action;
-	List<Float> critical;
-	Strike maneuver;
+  List<String> effects=new ArrayList<>(0);
+  AttackSequence sequence;
+  AbstractAttack action;
+  List<Float> critical;
+  Strike maneuver;
 
-	/** {@link AttackSequence} Constructor. */
-	public AttackResolver(AbstractAttack action,Combatant attacker,
-			Combatant target,AttackSequence sequence,BattleState state){
-		this.action=action;
-		this.sequence=new AttackSequence(sequence);
-		this.sequence.sort();
-		critical=new ArrayList<>(this.sequence.size());
-		maneuver=action.maneuver;
-		if(maneuver!=null) ap=maneuver.ap;
-		attackbonus-=action.getpenalty(attacker,target,state);
-		damagebonus+=action.getdamagebonus(attacker,target);
-	}
+  /** {@link AttackSequence} Constructor. */
+  public AttackResolver(AbstractAttack action,Combatant attacker,
+      Combatant target,AttackSequence sequence,BattleState state){
+    this.action=action;
+    this.sequence=new AttackSequence(sequence);
+    this.sequence.sort();
+    critical=new ArrayList<>(this.sequence.size());
+    maneuver=action.maneuver;
+    if(maneuver!=null) ap=maneuver.ap;
+    attackbonus-=action.getpenalty(attacker,target,state);
+    damagebonus+=action.getdamagebonus(attacker,target);
+  }
 
-	/** Single-{@link Attack} constructor. */
-	public AttackResolver(AbstractAttack action,Combatant attacker,
-			Combatant target,Attack attack,BattleState state){
-		this(action,attacker,target,new AttackSequence(List.of(attack)),state);
-	}
+  /** Single-{@link Attack} constructor. */
+  public AttackResolver(AbstractAttack action,Combatant attacker,
+      Combatant target,Attack attack,BattleState state){
+    this(action,attacker,target,new AttackSequence(List.of(attack)),state);
+  }
 
-	/** Calculates some fields to expose attack information and statistics. */
-	public void preview(Combatant target){
-		var preview=sequence.get(0);
-		misschance=(target.getac()-attackbonus-preview.getbonus(target))/20f;
-		misschance=Action.bind(Action.or(misschance,target.source.misschance));
-		hitchance=1-misschance;
-		chance=Javelin.getchance(Math.round(20*misschance))+" to hit";
-	}
+  /** @see Javelin#getchance(int) */
+  public String getchance(){
+    return Javelin.getchance(Math.round(20*misschance));
+  }
 
-	static void validate(final Collection<Float> chances){
-		var sum=chances.stream().collect(Collectors.summingDouble(c->c));
-		if(!(0.999<sum&&sum<=1.001))
-			throw new RuntimeException("Attack sum not whole: "+sum);
-	}
+  /** Calculates some fields to expose attack information and statistics. */
+  public void preview(Combatant target){
+    var preview=sequence.get(0);
+    misschance=(target.getac()-attackbonus-preview.getbonus(target))/20f;
+    misschance=Action.bind(Action.or(misschance,target.source.misschance));
+    hitchance=1-misschance;
+    chance=getchance()+" to hit";
+  }
 
-	/** @return Attack roll penalty equivalent to {@link Monster#misschance}. */
-	int getmisspenalty(int bonus,Combatant target){
-		var attackmisschance=Action.bind((target.getac()-bonus)/20f);
-		var totalmisschance=Action.or(attackmisschance,target.source.misschance);
-		return Math.round(Action.bind(totalmisschance-attackmisschance)*20);
-	}
+  static void validate(final Collection<Float> chances){
+    var sum=chances.stream().collect(Collectors.summingDouble(c->c));
+    if(!(0.999<sum&&sum<=1.001))
+      throw new RuntimeException("Attack sum not whole: "+sum);
+  }
 
-	SequenceResult dealattacks(int roll,Combatant target){
-		var r=new SequenceResult();
-		for(var a:sequence){
-			var bonus=a.getbonus(target)+attackbonus;
-			var m=target.source;
-			if(m.misschance>0) bonus-=getmisspenalty(bonus,target);
-			var ac=target.getac();
-			r.chances.add(Javelin.getchance(ac-bonus));
-			final Outcome o;
-			if(roll==1)
-				o=Outcome.MISS;
-			else if(roll>=a.threat){
-				o=m.immunitytocritical?Outcome.HIT:Outcome.CRITICAL_UNCONFIRMED;
-				if(roll==20) critical.add(Action.bind((20+ac-bonus)/20f));
-			}else if(roll+bonus>=ac)
-				o=Outcome.HIT;
-			else if(roll+bonus>=target.gettouchac())
-				o=Outcome.GRAZE;
-			else
-				o=Outcome.MISS;
-			r.outcomes.add(o);
-			if(o==Outcome.MISS) break;
-		}
-		return r;
-	}
+  /** @return Attack roll penalty equivalent to {@link Monster#misschance}. */
+  int getmisspenalty(int bonus,Combatant target){
+    var attackmisschance=Action.bind((target.getac()-bonus)/20f);
+    var totalmisschance=Action.or(attackmisschance,target.source.misschance);
+    return Math.round(Action.bind(totalmisschance-attackmisschance)*20);
+  }
 
-	void confirm(HashMap<SequenceResult,Float> results){
-		while(true){
-			SequenceResult result=null;
-			int i=0;
-			for(var r:results.keySet()){
-				i=r.outcomes.indexOf(Outcome.CRITICAL_UNCONFIRMED);
-				if(i>=0){
-					result=r;
-					break;
-				}
-			}
-			if(result==null) break;
-			var chance=results.remove(result);
-			var criticalchance=critical.get(i);
-			result.outcomes.set(i,Outcome.CRITICAL);
-			var previous=results.getOrDefault(result,0f);
-			results.put(result,chance*criticalchance+previous);
-			result=result.clone();
-			result.outcomes.set(i,Outcome.HIT);
-			previous=results.getOrDefault(result,0f);
-			results.put(result,chance*(1-criticalchance)+previous);
-		}
-	}
+  SequenceResult dealattacks(int roll,Combatant target){
+    var r=new SequenceResult();
+    for(var a:sequence){
+      var bonus=a.getbonus(target)+attackbonus;
+      var m=target.source;
+      if(m.misschance>0) bonus-=getmisspenalty(bonus,target);
+      var ac=target.getac();
+      r.chances.add(Javelin.getchance(ac-bonus));
+      final Outcome o;
+      if(roll==1) o=Outcome.MISS;
+      else if(roll>=a.threat){
+        o=m.immunitytocritical?Outcome.HIT:Outcome.CRITICAL_UNCONFIRMED;
+        if(roll==20) critical.add(Action.bind((20+ac-bonus)/20f));
+      }else if(roll+bonus>=ac) o=Outcome.HIT;
+      else if(roll+bonus>=target.gettouchac()) o=Outcome.GRAZE;
+      else o=Outcome.MISS;
+      r.outcomes.add(o);
+      if(o==Outcome.MISS) break;
+    }
+    return r;
+  }
 
-	/** TODO shouldn't use random for damage/saves or AI will preempt outcomes. */
-	String damage(Combatant c,Combatant target,Outcome o,Attack a,float ap,
-			BattleState s){
-		int damage;
-		String description;
-		if(o==Outcome.GRAZE){
-			damage=a.getminimumdamage()+damagebonus;
-			description="graze";
-		}else if(o==Outcome.HIT){
-			damage=a.rolldamage(AiThread.getrandom())+damagebonus;
-			description="hit";
-		}else if(o==Outcome.CRITICAL){
-			//TODO critical sound would be nice
-			damage=(a.rolldamage(AiThread.getrandom())+damagebonus)*a.multiplier;
-			description="CRITICAL";
-		}else
-			throw new InvalidParameterException(o.toString());
-		var apply=maneuver!=null&&o!=Outcome.GRAZE;
-		if(apply) maneuver.prehit(c,target,a,s);
-		var resistance=a.energy?target.source.energyresistance:target.source.dr;
-		target.damage(Math.max(1,damage),resistance,s);
-		var e=a.geteffect();
-		if(e!=null&&!target.source.passive&&target.hp>0){
-			var save=AiThread.getrandom().nextFloat()<=e.getsavechance(c,target);
-			effects.add(e.cast(c,target,save,s,null));
-		}
-		if(apply) maneuver.posthit(c,target,a,s);
-		if(target.hp<=0&&action.cleave) c.cleave(ap);
-		return description;
-	}
+  void confirm(HashMap<SequenceResult,Float> results){
+    while(true){
+      SequenceResult result=null;
+      var i=0;
+      for(var r:results.keySet()){
+        i=r.outcomes.indexOf(Outcome.CRITICAL_UNCONFIRMED);
+        if(i>=0){
+          result=r;
+          break;
+        }
+      }
+      if(result==null) break;
+      var chance=results.remove(result);
+      var criticalchance=critical.get(i);
+      result.outcomes.set(i,Outcome.CRITICAL);
+      var previous=results.getOrDefault(result,0f);
+      results.put(result,chance*criticalchance+previous);
+      result=result.clone();
+      result.outcomes.set(i,Outcome.HIT);
+      previous=results.getOrDefault(result,0f);
+      results.put(result,chance*(1-criticalchance)+previous);
+    }
+  }
 
-	String contextualize(Combatant c,Combatant target,boolean hit,
-			ArrayList<String> attacks){
-		var message=c+" attacks "+target+"!";
-		message+="\n"+String.join("; ",attacks)+"...";
-		if(!effects.isEmpty()) message+="\n"+String.join(" ",effects);
-		effects.clear();
-		if(hit) message+="\n"+target+" is "+target.getstatus()+".";
-		return message;
-	}
+  /** TODO shouldn't use random for damage/saves or AI will preempt outcomes. */
+  String damage(Combatant c,Combatant target,Outcome o,Attack a,float ap,
+      BattleState s){
+    int damage;
+    String description;
+    if(o==Outcome.GRAZE){
+      damage=a.getminimumdamage()+damagebonus;
+      description="graze";
+    }else if(o==Outcome.HIT){
+      damage=a.rolldamage(AiThread.getrandom())+damagebonus;
+      description="hit";
+    }else if(o==Outcome.CRITICAL){
+      //TODO critical sound would be nice
+      damage=(a.rolldamage(AiThread.getrandom())+damagebonus)*a.multiplier;
+      description="CRITICAL";
+    }else throw new InvalidParameterException(o.toString());
+    var apply=maneuver!=null&&o!=Outcome.GRAZE;
+    if(apply) maneuver.prehit(c,target,a,s);
+    var resistance=a.energy?target.source.energyresistance:target.source.dr;
+    target.damage(Math.max(1,damage),resistance,s);
+    var e=a.geteffect();
+    if(e!=null&&!target.source.passive&&target.hp>0){
+      var save=AiThread.getrandom().nextFloat()<=e.getsavechance(c,target);
+      effects.add(e.cast(c,target,save,s,null));
+    }
+    if(apply) maneuver.posthit(c,target,a,s);
+    if(target.hp<=0&&action.cleave) c.cleave(ap);
+    return description;
+  }
 
-	ChanceNode apply(SequenceResult r,Float chance,BattleState s,Combatant c,
-			Combatant target){
-		s=s.clone();
-		c=s.clone(c).clonesource();
-		target=s.clone(target).clonesource();
-		var attacks=new ArrayList<String>(sequence.size());
-		var hit=false;
-		var ap=0f;
-		for(var i=0;i<sequence.size();i++){
-			var a=sequence.get(i);
-			var apcost=sequence.indexOf(a)==0?ActionCost.STANDARD
-					:ActionCost.SWIFT/(sequence.size()-1);
-			ap+=apcost;
-			var chancetohit=" ("+r.chances.get(i)+" to hit)";
-			var name=maneuver==null?a.name:maneuver.name;
-			if(i==0) name=StatisticsScreen.capitalize(name);
-			var o=r.outcomes.get(i);
-			if(o==Outcome.MISS){
-				if(action.feign&&target.source.dexterity>=12) Bluff.feign(c,target);
-				attacks.add(name+": miss"+chancetohit);
-				break;
-			}
-			hit=true;
-			attacks.add(name+": "+damage(c,target,o,a,apcost,s)+chancetohit);
-			if(target.hp<=0) break;
-		}
-		c.ap+=this.ap==null?ap:this.ap;
-		if(maneuver!=null) maneuver.postattacks(c,target,sequence,s);
-		var message=contextualize(c,target,hit,attacks);
-		return new DamageNode(c,target,s,chance,message,hit);
-	}
+  String contextualize(Combatant c,Combatant target,boolean hit,
+      ArrayList<String> attacks){
+    var message=c+" attacks "+target+"!";
+    message+="\n"+String.join("; ",attacks)+"...";
+    if(!effects.isEmpty()) message+="\n"+String.join(" ",effects);
+    effects.clear();
+    if(hit) message+="\n"+target+" is "+target.getstatus()+".";
+    return message;
+  }
 
-	List<ChanceNode> merge(List<ChanceNode> nodes){
-		var merged=new HashMap<DamageNode,DamageNode>(nodes.size());
-		for(var n:nodes){
-			var dn=(DamageNode)n;
-			var previous=merged.get(dn);
-			if(previous==null)
-				merged.put(dn,dn);
-			else
-				previous.chance+=dn.chance;
-		}
-		nodes.clear();
-		nodes.addAll(merged.values());
-		return nodes;
-	}
+  ChanceNode apply(SequenceResult r,Float chance,BattleState s,Combatant c,
+      Combatant target){
+    s=s.clone();
+    c=s.clone(c).clonesource();
+    target=s.clone(target).clonesource();
+    var attacks=new ArrayList<String>(sequence.size());
+    var hit=false;
+    var ap=0f;
+    for(var i=0;i<sequence.size();i++){
+      var a=sequence.get(i);
+      var apcost=sequence.indexOf(a)==0?ActionCost.STANDARD
+          :ActionCost.SWIFT/(sequence.size()-1);
+      ap+=apcost;
+      var chancetohit=" ("+r.chances.get(i)+" to hit)";
+      var name=maneuver==null?a.name:maneuver.name;
+      if(i==0) name=StatisticsScreen.capitalize(name);
+      var o=r.outcomes.get(i);
+      if(o==Outcome.MISS){
+        if(action.feign&&target.source.dexterity>=12) Bluff.feign(c,target);
+        attacks.add(name+": miss"+chancetohit);
+        break;
+      }
+      hit=true;
+      attacks.add(name+": "+damage(c,target,o,a,apcost,s)+chancetohit);
+      if(target.hp<=0) break;
+    }
+    c.ap+=this.ap==null?ap:this.ap;
+    if(maneuver!=null) maneuver.postattacks(c,target,sequence,s);
+    var message=contextualize(c,target,hit,attacks);
+    return new DamageNode(c,target,s,chance,message,hit);
+  }
 
-	/** Initiates an Attack, {@link AttackSequence} or Strike. */
-	public List<ChanceNode> attack(Combatant attackerp,Combatant targetp,
-			BattleState statep){
-		var s=statep.clone();
-		var c=s.clone(attackerp).clonesource();
-		var target=s.clone(targetp).clonesource();
-		if(maneuver!=null) maneuver.preattacks(c,target,sequence,s);
-		var results=new HashMap<SequenceResult,Float>(20);
-		for(var roll=1;roll<=20;roll++){
-			var result=dealattacks(roll,target);
-			var previous=results.get(result);
-			var chance=1/20f;
-			if(previous!=null) chance+=previous;
-			results.put(result,chance);
-		}
-		confirm(results);
-		var nodes=merge(results.entrySet().stream()
-				.map(entry->apply(entry.getKey(),entry.getValue(),s,c,target))
-				.collect(Collectors.toList()));
-		return nodes;
-	}
+  List<ChanceNode> merge(List<ChanceNode> nodes){
+    var merged=new HashMap<DamageNode,DamageNode>(nodes.size());
+    for(var n:nodes){
+      var dn=(DamageNode)n;
+      var previous=merged.get(dn);
+      if(previous==null) merged.put(dn,dn);
+      else previous.chance+=dn.chance;
+    }
+    nodes.clear();
+    nodes.addAll(merged.values());
+    return nodes;
+  }
+
+  /** Initiates an Attack, {@link AttackSequence} or Strike. */
+  public List<ChanceNode> attack(Combatant attackerp,Combatant targetp,
+      BattleState statep){
+    var s=statep.clone();
+    var c=s.clone(attackerp).clonesource();
+    var target=s.clone(targetp).clonesource();
+    if(maneuver!=null) maneuver.preattacks(c,target,sequence,s);
+    var results=new HashMap<SequenceResult,Float>(20);
+    for(var roll=1;roll<=20;roll++){
+      var result=dealattacks(roll,target);
+      var previous=results.get(result);
+      var chance=1/20f;
+      if(previous!=null) chance+=previous;
+      results.put(result,chance);
+    }
+    confirm(results);
+    var nodes=merge(results.entrySet().stream()
+        .map(entry->apply(entry.getKey(),entry.getValue(),s,c,target))
+        .collect(Collectors.toList()));
+    return nodes;
+  }
+
+  /** @return Descriptive list of attacks with hit and damage chance. */
+  public static String describe(AttackSequence s,Combatant active,
+      Combatant target,AbstractAttack action){
+    active=active.clone().clonesource();
+    target=target.clone().clonesource();
+    var state=Fight.state.clone();
+    AttackResolver best=null;
+    for(var attack:s){
+      var r=new AttackResolver(action,active,target,attack,state);
+      r.preview(target);
+      if(best==null||r.hitchance>best.hitchance) best=r;
+      System.out.println(r.hitchance);
+      if(r.hitchance>=.5){
+        r.damage(active,target,Outcome.HIT,attack,0,state);
+        if(target.hp<1) break;
+      }
+    }
+    var sequence=new CountingSet(s.stream().map(a->a.name).toList()).toString();
+    sequence=sequence.replaceAll("\\(","").replaceAll("\\)","");
+    var status=target.getstatus();
+    var c=best.getchance();
+    return "%s (%s for %s to be %s)".formatted(sequence,c,target,status);
+  }
 }

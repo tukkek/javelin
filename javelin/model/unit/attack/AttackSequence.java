@@ -3,11 +3,11 @@ package javelin.model.unit.attack;
 import java.util.Collection;
 import java.util.Comparator;
 
+import javelin.Javelin;
 import javelin.model.unit.CloneableList;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.feat.attack.PowerAttack;
 import javelin.model.unit.feat.attack.shot.RapidShot;
-import javelin.view.screen.StatisticsScreen;
 
 /**
  * One of the possible mêlée or ranged full-attack options of a
@@ -34,19 +34,12 @@ public class AttackSequence extends CloneableList<Attack>{
 
   @Override
   public String toString(){
-    return toString(null);
+    return Javelin.group(stream().map(Attack::toString).toList());
   }
 
   @Override
   public AttackSequence clone(){
     return (AttackSequence)super.clone();
-  }
-
-  public String toString(Combatant target){
-    var line="";
-    for(Attack a:this)
-      line+=StatisticsScreen.capitalize(a.toString(target))+", ";
-    return line.substring(0,line.length()-2);
   }
 
   /** Guarantees that attacks are sorted by descending {@link Attack#bonus}. */

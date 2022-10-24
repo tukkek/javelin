@@ -17,6 +17,7 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.collection.CountingSet;
 import javelin.controller.content.action.Action;
 import javelin.controller.content.action.ActionCost;
+import javelin.controller.content.action.ai.attack.AbstractAttack;
 import javelin.controller.content.action.ai.attack.AttackResolver;
 import javelin.controller.content.action.ai.attack.MeleeAttack;
 import javelin.controller.content.action.ai.attack.RangedAttack;
@@ -208,15 +209,17 @@ public class Combatant implements Serializable,Cloneable{
 
   /** @see MeleeAttack */
   public void meleeattacks(Combatant target,BattleState s){
-    var a=chooseattack(source.melee);
-    var resolver=new AttackResolver(MeleeAttack.INSTANCE,this,target,a,s);
+    var action=MeleeAttack.INSTANCE;
+    var a=chooseattack(source.melee,target,action);
+    var resolver=new AttackResolver(action,this,target,a,s);
     Action.outcome(resolver.attack(this,target,s));
   }
 
   /** @see RangedAttack */
   public void rangedattacks(Combatant target,BattleState s){
-    var a=chooseattack(source.ranged);
-    var resolver=new AttackResolver(RangedAttack.INSTANCE,this,target,a,s);
+    var action=RangedAttack.INSTANCE;
+    var a=chooseattack(source.ranged,target,action);
+    var resolver=new AttackResolver(action,this,target,a,s);
     Action.outcome(resolver.attack(this,target,s));
   }
 
@@ -299,9 +302,12 @@ public class Combatant implements Serializable,Cloneable{
    *
    * TODO show hit chance
    */
-  public AttackSequence chooseattack(List<AttackSequence> attacks){
+  public AttackSequence chooseattack(List<AttackSequence> attacks,
+      Combatant target,AbstractAttack action){
     if(attacks.size()==1) return attacks.get(0);
-    var i=Javelin.choose("Start which attack sequence?",attacks,false,false);
+    var choices=attacks.stream()
+        .map(a->AttackResolver.describe(a,this,target,action)).toList();
+    var i=Javelin.choose("Start which attack sequence?",choices,false,false);
     if(i==-1) throw new RepeatTurn();
     return attacks.get(i);
   }

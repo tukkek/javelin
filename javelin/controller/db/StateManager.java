@@ -2,9 +2,9 @@ package javelin.controller.db;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -72,36 +72,47 @@ public class StateManager{
    */
   public static class SaveThread extends Thread{
     File to;
+    byte[] data;
 
     SaveThread(File to){
       this.to=to;
     }
 
+    void prepare(){
+      try(var bytes=new ByteArrayOutputStream();
+          var s=new ObjectOutputStream(bytes);){
+        if(WorldScreen.current!=null) WorldScreen.current.savediscovered();
+        s.writeBoolean(abandoned);
+        var squad=Squad.active;
+        if(squad!=null){
+          var squads=World.seed.actors.get(Squad.class);
+          squads.remove(squad);
+          squads.add(0,squad);
+        }
+        s.writeObject(World.seed);
+        s.writeObject(Dungeon.active);
+        s.writeObject(Incursion.currentel);
+        s.writeObject(Weather.current);
+        s.writeObject(Ressurect.dead);
+        s.writeObject(Season.current);
+        s.writeObject(Season.endsat);
+        s.writeObject(OpenJournal.content);
+        s.writeObject(WildEvents.instance);
+        s.writeObject(UrbanEvents.instance);
+        s.flush();
+        bytes.flush();
+        data=bytes.toByteArray();
+      }catch(final IOException e){
+        throw new RuntimeException(e);
+      }
+    }
+
     @Override
     public synchronized void run(){
-      try(var writer=new ObjectOutputStream(new FileOutputStream(to))){
-        if(WorldScreen.current!=null) WorldScreen.current.savediscovered();
-        writer.writeBoolean(abandoned);
-        var s=Squad.active;
-        if(s!=null){
-          var squads=World.seed.actors.get(Squad.class);
-          squads.remove(s);
-          squads.add(0,s);
-        }
-        writer.writeObject(World.seed);
-        writer.writeObject(Dungeon.active);
-        writer.writeObject(Incursion.currentel);
-        writer.writeObject(Weather.current);
-        writer.writeObject(Ressurect.dead);
-        writer.writeObject(Season.current);
-        writer.writeObject(Season.endsat);
-        writer.writeObject(OpenJournal.content);
-        writer.writeObject(WildEvents.instance);
-        writer.writeObject(UrbanEvents.instance);
-        writer.flush();
-        writer.close();
+      try{
+        Files.write(to.toPath(),data);
         if(to==SAVEFILE) backup(false);
-      }catch(final IOException e){
+      }catch(IOException e){
         throw new RuntimeException(e);
       }
     }
@@ -124,17 +135,19 @@ public class StateManager{
     public void windowClosing(WindowEvent event){
       var w=event.getWindow();
       try{
-        var inbattle=BattleScreen.active!=null
-            &&!(BattleScreen.active instanceof WorldScreen);
+        var b=BattleScreen.active;
+        var inbattle=b!=null&&!(b instanceof WorldScreen);
         var warning="Exiting during battle will not save your progress.\n"
             +"Leave the game anyway?";
-        if(inbattle&&JOptionPane.showConfirmDialog(w,warning,"Warning!",
-            JOptionPane.OK_CANCEL_OPTION)!=JOptionPane.OK_OPTION)
+        var options=JOptionPane.OK_CANCEL_OPTION;
+        var ok=JOptionPane.OK_OPTION;
+        if(inbattle
+            &&JOptionPane.showConfirmDialog(w,warning,"Warning!",options)!=ok)
           return;
         w.dispose();
-        if(BattleScreen.active!=null&&BattleScreen.active==WorldScreen.current){
-          backup(true);
+        if(b!=null&&b==WorldScreen.current){
           save(true).ifPresent(SaveThread::hold);
+          backup(true);
         }
         System.exit(0);
       }catch(RuntimeException e){
@@ -154,16 +167,20 @@ public class StateManager{
 
   static long lastsave=System.currentTimeMillis();
   static long lastbackup=System.currentTimeMillis();
+  static SaveThread current;
 
   static synchronized Optional<SaveThread> save(boolean force,File to){
     var now=System.currentTimeMillis();
     if(!force)
       if(now-lastsave<Preferences.saveinterval*MINUTE||Squad.active==null)
         return Optional.empty();
+    if(current!=null) current.hold();
     lastsave=now;
-    var t=new SaveThread(to);
-    t.start();
-    return Optional.of(t);
+    current=new SaveThread(to);
+    current.prepare();
+    current.start();
+    //    t.hold();//TODO also restore preferences.properties
+    return Optional.of(current);
   }
 
   /**
@@ -215,6 +232,7 @@ public class StateManager{
     var now=Calendar.getInstance();
     var time=now.getTimeInMillis();
     if(!force&&time-lastbackup<Preferences.backupinterval*MINUTE) return;
+    if(current!=Thread.currentThread()) current.hold();
     lastbackup=time;
     var timestamp="";
     timestamp+=now.get(Calendar.YEAR)+"-";

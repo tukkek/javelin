@@ -31,7 +31,7 @@ public class UseItems extends WorldAction{
   static final ArrayList<Character> KEYS=SelectScreen.filterkeys("desq");
   static final String COMMANDS="Press key to use item or (d)iscard item, (e)xchange item, (s)how %s, (q)uit.";
   static final String DISCARD="""
-      Are you sure you want to discard %s?
+      Discard %s?
 
       Press d to discard, any other key to cancel...
       """;
@@ -79,7 +79,8 @@ public class UseItems extends WorldAction{
     if(input=='d'){
       var i=select(allitems,infoscreen);
       if(i==null) return false;
-      Javelin.app.switchScreen(new InfoScreen(DISCARD.formatted(i)));
+      var name=i.toString().toLowerCase();
+      Javelin.app.switchScreen(new InfoScreen(DISCARD.formatted(name)));
       if(InfoScreen.feedback()=='d') Squad.active.equipment.remove(i);
       return false;
     }

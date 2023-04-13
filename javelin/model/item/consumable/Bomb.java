@@ -42,7 +42,7 @@ public class Bomb extends Item{
     }
 
     @Override
-    protected Overlay overlay(Combatant target){
+    protected Overlay overlay(Combatant active, Combatant target){
       return new AiOverlay(getarea(target.getlocation()));
     }
 

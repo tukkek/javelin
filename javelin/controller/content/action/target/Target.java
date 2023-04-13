@@ -16,7 +16,7 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.mappanel.MapPanel;
-import javelin.view.mappanel.battle.overlay.TargetOverlay;
+import javelin.view.mappanel.battle.overlay.TraceOverlay;
 import javelin.view.mappanel.overlay.Overlay;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
@@ -169,13 +169,13 @@ public abstract class Target extends Action{
   }
 
   /** @return Assigns to {@link MapPanel#overlay}. */
-  protected Overlay overlay(Combatant target){
-    return new TargetOverlay(target.getlocation());
+  protected Overlay overlay(Combatant active,Combatant target){
+    return new TraceOverlay(active.getlocation(),target.getlocation());
   }
 
   void lock(Combatant active,Combatant target,BattleState s){
     if(MapPanel.overlay!=null) MapPanel.overlay.clear();
-    MapPanel.overlay=overlay(target);
+    MapPanel.overlay=overlay(active,target);
     MessagePanel.active.clear();
     var prompt="Use ← and → to select target, ENTER or "+confirmkey
         +" to confirm, v to view target's sheet, q to quit.\n\n";

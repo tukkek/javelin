@@ -205,7 +205,7 @@ public class CastSpell extends Fire implements AiAction{
   }
 
   @Override
-  protected Overlay overlay(Combatant target){
+  protected Overlay overlay(Combatant active, Combatant target){
     return casting.overlay(target);
   }
 }

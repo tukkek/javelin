@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javelin.Debug;
 import javelin.Javelin;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.Tier;
@@ -73,6 +74,14 @@ public class ContestedTerritory extends Fortification{
       %s spends a day trying to mediate peace in the %s...
       %s
       """;
+  static final String DESCRIPTION="""
+      %s-tier contested territory.
+
+      %s""".stripIndent();
+  static final String ARMYPREVIEW="""
+      Attackers: %s.
+      Defenders: %s.
+      """.stripIndent();
 
   static class Army extends ArrayList<Combatants>{
     Army(int nsquads){
@@ -301,20 +310,27 @@ public class ContestedTerritory extends Fortification{
       for(var mercenary:a) fee+=MercenariesGuild.getfee(mercenary.source);
       mercenaries.add("%s ($%s/day)".formatted(a,Javelin.format(fee)));
     }
-    var i=Javelin.choose("Hire which mercenary band?",mercenaries,true,false);
+    var g=Javelin.format(Squad.active.gold);
+    var prompts="Hire which mercenary band? You have $%s.".formatted(g);
+    var i=Javelin.choose(prompts,mercenaries,true,false);
     if(i<0) return;
     for(var a:attackers.get(i)){
       a.setmercenary(true);
       Squad.active.add(a);
     }
-    attackers.remove(i);
+    this.attackers.remove(i);
   }
 
   @Override
   public boolean interact(){
     descriptionunknown=descriptionknown;
-    if(ishostile()) prepare();
-    else hire();
+    if(!ishostile()) hire();
+    else if(!(Javelin.DEBUG&&Debug.disablecombat)) prepare();
+    else{
+      defenders.clear();
+      garrison.clear();
+      return false;
+    }
     return true;
   }
 
@@ -323,5 +339,27 @@ public class ContestedTerritory extends Fortification{
     super.captureforai(attacker);
     defenders=new Army(1);
     defenders.add(attacker.getcombatants());
+  }
+
+  @Override
+  public boolean isworking(){
+    return attackers.isEmpty();
+  }
+
+  @Override
+  public boolean ishostile(){
+    return !defenders.isEmpty();
+  }
+
+  @Override
+  public String describe(){
+    var a=attackers.toString().trim();
+    var d=defenders.toString().trim();
+    var s=Squad.active.getlocation();
+    var h=ishostile();
+    var preview="";
+    if(h&&distanceinsteps(s.x,s.y)==1) preview=ARMYPREVIEW.formatted(a,d);
+    else if(!h) preview=isworking()?"Empty...":"Mercenaries: %s.".formatted(a);
+    return DESCRIPTION.formatted(Tier.get(targetel),preview.toString());
   }
 }

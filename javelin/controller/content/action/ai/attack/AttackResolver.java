@@ -23,8 +23,7 @@ import javelin.model.unit.abilities.discipline.Strike;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
 import javelin.model.unit.skill.Bluff;
-import javelin.view.mappanel.battle.overlay.AiOverlay;
-import javelin.view.screen.StatisticsScreen;
+import javelin.view.mappanel.battle.overlay.TraceOverlay;
 
 /**
  * Despite not being very large, {@link AbstractAttack} is extremely complex.
@@ -37,6 +36,9 @@ import javelin.view.screen.StatisticsScreen;
  * cloest to 1:1 approach but not as perfomant as skipping feat/maneuver hooks
  * if that's not necessary at all.
  *
+ * TODO reduce node outcomes to: miss, graze (minimum damage), hit (average
+ * damange), critical (max damage)
+ *
  * @author alex
  */
 public class AttackResolver{
@@ -44,7 +46,7 @@ public class AttackResolver{
     DamageNode(Combatant attacker,Combatant target,BattleState state,
         float chance,String message,boolean hit){
       super(state,chance,message,hit?Delay.BLOCK:Delay.WAIT);
-      overlay=new AiOverlay(target);
+      overlay=new TraceOverlay(attacker.getlocation(),target.getlocation());
       var action=AttackResolver.this.action;
       audio=target.hp<=0?new Audio("die",target)
           :new Audio(hit?action.soundhit:action.soundmiss,attacker);
@@ -202,7 +204,7 @@ public class AttackResolver{
       else if(roll+bonus>=target.gettouchac()) o=Outcome.GRAZE;
       else o=Outcome.MISS;
       r.outcomes.add(o);
-      if(o==Outcome.MISS) break;
+      if(o==Outcome.MISS||o==Outcome.GRAZE) break;
     }
     return r;
   }
@@ -238,10 +240,10 @@ public class AttackResolver{
     String description;
     if(o==Outcome.GRAZE){
       damage=a.getminimumdamage()+damagebonus;
-      description="graze";
+      description="grazes";
     }else if(o==Outcome.HIT){
       damage=a.rolldamage(AiThread.getrandom())+damagebonus;
-      description="hit";
+      description="hits";
     }else if(o==Outcome.CRITICAL){
       //TODO critical sound would be nice
       damage=(a.rolldamage(AiThread.getrandom())+damagebonus)*a.multiplier;
@@ -262,9 +264,10 @@ public class AttackResolver{
   }
 
   String contextualize(Combatant c,Combatant target,boolean hit,
-      ArrayList<String> attacks){
-    var message=c+" attacks "+target+"!";
-    message+="\n"+String.join("; ",attacks)+"...";
+      ArrayList<String> attacksp){
+    var attacks=Javelin.group(attacksp);
+    attacks=Character.toUpperCase(attacks.charAt(0))+attacks.substring(1);
+    var message=c+" attacks "+target+"!\n"+attacks+"...";
     if(!effects.isEmpty()) message+="\n"+String.join(" ",effects);
     effects.clear();
     if(hit) message+="\n"+target+" is "+target.getstatus()+".";
@@ -279,23 +282,26 @@ public class AttackResolver{
     var attacks=new ArrayList<String>(sequence.size());
     var hit=false;
     var ap=0f;
-    for(var i=0;i<sequence.size();i++){
+    for(var i=0;i<r.outcomes.size();i++){
       var a=sequence.get(i);
       var apcost=sequence.indexOf(a)==0?ActionCost.STANDARD
           :ActionCost.SWIFT/(sequence.size()-1);
       ap+=apcost;
-      var chancetohit=" ("+r.chances.get(i)+" to hit)";
       var name=maneuver==null?a.name:maneuver.name;
-      if(i==0) name=StatisticsScreen.capitalize(name);
+      name=name.toLowerCase();
       var o=r.outcomes.get(i);
+      var chancetohit=" ("+r.chances.get(i)+" to hit)";
       if(o==Outcome.MISS){
         if(action.feign&&target.source.dexterity>=12) Bluff.feign(c,target);
-        attacks.add(name+": miss"+chancetohit);
+        attacks.add(name+" misses"+chancetohit);
         break;
       }
       hit=true;
-      attacks.add(name+": "+damage(c,target,o,a,apcost,s)+chancetohit);
-      if(target.hp<=0) break;
+      name+=" "+damage(c,target,o,a,apcost,s);
+      var dead=target.hp<=0;
+      if(dead||i==sequence.size()-1) name+=chancetohit;
+      attacks.add(name);
+      if(dead) break;
     }
     c.ap+=this.ap==null?ap:this.ap;
     if(maneuver!=null) maneuver.postattacks(c,target,sequence,s);

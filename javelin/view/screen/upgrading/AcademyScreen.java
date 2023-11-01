@@ -37,18 +37,18 @@ public class AcademyScreen extends UpgradingScreen{
   protected void registertrainee(Order trainee){
     academy.training.add(trainee);
     var c=((TrainingOrder)trainee).trained;
-    Squad.active.equipment.remove(c);
-    Squad.active.remove(c);
+    var s=Squad.active;
+    s.equipment.remove(c);
+    s.remove(c);
   }
 
   @Override
   protected void onexit(ArrayList<TrainingOrder> trainees){
-    if(Squad.active.members.size()==trainees.size()){
-      academy.stash+=Squad.active.gold;
-      if(academy.parking==null
-          ||Squad.active.transport.price>academy.parking.price)
-        academy.parking=Squad.active.transport;
-    }
+    var s=Squad.active;
+    if(s.members.size()!=trainees.size()) return;
+    academy.stash+=s.gold;
+    var p=academy.parking;
+    if(p==null||s.transport.price>p.price) academy.parking=s.transport;
   }
 
   @Override

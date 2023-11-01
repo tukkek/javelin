@@ -86,6 +86,7 @@ public class LearningStone extends Feature{
     }
     var student=Squad.active.members.get(choice);
     AdventurersGuild.train(student,upgrades,student.xp.floatValue());
+    remove=true;
     return true;
   }
 

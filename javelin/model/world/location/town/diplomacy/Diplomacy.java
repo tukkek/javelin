@@ -64,7 +64,7 @@ public class Diplomacy implements Serializable{
     if(!treaties.isEmpty()&&RPG.chancein(30)){
       var m=RPG.pick(treaties);
       treaties.remove(m);
-      town.events.add("Treaty opportunity expired: "+m+".");
+      town.events.add("Treaty expired: "+m+".");
     }
     if(treaties.size()<town.getrank().rank&&RPG.chancein(7)){
       var m=Mandate.generate(this);

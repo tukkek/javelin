@@ -42,7 +42,7 @@ public class Bomb extends Item{
     }
 
     @Override
-    protected Overlay overlay(Combatant active, Combatant target){
+    protected Overlay overlay(Combatant active,Combatant target){
       return new AiOverlay(getarea(target.getlocation()));
     }
 
@@ -94,7 +94,7 @@ public class Bomb extends Item{
         }
         result=String.join(" ",effects);
       }
-      var item=Bomb.this.toString().toLowerCase();
+      var item=Bomb.this.name.toLowerCase();
       var success=h?"hits":"misses";
       var o=OUTCOME.formatted(caster,success,item,result).trim();
       var n=new ChanceNode(s,1,o,Delay.BLOCK);

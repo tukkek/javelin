@@ -129,6 +129,7 @@ public class Catacombs extends Wilderness{
         }
       };
       s.map.wall=WALL;
+      s.map.flying=false;
       return s;
     }
 

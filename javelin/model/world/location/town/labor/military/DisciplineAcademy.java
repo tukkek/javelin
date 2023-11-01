@@ -99,7 +99,7 @@ public class DisciplineAcademy extends Academy{
     public boolean select(Option op){
       var hire=op instanceof HireOption?(HireOption)op:null;
       if(hire!=null){
-        if(!MercenariesGuild.recruit(hire.c,false)){
+        if(!MercenariesGuild.recruit(hire.c,true, false)){
           final var error="You don't have enough money to pay today's advance!\n"
               +"Press any key to continue...";
           printmessage(error);

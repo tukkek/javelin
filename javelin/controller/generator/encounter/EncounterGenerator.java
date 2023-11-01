@@ -81,19 +81,6 @@ public class EncounterGenerator{
     }
   }
 
-  //	static int checklimit(int baseline,int step){
-  //		String failure=null;
-  //		for(var el=baseline;;el+=step)
-  //			for(var t:Terrain.NONWATER){
-  //				if(Javelin.DEBUG&&PRINTINFO)
-  //					failure=String.format("Failure: %s el%s",t,el);
-  //				if(generate(el,t)==null){
-  //					if(failure!=null) System.out.println(failure);
-  //					return el-step;
-  //				}
-  //			}
-  //	}
-
   static{
     /**
      * TODO ideally at some point here would use {@link Terrain#ALL} but

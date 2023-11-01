@@ -70,9 +70,8 @@ public class ResourceSite extends Location{
     }
 
     @Override
-    public boolean equals(Object obj){
-      var r=obj instanceof Resource?(Resource)obj:null;
-      return r!=null&&r.name.equals(name);
+    public boolean equals(Object o){
+      return o instanceof Resource r&&r.name.equals(name);
     }
 
     @Override

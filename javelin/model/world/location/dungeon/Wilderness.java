@@ -223,6 +223,7 @@ public class Wilderness extends Dungeon{
     Exit(Point p){
       super(p,Wilderness.this.floors.getFirst());
       prompt="Leave area?";
+      name="Entrance";
     }
   }
 

@@ -10,7 +10,8 @@ import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.MonstersByName;
-import javelin.controller.content.kit.Kit;
+import javelin.controller.content.upgrade.Upgrade;
+import javelin.controller.content.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -24,6 +25,9 @@ import javelin.old.RPG;
 public class SquadScreen extends InfoScreen{
   /** All units suitable for a starting {@link Squad}. */
   public static final ArrayList<Monster> CANDIDATES=new ArrayList<>();
+  /** Minimum starting party encounter level. */
+  public static final float EL=ChallengeCalculator
+      .calculateelfromcrs(List.of(1f,1f,1f,1f));
 
   static final List<Float> CRS=ChallengeCalculator.FRACTIONAL.stream()
       .filter(cr->1<=cr&&cr<=1.75).toList();
@@ -40,16 +44,14 @@ public class SquadScreen extends InfoScreen{
       Press ENTER to coninue with current selection
 
       Your team:
-
       %s
       """;
-  /** Minimum starting party encounter level. */
-  public static final float EL=ChallengeCalculator
-      .calculateelfromcrs(List.of(1f,1f,1f,1f));
+  static final int SPEED=Monster.get("human").walk/2;
 
   static{
     var candidates=CRS.stream().flatMap(cr->Monster.BYCR.get(cr).stream())
-        .filter(Monster::isalive).collect(Collectors.toList());
+        .filter(Monster::isalive).filter(c->Math.max(c.walk,c.fly)>=SPEED)
+        .toList();
     CANDIDATES.addAll(candidates);
     CANDIDATES.sort(MonstersByName.INSTANCE);
   }
@@ -108,7 +110,7 @@ public class SquadScreen extends InfoScreen{
   void print(){
     while(squad.getel()<EL){
       Javelin.app.switchScreen(this);
-      var team=String.join("\n",squad.members.stream().map(Combatant::toString)
+      var team=String.join("\n",squad.members.stream().map(t->"  "+t.toString())
           .collect(Collectors.toList()));
       text=FORMAT.formatted(printtable(),team);
       repaint();
@@ -123,12 +125,12 @@ public class SquadScreen extends InfoScreen{
 
   void upgrade(){
     var members=squad.members;
-    var advancement=new HashMap<Combatant,Kit>(members.size());
-    for(var m:members)
-      advancement.put(m,RPG.pick(Kit.getpreferred(m.source,false)));
+    var advancement=new HashMap<Combatant,Upgrade>(members.size());
+    for(var m:members) advancement.put(m,ClassLevelUpgrade.getpreferred(m));
     while(squad.getel()<EL){
       var w=members.getweakest();
       advancement.get(w).upgrade(w);
+      ChallengeCalculator.calculatecr(w.source);
     }
     var base=RewardCalculator.calculatepcequipment(1);
     var gold=members.stream().mapToInt(

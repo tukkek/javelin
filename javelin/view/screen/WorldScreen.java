@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -183,11 +184,12 @@ public class WorldScreen extends BattleScreen{
     if(WorldScreen.welcome) welcome();
     else Javelin.lose();
     endday();
-    if(World.getall(Squad.class).isEmpty()) return;
-    if(Squad.active!=null){
-      save();
-      act();
-    }
+    var squads=Squad.getsquads();
+    if(squads.isEmpty()) return;
+    if(Squad.active==null) Squad.active=squads.stream()
+        .min(Comparator.comparing(Squad::gettime)).orElse(null);
+    save();
+    act();
     messagepanel.clear();
   }
 

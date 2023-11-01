@@ -46,7 +46,7 @@ public class Door extends Feature{
   static final String FORCE="""
       The door is stuck (difficulty: %s)... Do you want to force it?
 
-      Press ENTER to try to force it once, b to force until it's broken or any other key to cancel...
+      Press ENTER to try to force it once, f to force until it's broken or any other key to cancel...
       """;
   static final String BEYONDSTUCK="This door is stuck beyond hope of being budged by %s...";
   static final String FORCED="%s breaks the door down!";
@@ -59,7 +59,7 @@ public class Door extends Feature{
 
   static{
     ATTEMPTS.put('\n',1);
-    ATTEMPTS.put('b',Integer.MAX_VALUE);
+    ATTEMPTS.put('f',Integer.MAX_VALUE);
   }
 
   /** DC of {@link DisableDevice} to unlock. */
@@ -113,7 +113,7 @@ public class Door extends Feature{
     var forcer=getforcer();
     var s=Monster.getbonus(forcer.source.strength);
     if(20+s<breakdc){
-      Javelin.message(BEYONDSTUCK.formatted(forcer),true);
+      Javelin.message(BEYONDSTUCK.formatted(forcer),false);
       return new Outcome(forcer,false,null);
     }
     var prompt=FORCE.formatted(Javelin.describe(s,breakdc));

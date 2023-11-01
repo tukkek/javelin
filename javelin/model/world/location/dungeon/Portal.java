@@ -43,6 +43,11 @@ public class Portal extends DungeonEntrance{
       f.squadlocation=RPG.pick(area);
       return f;
     }
+
+    @Override
+    protected synchronized String baptize(String base){
+      return base;
+    }
   }
 
   boolean discovered=false;

@@ -15,6 +15,8 @@ import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.challenge.Tier;
 import javelin.controller.collection.WeightedList;
 import javelin.controller.comparator.ActorsByDistance;
+import javelin.controller.comparator.ItemsByName;
+import javelin.controller.comparator.ItemsByPrice;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.generator.encounter.Encounter;
@@ -205,6 +207,8 @@ public class Caravan extends Actor{
       Javelin.message(m,false);
       return true;
     }
+    inventory.sort(ItemsByName.SINGLETON);
+    inventory.sort(ItemsByPrice.SINGLETON);
     new CaravanScreen().show();
     return true;
   }

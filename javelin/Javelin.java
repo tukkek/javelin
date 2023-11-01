@@ -259,6 +259,7 @@ public class Javelin{
       if(f==InfoScreen.ESCAPE&&!forceselection) return -1;
       i=SelectScreen.convertkeytoindex(f);
     }
+    if(fullscreen) app.switchScreen(BattleScreen.active);
     return i;
   }
 

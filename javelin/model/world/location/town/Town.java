@@ -92,7 +92,7 @@ public class Town extends Location{
    *
    * @see Scenario#populate(Town, boolean)
    */
-  public int population=1;
+  public int population=RPG.low(Tier.LOW.minlevel,Tier.LOW.maxlevel);
   /**
    * Alphabetically ordered set of urban traits.
    *
@@ -442,6 +442,7 @@ public class Town extends Location{
 
   /** Displays relevant town news. */
   public void report(){
+    events.clear();
     if(!ishostile()){
       var events=this.events;
       if(events.size()>9) events=events.subList(events.size()-9,events.size());

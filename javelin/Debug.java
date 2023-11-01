@@ -246,6 +246,17 @@ public class Debug{
       Javelin.redraw();
       Javelin.input();
     }
+
+    static void win(){
+      Fight.state.redteam.clear();
+    }
+
+    static void encounter(){
+      var d=WorldScreen.current.encounter();
+      d.bribe=false;
+      d.hide=false;
+      throw new StartBattle(d);
+    }
   }
 
   /** @see Preferences */

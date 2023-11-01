@@ -6,6 +6,8 @@ import java.awt.Image;
 import java.awt.Panel;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javelin.Javelin;
 import javelin.Javelin.Delay;
@@ -19,6 +21,7 @@ import javelin.controller.content.action.Dig;
 import javelin.controller.content.action.Examine;
 import javelin.controller.content.action.Movement;
 import javelin.controller.content.action.world.WorldAction;
+import javelin.controller.content.action.world.WorldMove;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.EndBattle;
@@ -181,13 +184,34 @@ public class BattleScreen extends Screen{
     }
   }
 
-  synchronized void humanmove(){
-    if(first) try{
+  /** TODO opportunistic attempt at bug-fixing black screens */
+  public void fix(){
+    var timer=new Timer();
+    for(var i=1;i<=1;i++) timer.schedule(new TimerTask(){
+      @Override
+      public void run(){
+        Javelin.redraw();
+      }
+    },i*1000);
+  }
+
+  /**
+   * Prevents players spamming {@link WorldMove}s from accidently acting in
+   * battle.
+   */
+  void blockinput(){
+    try{
+      if(!first) return;
       first=false;
+      fix();
       Thread.sleep(1000);
     }catch(InterruptedException e){
       //ignore
     }
+  }
+
+  synchronized void humanmove(){
+    blockinput();
     var s=Fight.state;
     lastaicheck=s.next.ap;
     if(current==null||current.automatic||s.fleeing.contains(current)) return;

@@ -94,20 +94,21 @@ public class WorldMove extends WorldAction{
    * @see BattleScreen
    */
   public static boolean move(int tox,int toy){
-    if(!JavelinApp.context.validatepoint(tox,toy)) throw new RepeatTurn();
+    var c=JavelinApp.context;
+    if(!c.validatepoint(tox,toy)) throw new RepeatTurn();
     abort=false;
     var t=Terrain.get(tox,toy);
     try{
-      if(JavelinApp.context.react(tox,toy)||abort||!place(tox,toy)||abort) return false;
+      if(c.react(tox,toy)||abort||!place(tox,toy)||abort) return false;
       var stop=false;
-      if(walk(JavelinApp.context.getsquadlocation()))
-        stop=!JavelinApp.context.explore(tox,toy);
+      if(walk(c.getsquadlocation())) stop=!c.explore(tox,toy);
       heal();
       return !stop;
     }finally{
-      if(!t.equals(Terrain.UNDERGROUND)
-          &&!(t.equals(Terrain.WATER)&&!Squad.active.swim()))
-        Squad.active.move(true,t,tox,toy);
+      var s=Squad.active;
+      if(s!=null&&!t.equals(Terrain.UNDERGROUND)
+          &&!(t.equals(Terrain.WATER)&&!s.swim()))
+        s.move(true,t,tox,toy);
     }
   }
 

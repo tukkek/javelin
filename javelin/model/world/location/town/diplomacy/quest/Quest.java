@@ -25,8 +25,10 @@ import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.diplomacy.Diplomacy;
 import javelin.model.world.location.town.diplomacy.quest.fetch.FetchArt;
 import javelin.model.world.location.town.diplomacy.quest.fetch.FetchGem;
+import javelin.model.world.location.town.diplomacy.quest.fetch.FetchRecipe;
 import javelin.model.world.location.town.diplomacy.quest.find.Connect;
 import javelin.model.world.location.town.diplomacy.quest.find.Discover;
+import javelin.model.world.location.town.diplomacy.quest.kill.Hit;
 import javelin.model.world.location.town.diplomacy.quest.kill.Raid;
 import javelin.model.world.location.town.labor.Trait;
 import javelin.old.RPG;
@@ -69,9 +71,9 @@ public abstract class Quest implements Serializable{
   static final Class<? extends Quest> DEBUG=null;
 
   static{
-    //TODO QUESTS.put(Trait.CRIMINAL,List.of(Hit.class));
+    QUESTS.put(Trait.CRIMINAL,List.of(Hit.class));
     QUESTS.put(Trait.EXPANSIVE,List.of(Discover.class));
-    //QUESTS.put(Trait.MAGICAL,List.of(FetchRecipe.class));
+    QUESTS.put(Trait.MAGICAL,List.of(FetchRecipe.class));
     QUESTS.put(Trait.MERCANTILE,List.of(Connect.class));
     QUESTS.put(Trait.MILITARY,List.of(Raid.class));
     QUESTS.put(Trait.NATURAL,List.of(FetchGem.class));

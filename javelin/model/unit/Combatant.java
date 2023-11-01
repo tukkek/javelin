@@ -969,7 +969,7 @@ public class Combatant implements Serializable,Cloneable{
    */
   public void dismiss(Squad s){
     s.members.remove(this);
-    for(Item i:s.equipment.get(this)) i.grab();
+    s.grab(s.equipment.get(this));
     s.remove(this);
     for(MercenariesGuild g:s.sortbydistance(MercenariesGuild.getguilds()))
       if(g.all.contains(this)){

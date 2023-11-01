@@ -104,6 +104,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
     remove();
     Javelin.lose();
     if(Dungeon.active!=null) Dungeon.active.leave();
+    if(Squad.active==this) Squad.active=null;
   }
 
   @Override
@@ -182,6 +183,10 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
   @Override
   public void turn(long time,WorldScreen world){
     paymercenaries();
+    if(members.isEmpty()){
+      disband();
+      return;
+    }
     var survival=Skill.SURVIVAL.getbonus(getbest(Skill.SURVIVAL));
     survival+=Terrain.get(x,y).survivalbonus;
     var foodfound=survival/(4f*members.size());
@@ -706,5 +711,17 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
     if(price>gold) return false;
     gold-=price;
     return true;
+  }
+
+  /** TODO replace {@link Item#grab()} with this method. */
+  public void grab(List<Item> items){
+    if(members.size()>1){
+      for(var i:items) i.grab();
+      return;
+    }
+    var m=members.get(0);
+    var message="%s takes: %s.".formatted(m,Javelin.group(items));
+    Javelin.message(message,true);
+    equipment.get(m).addAll(items);
   }
 }

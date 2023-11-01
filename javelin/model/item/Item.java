@@ -284,13 +284,24 @@ public abstract class Item implements Serializable,Cloneable,Healing{
   /**
    * Prompts user to select one of the active {@link Squad} members to keep this
    * item and updates {@link Squad#equipment}.
+   *
+   * @deprecated See {@link Squad#grab(List)}
    */
+  @Deprecated
   public void grab(Squad s){
     identified=s.identify(this);
+    var members=s.members;
     var name=toString();
     if(!(this instanceof Artifact)) name=name.toLowerCase();
-    var prompt="Who will take the "+name+"?";
-    s.equipment.get(UseItems.selectmember(s.members,this,prompt)).add(this);
+    Combatant c;
+    if(members.size()==1){
+      c=members.get(0);
+      Javelin.message("%s takes: %s.".formatted(c,name),true);
+    }else{
+      var prompt="Who will take the "+name+"?";
+      c=UseItems.selectmember(members,this,prompt);
+    }
+    s.equipment.get(c).add(this);
   }
 
   /**

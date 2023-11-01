@@ -30,7 +30,6 @@ import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.academy.Academy;
 import javelin.model.world.location.order.CraftingOrder;
-import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.OrderQueue;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
@@ -279,10 +278,9 @@ public class Shop extends Location{
     if(!super.interact()
         ||!isopen(List.of(Period.MORNING,Period.AFTERNOON),this))
       return false;
-    for(Order o:crafting.reclaim(Period.gettime())){
-      var done=(CraftingOrder)o;
-      done.item.grab();
-    }
+    var crafted=crafting.reclaim(Period.gettime()).stream()
+        .map(c->(CraftingOrder)c).map(o->o.item).toList();
+    if(crafted.size()>0) Squad.active.grab(crafted);
     new ShowShop(this).show();
     return true;
   }

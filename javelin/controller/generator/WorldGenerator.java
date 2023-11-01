@@ -227,7 +227,7 @@ public class WorldGenerator extends Thread{
       }
     }catch(Exception e){
       pool.shutdownNow();
-      throw e instanceof RuntimeException re?re:new RuntimeException(e);
+      throw new RuntimeException(e);
     }
     s.fix();
     pool.shutdown();
@@ -269,7 +269,6 @@ public class WorldGenerator extends Thread{
       }
       World.seed=null;
       s.reset();
-      continue;
     }
   }
 }

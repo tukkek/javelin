@@ -170,7 +170,7 @@ public class RPG{
   }
 
   public static <K> List<K> shuffle(List<K> list,boolean clone){
-    list=new ArrayList<>(list);
+    if(clone) list=new ArrayList<>(list);
     shuffle(list);
     return list;
   }

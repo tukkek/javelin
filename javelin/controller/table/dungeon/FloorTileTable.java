@@ -16,8 +16,8 @@ import javelin.old.RPG;
 public class FloorTileTable extends Table{
   public static final Mutator DEBUGMUTATOR=null;
 
-  static final FloorTile DEBUGROOM=null;
   static final FloorTile DEBUGCORRIDOR=null;
+  static final FloorTile DEBUGROOM=null;
 
   /** Constructor. */
   public FloorTileTable(DungeonFloor f){
@@ -34,8 +34,7 @@ public class FloorTileTable extends Table{
     if(Javelin.DEBUG&&DEBUGROOM!=null) return List.of(DEBUGROOM);
     var nrooms=RPG.randomize(4,1,FloorTile.GENERATED.size());
     var rooms=RPG.pick(FloorTile.GENERATED,nrooms);
-    rooms.addAll(
-        branch.stream().filter(t->!t.corridor).collect(Collectors.toList()));
+    rooms.addAll(branch.stream().filter(t->!t.corridor).toList());
     return rooms;
   }
 
@@ -45,8 +44,7 @@ public class FloorTileTable extends Table{
     var maxcorridors=Math.max(rooms.size(),FloorTile.CORRIDORS.size());
     while(RPG.chancein(2)&&ncorridors<maxcorridors) ncorridors+=1;
     var corridors=RPG.pick(FloorTile.CORRIDORS,ncorridors);
-    corridors.addAll(
-        branch.stream().filter(t->t.corridor).collect(Collectors.toList()));
+    corridors.addAll(branch.stream().filter(t->t.corridor).toList());
     return corridors;
   }
 

@@ -9,6 +9,7 @@ import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.exception.GaveUp;
+import javelin.controller.generator.WorldGenerator;
 import javelin.controller.generator.dungeon.Direction;
 import javelin.controller.generator.dungeon.DungeonArea;
 import javelin.controller.generator.dungeon.DungeonGenerator;
@@ -49,12 +50,11 @@ public abstract class FloorTile implements Cloneable,DungeonArea,Serializable{
   public static final List<FloorTile> CORRIDORS=List.of(new StraightCorridor(),
       new WindingCorridor());
 
-  static final ArrayList<Mutator> MUTATORS=new ArrayList<>(
-      Arrays.asList(Rotate.INSTANCE,HorizontalMirror.INSTANCE,
-          VerticalMirror.INSTANCE,new Symmetry(),new Noise(),new Wall(),
-          new Alcoves(),Grow.INSTANCE,new Hallway()));
-  static final ArrayList<Mutator> ROTATORS=new ArrayList<>(Arrays.asList(
-      Rotate.INSTANCE,HorizontalMirror.INSTANCE,VerticalMirror.INSTANCE));
+  static final List<Mutator> MUTATORS=new ArrayList<>(List.of(Rotate.INSTANCE,
+      HorizontalMirror.INSTANCE,VerticalMirror.INSTANCE,new Symmetry(),
+      new Noise(),new Wall(),new Alcoves(),Grow.INSTANCE,new Hallway()));
+  static final List<Mutator> ROTATORS=List.of(Rotate.INSTANCE,
+      HorizontalMirror.INSTANCE,VerticalMirror.INSTANCE);
   static final int FREEMUTATORS;
 
   static{
@@ -92,7 +92,7 @@ public abstract class FloorTile implements Cloneable,DungeonArea,Serializable{
       return;
     }
     var chance=mutate/FREEMUTATORS;
-    for(var m:RPG.shuffle(MUTATORS)){
+    for(var m:RPG.shuffle(MUTATORS,true)){
       if(corridor&&!m.allowcorridor) continue;
       if(RPG.random()<(m.chance==null?chance:m.chance)) m.apply(this);
     }
@@ -102,10 +102,7 @@ public abstract class FloorTile implements Cloneable,DungeonArea,Serializable{
   public String toString(){
     var s="";
     for(var y=height-1;y>=0;y--){
-      for(var x=0;x<width;x++){
-        Character c=tiles[x][y];
-        s+=c==null?' ':c;
-      }
+      for(var x=0;x<width;x++) s+=tiles[x][y];
       s+="\n";
     }
     return s;
@@ -142,6 +139,7 @@ public abstract class FloorTile implements Cloneable,DungeonArea,Serializable{
       }
       return c;
     }catch(GaveUp e){
+      WorldGenerator.retry();
       return null;
     }
   }

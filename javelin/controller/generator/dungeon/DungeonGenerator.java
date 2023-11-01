@@ -19,9 +19,8 @@ import javelin.view.screen.town.SelectScreen;
 
 /** Generates a {@link Dungeon} map. */
 public class DungeonGenerator{
-  static final boolean DEBUGROOMS=true;
-  static final int MAXATTEMPTS=10000;
-  static final int DEBUGSIZE=1;
+  static final boolean DEBUGROOMS=false;
+  static final int MAXATTEMPTS=5*1000;
 
   /** Relative map. */
   public VirtualMap map=new VirtualMap();
@@ -34,15 +33,11 @@ public class DungeonGenerator{
 
   LinkedList<Segment> segments=new LinkedList<>();
   ArrayList<FloorTile> pool=new ArrayList<>();
-  String templatesused="";
-  private int minrooms;
-  private int maxrooms;
-  private int nrooms;
+  int minrooms;
+  int maxrooms;
+  int nrooms;
 
   /**
-   * @param maxrooms
-   * @param minrooms
-   * @param tables2
    * @param sizehint TOOD would be cool to have this handled built-in, not on
    *   {@link #generate(int, int)}.
    */
@@ -55,7 +50,6 @@ public class DungeonGenerator{
   /** Generates {@link Dungeon} map. */
   public void start() throws GaveUp{
     pool.addAll(floor.gettable(FloorTileTable.class).gettemplates());
-    for(var t:pool) templatesused+=t.getClass().getSimpleName()+" ";
     draw();
     /* TODO make this a Table 5±10 */
     var connectionattempts=map.rooms.size()*RPG.r(0,10);
@@ -216,7 +210,6 @@ public class DungeonGenerator{
     maxrooms=13*2;
     var dungeon=generate(minrooms,maxrooms,null);
     dungeon.print();
-    System.out.println(dungeon.templatesused);
   }
 
   @Override

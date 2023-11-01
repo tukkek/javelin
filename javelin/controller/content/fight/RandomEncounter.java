@@ -12,6 +12,7 @@ import javelin.controller.content.terrain.Terrain;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.generator.encounter.EncounterGenerator;
+import javelin.controller.generator.encounter.EncounterMixer;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
@@ -65,7 +66,7 @@ public class RandomEncounter extends Fight{
 
   /** Internal constructor. */
   protected RandomEncounter(Combatants c){
-    enemies=c;
+    enemies=new EncounterMixer(c).mix();
   }
 
   /** Constructor. */

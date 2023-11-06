@@ -78,7 +78,7 @@ public class Audio{
   public void play(){
     try{
       var path=lookup().getCanonicalPath();
-      Runtime.getRuntime().exec(new String[]{Preferences.player,path});
+      Runtime.getRuntime().exec("%s %s".formatted(Preferences.player,path));
     }catch(Exception e){
       if(DEBUG) throw new RuntimeException(e);
     }

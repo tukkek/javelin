@@ -43,6 +43,7 @@ public class BattleSetup{
 
   /** Starts the setup steps. */
   public void setup(){
+    for(var r:Fight.state.redteam) r.automatic=true;
     rollinitiative();
     var f=Fight.current;
     Fight.state.map=generatemap(f,null).map;
@@ -145,11 +146,11 @@ public class BattleSetup{
     for(var p:RPG.shuffle(new ArrayList<>(vision))){
       if(p.distanceinsteps(source)>MAXDISTANCE||s.map[p.x][p.y].blocked)
         continue;
-      if(strict){
-        if((allies!=null
-            &&allies.stream().filter(a->a.getlocation().distanceinsteps(p)==1)
-                .limit(MAXADJACENT+1).count()==MAXADJACENT)||(enemies!=null&&cansee(enemies,p))) continue;
-      }
+      if(strict) if(allies!=null
+          &&allies.stream().filter(a->a.getlocation().distanceinsteps(p)==1)
+              .limit(MAXADJACENT+1).count()==MAXADJACENT
+          ||enemies!=null&&cansee(enemies,p))
+        continue;
       c.setlocation(p);
       return true;
     }

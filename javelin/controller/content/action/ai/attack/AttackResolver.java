@@ -45,10 +45,13 @@ public class AttackResolver{
   class DamageNode extends ChanceNode{
     DamageNode(Combatant attacker,Combatant target,BattleState state,
         float chance,String message,boolean hit){
-      super(state,chance,message,hit?Delay.BLOCK:Delay.WAIT);
+      super(state,chance,message,Delay.WAIT);
       overlay=new TraceOverlay(attacker.getlocation(),target.getlocation());
       var action=AttackResolver.this.action;
-      audio=target.hp<=0?new Audio("die",target)
+      var fallen=target.hp<=0;
+      if(hit&&(!attacker.automatic||!target.automatic)||fallen)
+        delay=Delay.BLOCK;
+      audio=fallen?new Audio("die",target)
           :new Audio(hit?action.soundhit:action.soundmiss,attacker);
     }
 

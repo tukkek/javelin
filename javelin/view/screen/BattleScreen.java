@@ -187,7 +187,7 @@ public class BattleScreen extends Screen{
   /** TODO opportunistic attempt at bug-fixing black screens */
   public void fix(){
     var timer=new Timer();
-    for(var i=1;i<=1;i++) timer.schedule(new TimerTask(){
+    for(var i=1;i<=2;i++) timer.schedule(new TimerTask(){
       @Override
       public void run(){
         Javelin.redraw();

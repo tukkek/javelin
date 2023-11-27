@@ -177,10 +177,13 @@ public class ContestedTerritory extends Fortification{
 
     @Override
     public String reward(){
-      double s=Squad.active.getel();
-      var all=s+attackers.rasterize().getel();
-      goldbonus=s/all;
-      xpbonus=s/all;
+      var attackers=this.attackers.rasterize();
+      if(!attackers.isEmpty()){
+        double s=Squad.active.getel();
+        var all=s+attackers.getel();
+        goldbonus=s/all;
+        xpbonus=s/all;
+      }
       return super.reward();
     }
 
@@ -343,12 +346,12 @@ public class ContestedTerritory extends Fortification{
 
   @Override
   public boolean isworking(){
-    return attackers.isEmpty();
+    return attackers.rasterize().isEmpty();
   }
 
   @Override
   public boolean ishostile(){
-    return !defenders.isEmpty();
+    return !defenders.rasterize().isEmpty();
   }
 
   @Override

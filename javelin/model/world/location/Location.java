@@ -115,6 +115,8 @@ public abstract class Location extends Actor{
    * {@link District}.
    */
   public int work=0;
+  /** When <code>false</code> will show a <code>?</code> icon. */
+  public boolean explored=true;
 
   /**
    * @param descriptionknown What to show a player on a succesfull
@@ -357,16 +359,6 @@ public abstract class Location extends Actor{
   public Integer getel(){
     return garrison.isEmpty()?Integer.MIN_VALUE
         :ChallengeCalculator.calculateel(garrison);
-  }
-
-  /**
-   * @param p Places the location at this point of the map. Note that forcing
-   *   placement skips {@link #generate()}.
-   * @see #place()
-   */
-  public void place(Point p){
-    setlocation(p);
-    place();
   }
 
   /**

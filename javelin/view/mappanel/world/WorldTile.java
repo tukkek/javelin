@@ -39,7 +39,7 @@ public class WorldTile extends Tile{
 
   @Override
   public void paint(Graphics g){
-    //    if(g==null) return;
+    if(g==null) return;
     if(!discovered){
       drawcover(g);
       return;
@@ -76,6 +76,7 @@ public class WorldTile extends Tile{
     if(l==null) return;
     if(l.drawgarisson()) draw(g,Images.HOSTILE.get(Tier.get(l.getel())));
     if(l.hascrafted()) draw(g,Images.CRAFTING);
+    else if(!l.explored) draw(g,Images.UNEXPLORED);
     if(l.hasupgraded()) draw(g,Images.UPGRADING);
     if(l.isworking()) draw(g,Images.LABOR);
     final var t=l instanceof Town?(Town)l:null;

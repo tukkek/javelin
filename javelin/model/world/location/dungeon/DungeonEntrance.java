@@ -32,6 +32,7 @@ public class DungeonEntrance extends Location{
     impermeable=true;
     allowentry=false;
     unique=true;
+    explored=false;
     if(d!=null) set(d);
   }
 
@@ -48,6 +49,7 @@ public class DungeonEntrance extends Location{
     if(Javelin.prompt("You are about to enter: "+describe()+"\n"
         +"Press ENTER to continue or any other key to cancel...")!='\n')
       return false;
+    explored=true;
     dungeon.enter();
     return true;
   }
@@ -72,7 +74,9 @@ public class DungeonEntrance extends Location{
   public String describe(){
     var squadel=ChallengeCalculator.calculateel(Squad.active.members);
     var difficulty=Difficulty.describe(dungeon.level-squadel);
-    return this+" ("+difficulty+").";
+    var details=new ArrayList<>(List.of(difficulty));
+    if(!explored) details.add("not explored");
+    return this+" ("+String.join(", ",details)+").";
   }
 
   @Override
@@ -103,7 +107,7 @@ public class DungeonEntrance extends Location{
    *   {@link Portal}s....
    */
   static public List<DungeonEntrance> getall(){
-    return World.getactors().stream().filter(a->a instanceof DungeonEntrance)
+    return World.getactors().stream().filter(DungeonEntrance.class::isInstance)
         .map(a->(DungeonEntrance)a).collect(Collectors.toList());
   }
 

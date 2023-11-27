@@ -53,6 +53,9 @@ public class Images{
       .get(List.of("overlay","upgrading"));
   /** @see Town#isworking() */
   public static final Image LABOR=Images.get(List.of("overlay","labor"));
+  /** @see Town#isworking() */
+  public static final Image UNEXPLORED=Images
+      .get(List.of("overlay","unexplored"));
   /** Show while a {@link MeldCrystal} is being generated. */
   public static final Image DEAD=Images.get(List.of("overlay","dead"));
   /** Show when a {@link MeldCrystal} is generated. */

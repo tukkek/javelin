@@ -25,7 +25,6 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.PointOfInterest;
 import javelin.model.world.location.ResourceSite;
-import javelin.model.world.location.academy.Academy;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonEntrance;
 import javelin.model.world.location.dungeon.DungeonTier;
@@ -52,7 +51,6 @@ import javelin.model.world.location.town.governor.HumanGovernor;
 import javelin.model.world.location.town.governor.MonsterGovernor;
 import javelin.model.world.location.town.labor.basic.Lodge;
 import javelin.model.world.location.town.labor.basic.Shop;
-import javelin.model.world.location.town.labor.cultural.MagesGuild;
 import javelin.model.world.location.town.labor.expansive.Docks;
 import javelin.model.world.location.unique.AdventurersGuild;
 import javelin.model.world.location.unique.Arena;
@@ -249,10 +247,10 @@ public class LocationGenerator implements Serializable{
 
   static void generatestartingarea(World w,Town t){
     var s=Shop.makebasic();
-    var a=Academy.makebasic();
-    var m=MagesGuild.makebasicmage();
-    for(var l:RPG.shuffle(new ArrayList<>(List.of(new Lodge(),s,a,m))))
-      spawnnear(t,l,w,1,2,true);
+    // TODO remove   var a=Academy.makebasic();
+    // TODO remove   var m=MagesGuild.makebasicmage();
+    var district=List.of(new Lodge(),s,new AdventurersGuild());
+    for(var l:RPG.shuffle(new ArrayList<>(district))) spawnnear(t,l,w,1,2,true);
     var p=t.getlocation();
     var recruits=RPG.shuffle(Terrain.get(p.x,p.y).getmonsters());
     recruits.sort((o1,o2)->{
@@ -260,7 +258,6 @@ public class LocationGenerator implements Serializable{
       if(difference==0) return 0;
       return difference>0?1:-1;
     });
-    spawnnear(t,new AdventurersGuild(),w,2,3,true).reveal();
     spawnnear(t,new Arena(),w,2,3,false).reveal();
     var r=District.RADIUSMAX/2;
     var farther=(int)Math.round(r*1.5);

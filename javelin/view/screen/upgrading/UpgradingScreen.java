@@ -194,7 +194,8 @@ public abstract class UpgradingScreen extends SelectScreen{
 
   abstract public ArrayList<Combatant> gettrainees();
 
-  private int price(float xp){
+  /** @return Gold price to upgrade a certain XP-worth. */
+  static public int price(float xp){
     return Math.round(xp*50);
   }
 

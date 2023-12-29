@@ -104,7 +104,7 @@ public class Dungeon implements Serializable{
   /** Dungeon name. */
   protected String name;
   /** {@link RPG#chancein(int)} chance to {@link Branch}. */
-  protected int branchchance=4;
+  protected int branchchance=3;
   /** Placed once per dungeon for the benefit of {@link FetchQuest}s. */
   protected List<Class<? extends Chest>> goals=List.of(ArtDisplay.class,
       RecipeBookcase.class);

@@ -234,10 +234,9 @@ public class LocationGenerator implements Serializable{
       throw new RuntimeException();
     }
     for(var level=Tier.LOW.minlevel;level<=Tier.HIGH.maxlevel;level++){
-      var nfloors=1;
       var t=DungeonTier.get(level);
-      var maxdepth=DungeonTier.TIERS.indexOf(t)+1;
-      while(nfloors<maxdepth&&RPG.chancein(2)) nfloors+=1;
+      var nfloors=2+t.tier.getordinal();
+      nfloors+=RPG.randomize(nfloors);
       locations.add(new DungeonEntrance(new Dungeon(t.name,level,nfloors)));
     }
     for(var i=0;i<15;i++) locations.add(new DungeonEntrance(new Wilderness()));

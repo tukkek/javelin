@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.util.HashMap;
 
-import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.model.state.Square;
 import javelin.view.screen.BattleScreen;
@@ -56,11 +55,8 @@ public abstract class Tile{
 
   /** Redraws. */
   public void repaint(){
-    try{
-      paint(BattleScreen.active.mappanel.getdrawgraphics());
-    }catch(Exception e){
-      if(Javelin.DEBUG) throw e;
-    }
+    var g=BattleScreen.active.mappanel.getdrawgraphics();
+    if(g!=null) paint(g);
   }
 
   /**

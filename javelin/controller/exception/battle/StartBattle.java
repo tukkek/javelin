@@ -47,6 +47,7 @@ public class StartBattle extends BattleEvent{
       var screen=new BattleScreen(true,true);
       for(var m:fight.mutators) m.draw(fight);
       if(Javelin.DEBUG) Debug.onbattlestart();
+      Javelin.app.switchScreen(screen);
       screen.mainloop();
     }else quickbattle(diffifculty);
   }

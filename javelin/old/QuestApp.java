@@ -66,24 +66,16 @@ public abstract class QuestApp extends Applet implements Runnable{
   }
 
   /** Switches to a new screen, discarding the old one. */
-  public void switchScreen(final Component s){
+  public void switchScreen(Component s){
     if(mainComponent==s) return;
-    synchronized(MapPanel.PAINTER){
-      setVisible(false);
-      MapPanel.overlay=null;
-      if(mainComponent instanceof Screen) ((Screen)mainComponent).close();
-      removeAll();
-      add(s);
-      revalidate();
-      s.revalidate();
-      var world=s instanceof WorldScreen?(WorldScreen)s:null;
-      if(world!=null&&Squad.active!=null) world.firstdraw=true;
-      setVisible(true);
-      /* CBG This is needed to give the focus to the contained screen.
-       * RequestFocusInWindow is preferable to requestFocus. */
-      s.requestFocus();
-      mainComponent=s;
-    }
+    MapPanel.overlay=null;
+    if(mainComponent instanceof Screen) ((Screen)mainComponent).close();
+    removeAll();
+    add(s);
+    s.revalidate();
+    s.requestFocus();
+    mainComponent=s;
+    if(Squad.active!=null&&s instanceof WorldScreen w) w.firstdraw=true;
   }
 
   @Override

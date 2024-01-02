@@ -281,6 +281,14 @@ public class Debug{
   public static boolean bypassdoors;
 
   /**
+   * @param log Print object or {@link List} to {@link System#out}.
+   * @param c Used to identify and locate the message.
+   */
+  public static void log(Object log,Class<?> c){
+    System.out.println("%s: %s".formatted(c.getSimpleName(),log));
+  }
+
+  /**
    * Java doesn't have programatic breakpoints but sometimes it's useful to
    * emulate them by setting a breakpoint here instead of directly into code.
    * One example is using <code>if(something) Debug.breakpoint()</code>, which
@@ -295,13 +303,13 @@ public class Debug{
     //
   }
 
-  /** @see StartBattle */
-  public static void onbattlestart(){
+  /** Called once every new playthrough. */
+  public static void oncampaignstart(){
     //
   }
 
-  /** Called once every new playthrough. */
-  public static void oncampaignstart(){
+  /** @see StartBattle */
+  public static void onbattlestart(){
     //
   }
 

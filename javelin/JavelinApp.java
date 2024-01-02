@@ -90,7 +90,7 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
       if(Dungeon.active==null) context=new WorldScreen(true);
       else Dungeon.active.enter();
       while(true){
-        Javelin.app.switchScreen(context);
+        switchScreen(context);
         JavelinApp.context.turn();
       }
     }catch(StartBattle e){

@@ -1,17 +1,15 @@
 package javelin.view.mappanel;
 
+import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Graphics;
 import java.awt.Panel;
 import java.awt.ScrollPane;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javelin.controller.db.Preferences;
 import javelin.view.mappanel.overlay.Overlay;
-import javelin.view.screen.BattleScreen;
 
 /**
  * Game map view, either in or out of battle.
@@ -23,8 +21,6 @@ public abstract class MapPanel extends Panel{
   public static int tilesize=Preferences.tilesizeworld;
   /** Produces a temporary overlay effect on-screen. */
   public static Overlay overlay=null;
-  /** Semaphore to block painting. */
-  public static final Object PAINTER=new Object();
 
   /** Scrollbar functionality. */
   public ScrollPane scroll=new ScrollPane(ScrollPane.SCROLLBARS_ALWAYS);
@@ -32,22 +28,12 @@ public abstract class MapPanel extends Panel{
   public Tile[][] tiles=null;
   /** Main component for panel. */
   public Canvas canvas=new Canvas(){
-    boolean first=true;
-
     @Override
     public void paint(Graphics g){
       refresh();
-      if(first){
-        first=false;
-        new Timer().schedule(new TimerTask(){
-          @Override
-          public void run(){
-            if(BattleScreen.active.mappanel==MapPanel.this) refresh();
-          }
-        },500);
-      }
     }
   };
+
   Panel container=new Panel();
   /**
    * Make sure we have a field for this to ensure we're going to instantiate
@@ -63,7 +49,6 @@ public abstract class MapPanel extends Panel{
     mapwidth=widthp;
     mapheight=heightp;
     scroll.setFocusable(false);
-    add(scroll);
     container.setFocusable(false);
     canvas.setFocusable(false);
     configurationkey=configurationkeyp;
@@ -91,17 +76,17 @@ public abstract class MapPanel extends Panel{
       }
     });
     tilesize=gettilesize();
-    scroll.setVisible(false);
     resize();
     tiles=new Tile[mapwidth][mapheight];
     for(var y=0;y<mapheight;y++)
       for(var x=0;x<mapwidth;x++) tiles[x][y]=newtile(x,y);
-    container.add(canvas);
     canvas.addMouseListener(mouse);
     canvas.addMouseMotionListener(mouse);
     canvas.addMouseWheelListener(mouse);
+    container.add(canvas);
     scroll.add(container);
-    scroll.setVisible(true);
+    setLayout(new BorderLayout());
+    add(scroll,BorderLayout.CENTER);
   }
 
   /** @see Preferences */

@@ -6,8 +6,6 @@ import java.awt.Image;
 import java.awt.Panel;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javelin.Javelin;
 import javelin.Javelin.Delay;
@@ -126,15 +124,12 @@ public class BattleScreen extends Screen{
     statuspanel=new StatusPanel();
     if(addsidebar) p.add("Center",statuspanel);
     setFont(QuestApp.mainfont);
-    Javelin.app.switchScreen(this);
     BattleScreen.active=this;
     Javelin.delayblock=false;
     partialmove=0;
     var l=getsquadlocation();
-    mappanel.scroll.setSize(mappanel.getBounds().getSize());
     mappanel.zoom(0,l.x,l.y);
     mappanel.center(l.x,l.y,true);
-    mappanel.scroll.setVisible(true);
   }
 
   /** @return Map panel implementation for this screen. */
@@ -166,6 +161,7 @@ public class BattleScreen extends Screen{
       current=Fight.state.next;
       Examine.lastlooked=null;
       partialmove=0;
+      updatescreen();
       checkai();
       if(Fight.state.redteam.contains(current)||current.automatic){
         lastaimove=current;
@@ -184,26 +180,14 @@ public class BattleScreen extends Screen{
     }
   }
 
-  /** TODO opportunistic attempt at bug-fixing black screens */
-  public void fix(){
-    var timer=new Timer();
-    for(var i=1;i<=2;i++) timer.schedule(new TimerTask(){
-      @Override
-      public void run(){
-        Javelin.redraw();
-      }
-    },i*1000);
-  }
-
   /**
    * Prevents players spamming {@link WorldMove}s from accidently acting in
    * battle.
    */
   void blockinput(){
+    if(!first) return;
     try{
-      if(!first) return;
       first=false;
-      fix();
       Thread.sleep(1000);
     }catch(InterruptedException e){
       //ignore
@@ -211,7 +195,6 @@ public class BattleScreen extends Screen{
   }
 
   synchronized void humanmove(){
-    blockinput();
     var s=Fight.state;
     lastaicheck=s.next.ap;
     if(current==null||current.automatic||s.fleeing.contains(current)) return;
@@ -219,6 +202,7 @@ public class BattleScreen extends Screen{
     BattlePanel.current=current;
     center(current.location[0],current.location[1]);
     updatescreen();
+    blockinput();
     Interface.userinterface.waiting=true;
     final var updatableUserAction=callback==null?getUserInput():null;
     if(MapPanel.overlay!=null) MapPanel.overlay.clear();
@@ -328,7 +312,6 @@ public class BattleScreen extends Screen{
         view(l.x,l.y);
       }
     }
-    statuspanel.repaint();
     Javelin.redraw();
   }
 
@@ -338,23 +321,21 @@ public class BattleScreen extends Screen{
    *   let the next automaric unit think instead.
    */
   public void setstate(final ChanceNode state,boolean enableoverrun){
-    synchronized(MapPanel.PAINTER){
-      if(MapPanel.overlay!=null) MapPanel.overlay.clear();
-      MapPanel.overlay=state.overlay;
-      BattlePanel.current=current;
-      final var s=(BattleState)state.n;
-      Fight.state=s;
-      if(lastaimove==null) Javelin.redraw();
-      var delay=state.delay;
-      if(enableoverrun&&delay==Javelin.Delay.WAIT
-          &&(s.redteam.contains(s.next)||s.next.automatic)){
-        delay=Javelin.Delay.NONE;
-        jointurns=true;
-      }
-      messagepanel.clear();
-      statuspanel.repaint();
-      Javelin.message(state.action,delay);
+    if(MapPanel.overlay!=null) MapPanel.overlay.clear();
+    MapPanel.overlay=state.overlay;
+    BattlePanel.current=current;
+    final var s=(BattleState)state.n;
+    Fight.state=s;
+    if(lastaimove==null) Javelin.redraw();
+    var delay=state.delay;
+    if(enableoverrun&&delay==Javelin.Delay.WAIT
+        &&(s.redteam.contains(s.next)||s.next.automatic)){
+      delay=Javelin.Delay.NONE;
+      jointurns=true;
     }
+    messagepanel.clear();
+    statuspanel.repaint();
+    Javelin.message(state.action,delay);
   }
 
   /**

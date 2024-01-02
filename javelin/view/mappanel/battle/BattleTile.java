@@ -31,7 +31,6 @@ public class BattleTile extends Tile{
 
   @Override
   public void paint(Graphics g){
-    //    if(g==null) return;
     if(!discovered){
       drawcover(g);
       return;

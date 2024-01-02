@@ -21,6 +21,9 @@ import javelin.view.screen.InfoScreen;
 
 /** Starting location to Apply class {@link Kit}s to low-level player units. */
 public class AdventurersGuild extends UniqueLocation{
+  /** Amount of {@link Combatant#xp} used to study. */
+  public static final int INCREMENT=1;
+
   static final List<String> KEYS=Arrays
       .asList("1234567890abcdefghijklnoprsuvxyz/*-+.?!@#$%&()_=[]{}<>;:\"\\|"
           .split(""));
@@ -90,7 +93,7 @@ public class AdventurersGuild extends UniqueLocation{
   String validate(Combatant c){
     if(ChallengeCalculator.calculatecr(c.source)>=MAX)
       return "has learned all they can here";
-    if(c.xp.floatValue()<1) return "needs at least 100XP";
+    if(c.xp.floatValue()<INCREMENT) return "needs at least 100XP";
     return null;
   }
 

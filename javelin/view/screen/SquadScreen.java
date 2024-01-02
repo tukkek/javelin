@@ -1,7 +1,7 @@
 package javelin.view.screen;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -10,11 +10,9 @@ import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.MonstersByName;
-import javelin.controller.content.upgrade.Upgrade;
-import javelin.controller.content.upgrade.classes.ClassLevelUpgrade;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
+import javelin.model.world.location.unique.AdventurersGuild;
 import javelin.old.RPG;
 
 /**
@@ -47,6 +45,8 @@ public class SquadScreen extends InfoScreen{
       %s
       """;
   static final int SPEED=Monster.get("human").walk/2;
+  static final int GOLD=RewardCalculator.calculatepcequipment(1);
+  static final BigDecimal INCREMENT=new BigDecimal(AdventurersGuild.INCREMENT);
 
   static{
     var candidates=CRS.stream().flatMap(cr->Monster.BYCR.get(cr).stream())
@@ -124,17 +124,20 @@ public class SquadScreen extends InfoScreen{
   }
 
   void upgrade(){
-    var members=squad.members;
-    var advancement=new HashMap<Combatant,Upgrade>(members.size());
-    for(var m:members) advancement.put(m,ClassLevelUpgrade.getpreferred(m));
-    while(squad.getel()<EL){
-      var w=members.getweakest();
-      advancement.get(w).upgrade(w);
-      ChallengeCalculator.calculatecr(w.source);
+    var members=RPG.shuffle(squad.members,true);
+    var el=squad.getel();
+    while(el<EL){
+      var crs=new ArrayList<>(
+          members.stream().map(m->m.source.cr+m.xp.floatValue()).toList());
+      var weakest=0;
+      for(var i=1;i<crs.size();i++) if(crs.get(i)<crs.get(weakest)) weakest=i;
+      var m=members.get(weakest);
+      m.xp=m.xp.add(INCREMENT);
+      crs.set(weakest,m.source.cr+m.xp.floatValue());
+      el=ChallengeCalculator.calculateelfromcrs(crs);
     }
-    var base=RewardCalculator.calculatepcequipment(1);
     var gold=members.stream().mapToInt(
-        m->RewardCalculator.calculatepcequipment(Math.round(m.source.cr))-base);
+        m->RewardCalculator.calculatepcequipment(Math.round(m.source.cr))-GOLD);
     squad.gold=Javelin.round(gold.sum());
   }
 

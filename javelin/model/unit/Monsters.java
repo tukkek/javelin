@@ -12,6 +12,11 @@ public class Monsters extends ArrayList<Monster>{
     super(list);
   }
 
+  /** Constructor. */
+  public Monsters(){
+    // default
+  }
+
   /** @see ChallengeCalculator#calculateelfromcrs(List, boolean) */
   public int getel(){
     var crs=stream().map(m->m.cr).toList();

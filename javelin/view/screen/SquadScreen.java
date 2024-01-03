@@ -11,15 +11,12 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.MonstersByName;
 import javelin.model.unit.Monster;
+import javelin.model.unit.Monsters;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.unique.AdventurersGuild;
 import javelin.old.RPG;
 
-/**
- * Squad selection screen when starting a new game.
- *
- * @author alex
- */
+/** Squad selection screen when starting a new game. */
 public class SquadScreen extends InfoScreen{
   /** All units suitable for a starting {@link Squad}. */
   public static final ArrayList<Monster> CANDIDATES=new ArrayList<>();
@@ -56,7 +53,7 @@ public class SquadScreen extends InfoScreen{
     CANDIDATES.sort(MonstersByName.INSTANCE);
   }
 
-  Squad squad=new Squad(0,0,8,null);
+  Monsters squad=new Monsters();
   boolean first=true;
 
   /** Constructor. */
@@ -70,18 +67,12 @@ public class SquadScreen extends InfoScreen{
       if(Javelin.DEBUG&&CANDIDATES.isEmpty())
         throw new NoSuchElementException();
       candidate=RPG.pick(CANDIDATES);
-      for(var m:squad.members) if(m.source.name.equals(candidate.name)){
+      for(var m:squad) if(m.name.equals(candidate.name)){
         candidate=null;
         break;
       }
     }
-    recruit(candidate);
-  }
-
-  void recruit(Monster m){
-    var c=squad.recruit(m);
-    c.hp=c.source.hd.maximize();
-    c.maxhp=c.hp;
+    squad.add(candidate);
   }
 
   String printtable(){
@@ -110,20 +101,20 @@ public class SquadScreen extends InfoScreen{
   void print(){
     while(squad.getel()<EL){
       Javelin.app.switchScreen(this);
-      var team=String.join("\n",squad.members.stream().map(t->"  "+t.toString())
+      var team=String.join("\n",squad.stream().map(t->"  "+t.toString())
           .collect(Collectors.toList()));
       text=FORMAT.formatted(printtable(),team);
       repaint();
       var f=InfoScreen.feedback();
-      if(f=='\n'&&!squad.members.isEmpty()) break;
+      if(f=='\n'&&!squad.isEmpty()) break;
       var i=KEYS.indexOf(f);
-      if(0<=i&&i<CANDIDATES.size()) recruit(CANDIDATES.get(i));
+      if(0<=i&&i<CANDIDATES.size()) squad.add(CANDIDATES.get(i));
       else if(f=='z') pickrandom();
-      else if(f=='\b') squad.members.clear();
+      else if(f=='\b') squad.clear();
     }
   }
 
-  void upgrade(){
+  static void upgrade(Squad squad){
     var members=RPG.shuffle(squad.members,true);
     var el=squad.getel();
     while(el<EL){
@@ -144,8 +135,14 @@ public class SquadScreen extends InfoScreen{
   /** @return Units selected by the player. */
   public Squad open(){
     print();
-    if(squad.getel()<EL) upgrade();
-    squad.sort();
-    return squad;
+    var s=new Squad(0,0,8,null);
+    for(var monster:squad){
+      var c=s.recruit(monster);
+      c.hp=c.source.hd.maximize();
+      c.maxhp=c.hp;
+    }
+    if(squad.getel()<EL) upgrade(s);
+    s.sort();
+    return s;
   }
 }

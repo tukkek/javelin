@@ -7,12 +7,12 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.model.world.location.unique.MercenariesGuild;
 
 public class Combatants extends ArrayList<Combatant>
     implements Cloneable,Serializable{
 
-  public Combatants(){
-  }
+  public Combatants(){}
 
   public Combatants(int size){
     super(size);
@@ -76,5 +76,10 @@ public class Combatants extends ArrayList<Combatant>
   /** @see ChallengeCalculator#calculateel(List) */
   public int getel(){
     return ChallengeCalculator.calculateel(this);
+  }
+
+  /** @return Total {@link MercenariesGuild#getfee(Monster)}. */
+  public int pay(){
+    return stream().mapToInt(c->MercenariesGuild.getfee(c.source)).sum();
   }
 }

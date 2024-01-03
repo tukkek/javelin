@@ -356,13 +356,17 @@ public class ContestedTerritory extends Fortification{
 
   @Override
   public String describe(){
+    var t=Tier.get(targetel);
+    if(!ishostile()){
+      var hires="No armies for hire.";
+      if(!attackers.isEmpty()) hires=attackers.stream()
+          .map(army->"- %s, $%s/day".formatted(army,Javelin.format(army.pay())))
+          .collect(joining("\n"));
+      return DESCRIPTION.formatted(t,hires).trim();
+    }
     var a=attackers.toString().trim();
-    var d=defenders.toString().trim();
-    var s=Squad.active.getlocation();
-    var h=ishostile();
-    var preview="";
-    if(h&&distanceinsteps(s.x,s.y)==1) preview=ARMYPREVIEW.formatted(a,d);
-    else if(!h) preview=isworking()?"Empty...":"Mercenaries: %s.".formatted(a);
-    return DESCRIPTION.formatted(Tier.get(targetel),preview.toString());
+    var b=defenders.toString().trim();
+    var d=Squad.active.getlocation().distanceinsteps(getlocation());
+    return DESCRIPTION.formatted(t,d==1?ARMYPREVIEW.formatted(a,b):"").trim();
   }
 }

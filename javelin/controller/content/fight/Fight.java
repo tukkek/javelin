@@ -203,11 +203,8 @@ public abstract class Fight{
 
   /** @return Default value of {@link #terrains}. */
   public ArrayList<Terrain> getdefaultterrains(){
-    if(Dungeon.active!=null)
-      return new ArrayList<>(List.of(Terrain.UNDERGROUND));
-    var terrains=new ArrayList<>(List.of(Terrain.current()));
-    if(flood()==Weather.STORM) terrains.add(Terrain.WATER);
-    return terrains;
+    var t=Dungeon.active==null?Terrain.current():Terrain.UNDERGROUND;
+    return new ArrayList<>(List.of(t));
   }
 
   /** @return <code>true</code> if battle has been won. */

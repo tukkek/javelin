@@ -232,7 +232,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
    * Like {@link #add(Combatant, List)} but adds an empty item list.
    */
   public void add(Combatant c){
-    add(c,new ArrayList<Item>(0));
+    add(c,new ArrayList<>(0));
   }
 
   /**
@@ -333,8 +333,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
       if(10+foe.perceive(flying,outside,outside)>=hideroll) return false; // spotted!
     // hidden
     var input=' ';
-    final var prompt="You have hidden from a "+Difficulty.describe(foes)
-        +" group of enemies!\n"
+    final var prompt="You have hidden from a group of enemies!\n"
         +"Press s to storm them or w to wait for them to go away...\n\n"
         +"Enemies: "+scout(foes,null)+".";
     while(input!='w'&&input!='s') input=Javelin.prompt(prompt);
@@ -363,18 +362,18 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
       break;
     }
     if(!intelligent) return false;
-    var diplomac=getbest(Skill.DIPLOMACY).roll(Skill.DIPLOMACY);
+    var d=getbest(Skill.DIPLOMACY).roll(Skill.DIPLOMACY);
     var highest=Integer.MIN_VALUE;
     var dailyfee=0;
     for(Combatant foe:foes){
       var will=foe.source.getwill();
-      if(RPG.r(1,20)+will>=diplomac) return false;// no deal!
+      if(RPG.r(1,20)+will>=d) return false;// no deal!
       if(will>highest) highest=will;
       dailyfee+=foe.pay();
     }
     if(Dungeon.active!=null) dailyfee*=10;
     final var bribe=Math.max(1,RewardCalculator.receivegold(foes)/2);
-    final var canhire=diplomac>=highest+5;
+    final var canhire=d>=highest+5;
     var b=new BribingScreen().bribe(foes,dailyfee,bribe,canhire);
     Javelin.app.switchScreen(BattleScreen.active);
     return b;

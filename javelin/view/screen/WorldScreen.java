@@ -142,6 +142,7 @@ public class WorldScreen extends BattleScreen{
         s.join(squad);
       var d=s.getdistrict();
       if(d!=null) d.town.enter();
+
       redraw();
       Interface.userinterface.waiting=true;
       final var updatableUserAction=getUserInput();
@@ -320,14 +321,15 @@ public class WorldScreen extends BattleScreen{
     infos.add(printgold());
     final var hps=showstatusinformation();
     while(hps.size()>6) hps.remove(6);
+    var space=hps.stream().mapToInt(String::length).max().orElseThrow();
     var panel="";
     for(var i=0;i<Math.max(infos.size(),hps.size());i++){
       String hp;
       final var info=infos.size()>i?"    "+infos.get(i):"";
       if(hps.size()>i){
         hp=hps.get(i);
-        while(hp.length()<WorldScreen.SPACER.length()) hp+=" ";
-      }else hp=WorldScreen.SPACER;
+        while(hp.length()<space) hp+=" ";
+      }else hp=" ".repeat(space);
       panel+=hp+info+"\n";
     }
     Javelin.message(panel,Javelin.Delay.NONE);
@@ -344,16 +346,26 @@ public class WorldScreen extends BattleScreen{
    * @return One line of text containing unit name and status information
    *   (health, poison, etc).
    */
-  static public ArrayList<String> showstatusinformation(){
-    final var hps=new ArrayList<String>();
-    for(final Combatant c:Squad.active.members){
-      var status=c.getstatus()+", ";
-      if(c.source.poison>0) status+="weak, ";
-      if(c.spells.size()>0&&checkexhaustion(c)) status+="spent, ";
-      var vital=c.toString()+" ("+status.substring(0,status.length()-2)+")";
+  static public List<String> showstatusinformation(){
+    var hps=new ArrayList<String>();
+    var s=Squad.active.members;
+    for(var member:s){
+      var status=member.getstatus()+", ";
+      if(member.source.poison>0) status+="weak, ";
+      if(member.spells.size()>0&&checkexhaustion(member)) status+="spent, ";
+      var vital=member.toString()+" ("+status.substring(0,status.length()-2)
+          +")";
       while(vital.length()<WorldScreen.STATUSSPACE) vital+=" ";
-      var cr=Math.round(Math.floor(c.source.cr));
-      hps.add(vital+" Level "+cr+" "+c.gethumanxp());
+      hps.add(vital);
+    }
+    var space=hps.stream().mapToInt(String::length).max().orElseThrow();
+    for(var i=0;i<s.size();i++){
+      var member=s.get(i);
+      var cr=Math.round(Math.floor(member.source.cr));
+      var format="%s Level %s %s";
+      var hp=hps.get(i);
+      hp+=" ".repeat(space-hp.length());
+      hps.set(i,String.format(format,hp,cr,member.gethumanxp()));
     }
     return hps;
   }

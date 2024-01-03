@@ -22,7 +22,8 @@ public class Connect extends FindQuest{
     var r=new HashSet<>(ResourceSite.RESOURCES.values());
     r.removeAll(t.resources);
     if(r.isEmpty()) return;
-    var targets=ResourceSite.getall();
+    var targets=ResourceSite.getall().stream().filter(s->r.contains(s.type))
+        .toList();
     if(targets.isEmpty()) return;
     var site=select(targets);
     target=site.type;

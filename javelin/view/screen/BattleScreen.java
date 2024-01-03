@@ -93,10 +93,11 @@ public class BattleScreen extends Screen{
   /** Visual representation of a {@link BattleState}. */
   public MapPanel mappanel;
 
-  Combatant lastaimove;
-  private boolean addsidebar;
   boolean maprevealed=false;
   Combatant current=null;
+  Combatant lastaimove;
+  boolean first=true;
+  boolean addsidebar;
   boolean jointurns;
 
   /**
@@ -127,9 +128,6 @@ public class BattleScreen extends Screen{
     BattleScreen.active=this;
     Javelin.delayblock=false;
     partialmove=0;
-    var l=getsquadlocation();
-    mappanel.zoom(0,l.x,l.y);
-    mappanel.center(l.x,l.y,true);
   }
 
   /** @return Map panel implementation for this screen. */
@@ -200,7 +198,6 @@ public class BattleScreen extends Screen{
     if(current==null||current.automatic||s.fleeing.contains(current)) return;
     if(MapPanel.overlay!=null) MapPanel.overlay.clear();
     BattlePanel.current=current;
-    center(current.location[0],current.location[1]);
     updatescreen();
     blockinput();
     Interface.userinterface.waiting=true;
@@ -297,10 +294,8 @@ public class BattleScreen extends Screen{
 
   /** Like {@link MapPanel#center(int, int, boolean)} but without forcing. */
   public void center(int x,int y){
-    mappanel.center(x,y,false);
+    mappanel.center(x,y,first);
   }
-
-  boolean first=true;
 
   /** Redraws screen. */
   protected void updatescreen(){

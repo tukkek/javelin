@@ -41,7 +41,7 @@ public class CraftingOrder extends Order{
   }
 
   public CraftingOrder(Item i,OrderQueue queue){
-    super(calculateeta(i),i.name);
+    super(calculateeta(i),i.toString());
     item=i.clone();
     if(queue!=null&&!queue.queue.isEmpty()){
       var hours=queue.last().completionat-Period.gettime();

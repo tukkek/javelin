@@ -242,7 +242,6 @@ public class Arena extends UniqueLocation{
     }
 
     void turn(Arena a){
-      rest();
       var upgrade=Period.Time.YEAR/20;
       if(RPG.chancein(size()==1?Time.WEEK:Time.SEASON)) hire();
       else if(RPG.chancein(upgrade)){

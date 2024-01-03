@@ -358,7 +358,6 @@ public class AttackResolver{
       var r=new AttackResolver(action,active,target,attack,state);
       r.preview(target);
       if(best==null||r.hitchance>best.hitchance) best=r;
-      System.out.println(r.hitchance);
       if(r.hitchance>=.5){
         r.damage(active,target,Outcome.HIT,attack,0,state);
         if(target.hp<1) break;

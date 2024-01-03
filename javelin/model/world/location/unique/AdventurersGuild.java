@@ -14,13 +14,19 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Tier;
 import javelin.controller.content.kit.Kit;
 import javelin.controller.content.upgrade.Upgrade;
+import javelin.controller.generator.NpcGenerator;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
+import javelin.model.world.Period.Time;
 import javelin.old.RPG;
 import javelin.view.screen.InfoScreen;
+import javelin.view.screen.SquadScreen;
+import javelin.view.screen.WorldScreen;
 
 /** Starting location to Apply class {@link Kit}s to low-level player units. */
 public class AdventurersGuild extends UniqueLocation{
+
   /** Amount of {@link Combatant#xp} used to study. */
   public static final int INCREMENT=1;
 
@@ -38,11 +44,15 @@ public class AdventurersGuild extends UniqueLocation{
       Training time: 1 week, fees: $%s. You have $%s.
 
       t - begin training
+      h - hire recruit (%s)
       q - quit
       """
       .trim();
+  static final List<Monster> RECRUITS=SquadScreen.CANDIDATES.stream()
+      .filter(c->c.think(0)).toList();
 
   Map<Integer,Kit> kits=new HashMap<>();
+  Combatant recruit=null;
 
   /** Constructor. */
   public AdventurersGuild(){
@@ -53,6 +63,13 @@ public class AdventurersGuild extends UniqueLocation{
   @Override
   protected void generategarrison(int minlevel,int maxlevel){
     // clear
+  }
+
+  boolean hire(){
+    if(recruit==null) return false;
+    Squad.active.add(recruit);
+    recruit=null;
+    return true;
   }
 
   @Override
@@ -73,7 +90,7 @@ public class AdventurersGuild extends UniqueLocation{
         change(s.get(index));
         continue;
       }
-      if(input=='t'&&train()) return true;
+      if(input=='t'&&train()||input=='h'&&hire()) return true;
     }
     return true;
   }
@@ -113,7 +130,10 @@ public class AdventurersGuild extends UniqueLocation{
     }
     var p=Javelin.format(price());
     var g=Javelin.format(Squad.active.gold);
-    return PROMPT.formatted(String.join("\n",trainees),p,g);
+    var r="none present";
+    if(recruit!=null)
+      r="%s, $%s/day".formatted(recruit,Javelin.format(recruit.pay()));
+    return PROMPT.formatted(String.join("\n",trainees),p,g,r);
   }
 
   boolean train(){
@@ -186,5 +206,21 @@ public class AdventurersGuild extends UniqueLocation{
   @Override
   public List<Combatant> getcombatants(){
     return null;
+  }
+
+  @Override
+  public void turn(long time,WorldScreen world){
+    super.turn(time,world);
+    if(!RPG.chancein(Time.MONTH)) return;
+    if(recruit!=null){
+      recruit=null;
+      return;
+    }
+    var t=getdistrict().town;
+    var cr=1+Tier.get(t.population).getordinal();
+    cr+=RPG.randomize(cr);
+    recruit=NpcGenerator.generate(RPG.pick(RECRUITS),cr);
+    recruit.mercenary=true;
+    t.events.add("New Adventurers Guild recruit: %s.".formatted(recruit));
   }
 }

@@ -22,6 +22,7 @@ import javelin.controller.content.fight.mutator.Friendly;
 import javelin.controller.content.kit.Kit;
 import javelin.controller.content.map.location.LocationMap;
 import javelin.controller.db.EncounterIndex;
+import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
@@ -92,6 +93,11 @@ public class Arena extends UniqueLocation{
   static final EncounterIndex GLADIATORS=new EncounterIndex(Monster.ALL.stream()
       .filter(m->m.think(-1)&&MonsterType.HUMANOID.equals(m.type))
       .collect(Collectors.toList()));
+  static final String CONCEDE="""
+      Concede the match?
+
+      Press ENTER to concede or any other key to cancel...
+      """;
 
   class ArenaMap extends LocationMap{
     List<Point> minionspawn=new ArrayList<>();
@@ -118,7 +124,6 @@ public class Arena extends UniqueLocation{
       mutators.add(new Friendly(Combatant.STATUSINJURED));
       period=Period.AFTERNOON;
       goldbonus=.5;
-      canflee=false;
     }
 
     @Override
@@ -152,6 +157,12 @@ public class Arena extends UniqueLocation{
       if(to!=from)
         r+="Reputation in %s increases to %s!\n".formatted(t,to.toLowerCase());
       return r;
+    }
+
+    @Override
+    public void withdraw(Combatant c){
+      if(Javelin.prompt(CONCEDE)!='\n') throw new RepeatTurn();
+      withdrawall(false);
     }
   }
 

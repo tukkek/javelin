@@ -218,7 +218,6 @@ public class BattleScreen extends Screen{
   }
 
   void computermove(){
-    first=false;
     if(jointurns) jointurns=false;
     else{
       BattlePanel.current=current;
@@ -299,6 +298,7 @@ public class BattleScreen extends Screen{
 
   /** Redraws screen. */
   protected void updatescreen(){
+    if(first) Javelin.redraw();
     var current=Fight.state.clone(this.current);
     if(current!=null){
       var l=current.getlocation();

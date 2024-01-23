@@ -131,7 +131,7 @@ public class Shop extends Location{
     Shop s;
 
     ShowShop(Shop s){
-      super("You enter the shop.",null);
+      super("You enter shop in %s.".formatted(s.getdistrict().town),null);
       this.s=s;
     }
 

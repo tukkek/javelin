@@ -368,26 +368,18 @@ public class Combatant implements Serializable,Cloneable{
    * @see #getnumericstatus()
    */
   public String getstatus(){
-    switch(getnumericstatus()){
-      case STATUSUNHARMED:
-        return "unharmed";
-      case STATUSSCRATCHED:
-        return "scratched";
-      case STATUSHURT:
-        return "hurt";
-      case STATUSWOUNDED:
-        return "wounded";
-      case STATUSINJURED:
-        return "injured";
-      case STATUSDYING:
-        return "dying";
-      case STATUSUNCONSCIOUS:
-        return "unconscious";
-      case STATUSDEAD:
-        return "killed";
-      default:
-        throw new RuntimeException("Unknown possibility: "+getnumericstatus());
-    }
+    return switch(getnumericstatus()){
+      case STATUSUNHARMED -> "unharmed";
+      case STATUSSCRATCHED -> "scratched";
+      case STATUSHURT -> "hurt";
+      case STATUSWOUNDED -> "wounded";
+      case STATUSINJURED -> "injured";
+      case STATUSDYING -> "dying";
+      case STATUSUNCONSCIOUS -> "unconscious";
+      case STATUSDEAD -> "killed";
+      default -> throw new RuntimeException(
+          "Unknown possibility: "+getnumericstatus());
+    };
   }
 
   /**
@@ -649,7 +641,7 @@ public class Combatant implements Serializable,Cloneable{
    * @return XP in human readeable format (ex: 150XP).
    */
   public String gethumanxp(){
-    return xp.multiply(XPFORMAT).setScale(0,RoundingMode.HALF_UP)+"XP";
+    return xp.multiply(XPFORMAT).setScale(0,RoundingMode.FLOOR)+"XP";
   }
 
   /**
@@ -998,7 +990,7 @@ public class Combatant implements Serializable,Cloneable{
     if(hp<1) hp=1;
     heal(hp,false);
     for(Spell sp:spells) sp.used=0;
-    if(RPG.chancein(2)) detox(1);
+    if(RPG.chancein(2)||hp==maxhp) detox(1);
     terminateconditions(hours);
   }
 }

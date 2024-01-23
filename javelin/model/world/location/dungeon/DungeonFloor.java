@@ -329,20 +329,25 @@ public class DungeonFloor implements Serializable{
     }
   }
 
+  /** {@link #generatefeature()} with {@link FeatureRarityTable}. */
+  protected Feature generatefeature(){
+    return generatefeature(FeatureRarityTable.class);
+  }
+
   /**
    * @return A feature chosen from {@link #DEBUGFEATURE},
    *   {@link RareFeatureTable} or {@link CommonFeatureTable}. May return
    *   <code>null</code> in event of failure, in which case it should usually be
    *   possible to try again.
    */
-  protected Feature generatefeature(){
+  public Feature generatefeature(Class<? extends FeatureRarityTable> features){
     if(Javelin.DEBUG&&DEBUGFEATURE!=null) try{
       return DEBUGFEATURE.getDeclaredConstructor(DungeonFloor.class)
           .newInstance(this);
     }catch(ReflectiveOperationException e){
       throw new RuntimeException(e);
     }
-    var t=gettable(FeatureRarityTable.class).roll();
+    var t=gettable(features).roll();
     return t.rollfeature(this);
   }
 

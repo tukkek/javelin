@@ -8,7 +8,6 @@ import javelin.Javelin;
 import javelin.controller.table.Table;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.DungeonTier;
-import javelin.model.world.location.dungeon.Wilderness;
 import javelin.model.world.location.dungeon.feature.Altar;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.rare.CorruptedAltar;
@@ -46,7 +45,7 @@ public class RareFeatureTable extends Table implements DungeonFeatureTable{
 
   static final List<Class<? extends Feature>> LOTS=List.of(FruitTree.class,
       Herb.class);
-  static final List<Class<? extends Feature>> AVERAGE=List.of(Fountain.class,
+  static final List<Class<? extends Feature>> SOME=List.of(Fountain.class,
       LearningStone.class,Spirit.class,Broker.class,Prisoner.class,
       Trader.class);
   static final List<Class<? extends Feature>> FEW=List.of(Mirror.class,
@@ -56,16 +55,18 @@ public class RareFeatureTable extends Table implements DungeonFeatureTable{
 
   static{
     ALL.addAll(LOTS);
-    ALL.addAll(AVERAGE);
+    ALL.addAll(SOME);
     ALL.addAll(FEW);
   }
 
   /** Constructor. */
   public RareFeatureTable(DungeonFloor f){
-    if(Javelin.DEBUG&&DEBUG!=null){
-      add(DEBUG,1);
-      return;
-    }
+    if(Javelin.DEBUG&&DEBUG!=null) add(DEBUG,1);
+    else generate(f);
+  }
+
+  /** @see CommonFeatureTable#generate() */
+  public void generate(DungeonFloor f){
     var tier=f.gettier().tier.getordinal();
     var features=define(tier,f);
     var types=RPG.shuffle(new ArrayList<>(features.keySet()));
@@ -76,10 +77,8 @@ public class RareFeatureTable extends Table implements DungeonFeatureTable{
   HashMap<Class<? extends Feature>,Integer> define(int tier,DungeonFloor floor){
     var features=new HashMap<Class<? extends Feature>,Integer>();
     for(var f:LOTS) features.put(f,ROWS*2);
-    if(tier>=1) for(var f:AVERAGE) features.put(f,ROWS);
+    if(tier>=1) for(var f:SOME) features.put(f,ROWS);
     if(tier>=2) for(var f:FEW) features.put(f,ROWS/2);
-    if(floor.dungeon instanceof Wilderness)
-      for(var f:Wilderness.FORBIDDEN) features.remove(f);
     return features;
   }
 

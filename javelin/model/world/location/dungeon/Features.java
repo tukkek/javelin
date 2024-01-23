@@ -106,4 +106,9 @@ public class Features implements Iterable<Feature>,Serializable{
   public List<Feature> getall(){
     return new ArrayList<>(placement.values());
   }
+
+  @Override
+  public String toString(){
+    return placement.values().toString();
+  }
 }

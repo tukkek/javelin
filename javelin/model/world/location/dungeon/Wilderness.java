@@ -4,12 +4,10 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javelin.controller.Point;
 import javelin.controller.challenge.Difficulty;
-import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.challenge.Tier;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.content.fight.RandomDungeonEncounter;
@@ -18,21 +16,15 @@ import javelin.controller.content.terrain.hazard.Hazard;
 import javelin.controller.db.EncounterIndex;
 import javelin.controller.generator.dungeon.template.FloorTile;
 import javelin.controller.generator.encounter.EncounterGenerator;
+import javelin.controller.table.dungeon.feature.WildernessFeatures;
 import javelin.controller.walker.pathing.DirectPath;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.StairsUp;
-import javelin.model.world.location.dungeon.feature.chest.Crate;
 import javelin.model.world.location.dungeon.feature.chest.GemDisplay;
-import javelin.model.world.location.dungeon.feature.common.Brazier;
-import javelin.model.world.location.dungeon.feature.common.LoreNote;
-import javelin.model.world.location.dungeon.feature.rare.Fountain;
 import javelin.model.world.location.dungeon.feature.rare.LearningStone;
-import javelin.model.world.location.dungeon.feature.rare.Mirror;
-import javelin.model.world.location.dungeon.feature.rare.Throne;
-import javelin.model.world.location.dungeon.feature.rare.inhabitant.Prisoner;
 import javelin.old.RPG;
 import javelin.view.Images;
 import javelin.view.mappanel.Tile;
@@ -75,11 +67,6 @@ import javelin.view.mappanel.dungeon.DungeonWalker;
  * @author alex
  */
 public class Wilderness extends Dungeon{
-  /** {@link DungeonFloor#features} that are not relevant to Wildernesses. */
-  public static final Set<Class<? extends Feature>> FORBIDDEN=Set.of(
-      Brazier.class,Mirror.class,Throne.class,Fountain.class,Prisoner.class,
-      Crate.class,LoreNote.class);
-
   static final String DESCRIPTION="Wilderness";
 
   class Path extends Feature{
@@ -109,7 +96,9 @@ public class Wilderness extends Dungeon{
     }
   }
 
+  /** {@link Wilderness} {@link DungeonFloor}. */
   public class WildernessFloor extends DungeonFloor{
+    /** Constructor. */
     public WildernessFloor(Integer level,Dungeon d){
       super(level,d);
     }
@@ -198,18 +187,13 @@ public class Wilderness extends Dungeon{
       for(var i=0;i<nfeatures;i++){
         var p=z.getpoint();
         if(p==null) break;
-        var f=generatefeature();
+        var f=generatefeature(WildernessFeatures.class);
         if(f!=null) f.place(this,p);
       }
+      //      Debug.log(List.of(level,this),getClass());
+      //      Debug.log(features,getClass());
+      //      Debug.log("",getClass());
       generatepaths();
-      var pool=RewardCalculator.getgold(level);
-      var ncrates=RPG.randomize(3,0,Integer.MAX_VALUE);
-      for(var i=0;i<ncrates;i++){
-        var gold=RPG.randomize(pool/ncrates,1,Integer.MAX_VALUE);
-        var c=new Crate(gold,this);
-        var p=z.getpoint();
-        if(p!=null) c.place(this,p);
-      }
       generatebranches(z);
     }
 
@@ -285,7 +269,7 @@ public class Wilderness extends Dungeon{
 
   /** @return All {@link DungeonEntrance}s to a wilderness. */
   public static List<DungeonEntrance> getwildernesses(){
-    return World.getactors().stream().filter(a->a instanceof DungeonEntrance)
+    return World.getactors().stream().filter(DungeonEntrance.class::isInstance)
         .map(a->(DungeonEntrance)a).filter(e->e.dungeon instanceof Wilderness)
         .collect(Collectors.toList());
   }

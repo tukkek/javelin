@@ -13,7 +13,7 @@ public class FeatureRarityTable extends Table{
   /** Constructor. */
   public FeatureRarityTable(Class<? extends Table> common,
       Class<? extends Table> rare,DungeonFloor f){
-    add(f.gettable(common),1,4);
+    add(f.gettable(common),2,4);
     add(f.gettable(rare),2);
   }
 

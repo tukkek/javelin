@@ -20,6 +20,7 @@ import javelin.model.world.location.dungeon.feature.rare.Mirror;
 import javelin.model.world.location.dungeon.feature.rare.Spirit;
 import javelin.model.world.location.dungeon.feature.rare.Throne;
 import javelin.model.world.location.dungeon.feature.rare.inhabitant.Broker;
+import javelin.model.world.location.dungeon.feature.rare.inhabitant.Hunter;
 import javelin.model.world.location.dungeon.feature.rare.inhabitant.Inhabitant;
 import javelin.model.world.location.dungeon.feature.rare.inhabitant.Leader;
 import javelin.model.world.location.dungeon.feature.rare.inhabitant.Prisoner;
@@ -46,8 +47,8 @@ public class RareFeatureTable extends Table implements DungeonFeatureTable{
   static final List<Class<? extends Feature>> LOTS=List.of(FruitTree.class,
       Herb.class);
   static final List<Class<? extends Feature>> SOME=List.of(Fountain.class,
-      LearningStone.class,Spirit.class,Broker.class,Prisoner.class,
-      Trader.class);
+      LearningStone.class,Spirit.class,Broker.class,Prisoner.class,Trader.class,
+      Hunter.class);
   static final List<Class<? extends Feature>> FEW=List.of(Mirror.class,
       Throne.class,Leader.class,DungeonMap.class,CorruptedAltar.class,
       Altar.class);

@@ -7,6 +7,7 @@ import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.common.Campfire;
 import javelin.model.world.location.dungeon.feature.rare.FruitTree;
 import javelin.model.world.location.dungeon.feature.rare.Herb;
+import javelin.model.world.location.dungeon.feature.rare.inhabitant.Hunter;
 import javelin.model.world.location.dungeon.feature.rare.inhabitant.Trader;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.basic.Lodge;
@@ -17,8 +18,9 @@ import javelin.model.world.location.town.labor.basic.Lodge;
  * gameplay. The limited {@link Feature}-set also helps simplify them.
  *
  * {@link Campfire}s and {@link FruitTree}s provide rest and healing.
- * {@link Trader}s provide the opportunity to exchange farmed resources for
- * progression.
+ * {@link Hunter}s provide aid for harder {@link DungeonFloor#encounters} and
+ * make farming more convenient. {@link Trader}s provide the opportunity to
+ * exchange farmed resources for progression.
  *
  * Players are still expected to go back to {@link Town} to do downtime activity
  * like using {@link Lodge}s and {@link Guild}s.
@@ -33,8 +35,8 @@ public class WildernessFeatures extends FeatureRarityTable{
 
     @Override
     public void generate(){
-      add(Campfire.class);
-      add(Herb.class);
+      add(Campfire.class,3);
+      add(Hunter.class,2);
     }
   }
 
@@ -49,6 +51,7 @@ public class WildernessFeatures extends FeatureRarityTable{
     public void generate(){
       add(Trader.class);
       add(FruitTree.class);
+      add(Herb.class);
     }
   }
 

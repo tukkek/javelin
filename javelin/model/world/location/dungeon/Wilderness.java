@@ -190,9 +190,6 @@ public class Wilderness extends Dungeon{
         var f=generatefeature(WildernessFeatures.class);
         if(f!=null) f.place(this,p);
       }
-      //      Debug.log(List.of(level,this),getClass());
-      //      Debug.log(features,getClass());
-      //      Debug.log("",getClass());
       generatepaths();
       generatebranches(z);
     }

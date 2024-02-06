@@ -8,6 +8,7 @@ import javelin.controller.Point;
 import javelin.controller.content.map.Maps;
 import javelin.controller.content.map.terrain.forest.DenseForest;
 import javelin.controller.content.map.terrain.forest.ForestPath;
+import javelin.controller.content.map.terrain.forest.ForestRuin;
 import javelin.controller.content.map.terrain.forest.ForestShore;
 import javelin.controller.content.map.terrain.forest.MediumForest;
 import javelin.controller.content.map.terrain.forest.SparseForest;
@@ -23,7 +24,7 @@ import javelin.model.world.World;
  */
 public class Forest extends Terrain{
   static final Maps MAPS=new Maps(List.of(SparseForest.class,MediumForest.class,
-      DenseForest.class,ForestPath.class));
+      DenseForest.class,ForestPath.class,ForestRuin.class));
 
   /** Constructor. */
   public Forest(){

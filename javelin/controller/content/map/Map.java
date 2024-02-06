@@ -74,15 +74,21 @@ public abstract class Map{
    * @see Monster#fly
    */
   public boolean flying=true;
+  /** @see #map */
+  public int width;
+  /** @see #map */
+  public int height;
 
   /**
    * Construcor based on map size. By default all {@link Square}s are completely
    * free.
    */
-  public Map(String namep,int width,int height){
+  public Map(String namep,int w,int h){
     name=namep;
-    map=new Square[width][height];
-    for(var x=0;x<width;x++) for(var y=0;y<height;y++) map[x][y]=new Square();
+    width=w;
+    height=h;
+    map=new Square[w][h];
+    for(var x=0;x<w;x++) for(var y=0;y<h;y++) map[x][y]=new Square();
   }
 
   /**

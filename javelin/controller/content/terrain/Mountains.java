@@ -11,6 +11,7 @@ import javelin.controller.content.map.terrain.mountain.Meadow;
 import javelin.controller.content.map.terrain.mountain.MountainCave;
 import javelin.controller.content.map.terrain.mountain.MountainPass;
 import javelin.controller.content.map.terrain.mountain.MountainPath;
+import javelin.controller.content.map.terrain.mountain.MountainRuin;
 import javelin.controller.content.map.terrain.mountain.MountainShore;
 import javelin.controller.content.map.terrain.mountain.MountainsOfMadness;
 import javelin.controller.content.map.terrain.mountain.Ridge;
@@ -25,9 +26,10 @@ import javelin.model.world.World;
  * @author alex
  */
 public class Mountains extends Terrain{
-  static final Maps MAPS=new Maps(List.of(Meadow.class,RuggedHill.class,
-      ForbiddingMountain.class,MountainPass.class,MountainCave.class,
-      MountainPath.class,Ridge.class,MountainsOfMadness.class));
+  static final Maps MAPS=new Maps(
+      List.of(Meadow.class,RuggedHill.class,ForbiddingMountain.class,
+          MountainPass.class,MountainCave.class,MountainPath.class,Ridge.class,
+          MountainsOfMadness.class,MountainRuin.class));
 
   /** Constructor. */
   public Mountains(){

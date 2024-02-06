@@ -8,6 +8,8 @@ import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.DungeonImages;
 import javelin.model.world.location.dungeon.DungeonTier;
 import javelin.model.world.location.dungeon.DungeonZoner;
+import javelin.model.world.location.dungeon.feature.door.Door;
+import javelin.model.world.location.dungeon.feature.door.trap.Alarm;
 import javelin.model.world.location.dungeon.feature.rare.LearningStone;
 import javelin.old.RPG;
 
@@ -51,6 +53,10 @@ public class DeepDungeon extends Dungeon{
     protected void generatefeatures(int nfeatures,DungeonZoner zoner){
       super.generatefeatures(nfeatures,zoner);
       while(RPG.chancein(2)) zoner.place(new LearningStone(this),this);
+      for(var d:features.getall(Door.class)) if(d.stuck){
+        d.stuck=false;
+        d.trap=Alarm.INSTANCE;
+      }
     }
   }
 

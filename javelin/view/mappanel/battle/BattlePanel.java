@@ -56,8 +56,8 @@ public class BattlePanel extends MapPanel{
     calculatevision();
     synchronized(seen){
       update.addAll(seen);
+      if(overlay!=null) update.addAll(overlay.affected);
     }
-    if(overlay!=null) update.addAll(overlay.affected);
     if(Fight.current.has(Meld.class)!=null)
       for(var m:s.meld) update.add(new Point(m.x,m.y));
     for(var p:update) tiles[p.x][p.y].repaint();

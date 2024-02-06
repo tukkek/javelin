@@ -52,9 +52,7 @@ public class AiMovement extends Action implements AiAction{
       moving=c;
       path=p;
       audio=new Audio("move",moving.source);
-      var steps=new ArrayList<Point>(p.steps.size()/2);
-      for(var i=0;i<p.steps.size()-1;i+=2) steps.add(p.steps.get(i));
-      var o=new AiOverlay(steps);
+      var o=new AiOverlay(p.steps.subList(0,p.steps.size()-1));
       o.image=AiMovement.MOVEOVERLAY;
       overlay=o;
     }

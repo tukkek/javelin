@@ -990,7 +990,7 @@ public class Combatant implements Serializable,Cloneable{
     if(hp<1) hp=1;
     heal(hp,false);
     for(Spell sp:spells) sp.used=0;
-    if(RPG.chancein(2)||hp==maxhp) detox(1);
+    if(RPG.chancein(2)||hp==getmaxhp()) detox(1);
     terminateconditions(hours);
   }
 }

@@ -25,7 +25,7 @@ public abstract class Overlay{
     var m=BattleScreen.active.mappanel;
     final var tiles=m.tiles;
     var affected=new HashSet<Point>();
-    for(Point p:this.affected){
+    for(Point p:new ArrayList<>(this.affected)){
       affected.add(p);
       for(Point neighbor:Point.getadjacentorthogonal()){
         neighbor.x+=p.x;

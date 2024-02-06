@@ -3,7 +3,6 @@ package javelin.view.screen;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.Difficulty;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -55,8 +54,7 @@ public class BribingScreen{
 
   static String printdiplomacy(List<Combatant> foes,int dailyfee,int bribe,
       boolean canhire){
-    var text="You are able to parley with the opponents ("
-        +Difficulty.describe(foes)+"):\n\n";
+    var text="You are able to parley with the opponents:\n\n";
     text+=Javelin.group(foes)+'.';
     text+="\n\nWhat do you want to do? You have $"
         +Javelin.format(Squad.active.gold)+".";

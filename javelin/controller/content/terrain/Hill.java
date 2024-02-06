@@ -7,6 +7,7 @@ import javelin.controller.Point;
 import javelin.controller.content.map.Maps;
 import javelin.controller.content.map.terrain.hill.GentleHill;
 import javelin.controller.content.map.terrain.hill.HillShore;
+import javelin.controller.content.map.terrain.hill.Pass;
 import javelin.controller.content.map.terrain.hill.RuggedHill;
 import javelin.controller.content.terrain.hazard.Hazard;
 import javelin.controller.content.terrain.hazard.Rockslide;
@@ -18,7 +19,8 @@ import javelin.model.world.World;
  * @author alex
  */
 public class Hill extends Terrain{
-  static final Maps MAPS=new Maps(List.of(GentleHill.class,RuggedHill.class));
+  static final Maps MAPS=new Maps(
+      List.of(GentleHill.class,RuggedHill.class,Pass.class));
 
   /** Constructor. */
   public Hill(){

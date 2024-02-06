@@ -6,18 +6,15 @@ import java.util.List;
 import javelin.Javelin.Delay;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.controller.collection.CountingSet;
 import javelin.controller.content.action.Action;
 import javelin.controller.content.action.Help;
 import javelin.controller.content.event.EventCard;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.content.fight.mutator.Mutator;
-import javelin.controller.content.fight.setup.BattleSetup;
 import javelin.controller.content.kit.Kit;
 import javelin.controller.content.map.Map;
 import javelin.controller.db.Preferences;
 import javelin.controller.exception.RepeatTurn;
-import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.generator.NpcGenerator;
 import javelin.controller.generator.WorldGenerator;
@@ -52,11 +49,15 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class Debug{
-  static class DebugFight extends Fight{
+  /** Utility class, can be automated. */
+  public static class DebugFight extends Fight{
+    /** If not <code>null</code>, override {@link #avoid(List)}. */
+    public Boolean avoid=null;
+
     Combatants foes;
-    Boolean avoid=null;
     Boolean win=null;
 
+    /** Constructor. */
     public DebugFight(Combatants foes){
       this.foes=foes;
       mutators.add(new Mutator(){
@@ -120,7 +121,6 @@ public class Debug{
       var c=new Combatant(Monster.get("orc"),false);
       c.ap=1000;
       var f=new DebugFight(new Combatants(List.of(c)));
-      f.win=false;
       f.map=m;
       f.bribe=false;
       f.hide=false;
@@ -199,44 +199,6 @@ public class Debug{
 
     static void reloadimages(){
       Images.clearcache();
-    }
-
-    /** Put Fight.withdrawall(false) on {@link Debug#onbattlestart()}. */
-    static void place(Integer times,List<? extends Class<? extends Map>> maps){
-      if(times==null) times=60;
-      try{
-        var measures=new ArrayList<Long>(times*maps.size());
-        var passes=new CountingSet();
-        var opponents=makearmy(100);
-        for(var map:maps) for(var i=1;i<=times;i++){
-          System.out.println(map.getCanonicalName()+" "+i+"/"+times);
-          var f=new DebugFight(opponents);
-          f.avoid=false;
-          f.map=map.getConstructor().newInstance();
-          f.skipresult=true;
-          Fight.current=f;
-          var clock=System.currentTimeMillis();
-          try{
-            new StartBattle(f).battle();
-          }catch(EndBattle e){
-            EndBattle.end();
-          }
-          measures.add(System.currentTimeMillis()-clock);
-          passes.add(BattleSetup.pass);
-        }
-        measures.sort(null);
-        System.out.println("Passes: "+passes+"\nMedian time: "
-            +measures.get(measures.size()/2)+"ms");
-      }catch(ReflectiveOperationException e){
-        throw new RuntimeException(e);
-      }
-    }
-
-    static Combatants makearmy(int opponents){
-      var monsters=new Combatants(opponents);
-      while(monsters.size()<opponents)
-        monsters.add(new Combatant(Monster.get("Orc"),true));
-      return monsters;
     }
 
     static void test(Overlay o,String message){

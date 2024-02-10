@@ -32,7 +32,9 @@ import javelin.model.world.location.town.labor.basic.Lodge;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.old.RPG;
 import javelin.view.screen.InfoScreen;
+import javelin.view.screen.Option;
 import javelin.view.screen.WorldScreen;
+import javelin.view.screen.town.SelectScreen;
 
 /**
  * {@link Fight}-based {@link Location}s where players join forces with local
@@ -201,6 +203,65 @@ public class ContestedTerritory extends Fortification{
     }
   }
 
+  class Hirable extends Option{
+    Combatants army;
+
+    Hirable(Combatants army){
+      super(describe(army),0);
+      this.army=army;
+    }
+
+    static String describe(Combatants army){
+      var fee=0;
+      for(var a:army) fee+=MercenariesGuild.getfee(a.source);
+      return "%s ($%s/day)".formatted(army,Javelin.format(fee));
+    }
+
+  }
+
+  class Hire extends SelectScreen{
+    Option rest=new Option("Rest",0,'r');
+    List<Combatants> armies;
+    Option selection;
+    String info;
+
+    Hire(String name,String i,List<Combatants> armiesp){
+      super(name,null);
+      info=i;
+      armies=armiesp;
+      stayopen=false;
+    }
+
+    @Override
+    public String getCurrency(){
+      return "";
+    }
+
+    @Override
+    public String printinfo(){
+      return info;
+    }
+
+    @Override
+    public boolean select(Option o){
+      selection=o;
+      return true;
+    }
+
+    @Override
+    public List<Option> getoptions(){
+      var options=new ArrayList<Option>(
+          armies.stream().map(Hirable::new).toList());
+      options.add(rest);
+      return options;
+    }
+
+    @Override
+    public String printpriceinfo(Option o){
+      return "";
+    }
+  }
+
   Class<? extends Map> map;
   Army attackers;
   Army defenders;
@@ -303,25 +364,23 @@ public class ContestedTerritory extends Fortification{
 
   void hire(){
     if(attackers.rasterize().isEmpty()){
-      Javelin.message("No units are currently available for hire...",false);
+      Javelin.message("No one is here...",false);
       return;
     }
-    var attackers=this.attackers.stream().filter(a->!a.isEmpty()).toList();
-    var mercenaries=new ArrayList<String>(attackers.size());
-    for(var a:attackers){
-      var fee=0;
-      for(var mercenary:a) fee+=MercenariesGuild.getfee(mercenary.source);
-      mercenaries.add("%s ($%s/day)".formatted(a,Javelin.format(fee)));
+    var armies=attackers.stream().filter(a->!a.isEmpty()).toList();
+    var info="You have $%s.".formatted(Javelin.format(Squad.active.gold));
+    var screen=new Hire("Hire which mercenary band?",info,armies);
+    screen.show();
+    var s=screen.selection;
+    if(s==screen.rest) Lodge.rest(1,8,true,Lodge.LODGE);
+    else if(s instanceof Hirable h){
+      var army=h.army;
+      for(var a:army){
+        a.setmercenary(true);
+        Squad.active.add(a);
+      }
+      attackers.remove(army);
     }
-    var g=Javelin.format(Squad.active.gold);
-    var prompts="Hire which mercenary band? You have $%s.".formatted(g);
-    var i=Javelin.choose(prompts,mercenaries,true,false);
-    if(i<0) return;
-    for(var a:attackers.get(i)){
-      a.setmercenary(true);
-      Squad.active.add(a);
-    }
-    this.attackers.remove(i);
   }
 
   @Override

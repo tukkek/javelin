@@ -201,7 +201,7 @@ public abstract class SelectScreen extends InfoScreen{
    * @return the index of that key in {@link #KEYS}.
    */
   public static int convertkeytoindex(char c){
-    if(c=='\t') return 0;
+    if(c=='\t'||c=='\n') return 0;
     for(var i=0;i<KEYS.length;i++){
       var key=KEYS[i];
       if(key==c) return i;

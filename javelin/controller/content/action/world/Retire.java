@@ -29,7 +29,7 @@ public class Retire extends WorldAction{
   public void perform(WorldScreen screen){
     Squad.active.sort();
     List<Combatant> squad=Squad.active.members;
-    var members=new ArrayList<String>(squad.size());
+    var members=new ArrayList<String>(squad.size()+1);
     for(Combatant c:squad){
       var fee="";
       if(c.mercenary) fee=", "+MercenariesGuild.getformattedfee(c);

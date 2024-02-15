@@ -11,6 +11,7 @@ import java.util.Properties;
 
 import javelin.Debug;
 import javelin.Javelin.Delay;
+import javelin.controller.Audio;
 import javelin.controller.Weather;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.ai.ThreadManager;
@@ -86,11 +87,13 @@ public class Preferences{
   /** Tile size for {@link DungeonScreen}. */
   public static int tilesizedungeons;
   /**
-   * External audio player (command).
+   * External {@link Audio} player (command).
    *
    * TODO shouldn't be necessary if and when using JavaFX
    */
   public static String player;
+  /** {@link Audio} volume. */
+  public static String volume;
 
   static{
     load();
@@ -201,6 +204,7 @@ public class Preferences{
       TextZone.fontcolor=Color.BLACK;
     }
     player=getstring("io.player");
+    volume=getstring("io.volume");
 
     initkeys("keys.world",new WorldKeysScreen());
     initkeys("keys.battle",new BattleKeysScreen());

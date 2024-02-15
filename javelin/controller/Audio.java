@@ -77,8 +77,10 @@ public class Audio{
   /** Plays the audio. */
   public void play(){
     try{
-      var path=lookup().getCanonicalPath();
-      Runtime.getRuntime().exec("%s %s".formatted(Preferences.player,path));
+      var p=Preferences.player;
+      var v=Preferences.volume;
+      var command=List.of(p,"--volume",v,lookup().getCanonicalPath());
+      new ProcessBuilder(command).start();
     }catch(Exception e){
       if(DEBUG) throw new RuntimeException(e);
     }

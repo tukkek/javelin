@@ -103,10 +103,10 @@ public class Water extends Terrain{
   }
 
   @Override
-  public boolean enter(int x,int y){
-    if(Squad.active.swim()) return true;
+  public boolean enter(Squad s,int x,int y){
+    if(s.swim()) return true;
     var a=World.get(x,y);
-    if(a==null) return false;
+    if(a==null) return true;
     var v=a instanceof ParkedVehicle?(ParkedVehicle)a:null;
     if(v!=null&&(v.transport.flies||v.transport.sails)) return true;
     var l=a instanceof Location?(Location)a:null;

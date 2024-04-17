@@ -334,10 +334,9 @@ public abstract class Terrain implements Serializable{
     return RPG.r(1,World.SIZE-2);
   }
 
-  /**
-   * @return <code>true</code> if active {@link Squad} can enter this location.
-   */
-  public boolean enter(int x,int y){
+  /** @return <code>true</code> if {@link Squad} can enter this location. */
+  @SuppressWarnings("unused")
+  public boolean enter(Squad s,int x,int y){
     return true;
   }
 

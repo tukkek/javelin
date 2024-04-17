@@ -57,14 +57,16 @@ public class WorldMove extends WorldAction{
    * @see #NORMALMARCH
    */
   public static final float TIMECOST=NORMALMARCH*(MOVETARGET*15f/30f)/2f;
-  /** TODO remove, hack */
-  private final int deltax;
-  private final int deltay;
   /**
    * Used when {@link WorldScreen#react(int, int)} returns <code>true</code> but
    * we still want to stop moving.
    */
   public static boolean abort;
+
+  /** Horizontal direction. */
+  public final int deltax;
+  /** Vertical direction. */
+  public final int deltay;
 
   /**
    * Constructor
@@ -106,9 +108,7 @@ public class WorldMove extends WorldAction{
       return !stop;
     }finally{
       var s=Squad.active;
-      if(s!=null&&!t.equals(Terrain.UNDERGROUND)
-          &&!(t.equals(Terrain.WATER)&&!s.swim()))
-        s.move(true,t,tox,toy);
+      if(s!=null&&t.enter(Squad.active,tox,toy)) s.move(true,t,tox,toy);
     }
   }
 

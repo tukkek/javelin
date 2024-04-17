@@ -110,4 +110,18 @@ public abstract class WorldAction implements ActionDescription{
   public void setMainKey(String key){
     morekeys[0]=key;
   }
+
+  /**
+   * @param keyp Key for {@link #morekeys} or <code>null</code>.
+   * @param code Key for {@link #keys} or <code>null</code>.
+   * @return The associated action or <code>null</code> for none.
+   */
+  public static WorldAction press(Character keyp,Integer code){
+    var key=keyp==null?null:Character.toString(keyp);
+    for(var a:WorldAction.ACTIONS){
+      if(keyp!=null) for(var k:a.morekeys) if(k.equals(key)) return a;
+      if(code!=null) for(var k:a.keys) if(k==code) return a;
+    }
+    return null;
+  }
 }

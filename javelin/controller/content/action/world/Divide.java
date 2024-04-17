@@ -1,13 +1,13 @@
 package javelin.controller.content.action.world;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.Point;
+import javelin.controller.content.terrain.Terrain;
 import javelin.controller.exception.RepeatTurn;
-import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
@@ -20,172 +20,186 @@ import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.SelectScreen;
 
-/**
- * Split squad into two.
- *
- * @author alex
- */
+/** Split squad into two. */
 public class Divide extends WorldAction{
-	static final int TOWNBUFFER=1;
+  static final int TOWNBUFFER=1;
 
-	/** Constructor. */
-	public Divide(){
-		super("Divide squad",new int[]{},new String[]{"d"});
-	}
+  /** Constructor. */
+  public Divide(){
+    super("Divide squad",new int[]{},new String[]{"d"});
+  }
 
-	boolean swap(List<Combatant> indexreference,char input,
-			List<Combatant> oldsquad,List<Combatant> newsquad){
-		Combatant swap;
-		try{
-			swap=indexreference.get(SelectScreen.convertkeytoindex(input));
-		}catch(final IndexOutOfBoundsException e){
-			return false;
-		}catch(final NumberFormatException e){
-			return false;
-		}
-		List<Combatant> from;
-		List<Combatant> to;
-		if(oldsquad.contains(swap)){
-			from=oldsquad;
-			to=newsquad;
-		}else{
-			to=oldsquad;
-			from=newsquad;
-		}
-		from.remove(swap);
-		to.add(swap);
-		return true;
-	}
+  boolean swap(List<Combatant> indexreference,char input,
+      List<Combatant> oldsquad,List<Combatant> newsquad){
+    Combatant swap;
+    try{
+      swap=indexreference.get(SelectScreen.convertkeytoindex(input));
+    }catch(final IndexOutOfBoundsException|NumberFormatException e){
+      return false;
+    }
+    List<Combatant> from;
+    List<Combatant> to;
+    if(oldsquad.contains(swap)){
+      from=oldsquad;
+      to=newsquad;
+    }else{
+      to=oldsquad;
+      from=newsquad;
+    }
+    from.remove(swap);
+    to.add(swap);
+    return true;
+  }
 
-	@Override
-	public void perform(final WorldScreen screen){
-		if(Dungeon.active!=null) throw new RepeatTurn();
-		clear();
-		final String in="Press each member's number to switch his destination squad.\n"
-				+"Press c to cancel or ENTER when done.\n"
-				+"The left column is your current squad, the right one is the new squad.\n"
-				+"To join two squads later just place them in the same square.\n";
-		Javelin.promptscreen(in);
-		char input=' ';
-		ArrayList<Combatant> indexreference=new ArrayList<>(Squad.active.members);
-		Combatants oldsquad=new Combatants(Squad.active.members);
-		Combatants newsquad=new Combatants();
-		while(input!='\n'){
-			clear();
-			final ArrayList<String> oldcolumn=new ArrayList<>();
-			final ArrayList<String> newcolumn=new ArrayList<>();
-			log(indexreference,oldsquad,oldcolumn);
-			log(indexreference,newsquad,newcolumn);
-			input=Javelin.promptscreen(formatcolumns(oldcolumn,newcolumn));
-			if(input=='c') return;
-			if(!swap(indexreference,input,oldsquad,newsquad)) continue;
-		}
-		if(oldsquad.isEmpty()||newsquad.isEmpty()) return;
-		input=' ';
-		int gold=transfergold(input,newsquad);
-		spawn(oldsquad,newsquad,gold);
-	}
+  /** TODO would be nice to highlight and use the mouse */
+  Point walk(){
+    Javelin.message("Select a direction to move into...",Delay.NONE);
+    var to=Javelin.input();
+    var action=WorldAction.press(to.getKeyChar(),to.getKeyCode());
+    var m=action instanceof WorldMove?(WorldMove)action:null;
+    if(m==null) return null;
+    var l=Squad.active.getlocation();
+    l.x+=m.deltax;
+    l.y+=m.deltay;
+    if(!l.validate(World.SIZE,World.SIZE)) return null;
+    if(World.get(l.x,l.y,World.getactors())!=null){
+      clear();
+      Javelin.message("Destination is not empty...",Delay.WAIT);
+      return null;
+    }
+    return l;
+  }
 
-	void spawn(final Combatants oldsquad,Combatants newsquad,int gold){
-		Actor nearto=findtown(Squad.active.x,Squad.active.y);
-		int x,y;
-		Squad s=new Squad(0,0,Period.gettime(),Squad.active.lasttown);
-		s.members=newsquad;
-		s.gold=gold;
-		s.strategic=Squad.active.strategic;
-		s.x=Squad.active.x;
-		s.y=Squad.active.y;
-		Squad.active.members=oldsquad;
-		Squad.active.gold-=gold;
-		s.place();
-		for(final Combatant c:newsquad){
-			final ArrayList<Item> items=Squad.active.equipment.get(c);
-			Squad.active.equipment.remove(c);
-			s.equipment.put(c,items);
-		}
-		Squad.active.updateavatar();
-		Squad.active=s;
-		throw new RepeatTurn();
-	}
+  @Override
+  public void perform(final WorldScreen screen){
+    if(Dungeon.active!=null) throw new RepeatTurn();
+    clear();
+    final var in="""
+        Press each member's number to switch his destination squad.
+        Press c to cancel or ENTER when done.
+        The left column is your current squad, the right one is the new squad.
+        To join two squads later just place them in the same square.
+        """;
+    Javelin.promptscreen(in);
+    var input=' ';
+    var indexreference=new ArrayList<>(Squad.active.members);
+    var oldsquad=new Combatants(Squad.active.members);
+    var newsquad=new Combatants();
+    while(input!='\n'){
+      clear();
+      var oldcolumn=new ArrayList<String>();
+      var newcolumn=new ArrayList<String>();
+      log(indexreference,oldsquad,oldcolumn);
+      log(indexreference,newsquad,newcolumn);
+      input=Javelin.promptscreen(formatcolumns(oldcolumn,newcolumn));
+      if(input=='c') return;
+      if(input!='\n'&&!swap(indexreference,input,oldsquad,newsquad)) continue;
+    }
+    if(oldsquad.isEmpty()||newsquad.isEmpty()) return;
+    Javelin.app.switchScreen(BattleScreen.active);
+    BattleScreen.active.center();
+    var to=walk();
+    if(to==null) throw new RepeatTurn();
+    var gold=transfergold(newsquad);
+    spawn(oldsquad,newsquad,to,gold);
+  }
 
-	int transfergold(char input,ArrayList<Combatant> newsquad){
-		int gold=Squad.active.gold*newsquad.size()/Squad.active.members.size();
-		final int increment=Squad.active.gold/10;
-		Javelin.app.switchScreen(BattleScreen.active);
-		BattleScreen.active.center();
-		while(input!='\n'){
-			clear();
-			String prompt="How much gold do you want to transfer to the new squad? Use the + and - keys to change and ENTER to confirm.\n"
-					+Javelin.format(gold);
-			input=Javelin.prompt(prompt);
-			if(input=='+'){
-				gold+=increment;
-				if(gold>Squad.active.gold) gold=Squad.active.gold;
-			}else if(input=='-'){
-				gold-=increment;
-				if(gold<0) gold=0;
-			}
-		}
-		return gold;
-	}
+  void spawn(final Combatants oldsquad,Combatants newsquad,Point to,int gold){
+    var a=Squad.active;
+    var s=new Squad(to.x,to.y,Period.gettime(),a.lasttown);
+    var t=Terrain.get(to.x,to.y);
+    s.members=newsquad;
+    if(!t.enter(s,to.x,to.y)){
+      clear();
+      Javelin.message("Units can't swim...",Delay.WAIT);
+      throw new RepeatTurn();
+    }
+    s.gold=gold;
+    s.strategic=a.strategic;
+    s.move(true,t,to.x,to.y);
+    a.members=oldsquad;
+    a.gold-=gold;
+    s.place();
+    for(var c:newsquad){
+      var items=a.equipment.get(c);
+      a.equipment.remove(c);
+      s.equipment.put(c,items);
+    }
+    a.updateavatar();
+    throw new RepeatTurn();
+  }
 
-	String formatcolumns(final ArrayList<String> oldcolumn,
-			final ArrayList<String> newcolumn){
-		String text="";
-		int nlines=Math.max(oldcolumn.size(),newcolumn.size());
-		for(int i=0;i<nlines;i++){
-			String oldtd=i<oldcolumn.size()?oldcolumn.get(i):"";
-			while(oldtd.length()<WorldScreen.SPACER.length())
-				oldtd+=" ";
-			final String newtd=i<newcolumn.size()?newcolumn.get(i):"";
-			text+=oldtd+newtd+"\n";
-		}
-		return text;
-	}
+  int transfergold(ArrayList<Combatant> newsquad){
+    var gold=Squad.active.gold*newsquad.size()/Squad.active.members.size();
+    var increment=Squad.active.gold/10;
+    var input=' ';
+    while(input!='\n'){
+      clear();
+      var prompt="How much gold do you want to transfer to the new squad? Use the + and - keys to change and ENTER to confirm.\n"
+          +Javelin.format(gold);
+      input=Javelin.prompt(prompt);
+      if(input=='+'){
+        gold+=increment;
+        if(gold>Squad.active.gold) gold=Squad.active.gold;
+      }else if(input=='-'){
+        gold-=increment;
+        if(gold<0) gold=0;
+      }
+    }
+    return gold;
+  }
 
-	Actor findtown(int xp,int yp){
-		for(Town t:Town.gettowns()){
-			HashSet<Point> district=t.getdistrict().getarea();
-			for(int x=xp-1;x<=xp+1;x++)
-				for(int y=yp-1;y<=yp+1;y++)
-					if(district.contains(new Point(x,y))) return t;
-		}
-		return null;
-	}
+  String formatcolumns(final ArrayList<String> oldcolumn,
+      final ArrayList<String> newcolumn){
+    var text="";
+    var nlines=Math.max(oldcolumn.size(),newcolumn.size());
+    for(var i=0;i<nlines;i++){
+      var oldtd=i<oldcolumn.size()?oldcolumn.get(i):"";
+      while(oldtd.length()<WorldScreen.SPACER.length()) oldtd+=" ";
+      final var newtd=i<newcolumn.size()?newcolumn.get(i):"";
+      text+=oldtd+newtd+"\n";
+    }
+    return text;
+  }
 
-	static void clear(){
-		BattleScreen.active.messagepanel.clear();
-	}
+  Actor findtown(int xp,int yp){
+    for(Town t:Town.gettowns()){
+      var district=t.getdistrict().getarea();
+      for(var x=xp-1;x<=xp+1;x++) for(var y=yp-1;y<=yp+1;y++)
+        if(district.contains(new Point(x,y))) return t;
+    }
+    return null;
+  }
 
-	void log(final List<Combatant> indexreference,final List<Combatant> oldsquad,
-			final List<String> oldcolumn){
-		if(oldsquad.isEmpty())
-			oldcolumn.add("Empty");
-		else
-			for(final Combatant m:oldsquad){
-				int i=indexreference.indexOf(m);
-				oldcolumn.add("["+SelectScreen.getkey(i)+"] "+m+" ("+m.getstatus()+")");
-			}
-	}
+  static void clear(){
+    BattleScreen.active.messagepanel.clear();
+  }
 
-	/**
-	 * @param townbufferenabled If <code>true</code> will also return
-	 *          <code>true</code> if too close to a {@link Town}.
-	 * @return <code>true</code> if there is a {@link Town} in this coordinate
-	 *         already.
-	 */
-	static public boolean istown(final int x,final int y,
-			boolean townbufferenabled){
-		if(World.get(x,y)!=null) return true;
-		ArrayList<Actor> towns=World.getall(Town.class);
-		if(townbufferenabled){
-			for(final Actor p:towns)
-				for(int townx=p.x-TOWNBUFFER;townx<=p.x+TOWNBUFFER;townx++)
-					for(int towny=p.y-TOWNBUFFER;towny<=p.y+TOWNBUFFER;towny++)
-						if(townx==x&&towny==y) return true;
-		}else
-			for(final Actor p:towns)
-				if(p.x==x&&p.y==y) return true;
-		return false;
-	}
+  void log(final List<Combatant> indexreference,final List<Combatant> oldsquad,
+      final List<String> oldcolumn){
+    if(oldsquad.isEmpty()) oldcolumn.add("Empty");
+    else for(final Combatant m:oldsquad){
+      var i=indexreference.indexOf(m);
+      oldcolumn.add("["+SelectScreen.getkey(i)+"] "+m+" ("+m.getstatus()+")");
+    }
+  }
+
+  /**
+   * @param townbufferenabled If <code>true</code> will also return
+   *   <code>true</code> if too close to a {@link Town}.
+   * @return <code>true</code> if there is a {@link Town} in this coordinate
+   *   already.
+   */
+  static public boolean istown(final int x,final int y,
+      boolean townbufferenabled){
+    if(World.get(x,y)!=null) return true;
+    var towns=World.getall(Town.class);
+    if(townbufferenabled){
+      for(final Actor p:towns)
+        for(var townx=p.x-TOWNBUFFER;townx<=p.x+TOWNBUFFER;townx++)
+          for(var towny=p.y-TOWNBUFFER;towny<=p.y+TOWNBUFFER;towny++)
+            if(townx==x&&towny==y) return true;
+    }else for(final Actor p:towns) if(p.x==x&&p.y==y) return true;
+    return false;
+  }
 }

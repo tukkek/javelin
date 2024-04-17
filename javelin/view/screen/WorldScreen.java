@@ -157,19 +157,10 @@ public class WorldScreen extends BattleScreen{
 
   void perform(KeyEvent keyEvent){
     if(keyEvent==null) return;
-    for(final WorldAction a:WorldAction.ACTIONS) for(final String s:a.morekeys)
-      if(s.equals(Character.toString(keyEvent.getKeyChar()))){
-        MessagePanel.active.clear();
-        a.perform(this);
-        return;
-      }
-    for(final WorldAction a:WorldAction.ACTIONS)
-      for(final int s:a.keys) if(s==keyEvent.getKeyCode()){
-        MessagePanel.active.clear();
-        a.perform(this);
-        return;
-      }
-    throw new RepeatTurn();
+    var a=WorldAction.press(keyEvent.getKeyChar(),keyEvent.getKeyCode());
+    if(a==null) throw new RepeatTurn();
+    MessagePanel.active.clear();
+    a.perform(this);
   }
 
   void save(){
@@ -431,7 +422,7 @@ public class WorldScreen extends BattleScreen{
    *   prevent further moves in a sequence by flagging {@link WorldMove#abort}.
    */
   public boolean react(int x,int y){
-    if(!World.seed.map[x][y].enter(x,y)){
+    if(!World.seed.map[x][y].enter(Squad.active,x, y)){
       WorldMove.abort=true;
       return false;
     }

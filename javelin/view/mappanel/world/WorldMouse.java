@@ -41,13 +41,16 @@ public class WorldMouse extends Mouse{
         break;
       }
       BattleScreen.active.mappanel.repaint();
-      if(interrupted!=null){
-        overlay.reset();
-        overlay.path.from.x=interrupted.x;
-        overlay.path.from.y=interrupted.y;
-        overlay.walk();
-        MapPanel.overlay=overlay;
+      if(interrupted==null){
+        var destination=overlay.affected.getLast();
+        WorldScreen.current.mappanel.center(destination.x,destination.y,true);
+        return;
       }
+      overlay.reset();
+      overlay.path.from.x=interrupted.x;
+      overlay.path.from.y=interrupted.y;
+      overlay.walk();
+      MapPanel.overlay=overlay;
     }
   }
 

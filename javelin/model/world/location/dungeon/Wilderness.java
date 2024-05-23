@@ -69,10 +69,11 @@ import javelin.view.mappanel.dungeon.DungeonWalker;
 public class Wilderness extends Dungeon{
   static final String DESCRIPTION="Wilderness";
 
-  class Path extends Feature{
+  /** Connects {@link Feature}s to inform navigation. */
+  public class Path extends Feature{
     int tile=RPG.r(1,14);
 
-    public Path(){
+    Path(){
       super("path");
       remove=false;
     }

@@ -422,7 +422,7 @@ public class WorldScreen extends BattleScreen{
    *   prevent further moves in a sequence by flagging {@link WorldMove#abort}.
    */
   public boolean react(int x,int y){
-    if(!World.seed.map[x][y].enter(Squad.active,x, y)){
+    if(!World.seed.map[x][y].enter(Squad.active,x,y)){
       WorldMove.abort=true;
       return false;
     }

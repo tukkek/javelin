@@ -9,15 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.content.terrain.Desert;
-import javelin.controller.content.terrain.Forest;
-import javelin.controller.content.terrain.Hill;
-import javelin.controller.content.terrain.Marsh;
-import javelin.controller.content.terrain.Mountains;
-import javelin.controller.content.terrain.Plains;
 import javelin.controller.content.terrain.Terrain;
-import javelin.controller.content.terrain.Water;
-import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
@@ -28,31 +20,16 @@ import javelin.old.RPG;
 import javelin.view.Images;
 
 /**
- * A resource lifecycle is composed of three parts:
- *
- * 1. The {@link Resource} itself.
- *
- * 2. A {@link ResourceSite}, which there can be multiple of for the same
- * {@link Resource}.
- *
- * 3. A {@link ResourceLink}, which there can be multiple of for a given
- * {@link Resource} site. However, as soon as a link is used to establish a
- * connection to a {@link Town}, the site and all other links are invalidated.
- *
+ * {@link Resource}s boost {@link Town} productivity.
  *
  * TODO add an instantaneous
  * {@link #getupgrades(javelin.model.world.location.town.District)} to connect
  * resources in the {@link District}.
  *
- * @see Squad#resources
  * @author alex
  */
 public class ResourceSite extends Location{
-  /**
-   * A type of natural resource.
-   *
-   * @author alex
-   */
+  /** A type of natural resource. */
   public static class Resource implements Serializable,Comparable<Resource>{
     /** Name of this natural resource. */
     public String name;
@@ -61,7 +38,6 @@ public class ResourceSite extends Location{
 
     /**
      * @param name Description.
-     * @param action Harvesting description.
      * @param t Terrain resource is found on.
      */
     public Resource(String name,Terrain t){
@@ -92,105 +68,20 @@ public class ResourceSite extends Location{
 
   /** All existing resources. */
   public static final HashMap<Terrain,Resource> RESOURCES=new HashMap<>();
-  /** {@link Mountains} resource. */
-  public static final Resource CRYSTAL=new Resource("Crystal",
-      Terrain.MOUNTAINS);
-  /** {@link Water} resource. */
-  public static final Resource FISH=new Resource("Fish",Terrain.WATER);
-  /** {@link Forest} resource. */
-  public static final Resource FRUIT=new Resource("Fruits",Terrain.FOREST);
-  /** {@link Desert} resource. */
-  public static final Resource GEMS=new Resource("Gems",Terrain.DESERT);
-  /** {@link Plains} resource. */
-  public static final Resource GRAIN=new Resource("Grains",Terrain.PLAIN);
-  /** {@link Marsh} resource. */
-  public static final Resource MERCURY=new Resource("Mercury",Terrain.MARSH);
-  /** {@link Hill} resource. */
-  public static final Resource STONE=new Resource("Stone",Terrain.HILL);
 
   static{
-    for(Resource t:new Resource[]{CRYSTAL,FISH,FRUIT,GEMS,GRAIN,MERCURY,STONE})
-      RESOURCES.put(t.terrain,t);
-  }
-
-  /**
-   * A map that connects a {@link Resource} to a town.
-   *
-   * @author alex
-   */
-  public static class ResourceLink extends Item{
-    ResourceSite site;
-    Resource type;
-
-    /**
-     * @param type Type of resource this link points to.
-     * @param site If not <code>null</code>, will make sure the resource hasn't
-     *   been previously claimed (scumming a {@link ResourceSite} for several
-     *   {@link ResourceLink}s) and will properly remove it from the game
-     *   {@link World} after it is linked to a {@link Town}.
-     * @see Actor#remove()
-     */
-    public ResourceLink(Resource type,ResourceSite site){
-      super("Map to "+type.name.toLowerCase()+" site",0,false);
-      this.type=type;
-      this.site=site;
-      usedinbattle=false;
-      usedoutofbattle=true;
-      targeted=false;
-      consumable=false;
-    }
-
-    @Override
-    public int hashCode(){
-      var s=type.toString();
-      if(site!=null) s+=site.x+":"+site.y;
-      return s.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj){
-      if(!(obj instanceof ResourceLink)) return false;
-      return hashCode()==obj.hashCode();
-    }
-
-    @Override
-    public boolean usepeacefully(Combatant user){
-      if(site!=null&&site.claimed!=null){
-        expend();
-        var claimed="This resource site has already been claimed by "
-            +site.claimed+"...";
-        Javelin.message(claimed,true);
-        return true;
-      }
-      var d=Squad.active.getdistrict();
-      if(d==null||d.town.ishostile()){
-        var friendly="Resources can only be linked to friendly towns...";
-        Javelin.message(friendly,true);
-        return true;
-      }
-      var t=d.town;
-      var name=type.name.toLowerCase();
-      if(t.resources.contains(type)){
-        var duplicate=t+" is already linked to a source of "+name+"...";
-        Javelin.message(duplicate,true);
-        return true;
-      }
-      t.resources.add(type);
-      if(site!=null){
-        site.claimed=t;
-        site.remove();
-      }
-      expend();
-      Javelin.message("You connect a "+name+" site to "+t+"!",true);
-      return true;
-    }
+    var c=new Resource("Crystal",Terrain.MOUNTAINS);
+    var fish=new Resource("Fish",Terrain.WATER);
+    var fruit=new Resource("Fruits",Terrain.FOREST);
+    var gems=new Resource("Gems",Terrain.DESERT);
+    var grain=new Resource("Grains",Terrain.PLAIN);
+    var m=new Resource("Mercury",Terrain.MARSH);
+    var s=new Resource("Stone",Terrain.HILL);
+    for(var t:List.of(c,fish,fruit,gems,grain,m,s)) RESOURCES.put(t.terrain,t);
   }
 
   /** Resource present on site. */
   public Resource type=RPG.pick(new ArrayList<>(RESOURCES.values()));
-
-  /** Used to prevent a site from being claimed more than once. */
-  Town claimed=null;
 
   /** Constructor. */
   public ResourceSite(){
@@ -198,6 +89,7 @@ public class ResourceSite extends Location{
     vision=0;
     link=false;
     discard=false;
+    allowentry=false;
   }
 
   @Override
@@ -211,7 +103,7 @@ public class ResourceSite extends Location{
     super.generate(true);
     description=type.name+" (resource)";
     sacrificeable=true;
-    allowentry=type!=FISH;
+    allowentry=!type.terrain.equals(Terrain.WATER);
   }
 
   @Override
@@ -226,18 +118,19 @@ public class ResourceSite extends Location{
 
   @Override
   public boolean interact(){
-    var link=new ResourceLink(type,this);
-    var existing=Squad.active.equipment.get(link);
-    if(existing!=null){
-      var duplicate="You already have a link to this "+type.name.toLowerCase()
-          +" site...";
-      Javelin.message(duplicate,false);
+    var towns=Town.gettowns().stream()
+        .filter(t->!t.ishostile()&&!t.resources.contains(type)).toList();
+    var n=type.name.toLowerCase();
+    if(towns.isEmpty()){
+      Javelin.message("No friendly town needs %s...".formatted(n),false);
       return false;
     }
-    Javelin.message("You come across a "+type.name.toLowerCase()+" site!\n"
-        +"Bring this information to a friendly town to help boost its economy!",
-        true);
-    link.grab(Squad.active);
+    var prompt="Connect this %s resource-site to which friendly town?";
+    var c=Javelin.choose(prompt.formatted(n),towns,true,false);
+    if(c<0) return false;
+    towns.get(c).resources.add(type);
+    remove();
+    Squad.active.setlocation(getlocation());
     return true;
   }
 

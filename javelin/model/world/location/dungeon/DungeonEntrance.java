@@ -56,7 +56,7 @@ public class DungeonEntrance extends Location{
 
   @Override
   public Integer getel(){
-    throw new UnsupportedOperationException(); //TODO
+    return dungeon.floors.get(0).level;
   }
 
   /**

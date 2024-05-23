@@ -7,6 +7,7 @@ import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.common.Campfire;
 import javelin.model.world.location.dungeon.feature.rare.FruitTree;
 import javelin.model.world.location.dungeon.feature.rare.Herb;
+import javelin.model.world.location.dungeon.feature.rare.LearningStone;
 import javelin.model.world.location.dungeon.feature.rare.inhabitant.Hunter;
 import javelin.model.world.location.dungeon.feature.rare.inhabitant.Trader;
 import javelin.model.world.location.town.Town;
@@ -37,6 +38,7 @@ public class WildernessFeatures extends FeatureRarityTable{
     public void generate(){
       add(Campfire.class,3);
       add(Hunter.class,2);
+      add(LearningStone.class,1);
     }
   }
 

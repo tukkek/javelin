@@ -124,6 +124,7 @@ public class Hunter extends Inhabitant{
   }
 
   Combatants track(){
+    if(RPG.chancein(20)) return null;
     var encounters=new ArrayList<>(
         Dungeon.active.encounters.stream().filter(e->e!=null).toList());
     encounters.sort(Comparator.comparing(Combatants::getel));

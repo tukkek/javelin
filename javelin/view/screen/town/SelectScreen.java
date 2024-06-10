@@ -50,6 +50,8 @@ public abstract class SelectScreen extends InfoScreen{
   protected boolean showquit=true;
   public boolean forceclose=false;
   String originaltext;
+  /** If not-<code>null</code>, select this with <code>Enter</code>. */
+  public Option fast=null;
 
   /** Constructor. */
   public SelectScreen(final String name,final Town t){
@@ -136,6 +138,7 @@ public abstract class SelectScreen extends InfoScreen{
   protected boolean select(char feedback,final List<Option> options){
     if(originaltext==null) originaltext=text;
     print(originaltext);
+    if(feedback=='\n'&&fast!=null) return select(fast);
     var o=convertselectionkey(feedback,options);
     if(o==null){
       var selected=convertnumericselection(feedback);

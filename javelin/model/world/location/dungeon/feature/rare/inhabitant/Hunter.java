@@ -48,10 +48,6 @@ public class Hunter extends Inhabitant{
       var s=Fight.state;
       Squad.active.remove(inhabitant);
       if(s.dead.contains(inhabitant)) remove();
-      else if(Fight.victory){
-        hunt=null;
-        game=null;
-      }
       return super.onend();
     }
 
@@ -66,6 +62,8 @@ public class Hunter extends Inhabitant{
       super("This %s hunter is after %s game.".formatted(
           inhabitant.toString().toLowerCase(),
           game.source.toString().toLowerCase()),null);
+      stayopen=true;
+      fast=HUNT;
     }
 
     @Override
@@ -124,17 +122,18 @@ public class Hunter extends Inhabitant{
   }
 
   Combatants track(){
-    if(RPG.chancein(20)) return null;
-    var encounters=new ArrayList<>(
-        Dungeon.active.encounters.stream().filter(e->e!=null).toList());
-    encounters.sort(Comparator.comparing(Combatants::getel));
-    if(encounters.isEmpty()) return null;
+    var encounters=Dungeon.active.encounters;
     if(hunt==null){
+      encounters=new ArrayList<>(
+          encounters.stream().filter(e->e!=null).toList());
+      encounters.sort(Comparator.comparing(Combatants::getel));
+      if(encounters.isEmpty()) return null;
       hunt=encounters.get(RPG.high(0,encounters.size()-1));
       game=hunt.stream().reduce((a,b)->a.source.cr>b.source.cr?a:b)
           .orElseThrow();
+      return hunt;
     }
-    return hunt;
+    return RPG.chancein(10)||!encounters.contains(hunt)?null:hunt;
   }
 
   @Override

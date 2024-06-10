@@ -9,10 +9,10 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import javelin.Javelin;
+import javelin.controller.Audio;
 import javelin.controller.Point;
 import javelin.controller.ai.AiThread;
 import javelin.controller.ai.ChanceNode;
-import javelin.controller.ai.Node;
 import javelin.controller.content.action.ai.AiAction;
 import javelin.controller.content.action.area.Area;
 import javelin.controller.content.action.area.Burst;
@@ -48,8 +48,10 @@ import javelin.view.mappanel.battle.overlay.BreathOverlay;
  */
 public class Breathe extends Action implements AiAction{
   static public class BreathNode extends ChanceNode{
-    public BreathNode(Node n,float chance,String action,Collection<Point> area){
+    public BreathNode(BattleState n,float chance,String action,
+        Collection<Point> area){
       super(n,chance,action,Javelin.Delay.BLOCK);
+      audio=new Audio("breathe",n.next.source);
       overlay=new AiOverlay(area);
     }
   }
@@ -179,8 +181,7 @@ public class Breathe extends Action implements AiAction{
       var s2=s.clone();
       final float damagechance=roll.getValue();
       final var damage=roll.getKey()+breath.damage[2];
-      var action=new StringBuilder(
-          active+" breaths "+breath.description+"!");
+      var action=new StringBuilder(active+" breaths "+breath.description+"!");
       var affected=new StringBuilder();
       for(Combatant target:targets){
         if(Thread.interrupted()) throw new StopThinking();

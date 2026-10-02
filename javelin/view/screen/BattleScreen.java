@@ -21,6 +21,7 @@ import javelin.controller.content.action.Movement;
 import javelin.controller.content.action.world.WorldAction;
 import javelin.controller.content.action.world.WorldMove;
 import javelin.controller.content.fight.Fight;
+import javelin.controller.db.Preferences;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.model.state.BattleState;
@@ -161,9 +162,11 @@ public class BattleScreen extends Screen{
       partialmove=0;
       updatescreen();
       checkai();
-      if(Fight.state.redteam.contains(current)||current.automatic){
+      var r=Fight.state.redteam.contains(current);
+      if(r||current.automatic){
         lastaimove=current;
         computermove();
+        if(!r) first=false;
       }else{
         humanmove();
         lastaimove=null;
@@ -237,12 +240,10 @@ public class BattleScreen extends Screen{
     }
   }
 
-  /**
-   * TODO this should eventually be replaced by a combatant-list UI that allows
-   * you to uncheck {@link Combatant#automatic} at any point in time.
-   */
+  /** TODO make it a {@link Preferences}. */
   void checkai(){
-    if(lastaicheck==null||lastaicheck+1>Fight.state.next.ap) return;
+    if(Javelin.DEBUG||lastaicheck==null||lastaicheck+1>Fight.state.next.ap)
+      return;
     lastaicheck=Fight.state.next.ap;
     for(Combatant c:Fight.state.blueteam)
       if(!c.automatic&&!c.source.passive) return;

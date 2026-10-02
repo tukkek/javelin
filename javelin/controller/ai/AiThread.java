@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.TreeMap;
+import java.util.stream.Stream;
 
 import javelin.controller.content.action.ai.AiAction;
 import javelin.controller.exception.StopThinking;
@@ -14,6 +15,10 @@ import javelin.old.RPG;
  * Efficiently uses a CPU core to run an {@link AlphaBetaSearch}. When the
  * search is done it starts a new one using the same thread, to avoid creating
  * more than threads than there are CPUs available.
+ *
+ * TODO Discard and instead delegate
+ * {@link AiAction#getoutcomes(javelin.model.unit.Combatant, BattleState)} to
+ * {@link Stream#parallel()}.
  *
  * @author alex
  */

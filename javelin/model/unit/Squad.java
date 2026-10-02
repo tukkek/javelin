@@ -49,6 +49,8 @@ import javelin.view.screen.WorldScreen;
  * TODO when this breaks the 1000 line limit an easy fix is to turn
  * {@link #members} into a SquadMemmbers class. See {@link #sort()}.
  *
+ * TODO gold
+ *
  * @author alex
  */
 public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
@@ -245,11 +247,6 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
   }
 
   @Override
-  public void move(int tox,int toy){
-    super.move(tox,toy);
-  }
-
-  @Override
   public String toString(){
     return members.toString();
   }
@@ -385,6 +382,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
    * @return Like {@link #speed()} but return time in hours.
    */
   public float move(boolean ellapse,Terrain t,int x,int y){
+    if(t.movement==null) return 0;
     var hours=WorldMove.TIMECOST*(30f*WorldMove.NORMALMARCH)/speed(t,x,y);
     if(hours<1) hours=1;
     if(ellapse) delay(Math.round(hours));

@@ -219,6 +219,7 @@ public class ContestedTerritory extends Fortification{
 
   }
 
+  /** TODO extract a Simple {@link SelectScreen} */
   class Hire extends SelectScreen{
     Option rest=new Option("Rest",0,'r');
     List<Combatants> armies;

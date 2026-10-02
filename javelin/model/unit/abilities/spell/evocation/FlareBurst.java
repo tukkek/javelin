@@ -10,6 +10,8 @@ import javelin.model.world.Period.Time;
 /**
  * Makes creatures in a 10-feet radius {@link Dazzled}.
  *
+ * TODO make stronger, currently worthless.
+ *
  * @author alex
  */
 public class FlareBurst extends AreaSpell{

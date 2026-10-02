@@ -49,9 +49,10 @@ public class Flee extends Action implements AiAction{
     throw new UnsupportedOperationException();
   }
 
+  //TODO test escape with new flight clause
   public static boolean flee(Combatant c,BattleState s){
-    if(!ALLOWFLEE||!Fight.current.canflee||!c.source.think(-1)
-        ||!s.redteam.contains(s.next)||s.isengaged(c))
+    if(!(ALLOWFLEE&&Fight.current.canflee&&s.redteam.contains(s.next)
+        &&!s.isengaged(c))||!c.source.think(-1)&&c.source.fly==0)
       return false;
     var red=ChallengeCalculator.calculateel(s.redteam);
     var blue=ChallengeCalculator.calculateel(s.blueteam);

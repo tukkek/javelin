@@ -13,81 +13,87 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public class Recharger implements Serializable,Cloneable{
-	/** Number of charges when full. */
-	public int capacity;
+  /** Number of charges when full. */
+  public int capacity;
 
-	int used=0;
-	double recharging=0;
+  int used=0;
+  double recharging=0;
 
-	/** Constructor. */
-	public Recharger(int capacity){
-		this.capacity=capacity;
-	}
+  /** Constructor. */
+  public Recharger(int capacity){
+    this.capacity=capacity;
+  }
 
-	/** @return <code>true</code> if used all daily capacities. */
-	public boolean isempty(){
-		return used==capacity;
-	}
+  /** @return <code>true</code> if used all daily capacities. */
+  public boolean isempty(){
+    return used==capacity;
+  }
 
-	/** @return {@link #isempty()}, after spending charges. */
-	public boolean discharge(int charges){
-		used+=charges;
-		if(used>capacity) used=capacity;
-		return isempty();
-	}
+  /** @return {@link #isempty()}, after spending charges. */
+  public boolean discharge(int charges){
+    used+=charges;
+    if(used>capacity) used=capacity;
+    return isempty();
+  }
 
-	/** @return As {@link #discharge(int)} with only 1 spent charge. */
-	public boolean discharge(){
-		return discharge(1);
-	}
+  /** @return As {@link #discharge(int)} with only 1 spent charge. */
+  public boolean discharge(){
+    return discharge(1);
+  }
 
-	/**
-	 * @param hours Hours spent recharging.
-	 * @return <code>true</code> if it has at least one usable charge.
-	 */
-	public boolean recharge(int hours){
-		if(hours==0) return !isempty();
-		recharging+=hours;
-		var hourspercharge=24.0/capacity;
-		while(recharging>=hourspercharge&&used>0){
-			used-=1;
-			recharging-=hourspercharge;
-		}
-		if(used==0) recharging=0;
-		return used<capacity;
-	}
+  /**
+   * @param hours Hours spent recharging. {@link Integer#MAX_VALUE} to refill.
+   * @return <code>true</code> if it has at least one usable charge.
+   */
+  public boolean recharge(int hours){
+    if(hours==0) return !isempty();
+    if(hours==Integer.MAX_VALUE){
+      //TODO test
+      recharging=0;
+      used=0;
+      return true;
+    }
+    recharging+=hours;
+    var hourspercharge=24.0/capacity;
+    while(recharging>=hourspercharge&&used>0){
+      used-=1;
+      recharging-=hourspercharge;
+    }
+    if(used==0) recharging=0;
+    return used<capacity;
+  }
 
-	/** @return Charges left until {@link #isempty()}. */
-	public int getleft(){
-		return capacity-used;
-	}
+  /** @return Charges left until {@link #isempty()}. */
+  public int getleft(){
+    return capacity-used;
+  }
 
-	@Override
-	public String toString(){
-		return "["+getleft()+"/"+capacity+"]";
-	}
+  @Override
+  public String toString(){
+    return "["+getleft()+"/"+capacity+"]";
+  }
 
-	/** @see Item#waste() */
-	public String waste(Combatant c,Item i,float resourcesused,List<Item> bag){
-		if(i.canuse(c)!=null||isempty()) return null;
-		int used=Math.round(capacity*resourcesused);
-		if(used==0) return null;
-		if(used>capacity/5) used=capacity/5;
-		var left=getleft();
-		if(used>left) used=left;
-		if(used<1) used=1;
-		var name=i.name.toLowerCase();
-		if(!discharge(used)) return name+" ("+used+" times)";
-		bag.remove(i);
-		return "exhausted "+name;
-	}
+  /** @see Item#waste() */
+  public String waste(Combatant c,Item i,float resourcesused,List<Item> bag){
+    if(i.canuse(c)!=null||isempty()) return null;
+    var used=Math.round(capacity*resourcesused);
+    if(used==0) return null;
+    if(used>capacity/5) used=capacity/5;
+    var left=getleft();
+    if(used>left) used=left;
+    if(used<1) used=1;
+    var name=i.name.toLowerCase();
+    if(!discharge(used)) return name+" ("+used+" times)";
+    bag.remove(i);
+    return "exhausted "+name;
+  }
 
-	@Override
-	public Recharger clone(){
-		try{
-			return (Recharger)super.clone();
-		}catch(CloneNotSupportedException e){
-			throw new RuntimeException(e);
-		}
-	}
+  @Override
+  public Recharger clone(){
+    try{
+      return (Recharger)super.clone();
+    }catch(CloneNotSupportedException e){
+      throw new RuntimeException(e);
+    }
+  }
 }

@@ -1,18 +1,14 @@
 package javelin.model.item.consumable;
 
-import java.util.ArrayList;
-
 import javelin.Javelin;
-import javelin.controller.content.action.world.inventory.UseItems;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.content.terrain.Terrain;
-import javelin.controller.content.wish.Wish.WishScreen;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.model.item.CommandItem;
-import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
+import javelin.model.world.location.dungeon.feature.rare.Fountain;
 import javelin.view.screen.BattleScreen;
 
 /**
@@ -34,19 +30,18 @@ public class Ruby extends CommandItem{
   }
 
   @Override
-  public void expend(){
-    // spent elsewhere
-  }
-
-  @Override
   public boolean usepeacefully(Combatant user){
-    Squad.active.equipment.clean();
-    var rubies=0;
-    for(ArrayList<Item> bag:Squad.active.equipment.values())
-      for(Item i:bag) if(i instanceof Ruby) rubies+=1;
-    new WishScreen(rubies).show();
-    UseItems.skiperror=true;
-    return false;
+    //TODO test and Wish is probably no longer needed
+    //TODO new Hire action as third use for rubies? instead of per-screen logic
+    for(var member:Squad.active) Fountain.heal(member);
+    for(var item:Squad.active.equipment.getall())
+      item.refresh(Integer.MAX_VALUE);
+    Javelin.message("The ruby brings your party back to full strength!",true);
+    /* Squad.active.equipment.clean(); var rubies=0; for(ArrayList<Item>
+     * bag:Squad.active.equipment.values()) for(Item i:bag) if(i instanceof
+     * Ruby) rubies+=1; new WishScreen(rubies).show();
+     * UseItems.skiperror=true; */
+    return true;
   }
 
   @Override

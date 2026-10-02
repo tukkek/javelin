@@ -9,6 +9,7 @@ import javelin.Javelin;
 import javelin.controller.table.dungeon.feature.FeatureModifierTable;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
+import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonEntrance;
 import javelin.model.world.location.dungeon.DungeonFloor;
@@ -19,7 +20,9 @@ import javelin.old.RPG;
 /**
  * Discovers {@link Lore} about another {@link DungeonFloor}. Generated
  * on-demand and not while generating {@link DungeonFloor} so we can have access
- * to all {@link DungeonFloor#lore} .
+ * to all {@link DungeonFloor#lore}.
+ *
+ * TODO should probably {@link Location#reveal()}
  *
  * @author alex
  */

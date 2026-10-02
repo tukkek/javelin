@@ -442,7 +442,7 @@ public class Town extends Location{
 
   /** Displays relevant town news. */
   public void report(){
-    events.clear();
+    events.clear();//TODO show news on town screen instead
     if(!ishostile()){
       var events=this.events;
       if(events.size()>9) events=events.subList(events.size()-9,events.size());

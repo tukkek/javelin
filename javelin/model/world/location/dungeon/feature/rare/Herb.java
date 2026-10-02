@@ -13,7 +13,6 @@ import javelin.controller.content.fight.RandomDungeonEncounter;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.model.item.Item;
 import javelin.model.item.consumable.potion.Potion;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.unit.skill.Survival;
@@ -69,9 +68,6 @@ public class Herb extends Feature{
 
   @Override
   public boolean activate(){
-    if(Javelin.prompt("Do you want to check these herbs?\n"
-        +"Press ENTER to continue, any other key to cancel...")!='\n')
-      return false;
     var description=describe(loot);
     var s=Squad.active;
     var survivalist=s.getbest(Skill.SURVIVAL);
@@ -83,6 +79,12 @@ public class Herb extends Feature{
       Javelin.message(text,false);
       return true;
     }
+    //TODO test
+    //TODO brew bombs?
+    var prompt="Should %s extract these herbs into a %s?\n"
+        +"Press ENTER to continue, any other key to cancel...";
+    if(Javelin.prompt(prompt.formatted(survivalist,description))!='\n')
+      return false;
     if(RPG.chancein(2)&&!Debug.disablecombat){
       var interupted="You are interrupted while extracting "+description+"!";
       Javelin.message(interupted,false);

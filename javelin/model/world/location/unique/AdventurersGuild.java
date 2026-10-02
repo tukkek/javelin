@@ -41,12 +41,12 @@ public class AdventurersGuild extends UniqueLocation{
       %s
 
       Press the respective number to select kits.
-      Training time: 1 week, fees: $%s. You have $%s.
+      Training time: 1 week. Fees: $%s. You have $%s.
 
       t - begin training
       h - hire recruit (%s)
       q - quit
-      """
+      """//TODO split and join to show recruit
       .trim();
   static final List<Monster> RECRUITS=SquadScreen.CANDIDATES.stream()
       .filter(c->c.think(0)).toList();

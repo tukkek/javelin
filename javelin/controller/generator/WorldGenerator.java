@@ -32,6 +32,8 @@ import javelin.view.screen.InfoScreen;
  * Mulit-threaded {@link World} generation. Also does {@link Dungeon#generate()}
  * once a valid world is generated.
  *
+ * TODO fix last remaining bugs with a DEBUG flag
+ *
  * @see World#seed
  * @author alex
  */

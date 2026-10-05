@@ -11,14 +11,21 @@ import com.codedisaster.steamworks.SteamException;
 import com.codedisaster.steamworks.SteamLibraryLoader;
 
 /// Uses `steamworks4j` to integrate with Steam.
+///
+/// TODO at some point will need to nandle 3 releases:
+/// * No Steam
+/// * Steam-demonstration (#5393530)
+/// * Steam (#5259370)
+///
+/// The best-extensible way to do this is probably to have a `steam.json` (or
+/// omit it for no Steam).
 public class Steam{
   /// Singleton
   public static final Steam INSTANCE=new Steam();
   /// If set to `false` all methods should be nooperations.
-  // TODO once there are versions for Steam and not this may need to be externalized or detected dynamically
   public static final boolean ENABLED=true;
 
-  static final int IDENTITY=5259370;
+  static final int IDENTITY=5393530;
 
   class Tick extends TimerTask{
     @Override

@@ -16,6 +16,7 @@ import java.util.Optional;
 import javax.swing.JOptionPane;
 
 import javelin.Javelin;
+import javelin.controller.Steam;
 import javelin.controller.Weather;
 import javelin.controller.content.action.world.meta.OpenJournal;
 import javelin.controller.content.event.EventDealer;
@@ -135,6 +136,7 @@ public class StateManager{
     public void windowClosing(WindowEvent event){
       var w=event.getWindow();
       try{
+        Steam.INSTANCE.close();
         var b=BattleScreen.active;
         var inbattle=b!=null&&!(b instanceof WorldScreen);
         var warning="Exiting during battle will not save your progress.\n"

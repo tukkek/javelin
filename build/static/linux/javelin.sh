@@ -1,5 +1,5 @@
 #!/bin/sh
-JLINK_VM_OPTIONS=
+JLINK_VM_OPTIONS="--enable-native-access=javelin,org.lwjgl -Djava.library.path=native/"
 DIR=`dirname $0`
 PATH="$PATH:fmedia/"
 

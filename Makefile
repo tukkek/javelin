@@ -12,7 +12,7 @@ define jlink
 	cp /tmp/VERSION.txt build/output/$(1)/javelin/doc/VERSION.txt
 	mv build/output/$(1)/javelin/doc/apidocs/ build/output/$(1)/javelin/doc/javadoc/
 	cp --recursive target/native/ build/output/$(1)/javelin/native/
-	cp --recursive build/static/steam/ build/output/$(1)/javelin/native/steam/
+	cp --recursive build/static/steam/sdk/redistributable_bin/ build/output/$(1)/javelin/native/steam/
 	echo "Bundling javelin-$(1).zip"
 	cd build/output/$(1)/;zip -v "../javelin-$(1).zip" . -r > /dev/null
 endef

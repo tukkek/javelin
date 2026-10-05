@@ -16,3 +16,4 @@ build/output/
 doc/apidocs/
 build/static/*/fmedia/
 target/
+build/static/steam/

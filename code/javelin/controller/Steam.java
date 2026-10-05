@@ -16,7 +16,7 @@ public class Steam{
   public static final Steam INSTANCE=new Steam();
   /// If set to `false` all methods should be nooperations.
   // TODO once there are versions for Steam and not this may need to be externalized or detected dynamically
-  public static final boolean ENABLED=true;
+  public static final boolean ENABLED=false;
 
   static final int IDENTITY=5259370;
 

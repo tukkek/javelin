@@ -31,3 +31,8 @@ fmedia is used to play external sounds on every operating system. The package ne
 * build/static/windows/fmedia
 * build/static/linux/fmedia
 * build/static/mac/fmedia
+
+## Steam
+`javelin.controller.Steam` uses `steamworks4j` with a thin wrapper for LWJGL to integrate with Steam. 
+
+The build process copies native libraries from Steam and LWJGL to `javelin/native/`. This requires SDK 1.62 from Steam to be extracted to `build/static/steam/` so that `build/static/steam/sdk/redistributable_bin/` is a valid path.

@@ -18,6 +18,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.InputSource;
 
+import javelin.controller.Steam;
 import javelin.controller.collection.CountingSet;
 import javelin.controller.content.upgrade.classes.ClassLevelUpgrade;
 import javelin.controller.db.Preferences;
@@ -111,6 +112,7 @@ public class Javelin{
    */
   public static void main(final String[] args){
     Thread.currentThread().setName("Javelin");
+    Steam.INSTANCE.load();
     final var f=new JFrame(TITLE);
     tracker=new MediaTracker(f);
     app=new JavelinApp();

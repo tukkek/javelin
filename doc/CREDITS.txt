@@ -64,6 +64,9 @@ Hyptosis and Zabin
 Simon "staz" Zolin
 * Fast media player https://github.com/stsaz/fmedia
 
+Endarire
+* Staunchest believer
+
 Special thanks
 * 11132113
 * Greg

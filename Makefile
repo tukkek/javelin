@@ -2,7 +2,7 @@ SHELL=/bin/bash
 .SILENT:
 
 define jlink
-	echo "Close Eclipse and enter."
+	echo "Close Eclipse or disable building automatically then enter."
 	read
 	echo "Building Javelin for $(1)..."
 	mkdir --parents build/output/$(1)/javelin/

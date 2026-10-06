@@ -71,14 +71,14 @@ public class WorldTile extends Tile{
       g.setColor(a.getrealmoverlay().color);
       g.fillRect(x,y+MapPanel.tilesize-5,MapPanel.tilesize,5);
     }
-    final var l=a instanceof Location?(Location)a:null;
+    final var l=a instanceof Location l2?l2:null;
     if(l==null) return;
     if(l.drawgarisson()) draw(g,Images.HOSTILE.get(Tier.get(l.getel())));
     if(l.hascrafted()) draw(g,Images.CRAFTING);
     else if(!l.explored) draw(g,Images.UNEXPLORED);
     if(l.hasupgraded()) draw(g,Images.UPGRADING);
     if(l.isworking()) draw(g,Images.LABOR);
-    final var t=l instanceof Town?(Town)l:null;
+    final var t=l instanceof Town t2?t2:null;
     if(t!=null&&!t.ishostile()&&t.isworking()) draw(g,Images.LABOR);
   }
 }

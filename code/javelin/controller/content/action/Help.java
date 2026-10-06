@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import javelin.Debug;
 import javelin.Javelin;
+import javelin.JavelinApp;
 import javelin.model.unit.Combatant;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
@@ -63,7 +64,7 @@ public class Help extends Action{
     }
     Javelin.app.switchScreen(new InfoScreen(text));
     Javelin.input();
-    Javelin.app.switchScreen(BattleScreen.active);
+    JavelinApp.reopen();
   }
 
   private static String pad(String s,int padding){

@@ -55,9 +55,11 @@ public class StatusPanel extends TPanel{
   @Override
   public void paint(final Graphics g){
     super.paint(g);
+    var state=Fight.state;
+    if(state==null) return;
     nextLine=0;
     var hero=BattleState.getcombatant(BattlePanel.current,
-        Fight.state.getcombatants());
+        state.getcombatants());
     if(hero==null||hero.source==null) return;
     if(Examine.lastlooked!=null) hero=Examine.lastlooked;
     var helper="";

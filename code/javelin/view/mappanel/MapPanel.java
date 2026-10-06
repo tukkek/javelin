@@ -8,8 +8,12 @@ import java.awt.ScrollPane;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
+import org.lwjgl.opengl.awt.AWTGLCanvas;
+
+import javelin.controller.OpenGL;
 import javelin.controller.db.Preferences;
 import javelin.view.mappanel.overlay.Overlay;
+import javelin.view.screen.BattleScreen;
 
 /**
  * Game map view, either in or out of battle.
@@ -27,10 +31,13 @@ public abstract class MapPanel extends Panel{
   /** Grid of tiles by coordinate. */
   public Tile[][] tiles=null;
   /** Main component for panel. */
-  public Canvas canvas=new Canvas(){
+  public AWTGLCanvas canvas=new AWTGLCanvas(){
     @Override
-    public void paint(Graphics g){
-      refresh();
+    public void initGL(){}
+
+    @Override
+    public void paintGL(){
+      if(BattleScreen.active!=null) refresh();
     }
   };
 
@@ -87,6 +94,7 @@ public abstract class MapPanel extends Panel{
     scroll.add(container);
     setLayout(new BorderLayout());
     add(scroll,BorderLayout.CENTER);
+    OpenGL.render();
   }
 
   /** @see Preferences */

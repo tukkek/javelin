@@ -9,9 +9,10 @@ import java.awt.Font;
 import java.awt.MediaTracker;
 import java.awt.Toolkit;
 
+import javelin.controller.OpenGL;
 import javelin.model.unit.Squad;
 import javelin.view.Images;
-import javelin.view.mappanel.MapPanel;
+import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 
 public abstract class QuestApp extends Applet implements Runnable{
@@ -67,15 +68,19 @@ public abstract class QuestApp extends Applet implements Runnable{
 
   /** Switches to a new screen, discarding the old one. */
   public void switchScreen(Component s){
-    if(mainComponent==s) return;
-    MapPanel.overlay=null;
-    if(mainComponent instanceof Screen) ((Screen)mainComponent).close();
-    removeAll();
+    var last=mainComponent;
+    if(last==s) return;
+    synchronized(OpenGL.LOCK){
+      BattleScreen.active=null;
+      if(last instanceof Screen screen) screen.close();
+      removeAll();
+    }
+    if(Squad.active!=null&&s instanceof WorldScreen w) w.firstdraw=true;
+    if(s instanceof BattleScreen screen) BattleScreen.active=screen;
+    mainComponent=s;
     add(s);
     s.revalidate();
     s.requestFocus();
-    mainComponent=s;
-    if(Squad.active!=null&&s instanceof WorldScreen w) w.firstdraw=true;
   }
 
   @Override

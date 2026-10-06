@@ -44,6 +44,7 @@ public class EndBattle extends BattleEvent{
       }
     }
     AiCache.reset();
+    BattleScreen.active.close();
   }
 
   static void terminateconditions(BattleState s,BattleScreen screen){

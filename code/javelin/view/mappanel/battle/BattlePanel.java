@@ -45,21 +45,22 @@ public class BattlePanel extends MapPanel{
 
   @Override
   public void refresh(){
+    var state=Fight.state;
+    if(state==null) return;
     updatestate();
-    var s=Fight.state;
-    var update=new HashSet<Point>(s.redteam.size()+s.blueteam.size());
-    for(var c:s.getcombatants()) update.add(c.getlocation());
+    var update=new HashSet<Point>(state.redteam.size()+state.blueteam.size());
+    for(var c:state.getcombatants()) update.add(c.getlocation());
     if(previous!=null)
       for(var c:previous.getcombatants()) update.add(c.getlocation());
     updatestate();
-    for(var c:s.getcombatants()) update.add(c.getlocation());
+    for(var c:state.getcombatants()) update.add(c.getlocation());
     calculatevision();
     synchronized(seen){
       update.addAll(seen);
       if(overlay!=null) update.addAll(overlay.affected);
     }
     if(Fight.current.has(Meld.class)!=null)
-      for(var m:s.meld) update.add(new Point(m.x,m.y));
+      for(var m:state.meld) update.add(new Point(m.x,m.y));
     for(var p:update) tiles[p.x][p.y].repaint();
   }
 

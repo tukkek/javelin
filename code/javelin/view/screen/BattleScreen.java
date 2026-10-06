@@ -396,4 +396,11 @@ public class BattleScreen extends Screen{
   public void center(){
     if(current!=null) center(current.location[0],current.location[1]);
   }
+
+  @Override
+  public void close(){
+    super.close();
+    mappanel.canvas.disposeCanvas();
+    BattleScreen.active=null;
+  }
 }

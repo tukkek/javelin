@@ -35,7 +35,9 @@ public class BattleTile extends Tile{
       drawcover(g);
       return;
     }
-    var m=Fight.current.map;
+    var fight=Fight.current;
+    if(fight==null) return;
+    var m=fight.map;
     var s=Fight.state;
     var square=s.map[x][y];
     if(square.blocked){

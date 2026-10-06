@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
+import javelin.JavelinApp;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.diplomacy.mandate.Mandate;
-import javelin.view.screen.BattleScreen;
 import javelin.view.screen.Option;
 import javelin.view.screen.town.option.ScreenOption;
 import javelin.view.screen.town.option.TournamentScreenOption;
@@ -154,7 +154,7 @@ public class TownScreen extends PurchaseScreen{
 
   @Override
   public void onexit(){
-    Javelin.app.switchScreen(BattleScreen.active);
+    JavelinApp.reopen();
   }
 
   @Override

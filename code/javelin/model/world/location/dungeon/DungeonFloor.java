@@ -535,11 +535,13 @@ public class DungeonFloor implements Serializable{
   public void enter(){
     if(BattleScreen.active instanceof DungeonScreen s&&s.floor==this) return;
     Dungeon.active=this;
-    JavelinApp.context=new DungeonScreen(this);
-    BattleScreen.active=JavelinApp.context;
+    var screen=new DungeonScreen(this);
+    JavelinApp.context=screen;
+    BattleScreen.active=screen;
     Squad.active.updateavatar();
     BattleScreen.active.mappanel.center(squadlocation.x,squadlocation.y,true);
     features.getknown();
+    Javelin.app.switchScreen(screen);
   }
 
   /** @see Dungeon#gettier() */

@@ -27,6 +27,7 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.old.QuestApp;
 import javelin.old.RPG;
+import javelin.view.screen.BattleScreen;
 import javelin.view.screen.SquadScreen;
 import javelin.view.screen.WorldScreen;
 
@@ -68,7 +69,7 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
 
   @Override
   public void run(){
-    Thread.setDefaultUncaughtExceptionHandler(this);
+    if(!Javelin.DEBUG) Thread.setDefaultUncaughtExceptionHandler(this);
     Preferences.setup();// pre
     initialize();
     if(!StateManager.load()){
@@ -77,7 +78,6 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
     }
     Preferences.setup();// post
     preparedebug();
-    if(Javelin.DEBUG) while(true) loop();
     while(true) try{
       loop();
     }catch(RuntimeException e){
@@ -87,12 +87,8 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
 
   void loop(){
     try{
-      if(Dungeon.active==null) context=new WorldScreen(true);
-      else Dungeon.active.enter();
-      while(true){
-        switchScreen(context);
-        JavelinApp.context.turn();
-      }
+      if(BattleScreen.active==null) reopen();
+      while(true) JavelinApp.context.turn();
     }catch(StartBattle e){
       if(Debug.disablecombat) return;
       Fight.current=e.fight;
@@ -180,5 +176,14 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
     }
     JOptionPane.showMessageDialog(Javelin.app,message);
     System.exit(20201202);
+  }
+
+  public static void reopen(){
+    var dungeon=Dungeon.active;
+    BattleScreen screen=null;
+    if(Fight.current!=null) screen=new BattleScreen(true,true);
+    else if(dungeon==null) screen=new WorldScreen(true);
+    else dungeon.enter();
+    if(screen!=null) Javelin.app.switchScreen(screen);
   }
 }

@@ -9,9 +9,9 @@
     <version>1.0.0</version>
     
 	<properties>
-		<lwjgl.version>3.4.3</lwjgl.version>
 		<steamworks4j.version>1.10.0</steamworks4j.version>
-		<lwjgl3-awt.version>0.2.3</lwjgl3-awt.version>
+		<lwjgl.version>3.4.2</lwjgl.version>
+		<lwjgl3-awt.version>0.2.5</lwjgl3-awt.version>
 		
 	    <maven.compiler.source>25</maven.compiler.source>
 	    <maven.compiler.target>25</maven.compiler.target>
@@ -74,6 +74,22 @@
 			                            }
 			                        </moduleInfoSource>
 			                    </module>
+			                    <module>
+			                        <artifact>
+										<groupId>org.lwjglx</groupId>
+										<artifactId>lwjgl3-awt</artifactId>
+										<version>${lwjgl3-awt.version}</version>
+			                        </artifact>
+			                        <moduleInfoSource>
+			                            module lwjgl3.awt {
+			                                exports org.lwjgl.opengl.awt;
+			                                requires java.desktop;
+			                                requires org.lwjgl;
+			                                requires org.lwjgl.jawt;
+			                                requires org.lwjgl.opengl; 
+			                            }
+			                        </moduleInfoSource>
+			                    </module>
 			                </modules>
                             <overwriteExistingFiles>true</overwriteExistingFiles>
 			            </configuration>
@@ -100,6 +116,14 @@
 			                        <outputDirectory>${project.build.directory}/native/</outputDirectory>
 			                        <includes>**/*.so</includes>
 			                    </artifactItem>
+			                    <artifactItem>
+			                        <groupId>org.lwjgl</groupId>
+			                        <artifactId>lwjgl-opengl</artifactId>
+			                        <classifier>${lwjgl.natives}</classifier>
+			                        <type>jar</type>
+			                        <outputDirectory>${project.build.directory}/native/</outputDirectory>
+			                        <includes>**/*.so</includes>
+			                    </artifactItem>
 			                </artifactItems>
 			            </configuration>
 			        </execution>
@@ -107,6 +131,7 @@
 			</plugin>
         </plugins>
     </build>
+    
 	<profiles>
 		<profile>
 			<id>lwjgl-natives-linux-amd64</id>
@@ -149,6 +174,11 @@
 	
 	<dependencies>
 		<dependency>
+		    <groupId>com.code-disaster.steamworks4j</groupId>
+		    <artifactId>steamworks4j</artifactId>
+		    <version>${steamworks4j.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.lwjgl</groupId>
 			<artifactId>lwjgl</artifactId>
 		</dependency>
@@ -157,10 +187,19 @@
 			<artifactId>lwjgl</artifactId>
 			<classifier>${lwjgl.natives}</classifier>
 		</dependency>
-	  <dependency>
-	    <groupId>com.code-disaster.steamworks4j</groupId>
-	    <artifactId>steamworks4j</artifactId>
-	    <version>${steamworks4j.version}</version>
-	  </dependency>
+		<dependency>
+			<groupId>org.lwjglx</groupId>
+			<artifactId>lwjgl3-awt</artifactId>
+			<version>${lwjgl3-awt.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-opengl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-opengl</artifactId>
+			<classifier>${lwjgl.natives}</classifier>
+		</dependency>
 	</dependencies>
 </project>

@@ -231,7 +231,7 @@ public class WorldScreen extends BattleScreen{
       if(!mappanel.tiles[a.x][a.y].discovered) continue;
       var point=a.getlocation();
       stayrevealed.add(point);
-      var l=a instanceof Location?(Location)a:null;
+      var l=a instanceof Location l2?l2:null;
       if(l==null) continue;
       var vision=l.watch();
       if(vision>0) for(var x=point.x-vision;x<=point.x+vision;x++)
@@ -430,7 +430,7 @@ public class WorldScreen extends BattleScreen{
     s.lastterrain=Terrain.current();
     var actor=World.get(x,y,World.getactors());
     if(actor==null) return false;
-    var l=actor instanceof Location?(Location)actor:null;
+    var l=actor instanceof Location l2?l2:null;
     try{
       if(actor.interact()) return true;
       if(l!=null&&l.allowentry&&!l.ishostile()) WorldMove.place(x,y);
@@ -529,7 +529,6 @@ public class WorldScreen extends BattleScreen{
 
   @Override
   public void center(){
-    Javelin.app.switchScreen(this);
     var here=getsquadlocation();
     if(here!=null) center(here.x,here.y);
   }

@@ -19,8 +19,6 @@
 	    
         <doclint>none</doclint>
         
-        <target.platform>linux-x64</target.platform>
-        
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	
@@ -114,7 +112,7 @@
 			                        <classifier>${lwjgl.natives}</classifier>
 			                        <type>jar</type>
 			                        <outputDirectory>${project.build.directory}/native/</outputDirectory>
-			                        <includes>**/*.so</includes>
+			                        <includes>**/*.so,,**/*.dll</includes>
 			                    </artifactItem>
 			                    <artifactItem>
 			                        <groupId>org.lwjgl</groupId>
@@ -122,7 +120,7 @@
 			                        <classifier>${lwjgl.natives}</classifier>
 			                        <type>jar</type>
 			                        <outputDirectory>${project.build.directory}/native/</outputDirectory>
-			                        <includes>**/*.so</includes>
+			                        <includes>**/*.so,,**/*.dll</includes>
 			                    </artifactItem>
 			                </artifactItems>
 			            </configuration>
@@ -134,7 +132,7 @@
     
 	<profiles>
 		<profile>
-			<id>lwjgl-natives-linux-amd64</id>
+			<id>linux</id>
 			<activation>
 				<os>
 					<family>unix</family>
@@ -144,10 +142,11 @@
 			</activation>
 			<properties>
 				<lwjgl.natives>natives-linux</lwjgl.natives>
+				<platform>linux</platform>
 			</properties>
 		</profile>
 		<profile>
-			<id>lwjgl-natives-windows-amd64</id>
+			<id>windows</id>
 			<activation>
 				<os>
 					<family>windows</family>
@@ -156,6 +155,7 @@
 			</activation>
 			<properties>
 				<lwjgl.natives>natives-windows</lwjgl.natives>
+				<platform>windows</platform>
 			</properties>
 		</profile>
 	</profiles>

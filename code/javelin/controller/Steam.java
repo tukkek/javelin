@@ -10,6 +10,8 @@ import com.codedisaster.steamworks.SteamAPI;
 import com.codedisaster.steamworks.SteamException;
 import com.codedisaster.steamworks.SteamLibraryLoader;
 
+import javelin.Debug;
+
 /// Uses `steamworks4j` to integrate with Steam.
 ///
 /// TODO at some point will need to nandle 3 releases:
@@ -20,10 +22,11 @@ import com.codedisaster.steamworks.SteamLibraryLoader;
 /// The best-extensible way to do this is probably to have a `steam.json` (or
 /// omit it for no Steam).
 public class Steam{
+  /// If `false` all methods should be nooperations.
+  public static final boolean ENABLED=System.getenv("SteamAppId")!=null
+      &&System.getenv("SteamGameId")!=null;
   /// Singleton
   public static final Steam INSTANCE=new Steam();
-  /// If set to `false` all methods should be nooperations.
-  public static final boolean ENABLED=true;
 
   static final int IDENTITY=5393530;
 
@@ -64,18 +67,19 @@ public class Steam{
     }
   }
 
-  /// Load Steam libraries
+  /// Load Steam-libraries
   public void load(){
     try{
       if(!ENABLED) return;
-      SteamLibraryLoader loader=new Loader();
-      //TODO
-      //loader.setLibraryPath(Path.of("target","classes","steam").toString());
-      SteamAPI.loadLibraries(loader);
-      SteamAPI.restartAppIfNecessary(IDENTITY);
-      SteamAPI.init();
+      var loader=new Loader();
+      if(!SteamAPI.loadLibraries(loader))
+        throw new RuntimeException("Failed to load Steam-libraries.");
+      if(SteamAPI.restartAppIfNecessary(IDENTITY)) System.exit(0);
+      if(!SteamAPI.init())
+        throw new RuntimeException("Failed to integrate Steam.");
       new Timer().scheduleAtFixedRate(new Tick(),0,1_000/20);
-    }catch(SteamException|NumberFormatException e){
+      Debug.log("Steam integrated.",getClass());
+    }catch(SteamException e){
       return;
     }
   }

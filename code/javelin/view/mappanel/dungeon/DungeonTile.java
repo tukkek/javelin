@@ -12,7 +12,6 @@ import javelin.model.world.location.dungeon.Wilderness;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.view.Images;
-import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
 
 public class DungeonTile extends Tile{
@@ -54,6 +53,5 @@ public class DungeonTile extends Tile{
     }
     if(floor.squadlocation.x==x&&floor.squadlocation.y==y)
       draw(g,Squad.active.getimage());
-    if(MapPanel.overlay!=null) MapPanel.overlay.overlay(this);
   }
 }

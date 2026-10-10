@@ -31,6 +31,7 @@ import javelin.model.world.Season;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
+import javelin.view.OpenGL;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 
@@ -151,6 +152,7 @@ public class StateManager{
           save(true).ifPresent(SaveThread::hold);
           backup(true);
         }
+        OpenGL.destroy();
         System.exit(0);
       }catch(RuntimeException e){
         w.dispose();

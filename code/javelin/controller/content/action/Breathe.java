@@ -27,9 +27,9 @@ import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.unit.abilities.BreathWeapon.BreathArea;
 import javelin.model.unit.condition.Breathless;
 import javelin.old.messagepanel.MessagePanel;
-import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
 import javelin.view.mappanel.battle.overlay.BreathOverlay;
+import javelin.view.mappanel.overlay.Overlay;
 
 /**
  * Use {@link BreathWeapon}s.
@@ -114,18 +114,17 @@ public class Breathe extends Action implements AiAction{
     var state=Fight.state;
     var area=a.fill(breath.range,hero,state);
     if(area.isEmpty()) throw new RepeatTurn();
-    var overlay=new BreathOverlay(area);
-    MapPanel.overlay=overlay;
+    Overlay.set(new BreathOverlay(area));
     clear();
     Javelin.redraw();
-    Javelin.message(
-        targetinfo(state,area)+"Press ENTER or b to confirm, q to quit.",
-        Javelin.Delay.NONE);
+    var text=targetinfo(state,area);
+    text+="Press ENTER or b to confirm, q to quit.";
+    Javelin.message(text,Javelin.Delay.NONE);
     var confirm=Javelin.input().getKeyChar();
+    Overlay.clear();
     try{
       quit(confirm);
     }catch(RepeatTurn e){
-      overlay.clear();
       MessagePanel.active.clear();
       throw e;
     }

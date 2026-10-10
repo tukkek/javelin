@@ -219,6 +219,13 @@ public class Debug{
       d.hide=false;
       throw new StartBattle(d);
     }
+
+    static void hire(String monster,boolean multiple){
+      var squad=Squad.active;
+      if(!multiple) for(var combatant:squad)
+        if(combatant.source.name.equalsIgnoreCase(monster)) return;
+      squad.add(new Combatant(Monster.get(monster),true));
+    }
   }
 
   /** @see Preferences */
@@ -247,7 +254,8 @@ public class Debug{
    * @param c Used to identify and locate the message.
    */
   public static void log(Object log,Class<?> c){
-    System.out.println("%s: %s".formatted(c.getSimpleName(),log));
+    if(Javelin.DEBUG)
+      System.out.println("%s: %s".formatted(c.getSimpleName(),log));
   }
 
   /**

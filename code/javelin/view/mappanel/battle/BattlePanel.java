@@ -1,11 +1,11 @@
 package javelin.view.mappanel.battle;
 
+import java.awt.Graphics;
 import java.util.HashSet;
 import java.util.Set;
 
 import javelin.controller.Point;
 import javelin.controller.content.fight.Fight;
-import javelin.controller.content.fight.mutator.Meld;
 import javelin.controller.db.Preferences;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
@@ -44,40 +44,26 @@ public class BattlePanel extends MapPanel{
   }
 
   @Override
-  public void refresh(){
+  public void refresh(Graphics g){
     var state=Fight.state;
     if(state==null) return;
     updatestate();
-    var update=new HashSet<Point>(state.redteam.size()+state.blueteam.size());
-    for(var c:state.getcombatants()) update.add(c.getlocation());
-    if(previous!=null)
-      for(var c:previous.getcombatants()) update.add(c.getlocation());
-    updatestate();
-    for(var c:state.getcombatants()) update.add(c.getlocation());
     calculatevision();
-    synchronized(seen){
-      update.addAll(seen);
-      if(overlay!=null) update.addAll(overlay.affected);
-    }
-    if(Fight.current.has(Meld.class)!=null)
-      for(var m:state.meld) update.add(new Point(m.x,m.y));
-    for(var p:update) tiles[p.x][p.y].repaint();
+    for(var tiles:this.tiles) for(var tile:tiles) tile.repaint(g);
   }
 
   void calculatevision(){
     if(daylight||state.getteam(current)==state.redteam) return;
-    synchronized(seen){
-      for(var s:seen){
-        var t=(BattleTile)tiles[s.x][s.y];
-        t.shrouded=true;
-      }
-      var vision=current.calculatevision(state);
-      for(var v:vision){ // seen
-        var t=(BattleTile)tiles[v.x][v.y];
-        seen.add(v);
-        t.discovered=true;
-        t.shrouded=false;
-      }
+    for(var s:seen){
+      var t=(BattleTile)tiles[s.x][s.y];
+      t.shrouded=true;
+    }
+    var vision=current.calculatevision(state);
+    for(var v:vision){ // seen
+      var t=(BattleTile)tiles[v.x][v.y];
+      seen.add(v);
+      t.discovered=true;
+      t.shrouded=false;
     }
   }
 
@@ -88,13 +74,12 @@ public class BattlePanel extends MapPanel{
     BattleTile.panel=this;
     var p=state.period;
     daylight=p.equals(Period.MORNING)||p.equals(Period.AFTERNOON);
-    if(previous==null||p!=previous.period) synchronized(seen){
+    if(previous==null||p!=previous.period)
       for(var tiles:tiles) for(var t:tiles){
         var bt=(BattleTile)t;
         bt.shrouded=!daylight;
         if(daylight) seen.add(new Point(t.x,t.y));
       }
-    }
   }
 
   @Override

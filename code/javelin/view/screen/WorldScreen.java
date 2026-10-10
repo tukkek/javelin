@@ -49,6 +49,7 @@ import javelin.old.messagepanel.MessagePanel;
 import javelin.view.Images;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
+import javelin.view.mappanel.overlay.Overlay;
 import javelin.view.mappanel.world.WorldPanel;
 
 /**
@@ -146,7 +147,7 @@ public class WorldScreen extends BattleScreen{
       redraw();
       Interface.userinterface.waiting=true;
       final var updatableUserAction=getUserInput();
-      if(MapPanel.overlay!=null) MapPanel.overlay.clear();
+      Overlay.clear();
       perform(updatableUserAction);
     }catch(RepeatTurn e){
       MessagePanel.active.clear();
@@ -458,10 +459,12 @@ public class WorldScreen extends BattleScreen{
 
   @Override
   public void center(int x,int y){
-    if(firstdraw){
-      mappanel.setposition(x,y);
-      firstdraw=false;
-    }else mappanel.viewposition(x,y);
+    if(!firstdraw){
+      mappanel.viewposition(x,y);
+      return;
+    }
+    mappanel.setposition(x,y);
+    firstdraw=false;
   }
 
   @Override

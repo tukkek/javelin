@@ -1,7 +1,6 @@
 package javelin.view.mappanel;
 
 import java.awt.BorderLayout;
-import java.awt.Canvas;
 import java.awt.Graphics;
 import java.awt.Panel;
 import java.awt.ScrollPane;
@@ -10,10 +9,9 @@ import java.awt.event.ComponentEvent;
 
 import org.lwjgl.opengl.awt.AWTGLCanvas;
 
-import javelin.controller.OpenGL;
 import javelin.controller.db.Preferences;
-import javelin.view.mappanel.overlay.Overlay;
-import javelin.view.screen.BattleScreen;
+import javelin.view.OpenGL;
+import javelin.view.OpenGL.Canvas;
 
 /**
  * Game map view, either in or out of battle.
@@ -23,23 +21,13 @@ import javelin.view.screen.BattleScreen;
 public abstract class MapPanel extends Panel{
   /** Current tile size. */
   public static int tilesize=Preferences.tilesizeworld;
-  /** Produces a temporary overlay effect on-screen. */
-  public static Overlay overlay=null;
 
   /** Scrollbar functionality. */
   public ScrollPane scroll=new ScrollPane(ScrollPane.SCROLLBARS_ALWAYS);
   /** Grid of tiles by coordinate. */
   public Tile[][] tiles=null;
   /** Main component for panel. */
-  public AWTGLCanvas canvas=new AWTGLCanvas(){
-    @Override
-    public void initGL(){}
-
-    @Override
-    public void paintGL(){
-      if(BattleScreen.active!=null) refresh();
-    }
-  };
+  public AWTGLCanvas canvas=new Canvas();
 
   Panel container=new Panel();
   /**
@@ -57,7 +45,6 @@ public abstract class MapPanel extends Panel{
     mapheight=heightp;
     scroll.setFocusable(false);
     container.setFocusable(false);
-    canvas.setFocusable(false);
     configurationkey=configurationkeyp;
   }
 
@@ -94,7 +81,6 @@ public abstract class MapPanel extends Panel{
     scroll.add(container);
     setLayout(new BorderLayout());
     add(scroll,BorderLayout.CENTER);
-    OpenGL.render();
   }
 
   /** @see Preferences */
@@ -154,15 +140,14 @@ public abstract class MapPanel extends Panel{
     y=Math.min(y,container.getHeight()-height+scroll.getVScrollbarWidth());
     x=Math.max(0,x);
     y=Math.max(0,y);
-    scroll.setScrollPosition(x,y);
+    synchronized(OpenGL.LOCK){
+      scroll.setScrollPosition(x,y);
+    }
     return true;
   }
 
-  /** Updates {@link Tile}s without redrawing the whole screen. */
-  abstract public void refresh();
-
-  /** @return {@link Canvas#getGraphics()}. */
-  public Graphics getdrawgraphics(){
-    return canvas.getGraphics();
-  }
+  /// Draws the panel.
+  ///
+  /// @see Tile#paint(Graphics)
+  abstract public void refresh(Graphics g);
 }

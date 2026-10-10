@@ -13,6 +13,7 @@ import javelin.controller.walker.overlay.OverlayStep;
 import javelin.controller.walker.overlay.OverlayWalker;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
+import javelin.view.mappanel.world.WorldMouse.Movement;
 import javelin.view.screen.BattleScreen;
 
 public class MoveOverlay extends Overlay{
@@ -23,25 +24,17 @@ public class MoveOverlay extends Overlay{
 
   public MoveOverlay(OverlayWalker mover){
     path=mover;
+    walk();
   }
 
   public void walk(){
     steps=path.walk();
-    try{
-      for(Point step:steps){
-        affected.add(step);
-        var mappanel=BattleScreen.active.mappanel;
-        mappanel.tiles[step.x][step.y].repaint();
-      }
-    }catch(IndexOutOfBoundsException e){
-      affected.clear();
-    }
+    affected.addAll(steps);
   }
 
   @Override
-  public void overlay(Tile t){
+  public void overlay(Tile t,Graphics g){
     if(steps==null) return;
-    var g=BattleScreen.active.mappanel.getdrawgraphics();
     var p=t.getposition();
     for(Point step:steps){
       var s=(OverlayStep)step;
@@ -61,5 +54,12 @@ public class MoveOverlay extends Overlay{
   public void reset(){
     path.reset();
     affected.clear();
+  }
+
+  @Override
+  public boolean click(){
+    if(steps.isEmpty()) return false;
+    BattleScreen.perform(new Movement(this));
+    return true;
   }
 }

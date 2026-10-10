@@ -1,5 +1,6 @@
 package javelin.view.mappanel.battle.overlay;
 
+import java.awt.Graphics;
 import java.awt.Image;
 import java.util.List;
 
@@ -26,9 +27,9 @@ public class TraceOverlay extends Overlay{
   }
 
   @Override
-  public void overlay(Tile t){
+  public void overlay(Tile t,Graphics g){
     var p=new Point(t.x,t.y);
-    if(p.equals(to)) draw(t,TargetOverlay.TARGET);
-    else if(affected.contains(p)) draw(t,TRACE);
+    if(p.equals(to)) draw(t,TargetOverlay.TARGET,g);
+    else if(affected.contains(p)) draw(t,TRACE,g);
   }
 }

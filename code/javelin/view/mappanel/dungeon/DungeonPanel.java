@@ -1,5 +1,6 @@
 package javelin.view.mappanel.dungeon;
 
+import java.awt.Graphics;
 import java.util.HashSet;
 
 import javelin.controller.db.Preferences;
@@ -33,7 +34,7 @@ public class DungeonPanel extends MapPanel{
   }
 
   @Override
-  public void refresh(){
+  public void refresh(Graphics g){
     var p=scroll.getScrollPosition();
     var s=scroll.getViewportSize();
     var w=s.width;
@@ -43,7 +44,7 @@ public class DungeonPanel extends MapPanel{
       var t=(DungeonTile)tile;
       if(p.x<=t.x*tilesize&&(t.x+1)*tilesize<=p.x+w&&p.y<=(t.y+1)*tilesize
           &&t.y*tilesize<=p.y+h)
-        t.repaint();
+        t.repaint(g);
     }
   }
 }

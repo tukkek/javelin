@@ -5,4 +5,5 @@ module javelin{
   requires org.lwjgl;
   requires static org.lwjgl.natives;
   requires lwjgl3.awt;
+  requires org.lwjgl.opengl;
 }

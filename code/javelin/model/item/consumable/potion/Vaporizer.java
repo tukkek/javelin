@@ -12,8 +12,8 @@ import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.AreaSpell;
 import javelin.model.unit.abilities.spell.Spell;
-import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
+import javelin.view.mappanel.overlay.Overlay;
 
 /**
  * A {@link Item#consumable} that affects everyone in a 10-foot cloud.
@@ -63,13 +63,13 @@ public class Vaporizer extends Potion{
   @Override
   public boolean use(Combatant user){
     var a=AreaSpell.getarea(user.getlocation(),10);
-    MapPanel.overlay=new AiOverlay(a);
+    Overlay.set(new AiOverlay(a));
     Javelin.redraw();
     if(Javelin.prompt(CONFIRM,true)!='\n') throw new RepeatTurn();
-    var effect=AreaSpell.getcombatants(a,Fight.state).stream()
-        .map(c->spell.cast(null,c,false,Fight.state,null))
+    var state=Fight.state;
+    var combatants=AreaSpell.getcombatants(a,state);
+    var effect=combatants.stream().map(c->spell.cast(null,c,false,state,null))
         .collect(joining(" "));
-    Javelin.redraw();
     Javelin.prompt(OUTCOME.formatted(user,toString().toLowerCase(),effect));
     return true;
   }

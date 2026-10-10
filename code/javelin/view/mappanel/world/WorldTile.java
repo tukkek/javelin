@@ -55,7 +55,6 @@ public class WorldTile extends Tile{
     }
     final var a=WorldPanel.ACTORS.get(new Point(x,y));
     if(a!=null) drawactor(g,a);
-    if(MapPanel.overlay!=null) MapPanel.overlay.overlay(this);
   }
 
   void drawactor(final Graphics g,final Actor a){

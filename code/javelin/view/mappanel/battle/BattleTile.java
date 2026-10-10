@@ -61,7 +61,6 @@ public class BattleTile extends Tile{
       g.setColor(new Color(0,0,0,1/3f));
       g.fillRect(p.x,p.y,MapPanel.tilesize,MapPanel.tilesize);
     }
-    if(MapPanel.overlay!=null) MapPanel.overlay.overlay(this);
   }
 
   void draw(Image i,Point p,Graphics g){

@@ -9,9 +9,10 @@ import java.awt.Font;
 import java.awt.MediaTracker;
 import java.awt.Toolkit;
 
-import javelin.controller.OpenGL;
 import javelin.model.unit.Squad;
 import javelin.view.Images;
+import javelin.view.OpenGL;
+import javelin.view.mappanel.overlay.Overlay;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 
@@ -74,6 +75,7 @@ public abstract class QuestApp extends Applet implements Runnable{
       BattleScreen.active=null;
       if(last instanceof Screen screen) screen.close();
       removeAll();
+      Overlay.clear();
     }
     if(Squad.active!=null&&s instanceof WorldScreen w) w.firstdraw=true;
     if(s instanceof BattleScreen screen) BattleScreen.active=screen;

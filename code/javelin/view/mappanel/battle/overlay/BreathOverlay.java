@@ -1,6 +1,7 @@
 package javelin.view.mappanel.battle.overlay;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
@@ -15,21 +16,20 @@ import javelin.view.screen.BattleScreen;
 
 /** @see BreathWeapon */
 public class BreathOverlay extends Overlay{
-  private static final Border BORDER=BorderFactory.createLineBorder(Color.CYAN,
-      MapPanel.tilesize/10);
+  Border border;
 
   /** Constructor. */
   public BreathOverlay(Set<Point> area){
     affected.addAll(area);
+    border=BorderFactory.createLineBorder(Color.CYAN,MapPanel.tilesize/10);
   }
 
   @Override
-  public void overlay(Tile t){
+  public void overlay(Tile t,Graphics g){
     if(!affected.contains(new Point(t.x,t.y))) return;
     var map=BattleScreen.active.mappanel;
-    var g=map.getdrawgraphics();
     var s=MapPanel.tilesize;
     var p=t.getposition();
-    BORDER.paintBorder(map.canvas,g,p.x,p.y,s,s);
+    border.paintBorder(map.canvas,g,p.x,p.y,s,s);
   }
 }

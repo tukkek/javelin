@@ -31,12 +31,14 @@ import javelin.old.Interface;
 import javelin.old.QuestApp;
 import javelin.old.Screen;
 import javelin.old.messagepanel.MessagePanel;
+import javelin.view.OpenGL;
 import javelin.view.StatusPanel;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.battle.BattleMouse;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.mappanel.battle.overlay.BattleWalker;
+import javelin.view.mappanel.overlay.Overlay;
 
 /**
  * Screen context during battle.
@@ -199,13 +201,14 @@ public class BattleScreen extends Screen{
     var s=Fight.state;
     lastaicheck=s.next.ap;
     if(current==null||current.automatic||s.fleeing.contains(current)) return;
-    if(MapPanel.overlay!=null) MapPanel.overlay.clear();
+    Overlay.clear();
     BattlePanel.current=current;
+    messagepanel.clear();
     updatescreen();
     blockinput();
     Interface.userinterface.waiting=true;
     final var updatableUserAction=callback==null?getUserInput():null;
-    if(MapPanel.overlay!=null) MapPanel.overlay.clear();
+    Overlay.clear();
     try{
       if(updatableUserAction==null) try{
         callback.run();
@@ -225,7 +228,7 @@ public class BattleScreen extends Screen{
     else{
       BattlePanel.current=current;
       MessagePanel.active.clear();
-      if(MapPanel.overlay!=null) MapPanel.overlay.clear();
+      Overlay.clear();
       Javelin.message("Thinking...\n",Javelin.Delay.NONE);
       messagepanel.repaint();
       updatescreen();
@@ -309,6 +312,7 @@ public class BattleScreen extends Screen{
       }
     }
     Javelin.redraw();
+    center();
   }
 
   /**
@@ -317,8 +321,7 @@ public class BattleScreen extends Screen{
    *   let the next automaric unit think instead.
    */
   public void setstate(final ChanceNode state,boolean enableoverrun){
-    if(MapPanel.overlay!=null) MapPanel.overlay.clear();
-    MapPanel.overlay=state.overlay;
+    Overlay.set(state.overlay);
     BattlePanel.current=current;
     final var s=(BattleState)state.n;
     Fight.state=s;
@@ -400,7 +403,7 @@ public class BattleScreen extends Screen{
   @Override
   public void close(){
     super.close();
-    mappanel.canvas.disposeCanvas();
+    OpenGL.dispose();
     BattleScreen.active=null;
   }
 }

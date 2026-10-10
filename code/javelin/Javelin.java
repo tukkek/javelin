@@ -38,6 +38,7 @@ import javelin.old.Interface;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.old.messagepanel.TextZone;
 import javelin.view.Images;
+import javelin.view.OpenGL;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
@@ -111,31 +112,34 @@ public class Javelin{
    * @param args See {@link #DEBUG}.
    */
   public static void main(final String[] args){
+    OpenGL.check();
     Thread.currentThread().setName("Javelin");
     Steam.INSTANCE.load();
-    final var f=new JFrame(TITLE);
-    tracker=new MediaTracker(f);
+    OpenGL.ready();
+    var frame=new JFrame(TITLE);
+    OpenGL.configure(frame);
+    tracker=new MediaTracker(frame);
     app=new JavelinApp();
-    f.setExtendedState(f.getExtendedState()|Frame.MAXIMIZED_BOTH);
-    f.setBackground(java.awt.Color.black);
-    f.addWindowListener(StateManager.SAVEONCLOSE);
-    f.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-    f.setLayout(new BorderLayout());
-    f.setFocusTraversalKeysEnabled(false);
-    f.setIconImages(Arrays.asList(Images.ICONS));
-    app.frame=f;
+    frame.setExtendedState(frame.getExtendedState()|Frame.MAXIMIZED_BOTH);
+    frame.setBackground(java.awt.Color.black);
+    frame.addWindowListener(StateManager.SAVEONCLOSE);
+    frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+    frame.setLayout(new BorderLayout());
+    frame.setFocusTraversalKeysEnabled(false);
+    frame.setIconImages(Arrays.asList(Images.ICONS));
+    app.frame=frame;
     app.setVisible(false);
-    f.add(app);
-    f.setSize(app.getPreferredSize().width,app.getPreferredSize().height);
-    f.addKeyListener(new KeyAdapter(){
+    frame.add(app);
+    frame.setSize(app.getPreferredSize().width,app.getPreferredSize().height);
+    frame.addKeyListener(new KeyAdapter(){
       @Override
       public void keyPressed(final KeyEvent e){
         Interface.userinterface.go(e);
       }
     });
     app.setVisible(true);
-    f.setVisible(true);
-    f.setExtendedState(Frame.MAXIMIZED_BOTH);
+    frame.setVisible(true);
+    frame.setExtendedState(Frame.MAXIMIZED_BOTH);
     app.init();
   }
 
@@ -261,7 +265,7 @@ public class Javelin{
       if(f==InfoScreen.ESCAPE&&!forceselection) return -1;
       i=SelectScreen.convertkeytoindex(f);
     }
-    if(fullscreen) app.switchScreen(BattleScreen.active);
+    if(fullscreen) JavelinApp.reopen();
     return i;
   }
 
@@ -359,8 +363,8 @@ public class Javelin{
 
   /** Updates the {@link MapPanel} and {@link MessagePanel}. */
   public static void redraw(){
-    var b=BattleScreen.active;
-    if(b.statuspanel!=null) b.statuspanel.repaint();
+    var panel=BattleScreen.active.statuspanel;
+    if(panel!=null) panel.repaint();
     MessagePanel.active.repaint();
   }
 

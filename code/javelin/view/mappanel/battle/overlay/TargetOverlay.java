@@ -1,5 +1,6 @@
 package javelin.view.mappanel.battle.overlay;
 
+import java.awt.Graphics;
 import java.awt.Image;
 import java.util.List;
 
@@ -21,7 +22,6 @@ public class TargetOverlay extends Overlay{
     this.x=x;
     this.y=y;
     affected.add(new Point(x,y));
-    BattleScreen.active.mappanel.tiles[x][y].repaint();
   }
 
   public TargetOverlay(Point p){
@@ -29,9 +29,9 @@ public class TargetOverlay extends Overlay{
   }
 
   @Override
-  public void overlay(Tile t){
+  public void overlay(Tile t,Graphics g){
     if(t.x==x&&t.y==y){
-      draw(t,TARGET);
+      draw(t,TARGET,g);
       BattleScreen.active.center(x,y);
     }
   }

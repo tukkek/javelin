@@ -1,5 +1,6 @@
 package javelin.view.mappanel.battle.overlay;
 
+import java.awt.Graphics;
 import java.awt.Image;
 import java.util.Collection;
 
@@ -35,7 +36,7 @@ public class AiOverlay extends Overlay{
   }
 
   @Override
-  public void overlay(Tile t){
-    if(affected.contains(new Point(t.x,t.y))) draw(t,image);
+  public void overlay(Tile t,Graphics g){
+    if(affected.contains(new Point(t.x,t.y))) draw(t,image,g);
   }
 }

@@ -36,7 +36,7 @@ public class BattleMouse extends Mouse{
 
   @Override
   public void mouseClicked(MouseEvent e){
-    if(overrideinput()||!Interface.userinterface.waiting) return;
+    if(overrideinput()) return;
     var t=gettile(e);
     var s=Fight.state;
     var target=s.getcombatant(t.x,t.y);
@@ -59,8 +59,7 @@ public class BattleMouse extends Mouse{
     var action=getaction(s,target,current);
     var outcome=action==null?null:action.act(current,target,s);
     if(outcome!=null) BattleScreen.perform(outcome);
-    if(MapPanel.overlay!=null&&(action==null||action.clearoverlay))
-      MapPanel.overlay.clear();
+    if(action==null||action.clearoverlay) Overlay.clear();
   }
 
   public BattleMouseAction getaction(BattleState s,Combatant target,
@@ -78,7 +77,7 @@ public class BattleMouse extends Mouse{
       BattleScreen.active.statuspanel.repaint();
     }
     if(!Interface.userinterface.waiting) return;
-    if(MapPanel.overlay!=null) MapPanel.overlay.clear();
+    Overlay.clear();
     BattleScreen.active.messagepanel.clear();
     try{
       var t=gettile(e);
@@ -100,10 +99,7 @@ public class BattleMouse extends Mouse{
   }
 
   public static void showstatus(String status,Combatant c,Overlay o){
-    if(o!=null){
-      MapPanel.overlay=o;
-      Javelin.redraw();
-    }
+    if(o!=null) Overlay.set(o);
     status+="\n\nConditions: ";
     var list=c.printstatus(Fight.state);
     status+=list.isEmpty()?"none":list;

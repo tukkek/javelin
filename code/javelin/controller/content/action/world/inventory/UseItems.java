@@ -64,7 +64,7 @@ public class UseItems extends WorldAction{
       infoscreen.print(actions+"\n"+list);
       if(executecommand(allitems,list,infoscreen)) break;
     }
-    Javelin.app.switchScreen(JavelinApp.context);
+    JavelinApp.reopen();
   }
 
   /** Toggle between {@link UseItems} and {@link EquipGear}. */

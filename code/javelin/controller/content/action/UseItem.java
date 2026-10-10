@@ -5,12 +5,12 @@ import java.util.Collections;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.JavelinApp;
 import javelin.controller.comparator.ItemsByName;
 import javelin.controller.content.fight.Fight;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.old.messagepanel.MessagePanel;
-import javelin.view.screen.BattleScreen;
 
 /**
  * Activates an {@link Item} in battle.
@@ -73,7 +73,7 @@ public class UseItem extends Action{
     var prompt="Which item?";
     var choice=Javelin.choose(prompt,items,fullscreen,false);
     var i=choice>=0?items.get(choice):null;
-    if(fullscreen) Javelin.app.switchScreen(BattleScreen.active);
+    if(fullscreen) JavelinApp.reopen();
     return i;
   }
 }

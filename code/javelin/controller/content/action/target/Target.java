@@ -118,7 +118,7 @@ public abstract class Target extends Action{
       if(Action.MOVE_W.isPressed(key)||key=='-') targeti-=1;
       else if(Action.MOVE_E.isPressed(key)||key=='+') targeti+=1;
       else if(key=='\n'||key==confirmkey){
-        if(MapPanel.overlay!=null) MapPanel.overlay.clear();
+        Overlay.clear();
         MessagePanel.active.clear();
         attack(c,targets.get(targeti),state);
         break;
@@ -174,8 +174,7 @@ public abstract class Target extends Action{
   }
 
   void lock(Combatant active,Combatant target,BattleState s){
-    if(MapPanel.overlay!=null) MapPanel.overlay.clear();
-    MapPanel.overlay=overlay(active,target);
+    Overlay.set(overlay(active,target));
     MessagePanel.active.clear();
     var prompt="Use ← and → to select target, ENTER or "+confirmkey
         +" to confirm, v to view target's sheet, q to quit.\n\n";

@@ -54,13 +54,12 @@ public abstract class Tile{
   }
 
   /** Redraws. */
-  public void repaint(){
+  public void repaint(Graphics g){
     var screen=BattleScreen.active;
     if(screen==null) return;
     var panel=screen.mappanel;
     if(panel==null) return;
-    var graphics=panel.getdrawgraphics();
-    if(graphics!=null) paint(graphics);
+    paint(g);
   }
 
   /**

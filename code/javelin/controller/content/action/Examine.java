@@ -12,9 +12,9 @@ import javelin.controller.exception.RepeatTurn;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.old.messagepanel.MessagePanel;
-import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.mappanel.battle.overlay.TargetOverlay;
+import javelin.view.mappanel.overlay.Overlay;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.StatisticsScreen;
 
@@ -101,18 +101,17 @@ public class Examine extends Action{
   }
 
   static void clearCursor(){
-    if(MapPanel.overlay!=null) MapPanel.overlay.clear();
+    Overlay.clear();
   }
 
   static Point getcursor(){
-    var cursor=(TargetOverlay)MapPanel.overlay;
+    var cursor=(TargetOverlay)Overlay.get();
     return new Point(cursor.x,cursor.y);
   }
 
   static void setCursor(int x,int y,BattleScreen s){
     clearCursor();
-    MapPanel.overlay=new TargetOverlay(x,y);
-    s.mappanel.repaint();
+    Overlay.set(new TargetOverlay(x,y));
     BattleScreen.active.mappanel.center(x,y,true);
   }
 
@@ -164,28 +163,18 @@ public class Examine extends Action{
   }
 
   static char convertkey(final KeyEvent e){
-    switch(e.getKeyCode()){
-      case KeyEvent.VK_UP:
-        return '8';
-      case KeyEvent.VK_DOWN:
-        return '2';
-      case KeyEvent.VK_LEFT:
-        return '4';
-      case KeyEvent.VK_RIGHT:
-        return '6';
-      case KeyEvent.VK_HOME:
-        return '7';
-      case KeyEvent.VK_END:
-        return '1';
-      case KeyEvent.VK_PAGE_UP:
-        return '9';
-      case KeyEvent.VK_PAGE_DOWN:
-        return '3';
-      case KeyEvent.VK_ESCAPE:
-        return 'q';
-      default:
-        return Character.toLowerCase(e.getKeyChar());
-    }
+    return switch(e.getKeyCode()){
+      case KeyEvent.VK_UP -> '8';
+      case KeyEvent.VK_DOWN -> '2';
+      case KeyEvent.VK_LEFT -> '4';
+      case KeyEvent.VK_RIGHT -> '6';
+      case KeyEvent.VK_HOME -> '7';
+      case KeyEvent.VK_END -> '1';
+      case KeyEvent.VK_PAGE_UP -> '9';
+      case KeyEvent.VK_PAGE_DOWN -> '3';
+      case KeyEvent.VK_ESCAPE -> 'q';
+      default -> Character.toLowerCase(e.getKeyChar());
+    };
   }
 
   static int checkbounds(int i,int upperbound){

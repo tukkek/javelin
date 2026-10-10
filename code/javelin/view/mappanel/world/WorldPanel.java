@@ -1,5 +1,6 @@
 package javelin.view.mappanel.world;
 
+import java.awt.Graphics;
 import java.util.HashMap;
 
 import javelin.controller.Point;
@@ -47,8 +48,8 @@ public class WorldPanel extends MapPanel{
   }
 
   @Override
-  public void refresh(){
+  public void refresh(Graphics g){
     updateactors();
-    for(var ts:tiles) for(var t:ts) t.repaint();
+    for(var ts:tiles) for(var t:ts) t.repaint(g);
   }
 }

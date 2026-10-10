@@ -9,13 +9,14 @@ import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.old.Interface;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
-import javelin.view.mappanel.overlay.DrawMoveOverlay;
 import javelin.view.mappanel.overlay.MoveOverlay;
+import javelin.view.mappanel.overlay.Overlay;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.DungeonScreen;
 import javelin.view.screen.WorldScreen;
@@ -26,7 +27,7 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class WorldMouse extends Mouse{
-  static class Movement implements Runnable{
+  public static class Movement implements Runnable{
     private final MoveOverlay overlay;
 
     public Movement(MoveOverlay overlay){
@@ -40,6 +41,7 @@ public class WorldMouse extends Mouse{
         interrupted=overlay.path.resetlocation();
         break;
       }
+      if(Dungeon.active==null) return; //left dungeon
       BattleScreen.active.mappanel.repaint();
       if(interrupted==null){
         var destination=overlay.affected.getLast();
@@ -50,7 +52,7 @@ public class WorldMouse extends Mouse{
       overlay.path.from.x=interrupted.x;
       overlay.path.from.y=interrupted.y;
       overlay.walk();
-      MapPanel.overlay=overlay;
+      Overlay.set(overlay);
     }
   }
 
@@ -68,14 +70,13 @@ public class WorldMouse extends Mouse{
         Javelin.app.switchScreen(WorldScreen.current);
         return;
       }
-      var s=target instanceof Squad?(Squad)target:null;
-      if(s!=null){
+      if(target instanceof Squad s){
         s.join(Squad.active);
         return;
       }
-      var l=target instanceof Location?(Location)target:null;
-      if(l!=null&&l.allowentry&&l.discard&&l.garrison.isEmpty())
-        WorldMove.place(l.x,l.y);
+      if(target instanceof Location l)
+        if(l.allowentry&&l.discard&&l.garrison.isEmpty())
+          WorldMove.place(l.x,l.y);
       target.interact();
     }
   }
@@ -114,16 +115,14 @@ public class WorldMouse extends Mouse{
    * @return <code>true</code> if moved the current {@link Squad}.
    */
   public static boolean move(){
-    final var overlay=(MoveOverlay)MapPanel.overlay;
-    if(overlay==null||overlay.steps.isEmpty()) return false;
-    BattleScreen.perform(new Movement(overlay));
-    return true;
+    var overlay=Overlay.get();
+    return overlay!=null&&overlay.click();
   }
 
   @Override
   public void mouseMoved(MouseEvent e){
     if(!Interface.userinterface.waiting) return;
-    if(MapPanel.overlay!=null) MapPanel.overlay.clear();
+    Overlay.clear();
     final var t=(WorldTile)gettile(e);
     if(!t.discovered) return;
     final var target=World.get(t.x,t.y);
@@ -136,16 +135,13 @@ public class WorldMouse extends Mouse{
       }
       var from=new Point(Squad.active.x,Squad.active.y);
       var to=new Point(t.x,t.y);
-      DrawMoveOverlay.draw(new MoveOverlay(new WorldWalker(from,to)));
+      Overlay.set(new MoveOverlay(new WorldWalker(from,to)));
     }else{
       MessagePanel.active.clear();
       Javelin.message(target.describe(),Javelin.Delay.NONE);
       MessagePanel.active.repaint();
       showingdescription=true;
-      if(target instanceof Town){
-        MapPanel.overlay=new DistrictOverlay((Town)target);
-        MapPanel.overlay.refresh(BattleScreen.active.mappanel);
-      }
+      if(target instanceof Town town) Overlay.set(new DistrictOverlay(town));
     }
   }
 }

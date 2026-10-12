@@ -5,6 +5,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.lwjgl.system.Library;
+import org.lwjgl.system.Platform;
 
 import com.codedisaster.steamworks.SteamAPI;
 import com.codedisaster.steamworks.SteamException;
@@ -40,7 +41,8 @@ public class Steam{
 
   /// patch our own lwjgl3 loader. needed as steamworks4j-lwjgl3 breaks modules.
   class Loader implements SteamLibraryLoader{
-    private String libraryPath;
+    String libraryPath;
+    boolean windows=Platform.get()==Platform.WINDOWS;
 
     @Override
     public void setLibraryPath(String libraryPath){
@@ -49,6 +51,7 @@ public class Steam{
 
     @Override
     public boolean loadLibrary(String libraryName){
+      if(windows) libraryName+="64";
       try{
         if(libraryPath!=null&&!libraryPath.trim().isEmpty()){
           // If a explicit path is set, load directly from that location

@@ -10,7 +10,7 @@ define flatten
 endef
 
 define jlink
-	read -p TODO do not distribute steam libraries on GIt Hub!
+	read -p "TODO do not distribute steam libraries on GIt Hub!"
 	@[ -d "build/static/${1}/phiola/" ] || read -p "build/static/${1}/phiola/ does not exist"
 	echo "Building Javelin for $(1)..."
 	mkdir --parents build/output/$(1)/javelin/

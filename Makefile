@@ -1,6 +1,14 @@
 SHELL=/bin/bash
 .SILENT:
 
+define flatten
+	find $(1) -type l | while read -r link; do \
+		target=$$(readlink -f "$$link"); \
+		rm "$$link"; \
+		cp -r "$$target" "$$link"; \
+	done
+endef
+
 define jlink
 	@[ -d "build/static/${1}/phiola/" ] || read -p "build/static/${1}/phiola/ does not exist"
 	echo "Building Javelin for $(1)..."
@@ -12,6 +20,7 @@ define jlink
 	mv build/output/$(1)/javelin/doc/apidocs/ build/output/$(1)/javelin/doc/javadoc/
 	cp --recursive target/native/ build/output/$(1)/javelin/native/
 	cp --recursive build/static/steam/sdk/redistributable_bin/ build/output/$(1)/javelin/native/steam/
+	$(call flatten, build/output/$(1))	
 	echo "Bundling javelin-$(1).zip"
 	cd build/output/$(1)/;zip -v "../javelin-$(1).zip" . -r > /dev/null
 endef

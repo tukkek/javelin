@@ -62,7 +62,7 @@ Hyptosis and Zabin
 * 2D tiles and sprites https://opengameart.org/content/lots-of-free-2d-tiles-and-sprites-by-hyptosis
 
 Simon "staz" Zolin
-* Fast media player https://github.com/stsaz/fmedia
+* Phiola https://github.com/stsaz/phiola
 
 Endarire
 * Staunchest believer

@@ -2,7 +2,10 @@ package javelin.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javelin.Javelin;
 import javelin.controller.db.Preferences;
@@ -24,7 +27,7 @@ public class Audio{
   static final boolean DEBUG=Javelin.DEBUG&&false;
   /**
    * Cannot easily support cross-platform MP3 and OGG with any up-to-date.
-   * Tritonus doesn't seem to work with Linux 64b. TODO JaveFX
+   * Tritonus doesn't seem to work with Linux 64b. TODO JavaFX
    */
   static final List<String> EXTENSIONS=List.of(".wav");
 
@@ -77,10 +80,13 @@ public class Audio{
   /** Plays the audio. */
   public void play(){
     try{
-      var p=Preferences.player;
-      var v=Preferences.volume;
-      var command=List.of(p,"--volume",v,lookup().getCanonicalPath());
-      new ProcessBuilder(command).start();
+      var flags=List.of(Preferences.player,Preferences.volume).stream()
+          .map(String::trim).filter(text->!text.isEmpty())
+          .flatMap(text->Stream.of(text.split(" ")))
+          .collect(Collectors.toList());
+      flags=new ArrayList<>(flags);
+      flags.add(lookup().getCanonicalPath());
+      new ProcessBuilder(flags).start();
     }catch(Exception e){
       if(DEBUG) throw new RuntimeException(e);
     }

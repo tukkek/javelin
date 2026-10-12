@@ -24,13 +24,15 @@ If you don't have Java installed on your system or if your installed Java versio
 
 Notice that as of Java 12 the macOS OpenJDK package has a slightly different directory structure to Windows and Linux. To work around this issue, extract only the appropriate folder (Home) so that the resulting JDK directory becomes equivalent to the other ones.
 
-## [fmedia](https://github.com/stsaz/fmedia)
+## Phiola
 
-fmedia is used to play external sounds on every operating system. The package needs to be unpacked exactly at these locations:
+Phiola is used to play external sounds on every operating system. The package needs to be unpacked exactly at these locations:
 
-* build/static/windows/fmedia
-* build/static/linux/fmedia
-* build/static/mac/fmedia
+* build/static/windows/phiola/
+* build/static/linux/phiola/
+* build/static/mac/phiola/
+
+Released at https://github.com/stsaz/phiola/releases/.
 
 ## Steam
 `javelin.controller.Steam` uses `steamworks4j` with a thin wrapper for LWJGL to integrate with Steam. 

@@ -112,7 +112,7 @@
 			                        <classifier>${lwjgl.natives}</classifier>
 			                        <type>jar</type>
 			                        <outputDirectory>${project.build.directory}/native/</outputDirectory>
-			                        <includes>**/*.so,,**/*.dll</includes>
+			                        <includes>**/*.so,**/*.dll</includes>
 			                    </artifactItem>
 			                    <artifactItem>
 			                        <groupId>org.lwjgl</groupId>
@@ -120,7 +120,15 @@
 			                        <classifier>${lwjgl.natives}</classifier>
 			                        <type>jar</type>
 			                        <outputDirectory>${project.build.directory}/native/</outputDirectory>
-			                        <includes>**/*.so,,**/*.dll</includes>
+			                        <includes>**/*.so,**/*.dll</includes>
+			                    </artifactItem>
+			                    <artifactItem>
+								    <groupId>com.code-disaster.steamworks4j</groupId>
+								    <artifactId>steamworks4j</artifactId>
+								    <version>${steamworks4j.version}</version>
+			                        <type>jar</type>
+			                        <outputDirectory>${project.build.directory}/native/</outputDirectory>
+			                        <includes>**/*.so,**/*.dll</includes>
 			                    </artifactItem>
 			                </artifactItems>
 			            </configuration>

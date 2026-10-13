@@ -46,6 +46,7 @@ warn:
 	read -p "Close Eclipse or disable building automatically then enter." 
 
 windows: checkdirty clean warn askversion
+	GOOS=windows GOARCH=amd64 go build -trimpath -ldflags="-s -w -H=windowsgui" -o build/static/windows/javelin.exe build/static/windows/javelin.go
 	$(call jlink,windows)
 
 mac: checkdirty clean warn askversion #TODO

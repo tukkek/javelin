@@ -10,7 +10,6 @@ define flatten
 endef
 
 define jlink
-	@[ -d "build/static/${1}/phiola/" ] || read -p "build/static/${1}/phiola/ does not exist"
 	echo "Building Javelin for $(1)..."
 	mkdir --parents build/output/$(1)/javelin/
 	mvn --activate-profiles $(1) clean compile jlink:jlink package

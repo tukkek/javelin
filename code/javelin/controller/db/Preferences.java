@@ -86,12 +86,6 @@ public class Preferences{
   public static int tilesizeworld;
   /** Tile size for {@link DungeonScreen}. */
   public static int tilesizedungeons;
-  /**
-   * External {@link Audio} player (command).
-   *
-   * TODO shouldn't be necessary if and when using JavaFX
-   */
-  public static String player;
   /** {@link Audio} volume. */
   public static String volume;
 
@@ -203,7 +197,6 @@ public class Preferences{
     }catch(Exception e){
       TextZone.fontcolor=Color.BLACK;
     }
-    player=getstring("io.player");
     volume=getstring("io.volume");
 
     initkeys("keys.world",new WorldKeysScreen());

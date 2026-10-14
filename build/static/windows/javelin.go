@@ -17,6 +17,7 @@ func main() {
 		"--enable-native-access=javelin,org.lwjgl,steamworks4j,org.lwjgl.jawt,org.lwjgl.opengl",
 		"-Djava.library.path=native\\",
 		"-Dorg.lwjgl.opengl.explicitInit=true",
+		"-Dsun.java2d.uiScale.enabled=false",
 		"-m","javelin/javelin.Javelin",
 	}
 	args = append(args, os.Args[1:]...)

@@ -1,21 +1,17 @@
+# Building
 This document describes the process of building all platform-specific builds of Javelin intended for distribution, from any supported platform. If you only want to modify and play the game, you don't need to read this - any Java IDE should be enough to automatically handle compiling and running the game (Eclipse in particular should work out-of-the-box after importing the project).
 
 This process is mostly automated through Make, with a few manual setup steps. Javelin's Makefile is written for Linux but should work on MacOS (or Windows with MinGW). Like any Makefile, you can run the default action (all targets), or one or more targets as desired (targets are: javadoc windows mac linux).
 
-# Prerequisites
-
+# Packaging
 * `git` (and a proper clone of the Javelin repository)
+* These can be installed on Windows through a full install of [MinGW](http://mingw-w64.org/doku.php):
+  * `bash` (usually the default terminal for Linux and Mac)
+  * GNU `make`
+  * `zip` command-line utility
 
-These can be installed on Windows through a full install of [MinGW](http://mingw-w64.org/doku.php):
-
-* `bash` (usually the default terminal for Linux and Mac)
-* GNU `make`
-* `zip` command-line utility
-
-## [OpenJDK](http://openjdk.java.net/projects/jdk/)
-
+# [OpenJDK](http://openjdk.java.net/projects/jdk/)
 The build script uses jlink to produce one ZIP file for each operating system. To achieve this, you'll need each system JDK as below:
-
 * build/jdk/windows
 * build/jdk/linux
 * build/jdk/mac
@@ -24,17 +20,16 @@ If you don't have Java installed on your system or if your installed Java versio
 
 Notice that as of Java 12 the macOS OpenJDK package has a slightly different directory structure to Windows and Linux. To work around this issue, extract only the appropriate folder (Home) so that the resulting JDK directory becomes equivalent to the other ones.
 
-## Phiola
+# Audio
+## Unix
+Released at https://github.com/stsaz/phiola/releases/. The package needs to be unpacked exactly at these locations:
+* `build/static/linux/phiola/`
+* `build/static/mac/phiola/`
 
-Phiola is used to play external sounds on every operating system. The package needs to be unpacked exactly at these locations:
+## Windows
+Phiola seems to have problems on Windows so for now extract `https://github.com/jimlawless/cmdmp3` to `build/static/windows/cmdmp3.exe`.
 
-* build/static/windows/phiola/
-* build/static/linux/phiola/
-* build/static/mac/phiola/
-
-Released at https://github.com/stsaz/phiola/releases/.
-
-## Steam
+# Steam
 `javelin.controller.Steam` uses `steamworks4j` with a thin wrapper for LWJGL to integrate with Steam. 
 
 The build process copies native libraries from Steam and LWJGL to `javelin/native/`. This requires SDK 1.62 from Steam to be extracted to `build/static/steam/` so that `build/static/steam/sdk/redistributable_bin/` is a valid path.

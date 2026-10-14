@@ -17,3 +17,6 @@ avatarsmore
 /build/static/*/phiola/
 /target/
 /build/static/steam/
+build/static/windows/javelin.exe
+build/static/windows/cmdmp3.exe
+

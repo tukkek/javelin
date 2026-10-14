@@ -67,6 +67,9 @@ Simon "staz" Zolin
 Endarire
 * Staunchest believer
 
+Jim Lawless 
+* cmdmp3 https://github.com/jimlawless/cmdmp3
+
 Special thanks
 * 11132113
 * Greg

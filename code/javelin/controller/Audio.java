@@ -2,10 +2,14 @@ package javelin.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javelin.Javelin;
 import javelin.controller.db.Preferences;
@@ -30,6 +34,26 @@ public class Audio{
    * Tritonus doesn't seem to work with Linux 64b. TODO JavaFX
    */
   static final List<String> EXTENSIONS=List.of(".wav");
+  static final Map<String,String> PLAYERS=new LinkedHashMap<>();
+
+  static String player=null;
+
+  static{
+    PLAYERS.put("phiola","phiola play -volume %volume %path");
+    PLAYERS.put("pw-cat","pw-cat --playback %path");
+    PLAYERS.put("cmdmp3.exe","cmdmp3.exe %path");
+    var paths=Arrays
+        .stream(System.getenv("PATH").split(Pattern.quote(File.pathSeparator)))
+        .map(Path::of).collect(Collectors.toList());
+    var windows=System.getProperty("os.name").toLowerCase().contains("win");
+    for(var command:PLAYERS.keySet()){
+      var found=paths.stream().map(dir->dir.resolve(command)).anyMatch(
+          file->Files.isRegularFile(file)&&(windows||Files.isExecutable(file)));
+      if(!found) continue;
+      player=command;
+      break;
+    }
+  }
 
   class NoAudio extends IOException{
     public NoAudio(Throwable cause){
@@ -80,13 +104,10 @@ public class Audio{
   /** Plays the audio. */
   public void play(){
     try{
-      var flags=List.of(Preferences.player,Preferences.volume).stream()
-          .map(String::trim).filter(text->!text.isEmpty())
-          .flatMap(text->Stream.of(text.split(" ")))
-          .collect(Collectors.toList());
-      flags=new ArrayList<>(flags);
-      flags.add(lookup().getCanonicalPath());
-      new ProcessBuilder(flags).start();
+      var command=PLAYERS.get(player);
+      command=command.replace("%volume",Preferences.volume);
+      command=command.replace("%path",lookup().toString());
+      new ProcessBuilder(command.split(" ")).start();
     }catch(Exception e){
       if(DEBUG) throw new RuntimeException(e);
     }

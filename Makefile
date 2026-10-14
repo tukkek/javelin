@@ -11,7 +11,6 @@ endef
 
 define jlink
 	read -p "TODO do not distribute steam libraries on GIt Hub!"
-	@[ -d "build/static/${1}/phiola/" ] || read -p "build/static/${1}/phiola/ does not exist"
 	echo "Building Javelin for $(1)..."
 	mkdir --parents build/output/$(1)/javelin/
 	mvn --activate-profiles $(1) clean compile jlink:jlink package
@@ -47,6 +46,7 @@ warn:
 	read -p "Close Eclipse or disable building automatically then enter." 
 
 windows: checkdirty clean warn askversion
+	GOOS=windows GOARCH=amd64 go build -trimpath -ldflags="-s -w -H=windowsgui" -o build/static/windows/javelin.exe build/static/windows/javelin.go
 	$(call jlink,windows)
 
 mac: checkdirty clean warn askversion #TODO

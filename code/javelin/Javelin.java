@@ -140,6 +140,7 @@ public class Javelin{
     app.setVisible(true);
     frame.setVisible(true);
     frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+    frame.requestFocus();
     app.init();
   }
 

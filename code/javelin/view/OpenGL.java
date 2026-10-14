@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 import javax.swing.JFrame;
 import javax.swing.Timer;
@@ -24,7 +25,6 @@ import org.lwjgl.opengl.awt.GLData.Profile;
 import org.lwjgl.opengl.awt.GLData.VersionPolicy;
 import org.lwjgl.system.MemoryUtil;
 
-import javelin.Debug;
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Steam;
@@ -91,6 +91,8 @@ public class OpenGL{
   static final int TICK=1_000/FREQUENCY;
   /// System-property that prevents Open GL from initializing implicitly.
   static final String EXPLICIT="org.lwjgl.opengl.explicitInit";
+  /// {@link Converter} needs exact calculations but Windows defaults to 125%.
+  static final String SCALING="sun.java2d.uiScale.enabled";
   /// Synchronize vertically. May hog the Swing-{@link Timer}-thread (EDT) but
   /// should not matter at slowly refreshing rates. Change to 0 to disable.
   static final int SYNCHRONIZE=1;
@@ -121,6 +123,7 @@ public class OpenGL{
   }
 
   static class Converter{
+    /// Converts from [0,1] to [-1,+1]
     static final float[][] QUADS={new float[]{0.0f,0.0f,-1f,-1f},
         new float[]{1.0f,0.0f,1f,-1f},new float[]{1.0f,1.0f,1f,1f},
         new float[]{0.0f,1.0f,-1f,1f}};
@@ -162,7 +165,9 @@ public class OpenGL{
       value=RenderingHints.VALUE_TEXT_ANTIALIAS_ON;
       graphics.setRenderingHint(key,value);
       graphics.setBackground(new Color(0,0,0,0));
-      graphics.clearRect(0,0,image.getWidth(),image.getHeight());
+      var width=image.getWidth();
+      var height=image.getHeight();
+      graphics.clearRect(0,0,width,height);
     }
 
     ByteBuffer buffer(){
@@ -197,9 +202,10 @@ public class OpenGL{
         texture.height=size[1];
       }
       GL11.glBindTexture(target,0);
-      MemoryUtil.memFree(buffer); // Release native memory
+      MemoryUtil.memFree(buffer);
     }
 
+    /// draws the texture to the backbuffer
     void copy(){
       var target=GL11.GL_TEXTURE_2D;
       GL11.glBindTexture(target,texture.identity);
@@ -213,7 +219,9 @@ public class OpenGL{
     }
 
     void predraw(){
-      GL11.glViewport(0,0,canvas.getWidth(),canvas.getHeight());
+      var width=canvas.getWidth();
+      var height=canvas.getHeight();
+      GL11.glViewport(0,0,width,height);
       surface();
     }
 
@@ -265,8 +273,8 @@ public class OpenGL{
       GL11.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
       var converter=new Converter(this);
       converter.predraw();
-      // executes in 8ms so should support 100+ FPS
       var graphics=converter.graphics;
+      // executes in 8ms so should support 100+ FPS
       screen.mappanel.refresh(graphics);
       overlay(screen,graphics);
       converter.postdraw();
@@ -280,7 +288,6 @@ public class OpenGL{
   /// - Schedule rendering
   public static void ready(){
     GL.create();
-    Debug.log("GL created.",OpenGL.class);
     timer=new Timer(TICK,new Renderer());
     timer.start();
   }
@@ -290,11 +297,15 @@ public class OpenGL{
   ///
   /// @see Javelin#main(String[])
   public static void check(){
-    var property=EXPLICIT;
-    var expected="true";
-    if(expected.equals(System.getProperty(property))) return;
-    var text="%s not set to %s,".formatted(property,expected);
-    throw new RuntimeException(text);
+    var flags=new HashMap<String,String>();
+    flags.put(EXPLICIT,"true");
+    flags.put(SCALING,"false");
+    for(var property:flags.keySet()){
+      var expected=flags.get(property);
+      if(expected.equals(System.getProperty(property))) continue;
+      var text="%s not set to %s,".formatted(property,expected);
+      throw new RuntimeException(text);
+    }
   }
 
   /// Dispose the current {@link Canvas}.

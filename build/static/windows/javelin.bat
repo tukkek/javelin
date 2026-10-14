@@ -10,4 +10,4 @@ set PATH=%PATH%;phiola\
 :: set JLINK_VM_OPTIONS=%JLINK_VM_OPTIONS% -Dorg.lwjgl.librarypath=native
 :: set PATH=%PATH%;native\
 
-java\bin\javaw %JLINK_VM_OPTIONS% -m javelin/javelin.Javelin %*
+java\bin\java %JLINK_VM_OPTIONS% -m javelin/javelin.Javelin %*

@@ -12,11 +12,10 @@ endef
 define jlink
 	echo "Building Javelin for $(1)..."
 	mkdir --parents build/output/$(1)/javelin/
-	mvn --activate-profiles $(1) clean compile jlink:jlink package
+	mvn --activate-profiles $(1) compile jlink:jlink package
 	cp -r target/maven-jlink/default build/output/$(1)/javelin/java
 	cp -r build/static/$(1)/* doc avatars maps monsters.xml preferences.properties README.txt audio build/output/$(1)/javelin
 	cp /tmp/VERSION.txt build/output/$(1)/javelin/doc/VERSION.txt 
-	mv build/output/$(1)/javelin/doc/apidocs/ build/output/$(1)/javelin/doc/javadoc/
 	cp --recursive target/native/ build/output/$(1)/javelin/native/
 	cp --recursive build/static/steam/sdk/redistributable_bin/ build/output/$(1)/javelin/native/steam/
 	$(call flatten, build/output/$(1))	
@@ -24,12 +23,11 @@ define jlink
 	cd build/output/$(1)/;zip -v "../javelin-$(1).zip" . -r > /dev/null
 endef
 
-default: checkdirty askversion javadoc windows mac linux
+default: windows linux
 
-javadoc:
-	echo "Generating Javadoc..."
-	if [ -d doc/javadoc ]; then rm -r doc/javadoc; fi
-	mvn clean javadoc:javadoc &>/dev/null
+javadoc: clean
+	mvn javadoc:javadoc
+	mv doc/apidocs/ doc/javadoc/
 	
 checkdirty:
 	echo "Checking for dirty preferences.properties..."
@@ -37,19 +35,21 @@ checkdirty:
 
 clean:
 	rm -rf "build/output/"
-
+	if [ -d doc/javadoc/ ]; then rm -r doc/javadoc/; fi
+	mvn clean
+	
 askversion:
 	read -e -i '$(shell git log --oneline -1 --decorate)' -p "Edit release name: " version;echo $$version > /tmp/VERSION.txt
 
 warn:
 	read -p "Close Eclipse or disable building automatically then enter." 
 
-windows: checkdirty clean warn askversion
+windows: checkdirty warn askversion clean javadoc
 	GOOS=windows GOARCH=amd64 go build -trimpath -ldflags="-s -w -H=windowsgui" -o build/static/windows/javelin.exe build/static/windows/javelin.go
 	$(call jlink,windows)
 
-mac: checkdirty clean warn askversion #TODO
+mac: checkdirty warn askversion clean javadoc#TODO
 	$(call jlink,mac)
 
-linux: checkdirty clean warn askversion
+linux: checkdirty warn askversion clean javadoc
 	$(call jlink,linux)

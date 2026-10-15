@@ -27,7 +27,7 @@ public abstract class Mouse extends MouseAdapter{
   }
 
   protected Tile gettile(MouseEvent e){
-    var size=MapPanel.tilesize;
+    var size=BattleScreen.active.mappanel.gettilesize();
     var xy=List.of(e.getX(),e.getY());
     xy=xy.stream().map(number->Math.floorDiv(number,size)).toList();
     var tile=panel.tiles[xy.get(0)][xy.get(1)];

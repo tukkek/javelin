@@ -27,6 +27,7 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.old.QuestApp;
 import javelin.old.RPG;
+import javelin.old.Screen;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.SquadScreen;
 import javelin.view.screen.WorldScreen;
@@ -178,12 +179,15 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
     System.exit(20201202);
   }
 
+  /// Opens the correct {@link Screen}.
   public static void reopen(){
     var dungeon=Dungeon.active;
     BattleScreen screen=null;
-    if(Fight.current!=null) screen=new BattleScreen(true,true);
-    else if(dungeon==null) screen=new WorldScreen(true);
+    if(Fight.current!=null) screen=new BattleScreen(true);
+    else if(dungeon==null) screen=new WorldScreen();
     else dungeon.enter();
-    if(screen!=null) Javelin.app.switchScreen(screen);
+    if(screen==null) return;
+    screen.open();
+    Javelin.app.switchScreen(screen);
   }
 }

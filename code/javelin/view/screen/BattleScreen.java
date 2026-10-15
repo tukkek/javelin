@@ -107,12 +107,11 @@ public class BattleScreen extends Screen{
    * @param addsidebar If <code>true</code> will add a {@link StatusPanel} to
    *   this screen.
    */
-  public BattleScreen(boolean addsidebar,boolean open){
+  public BattleScreen(boolean addsidebar){
     this.addsidebar=addsidebar;
-    if(open) open();
   }
 
-  void open(){
+  public void open(){
     BattleScreen.active=this;
     setForeground(Color.white);
     setBackground(Color.black);

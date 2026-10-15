@@ -104,12 +104,12 @@ public class WorldScreen extends BattleScreen{
   public boolean firstdraw=true;
 
   /** * Constructor. */
-  public WorldScreen(boolean open){
-    super(false,open);
+  public WorldScreen(){
+    super(false);
   }
 
   @Override
-  void open(){
+  public void open(){
     JavelinApp.context=this;
     BattleScreen.active=this;
     WorldScreen.current=this;

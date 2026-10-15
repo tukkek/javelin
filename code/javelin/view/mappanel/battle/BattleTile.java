@@ -13,6 +13,7 @@ import javelin.model.unit.Combatant;
 import javelin.view.Images;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
+import javelin.view.screen.BattleScreen;
 
 public class BattleTile extends Tile{
   public static float MAXLIFE=Combatant.STATUSUNHARMED;
@@ -59,19 +60,20 @@ public class BattleTile extends Tile{
     if(shrouded){
       var p=getposition();
       g.setColor(new Color(0,0,0,1/3f));
-      g.fillRect(p.x,p.y,MapPanel.tilesize,MapPanel.tilesize);
+      var tilesize=BattleScreen.active.mappanel.gettilesize();
+      g.fillRect(p.x,p.y,tilesize,tilesize);
     }
   }
 
   void draw(Image i,Point p,Graphics g){
-    var size=MapPanel.tilesize;
+    var size=BattleScreen.active.mappanel.gettilesize();
     var s=i.getScaledInstance(size,size,Image.SCALE_DEFAULT);
     g.drawImage(s,p.x,p.y,null);
   }
 
   void drawcombatant(Graphics g,Combatant c,Tile t){
     var isblue=Fight.state.blueteam.contains(c);
-    var s=MapPanel.tilesize;
+    var s=BattleScreen.active.mappanel.gettilesize();
     var p=getposition();
     if(BattlePanel.current!=null&&BattlePanel.current.equals(c)){
       g.setColor(isblue?Color.GREEN:Color.ORANGE);

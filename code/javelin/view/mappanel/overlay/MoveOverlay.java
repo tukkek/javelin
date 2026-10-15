@@ -11,7 +11,6 @@ import javax.swing.border.Border;
 import javelin.controller.Point;
 import javelin.controller.walker.overlay.OverlayStep;
 import javelin.controller.walker.overlay.OverlayWalker;
-import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.world.WorldMouse.Movement;
 import javelin.view.screen.BattleScreen;
@@ -44,10 +43,11 @@ public class MoveOverlay extends Overlay{
         border=BorderFactory.createLineBorder(s.color,3);
         BORDERS.put(s.color,border);
       }
-      border.paintBorder(BattleScreen.active.mappanel.canvas,g,p.x,p.y,
-          MapPanel.tilesize,MapPanel.tilesize);
+      var map=BattleScreen.active.mappanel;
+      var size=map.gettilesize();
+      border.paintBorder(map.canvas,g,p.x,p.y,size,size);
       g.setColor(s.color);
-      g.drawString(s.text,p.x+5,p.y+MapPanel.tilesize-5);
+      g.drawString(s.text,p.x+5,p.y+size-5);
     }
   }
 

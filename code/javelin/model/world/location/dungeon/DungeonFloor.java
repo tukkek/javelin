@@ -54,7 +54,6 @@ import javelin.old.RPG;
 import javelin.view.mappanel.dungeon.DungeonTile;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.DungeonScreen;
-import javelin.view.screen.WorldScreen;
 
 /**
  * A floor of a {@link Dungeon}.
@@ -445,7 +444,7 @@ public class DungeonFloor implements Serializable{
     }
     WorldMove.abort=true;
     Dungeon.active=null;
-    Javelin.app.switchScreen(new WorldScreen(true));
+    JavelinApp.reopen();
     if(Squad.getsquads().contains(Squad.active)) Squad.active.place();
   }
 

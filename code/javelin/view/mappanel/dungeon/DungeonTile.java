@@ -20,8 +20,8 @@ public class DungeonTile extends Tile{
   Image featureimage;
   Feature feature;
 
-  public DungeonTile(int x,int y,DungeonPanel p){
-    super(x,y,p.dungeon.visible[x][y]);
+  public DungeonTile(int x,int y){
+    super(x,y,Dungeon.active.visible[x][y]);
     var floor=Dungeon.active;
     var d=floor.dungeon;
     feature=floor.features.get(x,y);

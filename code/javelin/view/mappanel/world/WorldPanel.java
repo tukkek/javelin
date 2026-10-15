@@ -28,8 +28,13 @@ public class WorldPanel extends MapPanel{
   }
 
   @Override
-  protected int gettilesize(){
+  public int gettilesize(){
     return Preferences.tilesizeworld;
+  }
+
+  @Override
+  protected void settilesize(int size){
+    Preferences.tilesizeworld=size;
   }
 
   @Override

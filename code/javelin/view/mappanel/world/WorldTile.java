@@ -16,8 +16,8 @@ import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.Town;
 import javelin.view.Images;
-import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
+import javelin.view.screen.BattleScreen;
 
 public class WorldTile extends Tile{
   public static final HashMap<Point,Image> COASTLINES=new HashMap<>(4);
@@ -58,17 +58,18 @@ public class WorldTile extends Tile{
   }
 
   void drawactor(final Graphics g,final Actor a){
-    var x=this.x*MapPanel.tilesize;
-    var y=this.y*MapPanel.tilesize;
+    var size=BattleScreen.active.mappanel.gettilesize();
+    var x=this.x*size;
+    var y=this.y*size;
     if(a==Squad.active){
       g.setColor(Color.GREEN);
-      g.fillRect(x,y,MapPanel.tilesize,MapPanel.tilesize);
+      g.fillRect(x,y,size,size);
       if(Squad.active.getdistrict()!=null) DistrictOverlay.paint(this,g);
     }
     draw(g,a.getimage());
     if(a.getrealmoverlay()!=null){
       g.setColor(a.getrealmoverlay().color);
-      g.fillRect(x,y+MapPanel.tilesize-5,MapPanel.tilesize,5);
+      g.fillRect(x,y+size-5,size,5);
     }
     final var l=a instanceof Location l2?l2:null;
     if(l==null) return;

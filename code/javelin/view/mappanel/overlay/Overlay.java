@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 import javelin.controller.Point;
 import javelin.view.OpenGL;
-import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
+import javelin.view.screen.BattleScreen;
 
 /// Produces a temporary effect on {@link Canvas}.
 public abstract class Overlay{
@@ -20,7 +20,7 @@ public abstract class Overlay{
   /// Draws image on given tile and adds it to #affected.
   protected void draw(Tile t,Image i,Graphics g){
     var p=t.getposition();
-    var size=MapPanel.tilesize;
+    var size=BattleScreen.active.mappanel.gettilesize();
     g.drawImage(i,p.x,p.y,size,size,null);
     affected.add(new Point(t.x,t.y));
   }

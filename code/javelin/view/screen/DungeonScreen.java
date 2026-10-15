@@ -25,7 +25,6 @@ public class DungeonScreen extends WorldScreen{
 
   /** Constructor. */
   public DungeonScreen(DungeonFloor f){
-    super(false);
     floor=f;
     open();
   }

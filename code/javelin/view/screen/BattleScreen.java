@@ -187,10 +187,10 @@ public class BattleScreen extends Screen{
    * battle.
    */
   void blockinput(){
-    if(!first) return;
     try{
+      if(!first) return;
       first=false;
-      Thread.sleep(1000);
+      if(!Javelin.DEBUG) Thread.sleep(1_000);
     }catch(InterruptedException e){
       //ignore
     }

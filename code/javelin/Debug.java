@@ -226,6 +226,10 @@ public class Debug{
         if(combatant.source.name.equalsIgnoreCase(monster)) return;
       squad.add(new Combatant(Monster.get(monster),true));
     }
+
+    static void flee(){
+      Fight.current.flee(true);
+    }
   }
 
   /** @see Preferences */
@@ -264,7 +268,7 @@ public class Debug{
    * One example is using <code>if(something) Debug.breakpoint()</code>, which
    * is a one-line hack and much faster than conditional breakpoints in Eclipse.
    */
-  public static void breakpoint(){
+  public static void stop(){
     //
   }
 

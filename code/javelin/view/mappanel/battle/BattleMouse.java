@@ -10,6 +10,7 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.old.Interface;
 import javelin.old.messagepanel.MessagePanel;
+import javelin.view.StatusPanel;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.battle.action.BattleMouseAction;
@@ -72,13 +73,14 @@ public class BattleMouse extends Mouse{
 
   @Override
   public void mouseMoved(MouseEvent e){
+    var statuspanel=StatusPanel.get();
     if(Examine.lastlooked!=null){
       Examine.lastlooked=null;
-      BattleScreen.active.statuspanel.repaint();
+      statuspanel.repaint();
     }
     if(!Interface.userinterface.waiting) return;
     Overlay.clear();
-    BattleScreen.active.messagepanel.clear();
+    MessagePanel.get().clear();
     try{
       var t=gettile(e);
       var s=Fight.state;
@@ -91,7 +93,7 @@ public class BattleMouse extends Mouse{
       }else action.onenter(current,target,t,s);
       if(target!=null&&(action==null||action.clearoverlay)){
         Examine.lastlooked=target;
-        BattleScreen.active.statuspanel.repaint();
+        statuspanel.repaint();
       }
     }finally{
       MessagePanel.active.repaint();
@@ -111,7 +113,6 @@ public class BattleMouse extends Mouse{
     if(!Interface.userinterface.waiting) return;
     super.mouseWheelMoved(e);
     var current=BattlePanel.current;
-    MapPanel.get().center(current.location[0],current.location[1],
-        true);
+    MapPanel.get().center(current.location[0],current.location[1],true);
   }
 }

@@ -39,6 +39,7 @@ import javelin.old.messagepanel.MessagePanel;
 import javelin.old.messagepanel.TextZone;
 import javelin.view.Images;
 import javelin.view.OpenGL;
+import javelin.view.StatusPanel;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
@@ -200,7 +201,7 @@ public class Javelin{
         ||World.getactors().stream().filter(Actor::hold).findAny().isPresent())
       return false;
     Javelin.app.switchScreen(BattleScreen.active);
-    BattleScreen.active.messagepanel.clear();
+    MessagePanel.get().clear();
     message("Please wait...",Delay.NONE);
     StateManager.clear();
     message("You have lost all your units! Game over T_T",true);
@@ -364,7 +365,7 @@ public class Javelin{
 
   /** Updates the {@link MapPanel} and {@link MessagePanel}. */
   public static void redraw(){
-    var panel=BattleScreen.active.statuspanel;
+    var panel=StatusPanel.get();
     if(panel!=null) panel.repaint();
     MessagePanel.active.repaint();
   }
@@ -412,7 +413,7 @@ public class Javelin{
   public static Character prompt(String prompt,Set<Character> allowed){
     Character input=null;
     while(input==null||!allowed.contains(input)) input=prompt(prompt);
-    BattleScreen.active.messagepanel.clear();
+    MessagePanel.get().clear();
     return input;
   }
 

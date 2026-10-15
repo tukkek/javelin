@@ -2,6 +2,7 @@ package javelin.model.world.location.dungeon;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,7 +12,6 @@ import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.Javelin.Delay;
-import javelin.controller.Point;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.challenge.Tier;
 import javelin.controller.content.fight.Fight;
@@ -20,7 +20,6 @@ import javelin.controller.content.template.Template;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.db.EncounterIndex;
 import javelin.controller.db.StateManager;
-import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.generator.WorldGenerator;
 import javelin.controller.generator.encounter.Encounter;
@@ -36,16 +35,16 @@ import javelin.model.world.location.dungeon.feature.Decoration;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.StairsUp;
 import javelin.model.world.location.dungeon.feature.chest.ArtDisplay;
+import javelin.model.world.location.dungeon.feature.chest.Bookcase.RecipeBookcase;
 import javelin.model.world.location.dungeon.feature.chest.Chest;
 import javelin.model.world.location.dungeon.feature.chest.SpecialChest;
-import javelin.model.world.location.dungeon.feature.chest.Bookcase.RecipeBookcase;
 import javelin.model.world.location.dungeon.feature.common.Passage;
 import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.model.world.location.dungeon.feature.trap.Trap;
 import javelin.model.world.location.town.diplomacy.quest.fetch.FetchQuest;
 import javelin.model.world.location.unique.DeepDungeon;
 import javelin.old.RPG;
-import javelin.view.screen.BattleScreen;
+import javelin.old.messagepanel.MessagePanel;
 
 /**
  * A set of {@link DungeonFloor}s.
@@ -143,7 +142,7 @@ public class Dungeon implements Serializable{
         throw new RuntimeException(getClass().getSimpleName());
     try{
       var name=World.getseed().dungeonnames.pop();
-      name=name.substring(name.lastIndexOf(" ")+1,name.length());
+      name=name.substring(name.lastIndexOf(" ")+1);
       var suffix=name.charAt(name.length()-1)=='s'?"'":"'s";
       return "%s%s %s".formatted(name,suffix,base.toLowerCase());
     }catch(NoSuchElementException e){
@@ -158,7 +157,7 @@ public class Dungeon implements Serializable{
     for(var f:floors) lore.addAll(Lore.generate(f));
     if(!Lore.DEBUG){
       var byvalue=RPG.shuffle(new ArrayList<>(lore));
-      byvalue.sort((a,b)->-Integer.compare(a.value,b.value));
+      byvalue.sort(Comparator.comparing((Lore a)->a.value).reversed());
       var keep=RPG.randomize(3,1,byvalue.size());
       lore.retainAll(byvalue.subList(0,keep));
     }
@@ -263,7 +262,7 @@ public class Dungeon implements Serializable{
     var entrances=new ArrayList<Feature>(floors.stream().sequential()
         .flatMap(f->f.features.getall(Passage.class).stream())
         .filter(p->p.destination==null&&p.found).collect(Collectors.toList()));
-    var top=floors.get(0); 
+    var top=floors.get(0);
     var stairs=top.features.get(StairsUp.class);
     entrances.add(0,stairs);
     var choice=0;
@@ -283,9 +282,10 @@ public class Dungeon implements Serializable{
   public void enter(){
     if(floors.get(0).features.isEmpty()){
       if(Javelin.DEBUG) throw new RuntimeException(this+" not generated!");
-      BattleScreen.active.messagepanel.clear();
+      var panel=MessagePanel.get();
+      panel.clear();
       Javelin.message("Generating dungeon, please wait...",Delay.NONE);
-      BattleScreen.active.messagepanel.repaint();
+      panel.repaint();
       generate();
     }
     chooseentrance().enter();

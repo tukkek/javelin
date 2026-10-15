@@ -98,8 +98,6 @@ public class WorldScreen extends BattleScreen{
 
   /** Last day that was taken into account by {@link World} computations. */
   public static double lastday=-1;
-  /** Current active world screen. */
-  public static WorldScreen current;
   static boolean welcome=true;
   public boolean firstdraw=true;
 
@@ -112,7 +110,6 @@ public class WorldScreen extends BattleScreen{
   public void open(){
     JavelinApp.context=this;
     BattleScreen.active=this;
-    WorldScreen.current=this;
     super.open();
     var tiles=gettiles();
     if(Debug.showmap) for(Tile[] ts:tiles) for(Tile t:ts) t.discovered=true;
@@ -227,7 +224,7 @@ public class WorldScreen extends BattleScreen{
     if(Debug.showmap) return;
     var amount=2;
     var stayrevealed=new HashSet<Point>();
-    var mappanel=WorldScreen.current.mappanel;
+    var mappanel=WorldScreen.get().mappanel;
     for(Actor a:World.getactors()){
       if(!mappanel.tiles[a.x][a.y].discovered) continue;
       var point=a.getlocation();
@@ -377,7 +374,7 @@ public class WorldScreen extends BattleScreen{
   void welcome(){
     if(Dungeon.active==null) Squad.updatevision();
     Javelin.message(Javelin.welcome(),Javelin.Delay.NONE);
-    WorldScreen.current.center();
+    WorldScreen.get().center();
     InfoScreen.feedback();
     messagepanel.clear();
     WorldScreen.welcome=false;
@@ -534,5 +531,10 @@ public class WorldScreen extends BattleScreen{
   public void center(){
     var here=getsquadlocation();
     if(here!=null) center(here.x,here.y);
+  }
+
+  /// @return {@link BattleScreen#active} if a world-screen; else `null`.
+  static public WorldScreen get(){
+    return BattleScreen.active instanceof WorldScreen world?world:null;
   }
 }

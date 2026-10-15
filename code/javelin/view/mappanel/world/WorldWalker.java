@@ -10,6 +10,7 @@ import javelin.controller.walker.overlay.OverlayStep;
 import javelin.controller.walker.overlay.OverlayWalker;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Town;
+import javelin.view.mappanel.MapPanel;
 import javelin.view.screen.WorldScreen;
 
 public class WorldWalker extends OverlayWalker{
@@ -53,7 +54,7 @@ public class WorldWalker extends OverlayWalker{
     if(p.totalhours>maxhours) return false;
     if(p.equals(to)) return WorldPanel.ACTORS.get(p)==null||previous.isEmpty();
     return WorldPanel.ACTORS.get(p)==null
-        &&WorldScreen.current.mappanel.tiles[p.x][p.y].discovered;
+        &&MapPanel.get().tiles[p.x][p.y].discovered;
   }
 
   boolean checkwater(Point p){

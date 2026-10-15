@@ -430,7 +430,7 @@ public class WarlocksTower extends Location{
   @Override
   public boolean interact(){
     if(Javelin.prompt(ENTER)!='s') return false;
-    var panel=WorldScreen.current.messagepanel;
+    var panel=WorldScreen.get().messagepanel;
     panel.clear();
     var loading="Please wait, The Warlock is setting up tactical scenario #%s...";
     loading=loading.formatted(Javelin.format(RPG.r(1,9000)));

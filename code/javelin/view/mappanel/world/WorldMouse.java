@@ -44,7 +44,7 @@ public class WorldMouse extends Mouse{
       if(Dungeon.active==null) return; //left dungeon
       if(interrupted==null){
         var destination=overlay.affected.getLast();
-        WorldScreen.current.mappanel.center(destination.x,destination.y,true);
+        WorldScreen.get().mappanel.center(destination.x,destination.y,true);
         return;
       }
       overlay.reset();
@@ -66,7 +66,7 @@ public class WorldMouse extends Mouse{
     public void run(){
       if(!target.isadjacent(Squad.active)){
         target.accessremotely();
-        Javelin.app.switchScreen(WorldScreen.current);
+        Javelin.app.switchScreen(WorldScreen.get());
         return;
       }
       if(target instanceof Squad s){
@@ -123,7 +123,7 @@ public class WorldMouse extends Mouse{
       showingdescription=false;
       var panel=MessagePanel.active;
       panel.clear();
-      WorldScreen.current.updateplayerinformation();
+      WorldScreen.get().updateplayerinformation();
       panel.repaint();
     }
     var active=Squad.active;

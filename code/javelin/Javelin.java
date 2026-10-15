@@ -281,8 +281,7 @@ public class Javelin{
    * @return the key pressed by the user as confirmation for seeing the message.
    */
   public static KeyEvent message(String text,boolean requireenter){
-    var screen=BattleScreen.active==null?WorldScreen.current
-        :BattleScreen.active;
+    var screen=BattleScreen.active;
     app.switchScreen(screen);
     screen.center();
     MessagePanel.active.clear();

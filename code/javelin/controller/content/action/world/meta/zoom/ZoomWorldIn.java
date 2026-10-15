@@ -12,6 +12,6 @@ public class ZoomWorldIn extends WorldAction{
 
 	@Override
 	public void perform(WorldScreen screen){
-		ZoomIn.zoom(WorldScreen.current.getsquadlocation());
+		ZoomIn.zoom(WorldScreen.get().getsquadlocation());
 	}
 }

@@ -44,7 +44,7 @@ public class Bookcase extends Chest{
     }
 
     Shop findshop(){
-      if(WorldScreen.current.getClass()!=WorldScreen.class) return null;
+      if(WorldScreen.get().getClass()!=WorldScreen.class) return null;
       var s=Squad.active;
       var d=s.getdistrict();
       if(d==null) return null;

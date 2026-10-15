@@ -40,7 +40,7 @@ public class RevealRegion extends WildEvent{
 		var terrain=Terrain.get(location.x,location.y);
 		scan(location.getlocation(),terrain);
 		for(var tile:new ArrayList<>(undiscovered))
-			if(WorldScreen.current.mappanel.tiles[tile.x][tile.y].discovered)
+			if(WorldScreen.get().mappanel.tiles[tile.x][tile.y].discovered)
 				undiscovered.remove(tile);
 		return !undiscovered.isEmpty();
 	}

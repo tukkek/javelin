@@ -214,7 +214,7 @@ public class Debug{
     }
 
     static void encounter(){
-      var d=WorldScreen.current.encounter();
+      var d=WorldScreen.get().encounter();
       d.bribe=false;
       d.hide=false;
       throw new StartBattle(d);

@@ -24,7 +24,7 @@ public class DungeonMouse extends Mouse{
     if(!t.discovered) return;
     if(e.getButton()==MouseEvent.BUTTON1&&WorldMouse.move()){
       var p=Dungeon.active.squadlocation;
-      BattleScreen.active.mappanel.center(p.x,p.y,true);
+      MapPanel.get().center(p.x,p.y,true);
     }else super.mouseClicked(e);
   }
 

@@ -51,6 +51,7 @@ import javelin.model.world.location.dungeon.feature.rare.inhabitant.Leader;
 import javelin.model.world.location.dungeon.feature.trap.Trap;
 import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
+import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.dungeon.DungeonTile;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.DungeonScreen;
@@ -487,7 +488,7 @@ public class DungeonFloor implements Serializable{
   public void setvisible(int x,int y){
     if(0<=x&&x<=size&&0<=y&&y<=size){
       visible[x][y]=true;
-      BattleScreen.active.mappanel.tiles[x][y].discovered=true;
+      MapPanel.get().tiles[x][y].discovered=true;
     }
   }
 
@@ -538,7 +539,7 @@ public class DungeonFloor implements Serializable{
     JavelinApp.context=screen;
     BattleScreen.active=screen;
     Squad.active.updateavatar();
-    BattleScreen.active.mappanel.center(squadlocation.x,squadlocation.y,true);
+    MapPanel.get().center(squadlocation.x,squadlocation.y,true);
     features.getknown();
     Javelin.app.switchScreen(screen);
   }

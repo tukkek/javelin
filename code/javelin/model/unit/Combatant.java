@@ -60,6 +60,7 @@ import javelin.model.world.Period;
 import javelin.model.world.World;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.old.RPG;
+import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.mappanel.battle.action.BattleMouseAction;
 import javelin.view.screen.BattleScreen;
@@ -652,9 +653,9 @@ public class Combatant implements Serializable,Cloneable{
   public void detect(){
     if(Fight.state.redteam.contains(this)) return;
     var listen=perceive(true,true,true);
-    for(Combatant c:Fight.state.redteam) if(listen>=c.taketen(Skill.STEALTH)
-        +(Walker.distance(this,c)-1))
-      BattleScreen.active.mappanel.tiles[c.location[0]][c.location[1]].discovered=true;
+    for(Combatant c:Fight.state.redteam)
+      if(listen>=c.taketen(Skill.STEALTH)+(Walker.distance(this,c)-1))
+        MapPanel.get().tiles[c.location[0]][c.location[1]].discovered=true;
   }
 
   public void setlocation(Point p){

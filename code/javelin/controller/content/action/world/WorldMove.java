@@ -16,6 +16,7 @@ import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
+import javelin.view.mappanel.MapPanel;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 
@@ -88,7 +89,7 @@ public class WorldMove extends WorldAction{
     final var p=JavelinApp.context.getsquadlocation();
     var x=p.x+deltax;
     var y=p.y+deltay;
-    if(move(x,y)) BattleScreen.active.mappanel.center(x,y,true);
+    if(move(x,y)) MapPanel.get().center(x,y,true);
   }
 
   /**

@@ -45,7 +45,7 @@ public class DungeonPanel extends MapPanel{
     var s=scroll.getViewportSize();
     var w=s.width;
     var h=s.height;
-    var size=BattleScreen.active.mappanel.gettilesize();
+    var size=MapPanel.get().gettilesize();
     for(Tile[] tiles:tiles) for(Tile tile:tiles){
       if(!tile.discovered) continue;
       var t=(DungeonTile)tile;

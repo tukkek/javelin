@@ -143,4 +143,9 @@ public abstract class MapPanel extends Panel{
   ///
   /// @see Tile#paint(Graphics)
   abstract public void refresh(Graphics g);
+
+  /// @return Map-component for {@link BattleScreen#active}.
+  static public MapPanel get(){
+    return BattleScreen.active.mappanel;
+  }
 }

@@ -111,7 +111,7 @@ public class BattleMouse extends Mouse{
     if(!Interface.userinterface.waiting) return;
     super.mouseWheelMoved(e);
     var current=BattlePanel.current;
-    BattleScreen.active.mappanel.center(current.location[0],current.location[1],
+    MapPanel.get().center(current.location[0],current.location[1],
         true);
   }
 }

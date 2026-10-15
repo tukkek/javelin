@@ -22,12 +22,12 @@ public abstract class Mouse extends MouseAdapter{
   public void mouseClicked(MouseEvent e){
     if(e.getButton()==MouseEvent.BUTTON3){
       var t=gettile(e);
-      BattleScreen.active.mappanel.center(t.x,t.y,true);
+      MapPanel.get().center(t.x,t.y,true);
     }
   }
 
   protected Tile gettile(MouseEvent e){
-    var size=BattleScreen.active.mappanel.gettilesize();
+    var size=MapPanel.get().gettilesize();
     var xy=List.of(e.getX(),e.getY());
     xy=xy.stream().map(number->Math.floorDiv(number,size)).toList();
     var tile=panel.tiles[xy.get(0)][xy.get(1)];
@@ -48,7 +48,7 @@ public abstract class Mouse extends MouseAdapter{
    */
   public boolean overrideinput(){
     if(Interface.userinterface.waiting) return false;
-    final var k=new KeyEvent(BattleScreen.active.mappanel,0,
+    final var k=new KeyEvent(MapPanel.get(),0,
         System.currentTimeMillis(),0,0,'c');
     k.setKeyChar('\n');
     Interface.userinterface.go(k);

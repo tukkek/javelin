@@ -42,7 +42,7 @@ public class WorldMouse extends Mouse{
         break;
       }
       if(Dungeon.active==null) return; //left dungeon
-      BattleScreen.active.mappanel.repaint();
+      MapPanel.get().repaint();
       if(interrupted==null){
         var destination=overlay.affected.getLast();
         WorldScreen.current.mappanel.center(destination.x,destination.y,true);

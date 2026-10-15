@@ -38,7 +38,7 @@ public abstract class Tile{
 
   /** Scales, caches and renders image. */
   protected void draw(final Graphics g,final Image i){
-    var size=BattleScreen.active.mappanel.gettilesize();
+    var size=MapPanel.get().gettilesize();
     var scaled=cache.get(i);
     if(scaled==null){
       scaled=i.getScaledInstance(size,size,Image.SCALE_DEFAULT);
@@ -66,7 +66,7 @@ public abstract class Tile{
    * TODO might decide to turn into field instead of generating so many times.
    */
   public Point getposition(){
-    var size=BattleScreen.active.mappanel.gettilesize();
+    var size=MapPanel.get().gettilesize();
     return new Point(x*size,y*size);
   }
 
@@ -75,7 +75,7 @@ public abstract class Tile{
     if(g==null) return;
     var p=getposition();
     g.setColor(Color.BLACK);
-    var size=BattleScreen.active.mappanel.gettilesize();
+    var size=MapPanel.get().gettilesize();
     g.fillRect(p.x,p.y,size,size);
   }
 }

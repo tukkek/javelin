@@ -16,8 +16,8 @@ import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.Town;
 import javelin.view.Images;
+import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
-import javelin.view.screen.BattleScreen;
 
 public class WorldTile extends Tile{
   public static final HashMap<Point,Image> COASTLINES=new HashMap<>(4);
@@ -58,7 +58,7 @@ public class WorldTile extends Tile{
   }
 
   void drawactor(final Graphics g,final Actor a){
-    var size=BattleScreen.active.mappanel.gettilesize();
+    var size=MapPanel.get().gettilesize();
     var x=this.x*size;
     var y=this.y*size;
     if(a==Squad.active){

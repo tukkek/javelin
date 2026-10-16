@@ -38,7 +38,9 @@ public abstract class Tile{
 
   /** Scales, caches and renders image. */
   protected void draw(final Graphics g,final Image i){
-    var size=MapPanel.get().gettilesize();
+    var map=MapPanel.get();
+    if(map==null) return;
+    var size=map.gettilesize();
     var scaled=cache.get(i);
     if(scaled==null){
       scaled=i.getScaledInstance(size,size,Image.SCALE_DEFAULT);

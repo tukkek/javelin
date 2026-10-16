@@ -456,11 +456,8 @@ public class WorldScreen extends BattleScreen{
 
   @Override
   public void center(int x,int y){
-    if(!firstdraw){
-      mappanel.viewposition(x,y);
-      return;
-    }
-    mappanel.setposition(x,y);
+    if(firstdraw) mappanel.setposition(x,y);
+    else mappanel.viewposition(x,y);
     firstdraw=false;
   }
 
@@ -536,5 +533,10 @@ public class WorldScreen extends BattleScreen{
   /// @return {@link BattleScreen#active} if a world-screen; else `null`.
   static public WorldScreen get(){
     return BattleScreen.active instanceof WorldScreen world?world:null;
+  }
+
+  @Override
+  public Point anchor(){
+    return getsquadlocation();
   }
 }

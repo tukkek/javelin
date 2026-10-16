@@ -249,12 +249,22 @@ public class OpenGL{
       setIgnoreRepaint(!REPAINT);
     }
 
+    /// Never stop rendering. Only log. If an exception throws from
+    /// {@link #paintGL()} rendering breaks.
+    void handle(Exception e){
+      e.printStackTrace();
+    }
+
     @Override
     public void initGL(){
-      GL.createCapabilities();
-      var color=0f;
-      GL11.glClearColor(color,color,color,1);
-      Converter.ready();
+      try{
+        GL.createCapabilities();
+        var color=0f;
+        GL11.glClearColor(color,color,color,1);
+        Converter.ready();
+      }catch(Exception e){
+        handle(e);
+      }
     }
 
     void overlay(BattleScreen screen,Graphics2D graphics){
@@ -268,28 +278,29 @@ public class OpenGL{
 
     @Override
     public void paintGL(){
-      var screen=BattleScreen.active;
-      if(screen==null) return;
-      GL11.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
-      var converter=new Converter(this);
-      converter.predraw();
-      var graphics=converter.graphics;
-      // executes in 8ms so should support 100+ FPS
-      screen.mappanel.refresh(graphics);
-      overlay(screen,graphics);
-      converter.postdraw();
-      swapBuffers();
+      try{
+        var screen=BattleScreen.active;
+        if(screen==null||getWidth()==0||getHeight()==0) return;
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
+        var converter=new Converter(this);
+        converter.predraw();
+        var graphics=converter.graphics;
+        // executes in 8ms so should support 100+ FPS
+        screen.mappanel.refresh(graphics);
+        overlay(screen,graphics);
+        converter.postdraw();
+        swapBuffers();
+      }catch(Exception e){
+        handle(e);
+      }
     }
   }
-
-  static Timer timer=null;
 
   /// - {@link #EXPLICIT} start for {@link GL} so {@link Steam} is ready to hook
   /// - Schedule rendering
   public static void ready(){
     GL.create();
-    timer=new Timer(TICK,new Renderer());
-    timer.start();
+    new Timer(TICK,new Renderer()).start();
   }
 
   /// Check that system-properties have been set at launch. Doing so now is

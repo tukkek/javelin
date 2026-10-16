@@ -395,8 +395,14 @@ public class BattleScreen extends Screen{
     return m.floor;
   }
 
+  public Point anchor(){
+    return current==null?null:current.getlocation();
+  }
+
   public void center(){
-    if(current!=null) center(current.location[0],current.location[1]);
+    if(current==null) return;
+    var location=anchor();
+    center(location.x,location.y);
   }
 
   @Override

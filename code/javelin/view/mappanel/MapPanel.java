@@ -42,13 +42,16 @@ public abstract class MapPanel extends Panel{
   abstract protected Mouse getmouselistener();
 
   void resize(){
-    scroll.setBounds(getBounds());
-    container.setSize(scroll.getViewportSize());
-    var tilesize=gettilesize();
-    var width=tilesize*tiles.length;
-    var height=tilesize*tiles[0].length;
-    canvas.setSize(width,height);
-    revalidate();
+    synchronized(OpenGL.LOCK){
+      var bounds=getBounds();
+      scroll.setBounds(bounds);
+      container.setSize(scroll.getViewportSize());
+      var tilesize=gettilesize();
+      var width=tilesize*tiles.length;
+      var height=tilesize*tiles[0].length;
+      canvas.setSize(width,height);
+      revalidate();
+    }
   }
 
   /** Configures size, scrolling, listeners, etc. */
@@ -57,18 +60,19 @@ public abstract class MapPanel extends Panel{
       @Override
       public void componentResized(ComponentEvent e){
         resize();
-        BattleScreen.active.center();
       }
     });
-    canvas.addMouseListener(mouse);
-    canvas.addMouseMotionListener(mouse);
-    canvas.addMouseWheelListener(mouse);
-    container.setLayout(new GridBagLayout());
-    var constraints=new GridBagConstraints();
-    constraints.anchor=GridBagConstraints.CENTER;
-    container.add(canvas,constraints);
-    scroll.add(container);
-    add(scroll);
+    synchronized(OpenGL.LOCK){
+      canvas.addMouseListener(mouse);
+      canvas.addMouseMotionListener(mouse);
+      canvas.addMouseWheelListener(mouse);
+      container.setLayout(new GridBagLayout());
+      var constraints=new GridBagConstraints();
+      constraints.anchor=GridBagConstraints.CENTER;
+      container.add(canvas,constraints);
+      scroll.add(container);
+      add(scroll);
+    }
   }
 
   /** @see Preferences */

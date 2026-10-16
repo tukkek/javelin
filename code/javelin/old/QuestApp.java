@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.MediaTracker;
 import java.awt.Toolkit;
@@ -83,6 +84,10 @@ public abstract class QuestApp extends Applet implements Runnable{
     add(s);
     s.revalidate();
     s.requestFocus();
+    if(s instanceof BattleScreen screen){
+      var point=screen.anchor();
+      EventQueue.invokeLater(()->screen.mappanel.setposition(point.x,point.y));
+    }
   }
 
   @Override

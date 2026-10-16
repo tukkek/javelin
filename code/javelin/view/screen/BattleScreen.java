@@ -3,7 +3,6 @@ package javelin.view.screen;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Image;
-import java.awt.Panel;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
@@ -118,11 +117,8 @@ public class BattleScreen extends Screen{
     setBackground(Color.BLACK);
     setLayout(new BorderLayout());
     // status
-    var p=new Panel();
-    p.setLayout(new BorderLayout());
     statuspanel=new StatusPanel();
-    if(addsidebar) p.add(statuspanel);
-    add(p,BorderLayout.EAST);
+    if(addsidebar) add(statuspanel,BorderLayout.EAST);
     // message
     messagepanel=new MessagePanel();
     add(messagepanel,BorderLayout.NORTH);

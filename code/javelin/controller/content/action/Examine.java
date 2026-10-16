@@ -12,6 +12,7 @@ import javelin.controller.exception.RepeatTurn;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.old.messagepanel.MessagePanel;
+import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.mappanel.battle.overlay.TargetOverlay;
 import javelin.view.mappanel.overlay.Overlay;
@@ -112,7 +113,7 @@ public class Examine extends Action{
   static void setCursor(int x,int y,BattleScreen s){
     clearCursor();
     Overlay.set(new TargetOverlay(x,y));
-    BattleScreen.active.mappanel.center(x,y,true);
+    MapPanel.get().center(x,y,true);
   }
 
   static void doLook(Combatant active,BattleScreen s){
@@ -132,7 +133,7 @@ public class Examine extends Action{
     if(combatant!=null){
       var customaction=combatant.getmouseaction();
       if(customaction!=null) customaction.onenter(state.next,combatant,
-          BattleScreen.active.mappanel.tiles[p.x][p.y],state);
+          MapPanel.get().tiles[p.x][p.y],state);
       else{
         lookmessage(describestatus(combatant,state),s);
         lastlooked=combatant;

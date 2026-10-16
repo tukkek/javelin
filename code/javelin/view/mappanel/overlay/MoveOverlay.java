@@ -44,10 +44,11 @@ public class MoveOverlay extends Overlay{
         border=BorderFactory.createLineBorder(s.color,3);
         BORDERS.put(s.color,border);
       }
-      border.paintBorder(BattleScreen.active.mappanel.canvas,g,p.x,p.y,
-          MapPanel.tilesize,MapPanel.tilesize);
+      var map=MapPanel.get();
+      var size=map.gettilesize();
+      border.paintBorder(map.canvas,g,p.x,p.y,size,size);
       g.setColor(s.color);
-      g.drawString(s.text,p.x+5,p.y+MapPanel.tilesize-5);
+      g.drawString(s.text,p.x+5,p.y+size-5);
     }
   }
 

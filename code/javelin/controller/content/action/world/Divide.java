@@ -16,6 +16,7 @@ import javelin.model.world.Period;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.SelectScreen;
@@ -56,7 +57,7 @@ public class Divide extends WorldAction{
     Javelin.message("Select a direction to move into...",Delay.NONE);
     var to=Javelin.input();
     var action=WorldAction.press(to.getKeyChar(),to.getKeyCode());
-    var m=action instanceof WorldMove?(WorldMove)action:null;
+    var m=action instanceof WorldMove w?w:null;
     if(m==null) return null;
     var l=Squad.active.getlocation();
     l.x+=m.deltax;
@@ -172,7 +173,7 @@ public class Divide extends WorldAction{
   }
 
   static void clear(){
-    BattleScreen.active.messagepanel.clear();
+    MessagePanel.get().clear();
   }
 
   void log(final List<Combatant> indexreference,final List<Combatant> oldsquad,

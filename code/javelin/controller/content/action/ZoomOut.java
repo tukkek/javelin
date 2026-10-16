@@ -3,7 +3,7 @@ package javelin.controller.content.action;
 import javelin.controller.Point;
 import javelin.controller.exception.RepeatTurn;
 import javelin.model.unit.Combatant;
-import javelin.view.screen.BattleScreen;
+import javelin.view.mappanel.MapPanel;
 
 /**
  * TODO this should be a view feature in d20
@@ -12,19 +12,19 @@ import javelin.view.screen.BattleScreen;
  */
 public class ZoomOut extends Action{
 
-	/** Constructor. */
-	public ZoomOut(){
-		super("Zoom out",new String[]{"-","_"});
-		allowburrowed=true;
-	}
+  /** Constructor. */
+  public ZoomOut(){
+    super("Zoom out",new String[]{"-","_"});
+    allowburrowed=true;
+  }
 
-	@Override
-	public boolean perform(Combatant active){
-		zoom(active.getlocation());
-		throw new RepeatTurn();
-	}
+  @Override
+  public boolean perform(Combatant active){
+    zoom(active.getlocation());
+    throw new RepeatTurn();
+  }
 
-	public static void zoom(Point p){
-		BattleScreen.active.mappanel.zoom(-1,p.x,p.y);
-	}
+  public static void zoom(Point p){
+    MapPanel.get().zoom(-1,p.x,p.y);
+  }
 }

@@ -10,6 +10,7 @@ import javelin.controller.walker.overlay.OverlayStep;
 import javelin.controller.walker.overlay.OverlayWalker;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
+import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.mappanel.battle.BattleTile;
 import javelin.view.screen.BattleScreen;
@@ -77,7 +78,7 @@ public class BattleWalker extends OverlayWalker{
     var m=state.getmeld(step.x,step.y);
     if(m!=null) return istarget&&m.crystalize(state);
     try{
-      var panel=(BattlePanel)BattleScreen.active.mappanel;
+      var panel=(BattlePanel)MapPanel.get();
       var t=(BattleTile)panel.tiles[p.x][p.y];
       return panel.daylight||t.discovered&&!t.shrouded;
     }catch(NullPointerException|ClassCastException e){

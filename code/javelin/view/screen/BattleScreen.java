@@ -3,7 +3,6 @@ package javelin.view.screen;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Image;
-import java.awt.Panel;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
@@ -107,26 +106,26 @@ public class BattleScreen extends Screen{
    * @param addsidebar If <code>true</code> will add a {@link StatusPanel} to
    *   this screen.
    */
-  public BattleScreen(boolean addsidebar,boolean open){
+  public BattleScreen(boolean addsidebar){
     this.addsidebar=addsidebar;
-    if(open) open();
   }
 
-  void open(){
+  /// creates subcomponents
+  public void open(){
     BattleScreen.active=this;
-    setForeground(Color.white);
-    setBackground(Color.black);
+    setForeground(Color.WHITE);
+    setBackground(Color.BLACK);
     setLayout(new BorderLayout());
+    // status
+    statuspanel=new StatusPanel();
+    if(addsidebar) add(statuspanel,BorderLayout.EAST);
+    // message
     messagepanel=new MessagePanel();
-    add(messagepanel,"South");
+    add(messagepanel,BorderLayout.NORTH);
+    // map
     mappanel=getmappanel();
     mappanel.setup();
-    add(mappanel,"Center");
-    var p=new Panel();
-    p.setLayout(new BorderLayout());
-    add("East",p);
-    statuspanel=new StatusPanel();
-    if(addsidebar) p.add("Center",statuspanel);
+    add(mappanel,BorderLayout.CENTER);
     setFont(QuestApp.mainfont);
     BattleScreen.active=this;
     Javelin.delayblock=false;
@@ -188,10 +187,10 @@ public class BattleScreen extends Screen{
    * battle.
    */
   void blockinput(){
-    if(!first) return;
     try{
+      if(!first) return;
       first=false;
-      Thread.sleep(1000);
+      if(!Javelin.DEBUG) Thread.sleep(1_000);
     }catch(InterruptedException e){
       //ignore
     }
@@ -396,8 +395,14 @@ public class BattleScreen extends Screen{
     return m.floor;
   }
 
+  public Point anchor(){
+    return current==null?null:current.getlocation();
+  }
+
   public void center(){
-    if(current!=null) center(current.location[0],current.location[1]);
+    if(current==null) return;
+    var location=anchor();
+    center(location.x,location.y);
   }
 
   @Override

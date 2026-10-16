@@ -21,161 +21,164 @@ import javelin.view.screen.BattleScreen;
  * @author alex
  */
 public class ThreadManager{
-	static final Thread MAIN=Thread.currentThread();
-	static final ArrayList<Integer> BATTLERECORD=new ArrayList<>();
+  static final Thread MAIN=Thread.currentThread();
+  static final ArrayList<Integer> BATTLERECORD=new ArrayList<>();
 
-	static final String PERFORMANCESOLUTION="The maximum number of AI threads has been lowered to %1$d.\n"
-			+"This reduces the AI thinking power but increases speed.\n"
-			+"You may need to go through this step a couple of times.\n\n"
-			+"If you don't want to lose thinking power you can try\n"
-			+"raising the thinking time manually via the Options screen.";
-	static final String PERFORMANCENOTIFICATION="Your computer seems to be having trouble thinking fast enough.\n\n"
-			+"The current configured thinking time is ~%1$d seconds.\n" //
-			+"The current computer move has taken ~%2$d seconds to complete.\n\n"
-			+"Press Yes to attempt an automatic solution.\n"
-			+"Press No to ignore this message until the game is restarted.\n"
-			+"Press Cancel to never see this message again.\n\n"
-			+"You can also press %3$c after closing this dialog to configure your preferences manually.";
+  static final String PERFORMANCESOLUTION="""
+      The maximum number of AI threads has been lowered to %1$d.
+      This reduces the AI thinking power but increases speed.
+      You may need to go through this step a couple of times.
 
-	static public void determineprocessors(){
-		String message="\n\nThe AI will use "+Preferences.maxthreads+" cores";
-		if(Preferences.aicacheenabled) message+=" (cache enabled)";
-		System.out.println(message);
-		System.out.println();
-	}
+      If you don't want to lose thinking power you can try
+      raising the thinking time manually via the Options screen.""";
+  static final String PERFORMANCENOTIFICATION="""
+      Your computer seems to be having trouble thinking fast enough.
 
-	public static Exception ERROR;
-	public static boolean working;
-	/**
-	 * Increment by 1 if computation was done within proximity of
-	 * {@link Preferences#maxmilisecondsthinking} or decrement by 1 otherwise.
-	 * {@link Integer#MIN_VALUE} means no performance monitoring.
-	 */
-	public static int performance=0;
+      The current configured thinking time is ~%1$d seconds.
+      The current computer move has taken ~%2$d seconds to complete.
 
-	public static List<ChanceNode> think(BattleState state){
-		final long start;
-		try{
-			working=true;
-			interrupt();
-			TemperatureManager.cooldown();
-			start=now();
-			AiCache.clear();
-			AiThread.depthincremeneter=1;
-			AiThread.reset();
-			int nthreads=Preferences.maxthreads;
-			long seed=RPG.rand.nextLong();
-			for(int i=0;i<nthreads;i++)
-				AiThread.STARTED.add(new AiThread(state,seed));
-			sleep(start);
-			interrupt();
-			working=false;
-		}catch(Exception e){
-			interrupt();
-			working=false;
-			Javelin.message("Fatal error: "+ERROR.getMessage(),Javelin.Delay.NONE);
-			ERROR.printStackTrace();
-			throw new RuntimeException(ERROR);
-		}
-		int deepest=AiThread.FINISHED.descendingKeySet().first();
-		analyze(start,deepest);
-		return AiThread.FINISHED.get(deepest);
-	}
+      Press Yes to attempt an automatic solution.
+      Press No to ignore this message until the game is restarted.
+      Press Cancel to never see this message again.
 
-	static void analyze(final long start,int depth){
-		float miliseconds=now()-start;
-		checkperformance(miliseconds);
-		final float elapsed=miliseconds/1000f;
-		System.out.println(elapsed+" seconds elapsed. Depth: "+depth);
-		BATTLERECORD.add(depth);
-	}
+      You can also press %3$c after closing this dialog to configure your preferences manually.""";
 
-	static void sleep(final long start) throws InterruptedException,Exception{
-		long sleepfor=Preferences.maxmilisecondsthinking-(now()-start);
-		Thread.sleep(sleepfor>=0?sleepfor:0);
-		while(AiThread.FINISHED.isEmpty()){
-			if(ThreadManager.ERROR!=null) throw ThreadManager.ERROR;
-			Thread.sleep(500);
-		}
-	}
+  static public void determineprocessors(){
+    var message="\n\nThe AI will use "+Preferences.maxthreads+" cores";
+    if(Preferences.aicacheenabled) message+=" (cache enabled)";
+    System.out.println(message);
+    System.out.println();
+  }
 
-	static void checkperformance(float miliseconds){
-		if(performance==Integer.MIN_VALUE||Preferences.maxthreads==1) return;
-		performance+=miliseconds<Preferences.maxmilisecondsthinking+1000?+1:-1;
-		if(performance>=-9) return;
-		String message=String.format(PERFORMANCENOTIFICATION,
-				Preferences.maxmilisecondsthinking/1000,Math.round(miliseconds/1000),
-				ShowOptions.getsingleton().morekeys[0].charAt(0));
-		int choice=JOptionPane.showConfirmDialog(BattleScreen.active,message,
-				"Performance problem detected",JOptionPane.YES_NO_CANCEL_OPTION);
-		if(choice==JOptionPane.YES_OPTION){
-			performance=0;
-			int to=Preferences.maxthreads-1;
-			Preferences.setoption(Preferences.KEYMAXTHREADS,to);
-			JOptionPane.showMessageDialog(BattleScreen.active,
-					String.format(PERFORMANCESOLUTION,to));
-		}else if(choice==JOptionPane.NO_OPTION)
-			performance=Integer.MIN_VALUE;
-		else if(choice==JOptionPane.CANCEL_OPTION){
-			performance=Integer.MIN_VALUE;
-			Preferences.savefile(
-					Preferences.getfile()+"\n"+Preferences.KEYCHECKPERFORMANCE+"=false");
-		}else if(choice!=-1&&Javelin.DEBUG)
-			throw new RuntimeException("#performancereply "+choice);
-	}
+  public static Exception ERROR;
+  public static boolean working;
+  /**
+   * Increment by 1 if computation was done within proximity of
+   * {@link Preferences#maxmilisecondsthinking} or decrement by 1 otherwise.
+   * {@link Integer#MIN_VALUE} means no performance monitoring.
+   */
+  public static int performance=0;
 
-	static boolean interrupting;
+  public static List<ChanceNode> think(BattleState state){
+    final long start;
+    try{
+      working=true;
+      interrupt();
+      start=now();
+      AiCache.clear();
+      AiThread.depthincremeneter=1;
+      AiThread.reset();
+      var nthreads=Preferences.maxthreads;
+      var seed=RPG.rand.nextLong();
+      for(var i=0;i<nthreads;i++)
+        AiThread.STARTED.add(new AiThread(state,seed));
+      sleep(start);
+      interrupt();
+      working=false;
+    }catch(Exception e){
+      interrupt();
+      working=false;
+      Javelin.message("Fatal error: "+ERROR.getMessage(),Javelin.Delay.NONE);
+      ERROR.printStackTrace();
+      throw new RuntimeException(ERROR);
+    }
+    int deepest=AiThread.FINISHED.descendingKeySet().first();
+    analyze(start,deepest);
+    return AiThread.FINISHED.get(deepest);
+  }
 
-	public static void interrupt(){
-		interrupting=true;
-		AiThread.group.interrupt();
-		for(Thread t:new ArrayList<>(AiThread.STARTED))
-			try{
-				t.join();
-			}catch(InterruptedException e){
-				throw new RuntimeException(e);
-			}
-		destroy();
-		AiThread.group=AiThread.regroup();
-		interrupting=false;
-	}
+  static void analyze(final long start,int depth){
+    float miliseconds=now()-start;
+    checkperformance(miliseconds);
+    final var elapsed=miliseconds/1000f;
+    System.out.println(elapsed+" seconds elapsed. Depth: "+depth);
+    BATTLERECORD.add(depth);
+  }
 
-	/**
-	 * There is some sort of weird JRE bug that spawns a class loader thread (as
-	 * part of {@link AiThread#group}, since that's the current context) and it
-	 * doesn't stop itself gracefully when calling
-	 * {@link ThreadGroup#interrupt()}. As such, it dangles on our group on some
-	 * weird cases and causes this call to throw an {@link IllegalStateException}.
-	 *
-	 * Sadly, this is out of our scope to fix (to the best of my understanding) so
-	 * it's better not to destroy the group if that thread is still running.
-	 *
-	 * The exact point the TimerThread is instantited is on the first call to
-	 * {@link BattleState#getsucessors()}, which then causes
-	 * {@link ActionProvider} to be loaded by the {@link ClassLoader}.
-	 *
-	 * Thankfully, as far as I can tell, the problem solves itself pretty fast
-	 * (probably the garbage collector cleaning the thread/group by itself).
-	 * Still, would be ncie to eventually be able to skip this check and destroy
-	 * the group every single time, which had been working normally for literal
-	 * years before this issue.
-	 *
-	 * @author alex
-	 */
-	static void destroy(){
-		if(AiThread.group.activeCount()==0) AiThread.group.destroy();
-	}
+  static void sleep(final long start) throws InterruptedException,Exception{
+    var sleepfor=Preferences.maxmilisecondsthinking-(now()-start);
+    Thread.sleep(sleepfor>=0?sleepfor:0);
+    while(AiThread.FINISHED.isEmpty()){
+      if(ThreadManager.ERROR!=null) throw ThreadManager.ERROR;
+      Thread.sleep(500);
+    }
+  }
 
-	static private long now(){
-		return new Date().getTime();
-	}
+  static void checkperformance(float miliseconds){
+    if(performance==Integer.MIN_VALUE||Preferences.maxthreads==1) return;
+    performance+=miliseconds<Preferences.maxmilisecondsthinking+1000?+1:-1;
+    if(performance>=-9) return;
+    var message=String.format(PERFORMANCENOTIFICATION,
+        Preferences.maxmilisecondsthinking/1000,Math.round(miliseconds/1000),
+        ShowOptions.getsingleton().morekeys[0].charAt(0));
+    var choice=JOptionPane.showConfirmDialog(BattleScreen.active,message,
+        "Performance problem detected",JOptionPane.YES_NO_CANCEL_OPTION);
+    if(choice==JOptionPane.YES_OPTION){
+      performance=0;
+      var to=Preferences.maxthreads-1;
+      Preferences.setoption(Preferences.KEYMAXTHREADS,to);
+      JOptionPane.showMessageDialog(BattleScreen.active,
+          String.format(PERFORMANCESOLUTION,to));
+    }else if(choice==JOptionPane.NO_OPTION) performance=Integer.MIN_VALUE;
+    else if(choice==JOptionPane.CANCEL_OPTION){
+      performance=Integer.MIN_VALUE;
+      Preferences.savefile(
+          Preferences.getfile()+"\n"+Preferences.KEYCHECKPERFORMANCE+"=false");
+    }else if(choice!=-1&&Javelin.DEBUG)
+      throw new RuntimeException("#performancereply "+choice);
+  }
 
-	static public void printbattlerecord(){
-		if(BATTLERECORD.isEmpty()) return;
-		Collections.sort(BATTLERECORD);
-		System.out.println(
-				"Median depth for battle: "+BATTLERECORD.get(BATTLERECORD.size()/2));
-		System.out.println();
-		BATTLERECORD.clear();
-	}
+  static boolean interrupting;
+
+  public static void interrupt(){
+    interrupting=true;
+    AiThread.group.interrupt();
+    for(Thread t:new ArrayList<>(AiThread.STARTED)) try{
+      t.join();
+    }catch(InterruptedException e){
+      throw new RuntimeException(e);
+    }
+    destroy();
+    AiThread.group=AiThread.regroup();
+    interrupting=false;
+  }
+
+  /**
+   * There is some sort of weird JRE bug that spawns a class loader thread (as
+   * part of {@link AiThread#group}, since that's the current context) and it
+   * doesn't stop itself gracefully when calling
+   * {@link ThreadGroup#interrupt()}. As such, it dangles on our group on some
+   * weird cases and causes this call to throw an {@link IllegalStateException}.
+   *
+   * Sadly, this is out of our scope to fix (to the best of my understanding) so
+   * it's better not to destroy the group if that thread is still running.
+   *
+   * The exact point the TimerThread is instantited is on the first call to
+   * {@link BattleState#getsucessors()}, which then causes
+   * {@link ActionProvider} to be loaded by the {@link ClassLoader}.
+   *
+   * Thankfully, as far as I can tell, the problem solves itself pretty fast
+   * (probably the garbage collector cleaning the thread/group by itself).
+   * Still, would be ncie to eventually be able to skip this check and destroy
+   * the group every single time, which had been working normally for literal
+   * years before this issue.
+   *
+   * @author alex
+   */
+  static void destroy(){
+    if(AiThread.group.activeCount()==0) AiThread.group.destroy();
+  }
+
+  static private long now(){
+    return new Date().getTime();
+  }
+
+  static public void printbattlerecord(){
+    if(BATTLERECORD.isEmpty()) return;
+    Collections.sort(BATTLERECORD);
+    System.out.println(
+        "Median depth for battle: "+BATTLERECORD.get(BATTLERECORD.size()/2));
+    System.out.println();
+    BATTLERECORD.clear();
+  }
 }

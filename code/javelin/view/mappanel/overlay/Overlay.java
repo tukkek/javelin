@@ -20,7 +20,7 @@ public abstract class Overlay{
   /// Draws image on given tile and adds it to #affected.
   protected void draw(Tile t,Image i,Graphics g){
     var p=t.getposition();
-    var size=MapPanel.tilesize;
+    var size=MapPanel.get().gettilesize();
     g.drawImage(i,p.x,p.y,size,size,null);
     affected.add(new Point(t.x,t.y));
   }

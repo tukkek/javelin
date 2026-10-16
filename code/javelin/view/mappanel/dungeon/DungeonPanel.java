@@ -8,6 +8,7 @@ import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.Tile;
+import javelin.view.screen.BattleScreen;
 
 public class DungeonPanel extends MapPanel{
   DungeonFloor dungeon;
@@ -24,13 +25,18 @@ public class DungeonPanel extends MapPanel{
   }
 
   @Override
-  protected int gettilesize(){
+  public int gettilesize(){
     return Preferences.tilesizedungeons;
   }
 
   @Override
+  protected void settilesize(int size){
+    Preferences.tilesizedungeons=size;
+  }
+
+  @Override
   protected Tile newtile(int x,int y){
-    return new DungeonTile(x,y,this);
+    return new DungeonTile(x,y);
   }
 
   @Override
@@ -39,11 +45,11 @@ public class DungeonPanel extends MapPanel{
     var s=scroll.getViewportSize();
     var w=s.width;
     var h=s.height;
+    var size=MapPanel.get().gettilesize();
     for(Tile[] tiles:tiles) for(Tile tile:tiles){
       if(!tile.discovered) continue;
       var t=(DungeonTile)tile;
-      if(p.x<=t.x*tilesize&&(t.x+1)*tilesize<=p.x+w&&p.y<=(t.y+1)*tilesize
-          &&t.y*tilesize<=p.y+h)
+      if(p.x<=t.x*size&&(t.x+1)*size<=p.x+w&&p.y<=(t.y+1)*size&&t.y*size<=p.y+h)
         t.repaint(g);
     }
   }

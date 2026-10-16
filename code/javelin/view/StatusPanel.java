@@ -216,4 +216,9 @@ public class StatusPanel extends TPanel{
     g.fillRect(x+1,y+h-boxborder,w-1,boxborder);
     g.fillRect(x+w-boxborder,y+1,boxborder,h-1);
   }
+
+  /// @return Instance for {@link BattleScreen#active}.
+  public static StatusPanel get(){
+    return BattleScreen.active.statuspanel;
+  }
 }

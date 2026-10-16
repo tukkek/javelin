@@ -42,10 +42,9 @@ public class WorldMouse extends Mouse{
         break;
       }
       if(Dungeon.active==null) return; //left dungeon
-      BattleScreen.active.mappanel.repaint();
       if(interrupted==null){
         var destination=overlay.affected.getLast();
-        WorldScreen.current.mappanel.center(destination.x,destination.y,true);
+        WorldScreen.get().mappanel.center(destination.x,destination.y,true);
         return;
       }
       overlay.reset();
@@ -67,7 +66,7 @@ public class WorldMouse extends Mouse{
     public void run(){
       if(!target.isadjacent(Squad.active)){
         target.accessremotely();
-        Javelin.app.switchScreen(WorldScreen.current);
+        Javelin.app.switchScreen(WorldScreen.get());
         return;
       }
       if(target instanceof Squad s){
@@ -119,29 +118,36 @@ public class WorldMouse extends Mouse{
     return overlay!=null&&overlay.click();
   }
 
+  void walk(Point to){
+    if(showingdescription){
+      showingdescription=false;
+      var panel=MessagePanel.active;
+      panel.clear();
+      WorldScreen.get().updateplayerinformation();
+      panel.repaint();
+    }
+    var active=Squad.active;
+    var from=new Point(active.x,active.y);
+    Overlay.set(new MoveOverlay(new WorldWalker(from,to)));
+  }
+
+  void describe(final Actor target){
+    var panel=MessagePanel.active;
+    panel.clear();
+    Javelin.message(target.describe(),Javelin.Delay.NONE);
+    panel.repaint();
+    showingdescription=true;
+    if(target instanceof Town town) Overlay.set(new DistrictOverlay(town));
+  }
+
   @Override
   public void mouseMoved(MouseEvent e){
     if(!Interface.userinterface.waiting) return;
     Overlay.clear();
-    final var t=(WorldTile)gettile(e);
+    var t=(WorldTile)gettile(e);
     if(!t.discovered) return;
-    final var target=World.get(t.x,t.y);
-    if(target==null){
-      if(showingdescription){
-        showingdescription=false;
-        MessagePanel.active.clear();
-        ((WorldScreen)BattleScreen.active).updateplayerinformation();
-        MessagePanel.active.repaint();
-      }
-      var from=new Point(Squad.active.x,Squad.active.y);
-      var to=new Point(t.x,t.y);
-      Overlay.set(new MoveOverlay(new WorldWalker(from,to)));
-    }else{
-      MessagePanel.active.clear();
-      Javelin.message(target.describe(),Javelin.Delay.NONE);
-      MessagePanel.active.repaint();
-      showingdescription=true;
-      if(target instanceof Town town) Overlay.set(new DistrictOverlay(town));
-    }
+    var target=World.get(t.x,t.y);
+    if(target==null) walk(new Point(t.x,t.y));
+    else describe(target);
   }
 }

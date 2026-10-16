@@ -79,7 +79,7 @@ public class Throne extends Feature{
 		lastuse=Period.gettime();
 		if(!revealed){
 			var result=combatant+" has been gifted with a use of "+name+"!";
-			Javelin.app.switchScreen(WorldScreen.current);
+			Javelin.app.switchScreen(WorldScreen.get());
 			Javelin.message(result,false);
 			revealed=true;
 		}

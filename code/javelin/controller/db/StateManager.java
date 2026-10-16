@@ -1,5 +1,6 @@
 package javelin.controller.db;
 
+import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.ByteArrayOutputStream;
@@ -11,6 +12,7 @@ import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Optional;
 
 import javax.swing.JOptionPane;
@@ -32,7 +34,6 @@ import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.view.OpenGL;
-import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -83,7 +84,8 @@ public class StateManager{
     void prepare(){
       try(var bytes=new ByteArrayOutputStream();
           var s=new ObjectOutputStream(bytes);){
-        if(WorldScreen.current!=null) WorldScreen.current.savediscovered();
+        var world=WorldScreen.get();
+        if(world!=null) world.savediscovered();
         s.writeBoolean(abandoned);
         var squad=Squad.active;
         if(squad!=null){
@@ -129,35 +131,38 @@ public class StateManager{
     }
   }
 
-  /**
-   * Always called on normal exit. Saves a backup.
-   */
+  /// Always called on normal exit. Saves a backup.
   public static final WindowAdapter SAVEONCLOSE=new WindowAdapter(){
+    boolean confirm(Window window){
+      var lines=List.of("Exiting during battle will not save your progress.",
+          "Leave the game anyway?");
+      var text=String.join("\n",lines);
+      var options=JOptionPane.OK_CANCEL_OPTION;
+      var quit=JOptionPane.showConfirmDialog(window,text,"Warning!",options);
+      return quit==JOptionPane.OK_OPTION;
+    }
+
+    void exit(Window window){
+      window.dispose();
+      Steam.INSTANCE.close();
+      OpenGL.destroy();
+      System.exit(0);
+    }
+
     @Override
     public void windowClosing(WindowEvent event){
-      var w=event.getWindow();
+      var window=event.getWindow();
       try{
-        Steam.INSTANCE.close();
-        var b=BattleScreen.active;
-        var inbattle=b!=null&&!(b instanceof WorldScreen);
-        var warning="Exiting during battle will not save your progress.\n"
-            +"Leave the game anyway?";
-        var options=JOptionPane.OK_CANCEL_OPTION;
-        var ok=JOptionPane.OK_OPTION;
-        if(inbattle
-            &&JOptionPane.showConfirmDialog(w,warning,"Warning!",options)!=ok)
-          return;
-        w.dispose();
-        if(b!=null&&b==WorldScreen.current){
+        var world=WorldScreen.get()!=null;
+        if(!world&&!confirm(window)) return;
+        if(world){
           save(true).ifPresent(SaveThread::hold);
           backup(true);
         }
-        OpenGL.destroy();
-        System.exit(0);
+        exit(window);
       }catch(RuntimeException e){
-        w.dispose();
         Javelin.app.uncaughtException(Thread.currentThread(),e);
-        System.exit(0);
+        exit(window);
       }
     }
   };

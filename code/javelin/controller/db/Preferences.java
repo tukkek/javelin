@@ -48,7 +48,7 @@ public class Preferences{
   static final String FILE="preferences.properties";
   /** Key for {@link #tilesizebattle}. */
   public static final String KEYTILEBATTLE="ui.battletile";
-  /** Key for {@link #tilesizeworld}. */
+  /// Key for {@link #tilesizeworld}.
   public static final String KEYTILEWORLD="ui.worldtile";
   /** Key for {@link #tilesizedungeons}. */
   public static final String KEYTILEDUNGEON="ui.dungeontile";
@@ -57,11 +57,6 @@ public class Preferences{
 
   /** If <code>true</code> will use {@link AiCache}. */
   public static boolean aicacheenabled;
-  /**
-   * In some system will prevent the CPU temperature from going above this
-   * value.
-   */
-  public static Integer maxtemperature;
   /** Max {@link BattleAi} thinking time. */
   public static int maxmilisecondsthinking;
   /** Thread limit for {@link ThreadManager}. */
@@ -171,7 +166,6 @@ public class Preferences{
    */
   public static void setup(){
     aicacheenabled="true".equals(getstring("ai.cache"));
-    maxtemperature=getinteger("ai.maxtemperature",0);
     maxmilisecondsthinking=Math.round(1000*getFloat("ai.maxsecondsthinking"));
     var cpus=Runtime.getRuntime().availableProcessors();
     maxthreads=Preferences.getinteger(KEYMAXTHREADS,cpus);

@@ -3,11 +3,14 @@
 @echo off
 
 set PERMISSIONS=--enable-native-access=javelin,org.lwjgl,steamworks4j,org.lwjgl.jawt,org.lwjgl.opengl
-set JLINK_VM_OPTIONS=%PERMISSIONS% -Djava.library.path=native\ -Dorg.lwjgl.opengl.explicitInit=true
+set AWT=-Dsun.java2d.uiScale.enabled=false
+set FLAGS=-Djava.library.path=native\ -Dorg.lwjgl.opengl.explicitInit=true %PERMISSIONS% %AWT% 
 set PATH=%PATH%;phiola\
 
 :: not needed but documented here as potential fixes for future errors 
-:: set JLINK_VM_OPTIONS=%JLINK_VM_OPTIONS% -Dorg.lwjgl.librarypath=native
+:: set FLAGS=%FLAGS% -Dorg.lwjgl.librarypath=native
 :: set PATH=%PATH%;native\
 
-java\bin\java %JLINK_VM_OPTIONS% -m javelin/javelin.Javelin %*
+java\bin\java %FLAGS% -Ddebug=true -m javelin/javelin.Javelin %*
+
+

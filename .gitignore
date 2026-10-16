@@ -13,10 +13,9 @@ avatarsmore
 /error.txt
 /build/jdk/
 /build/output/
-/doc/apidocs/
+/doc/javadoc/
 /build/static/*/phiola/
 /target/
 /build/static/steam/
 build/static/windows/javelin.exe
 build/static/windows/cmdmp3.exe
-

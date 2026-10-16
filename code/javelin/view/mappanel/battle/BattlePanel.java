@@ -83,7 +83,12 @@ public class BattlePanel extends MapPanel{
   }
 
   @Override
-  protected int gettilesize(){
+  public int gettilesize(){
     return Preferences.tilesizebattle;
+  }
+
+  @Override
+  protected void settilesize(int size){
+    Preferences.tilesizebattle=size;
   }
 }

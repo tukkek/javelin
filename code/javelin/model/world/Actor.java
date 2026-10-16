@@ -21,6 +21,7 @@ import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
 import javelin.old.messagepanel.MessagePanel;
+import javelin.view.mappanel.MapPanel;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -302,8 +303,7 @@ public abstract class Actor implements Serializable{
    * @see Scenario#fogofwar
    */
   public void reveal(){
-    if(WorldScreen.current!=null)
-      WorldScreen.current.mappanel.tiles[x][y].discovered=true;
+    if(WorldScreen.get()!=null) MapPanel.get().tiles[x][y].discovered=true;
     World.getseed().discovered.add(getlocation());
   }
 

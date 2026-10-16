@@ -111,21 +111,25 @@ public class BattleScreen extends Screen{
     this.addsidebar=addsidebar;
   }
 
+  /// creates subcomponents
   public void open(){
     BattleScreen.active=this;
-    setForeground(Color.white);
-    setBackground(Color.black);
+    setForeground(Color.WHITE);
+    setBackground(Color.BLACK);
     setLayout(new BorderLayout());
-    messagepanel=new MessagePanel();
-    add(messagepanel,"South");
-    mappanel=getmappanel();
-    mappanel.setup();
-    add(mappanel,"Center");
+    // status
     var p=new Panel();
     p.setLayout(new BorderLayout());
-    add("East",p);
     statuspanel=new StatusPanel();
-    if(addsidebar) p.add("Center",statuspanel);
+    if(addsidebar) p.add(statuspanel);
+    add(p,BorderLayout.EAST);
+    // message
+    messagepanel=new MessagePanel();
+    add(messagepanel,BorderLayout.NORTH);
+    // map
+    mappanel=getmappanel();
+    mappanel.setup();
+    add(mappanel,BorderLayout.CENTER);
     setFont(QuestApp.mainfont);
     BattleScreen.active=this;
     Javelin.delayblock=false;

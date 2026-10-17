@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import javelin.Debug;
 import javelin.Javelin;
+import javelin.JavelinApp;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
@@ -37,7 +38,6 @@ import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.Images;
-import javelin.view.screen.BattleScreen;
 import javelin.view.screen.BribingScreen;
 import javelin.view.screen.NamingScreen;
 import javelin.view.screen.WorldScreen;
@@ -372,7 +372,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
     final var bribe=Math.max(1,RewardCalculator.receivegold(foes)/2);
     final var canhire=d>=highest+5;
     var b=new BribingScreen().bribe(foes,dailyfee,bribe,canhire);
-    Javelin.app.switchScreen(BattleScreen.active);
+    JavelinApp.reopen();
     return b;
   }
 
@@ -467,7 +467,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
     if(!strategic) return false;
     Character input=' ';
     while(input!='\n'&&input!='s'){
-      Javelin.app.switchScreen(BattleScreen.active);
+      JavelinApp.reopen();
       final var difficulty=Difficulty.describe(diffifculty);
       final var prompt="Do you want to skip this "+difficulty+" battle?\n\n" //
           +"Press ENTER to open the battle screen.\n"

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.JavelinApp;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.ItemsByPrice;
@@ -17,7 +18,6 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.town.labor.basic.Shop;
 import javelin.old.RPG;
-import javelin.view.screen.BattleScreen;
 
 /** Works like a small {@link Shop} but for {@link Dungeon}s. */
 public class Trader extends Inhabitant{
@@ -86,11 +86,12 @@ public class Trader extends Inhabitant{
     if(choice<0) return true;
     if(options.get(choice)==attack) throw new StartBattle(new TraderFight());
     var item=inventory.get(choice);
-    if(Squad.active.pay(item.price)) sell(item);
-    else{
-      Javelin.app.switchScreen(BattleScreen.active);
-      Javelin.message("Too expensive...",false);
+    if(Squad.active.pay(item.price)){
+      sell(item);
+      return true;
     }
+    JavelinApp.reopen();
+    Javelin.message("Too expensive...",false);
     return true;
   }
 

@@ -181,8 +181,12 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
 
   /// Opens the correct {@link Screen}.
   public static void reopen(){
+    var screen=BattleScreen.active;
+    if(screen!=null&&screen==Javelin.app.mainComponent){
+      Javelin.redraw();
+      return;
+    }
     var dungeon=Dungeon.active;
-    BattleScreen screen=null;
     if(Fight.current!=null) screen=new BattleScreen(true);
     else if(dungeon==null) screen=new WorldScreen();
     else dungeon.enter();

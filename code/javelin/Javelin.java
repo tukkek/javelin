@@ -39,7 +39,6 @@ import javelin.old.messagepanel.MessagePanel;
 import javelin.old.messagepanel.TextZone;
 import javelin.view.Images;
 import javelin.view.OpenGL;
-import javelin.view.StatusPanel;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
@@ -197,10 +196,10 @@ public class Javelin{
    * record the highscore and exit the application.
    */
   public static boolean lose(){
-    if(!Squad.getsquads().isEmpty()
-        ||World.getactors().stream().filter(Actor::hold).findAny().isPresent())
-      return false;
-    Javelin.app.switchScreen(BattleScreen.active);
+    var squads=Squad.getsquads();
+    var held=World.getactors().stream().filter(Actor::hold).toList();
+    if(!squads.isEmpty()||!held.isEmpty()) return false;
+    JavelinApp.reopen();
     MessagePanel.get().clear();
     message("Please wait...",Delay.NONE);
     StateManager.clear();
@@ -230,19 +229,19 @@ public class Javelin{
    * characters to use, it will display more choices but not allow the player to
    * actually select them.
    *
-   * @param prompt Text to show the user.
+   * @param text Text to show the user.
    * @param names Will show each's {@link Object#toString()} as an option.
-   * @param fullscreen <code>true</code> to open in a new screen. Otherwise uses
-   *   the message panel.
-   * @param forceselection If <code>false</code> will allow the user to abort
-   *   the operation.
+   * @param full <code>true</code> to open in a new screen. Otherwise uses the
+   *   message panel.
+   * @param force If <code>false</code> will allow the user to abort the
+   *   operation.
    * @return The index of the selected element or -1 if aborted. Won't return an
    *   invalid index other than -1.
    */
-  static public int choose(String prompt,List<?> names,boolean fullscreen,
-      boolean forceselection){
-    if(!forceselection) prompt+=" (q to quit)";
-    prompt+="\n\n";
+  static public int choose(String text,List<?> names,boolean full,
+      boolean force){
+    if(!force) text+=" (q to quit)";
+    text+="\n\n";
     var nnames=names.size();
     var multicolumn=nnames>20;
     var options=new ArrayList<>();
@@ -252,22 +251,25 @@ public class Javelin{
       options.add(name);
       var item="["+SelectScreen.getkey(i)+"] "+name;
       if(multicolumn&&leftcolumn) while(item.length()<50) item+=" ";
-      prompt+=item;
-      if(!multicolumn||!leftcolumn) prompt+="\n";
+      text+=item;
+      if(!multicolumn||!leftcolumn) text+="\n";
     }
-    if(fullscreen) app.switchScreen(new InfoScreen(prompt));
+    if(full) app.switchScreen(new InfoScreen(text));
     else{
-      app.switchScreen(BattleScreen.active);
+      JavelinApp.reopen();
       MessagePanel.active.clear();
-      Javelin.message(prompt,Delay.NONE);
+      Javelin.message(text,Delay.NONE);
     }
     var i=-1;
     while(!(0<=i&&i<names.size())){
       var f=InfoScreen.feedback();
-      if(f==InfoScreen.ESCAPE&&!forceselection) return -1;
+      if(f==InfoScreen.ESCAPE&&!force){
+        i=~1;
+        break;
+      }
       i=SelectScreen.convertkeytoindex(f);
     }
-    if(fullscreen) JavelinApp.reopen();
+    if(full) JavelinApp.reopen();
     return i;
   }
 
@@ -281,9 +283,7 @@ public class Javelin{
    * @return the key pressed by the user as confirmation for seeing the message.
    */
   public static KeyEvent message(String text,boolean requireenter){
-    var screen=BattleScreen.active;
-    app.switchScreen(screen);
-    screen.center();
+    JavelinApp.reopen();
     MessagePanel.active.clear();
     text+="\nPress "+(requireenter?"ENTER":"any key")+" to continue...";
     Javelin.message(text,Delay.NONE);
@@ -364,9 +364,10 @@ public class Javelin{
 
   /** Updates the {@link MapPanel} and {@link MessagePanel}. */
   public static void redraw(){
-    var panel=StatusPanel.get();
-    if(panel!=null) panel.repaint();
-    MessagePanel.active.repaint();
+    var active=BattleScreen.active;
+    if(active==null) return;
+    active.messagepanel.repaint();
+    active.statuspanel.repaint();
   }
 
   public static KeyEvent input(){
@@ -375,30 +376,22 @@ public class Javelin{
     return Interface.userinterface.keyevent;
   }
 
-  /**
-   * Main output function for {@link BattleScreen}s.
-   *
-   * @param message Text to be printed.
-   * @param t TODO remove
-   * @param See {@link Delay}.
-   */
-  public static void message(String out,Delay d){
+  /// Main output function for {@link BattleScreen}s.
+  public static void message(String text,Delay d){
     if(BattleScreen.lastaicheck==null&&d==Delay.BLOCK) d=Delay.WAIT;
-    MessagePanel.active.add(out);
-    switch(d){
-      case WAIT:
-        try{
-          redraw();
-          Thread.sleep(Preferences.messagewait);
-        }catch(final InterruptedException e){
-          e.printStackTrace();
-        }
-        MessagePanel.active.clear();
-        break;
-      case BLOCK:
-        MessagePanel.active.add("\n"+TextZone.BLACK+"-- ENTER --");
-        delayblock=true;
-        break;
+    MessagePanel.active.add(text);
+    if(d==Delay.NONE) return;
+    if(d==Delay.BLOCK){
+      MessagePanel.active.add("\n"+TextZone.BLACK+"-- ENTER --");
+      delayblock=true;
+      return;
+    }
+    try{
+      redraw();
+      Thread.sleep(Preferences.messagewait);
+      MessagePanel.active.clear();
+    }catch(final InterruptedException e){
+      e.printStackTrace();
     }
   }
 

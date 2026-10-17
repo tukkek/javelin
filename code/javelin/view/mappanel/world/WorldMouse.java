@@ -3,6 +3,7 @@ package javelin.view.mappanel.world;
 import java.awt.event.MouseEvent;
 
 import javelin.Javelin;
+import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.content.action.world.WorldMove;
 import javelin.model.unit.Squad;
@@ -67,7 +68,7 @@ public class WorldMouse extends Mouse{
     public void run(){
       if(!target.isadjacent(Squad.active)){
         target.accessremotely();
-        Javelin.app.switchScreen(WorldScreen.get());
+        JavelinApp.reopen();
         return;
       }
       if(target instanceof Squad s){

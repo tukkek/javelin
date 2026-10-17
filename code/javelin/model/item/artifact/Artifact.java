@@ -52,10 +52,9 @@ public abstract class Artifact extends Item{
   boolean userelic(Combatant user){
     if(charge()){
       var text="The "+name+" is recharging and can't be used right now...";
-      if(BattleScreen.active instanceof WorldScreen){
-        Javelin.app.switchScreen(BattleScreen.active);
+      if(BattleScreen.active instanceof WorldScreen)
         Javelin.message(text,false);
-      }else Javelin.message(text,Javelin.Delay.BLOCK);
+      else Javelin.message(text,Javelin.Delay.BLOCK);
       return true;
     }
     if(!activate(user)) return false;

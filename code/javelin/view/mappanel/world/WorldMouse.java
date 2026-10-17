@@ -35,14 +35,16 @@ public class WorldMouse extends Mouse{
 
     @Override
     public void run(){
+      var dungeon=Dungeon.active;
       Point interrupted=null;
-      for(var tile:overlay.affected) if(!WorldMove.move(tile.x,tile.y)){
+      var affected=overlay.affected;
+      for(var tile:affected) if(!WorldMove.move(tile.x,tile.y)){
         interrupted=overlay.path.resetlocation();
         break;
       }
-      if(Dungeon.active==null) return; //left dungeon
+      if(dungeon!=Dungeon.active) return; //left dungeon
       if(interrupted==null){
-        var destination=overlay.affected.getLast();
+        var destination=affected.getLast();
         WorldScreen.get().mappanel.center(destination.x,destination.y,true);
         return;
       }
@@ -139,7 +141,7 @@ public class WorldMouse extends Mouse{
     if(!Interface.userinterface.waiting) return;
     Overlay.clear();
     var t=(WorldTile)gettile(e);
-    if((t==null)||!t.discovered) return;
+    if(t==null||!t.discovered) return;
     var target=World.get(t.x,t.y);
     if(target==null) walk(new Point(t.x,t.y));
     else describe(target);

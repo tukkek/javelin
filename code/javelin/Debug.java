@@ -128,7 +128,7 @@ public class Debug{
       throw new StartBattle(f);
     }
 
-    static void freezeopponents(){
+    static void freeze(){
       var m=new Mutator(){
         @Override
         public void endturn(Fight fight){

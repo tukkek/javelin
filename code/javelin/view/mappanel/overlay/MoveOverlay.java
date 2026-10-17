@@ -29,16 +29,18 @@ public class MoveOverlay extends Overlay{
 
   public void walk(){
     steps=path.walk();
-    affected.addAll(steps);
+    var map=MapPanel.get().tiles;
+    var tiles=steps.stream().map(point->map[point.x][point.y]).toList();
+    affected.addAll(tiles);
   }
 
   @Override
-  public void overlay(Tile t,Graphics g){
+  public void overlay(Tile tile,Graphics graphics){
     if(steps==null) return;
-    var p=t.getposition();
+    var p=tile.draw();
     for(Point step:steps){
       var s=(OverlayStep)step;
-      if(t.x!=s.x||t.y!=s.y) continue;
+      if(tile.x!=s.x||tile.y!=s.y) continue;
       var border=BORDERS.get(s.color);
       if(border==null){
         border=BorderFactory.createLineBorder(s.color,3);
@@ -46,9 +48,10 @@ public class MoveOverlay extends Overlay{
       }
       var map=MapPanel.get();
       var size=map.gettilesize();
-      border.paintBorder(map.canvas,g,p.x,p.y,size,size);
-      g.setColor(s.color);
-      g.drawString(s.text,p.x+5,p.y+size-5);
+      var point=tile.draw();
+      border.paintBorder(map.canvas,graphics,point.x,point.y,size,size);
+      graphics.setColor(s.color);
+      graphics.drawString(s.text,point.x+5,point.y+size-5);
     }
   }
 

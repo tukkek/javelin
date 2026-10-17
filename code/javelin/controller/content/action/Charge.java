@@ -19,6 +19,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.condition.Charging;
 import javelin.model.unit.condition.Fatigued;
 import javelin.model.unit.feat.attack.BullRush;
+import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.battle.overlay.TargetOverlay;
 import javelin.view.mappanel.overlay.Overlay;
@@ -37,15 +38,17 @@ public class Charge extends Fire implements AiAction{
 
     public ChargeOverlay(List<Point> steps,Point target){
       this.target=target;
-      affected.add(target);
-      affected.addAll(steps);
+      var all=MapPanel.get().tiles;
+      affected.add(all[target.x][target.y]);
+      var tiles=steps.stream().map(point->all[point.x][point.y]).toList();
+      affected.addAll(tiles);
     }
 
     @Override
     public void overlay(Tile t,Graphics g){
       var p=new Point(t.x,t.y);
       if(p.equals(target)) draw(t,TargetOverlay.TARGET,g);
-      else if(affected.contains(p)) draw(t,AiMovement.MOVEOVERLAY,g);
+      else if(affected.contains(t)) draw(t,AiMovement.MOVEOVERLAY,g);
     }
   }
 

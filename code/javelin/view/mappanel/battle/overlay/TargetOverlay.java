@@ -6,6 +6,7 @@ import java.util.List;
 
 import javelin.controller.Point;
 import javelin.view.Images;
+import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.overlay.Overlay;
 import javelin.view.screen.BattleScreen;
@@ -16,12 +17,10 @@ public class TargetOverlay extends Overlay{
   public int x;
   public int y;
 
-  Tile t=null;
-
   public TargetOverlay(int x,int y){
     this.x=x;
     this.y=y;
-    affected.add(new Point(x,y));
+    affected.add(MapPanel.get().tiles[x][y]);
   }
 
   public TargetOverlay(Point p){

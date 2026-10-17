@@ -1,5 +1,6 @@
 package javelin.view.mappanel;
 
+import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -7,6 +8,7 @@ import java.util.HashMap;
 
 import javelin.controller.Point;
 import javelin.model.state.Square;
+import javelin.view.mappanel.MapPanel.Grid;
 import javelin.view.screen.BattleScreen;
 
 /**
@@ -33,11 +35,16 @@ public abstract class Tile{
     discovered=discoveredp;
   }
 
-  /** Draws the tile. */
+  /// Draws the tile on the given {@link Canvas} coordinate.
   abstract public void paint(Graphics c);
 
+  /// See {@link Grid#position(Tile)}.
+  public Point draw(){
+    return Grid.get().position(this);
+  }
+
   /** Scales, caches and renders image. */
-  protected void draw(final Graphics g,final Image i){
+  protected void draw(Graphics g,Image i){
     var map=MapPanel.get();
     if(map==null) return;
     var size=map.gettilesize();
@@ -46,8 +53,8 @@ public abstract class Tile{
       scaled=i.getScaledInstance(size,size,Image.SCALE_DEFAULT);
       cache.put(i,scaled);
     }
-    var p=getposition();
-    g.drawImage(scaled,p.x,p.y,size,size,null);
+    var point=draw();
+    g.drawImage(scaled,point.x,point.y,size,size,null);
   }
 
   /** Sets as not-{@link #discovered}. */
@@ -64,20 +71,12 @@ public abstract class Tile{
     paint(g);
   }
 
-  /**
-   * TODO might decide to turn into field instead of generating so many times.
-   */
-  public Point getposition(){
-    var size=MapPanel.get().gettilesize();
-    return new Point(x*size,y*size);
-  }
-
   /** Fills with black. */
-  protected void drawcover(final Graphics g){
+  protected void drawcover(Graphics g){
     if(g==null) return;
-    var p=getposition();
     g.setColor(Color.BLACK);
     var size=MapPanel.get().gettilesize();
-    g.fillRect(p.x,p.y,size,size);
+    var point=draw();
+    g.fillRect(point.x,point.y,size,size);
   }
 }

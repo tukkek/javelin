@@ -2,9 +2,11 @@ package javelin.view.mappanel.world;
 
 import java.awt.Graphics;
 import java.util.HashMap;
+import java.util.Map;
 
 import javelin.controller.Point;
 import javelin.controller.db.Preferences;
+import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
@@ -13,9 +15,9 @@ import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.Tile;
 
 public class WorldPanel extends MapPanel{
+  public static final Map<Point,Location> DESTINATIONS=new HashMap<>();
 
-  static final HashMap<Point,Actor> ACTORS=new HashMap<>();
-  public static final HashMap<Point,Location> DESTINATIONS=new HashMap<>();
+  static final Map<Point,Actor> ACTORS=new HashMap<>();
 
   public WorldPanel(){
     super(World.getseed().map.length,World.getseed().map[0].length,
@@ -24,7 +26,7 @@ public class WorldPanel extends MapPanel{
 
   @Override
   protected Mouse getmouselistener(){
-    return new WorldMouse(this);
+    return new WorldMouse();
   }
 
   @Override
@@ -55,6 +57,9 @@ public class WorldPanel extends MapPanel{
   @Override
   public void refresh(Graphics g){
     updateactors();
-    for(var ts:tiles) for(var t:ts) t.repaint(g);
+    var point=Squad.active.getlocation();
+    var tile=tiles[point.x][point.y];
+    grid.center(tile,tile!=grid.center);
+    grid.draw(tile,g);
   }
 }

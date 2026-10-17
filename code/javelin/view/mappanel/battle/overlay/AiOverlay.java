@@ -7,6 +7,7 @@ import java.util.Collection;
 import javelin.controller.Point;
 import javelin.controller.content.action.ai.AiAction;
 import javelin.model.unit.Combatant;
+import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.overlay.Overlay;
 
@@ -23,12 +24,15 @@ public class AiOverlay extends Overlay{
     this(new Point(x,y));
   }
 
-  public AiOverlay(Collection<? extends Point> area){
-    affected.addAll(area);
+  public AiOverlay(Collection<Point> area){
+    var map=MapPanel.get();
+    var tiles=area.stream().map(point->map.tiles[point.x][point.y]).toList();
+    affected.addAll(tiles);
   }
 
   public AiOverlay(Point p){
-    affected.add(p);
+    var tile=MapPanel.get().tiles[p.x][p.y];
+    affected.add(tile);
   }
 
   public AiOverlay(Combatant c){
@@ -37,6 +41,6 @@ public class AiOverlay extends Overlay{
 
   @Override
   public void overlay(Tile t,Graphics g){
-    if(affected.contains(new Point(t.x,t.y))) draw(t,image,g);
+    if(affected.contains(t)) draw(t,image,g);
   }
 }

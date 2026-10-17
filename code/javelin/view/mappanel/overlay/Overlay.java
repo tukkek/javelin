@@ -3,9 +3,10 @@ package javelin.view.mappanel.overlay;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.List;
 
-import javelin.controller.Point;
 import javelin.view.OpenGL;
+import javelin.view.OpenGL.Canvas;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
 
@@ -13,16 +14,16 @@ import javelin.view.mappanel.Tile;
 public abstract class Overlay{
   static Overlay active=null;
 
-  public ArrayList<Point> affected=new ArrayList<>();
+  public List<Tile> affected=new ArrayList<>();
 
   abstract public void overlay(Tile t,Graphics g);
 
   /// Draws image on given tile and adds it to #affected.
   protected void draw(Tile t,Image i,Graphics g){
-    var p=t.getposition();
+    var p=t.draw();
     var size=MapPanel.get().gettilesize();
     g.drawImage(i,p.x,p.y,size,size,null);
-    affected.add(new Point(t.x,t.y));
+    affected.add(t);
   }
 
   public boolean click(){

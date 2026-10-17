@@ -30,11 +30,6 @@ public class BattleMouse extends Mouse{
   static final BattleMouseAction[] ACTIONS={new MoveMouseAction(),
       new MeleeMouseAction(),new RangedMouseAction()};
 
-  /** Constructor. */
-  public BattleMouse(MapPanel panel){
-    super(panel);
-  }
-
   @Override
   public void mouseClicked(MouseEvent e){
     if(overrideinput()) return;

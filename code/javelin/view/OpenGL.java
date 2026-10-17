@@ -285,9 +285,7 @@ public class OpenGL{
         var converter=new Converter(this);
         converter.predraw();
         var graphics=converter.graphics;
-        // executes in 8ms so should support 100+ FPS
         screen.mappanel.refresh(graphics);
-        overlay(screen,graphics);
         converter.postdraw();
         swapBuffers();
       }catch(Exception e){

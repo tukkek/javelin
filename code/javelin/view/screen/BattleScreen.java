@@ -33,6 +33,7 @@ import javelin.old.messagepanel.MessagePanel;
 import javelin.view.OpenGL;
 import javelin.view.StatusPanel;
 import javelin.view.mappanel.MapPanel;
+import javelin.view.mappanel.MapPanel.Grid;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.battle.BattleMouse;
 import javelin.view.mappanel.battle.BattlePanel;
@@ -96,6 +97,7 @@ public class BattleScreen extends Screen{
   public MapPanel mappanel;
 
   boolean maprevealed=false;
+  /// TODO redundant with {@link BattlePanel#current}
   Combatant current=null;
   Combatant lastaimove;
   boolean first=true;
@@ -305,13 +307,10 @@ public class BattleScreen extends Screen{
     var current=Fight.state.clone(this.current);
     if(current!=null){
       var l=current.getlocation();
-      if(mappanel.tiles[l.x][l.y].discovered){
-        center(l.x,l.y);
-        view(l.x,l.y);
-      }
+      if(mappanel.tiles[l.x][l.y].discovered) view(l.x,l.y);
     }
     Javelin.redraw();
-    center();
+    Grid.get().center(null,false);
   }
 
   /**

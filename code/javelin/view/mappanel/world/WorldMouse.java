@@ -13,7 +13,6 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.old.Interface;
 import javelin.old.messagepanel.MessagePanel;
-import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.overlay.MoveOverlay;
 import javelin.view.mappanel.overlay.Overlay;
@@ -37,7 +36,7 @@ public class WorldMouse extends Mouse{
     @Override
     public void run(){
       Point interrupted=null;
-      for(Point p:overlay.affected) if(!WorldMove.move(p.x,p.y)){
+      for(var tile:overlay.affected) if(!WorldMove.move(tile.x,tile.y)){
         interrupted=overlay.path.resetlocation();
         break;
       }
@@ -85,11 +84,6 @@ public class WorldMouse extends Mouse{
 
   boolean showingdescription=false;
   long lastcall=-Integer.MIN_VALUE;
-
-  /** Constructor. */
-  public WorldMouse(MapPanel panel){
-    super(panel);
-  }
 
   @Override
   public void mouseClicked(MouseEvent e){
@@ -145,7 +139,7 @@ public class WorldMouse extends Mouse{
     if(!Interface.userinterface.waiting) return;
     Overlay.clear();
     var t=(WorldTile)gettile(e);
-    if(!t.discovered) return;
+    if((t==null)||!t.discovered) return;
     var target=World.get(t.x,t.y);
     if(target==null) walk(new Point(t.x,t.y));
     else describe(target);

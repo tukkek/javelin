@@ -86,7 +86,9 @@ public abstract class QuestApp extends Applet implements Runnable{
     s.requestFocus();
     if(s instanceof BattleScreen screen){
       var point=screen.anchor();
-      EventQueue.invokeLater(()->screen.mappanel.setposition(point.x,point.y));
+      var map=screen.mappanel;
+      if(point!=null)
+        EventQueue.invokeLater(()->map.setposition(point.x,point.y));
     }
   }
 

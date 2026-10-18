@@ -6,7 +6,6 @@ import java.awt.event.KeyEvent;
 
 import javelin.Javelin;
 import javelin.old.QuestApp;
-import javelin.old.Screen;
 import javelin.old.messagepanel.Text;
 
 /**
@@ -90,8 +89,7 @@ public class InfoScreen extends Screen{
    */
   public void print(String string){
     text=string;
-    //TODO not ok
-    Javelin.app.switchScreen(this);
+    Screen.change(this);
     repaint();
   }
 

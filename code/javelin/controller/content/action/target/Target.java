@@ -175,13 +175,14 @@ public abstract class Target extends Action{
 
   void lock(Combatant active,Combatant target,BattleState s){
     Overlay.set(overlay(active,target));
+    var point=target.getlocation();
+    BattleScreen.active.center(point.x,point.y);
+    Examine.lastlooked=target;
     MessagePanel.active.clear();
     var prompt="Use ← and → to select target, ENTER or "+confirmkey
         +" to confirm, v to view target's sheet, q to quit.\n\n";
     prompt+=describehitchance(active,target,s);
     Javelin.message(prompt,Javelin.Delay.NONE);
-    Examine.lastlooked=target;
-    BattleScreen.active.center(target.location[0],target.location[1]);
   }
 
   /** @return Text with the name of the target and chance to hit. */

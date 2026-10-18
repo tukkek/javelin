@@ -11,7 +11,7 @@ import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.common.Brazier;
 import javelin.old.RPG;
-import javelin.view.screen.BattleScreen;
+import javelin.view.mappanel.MapPanel;
 
 /**
  * Shows an area of the {@link DungeonFloor} map, with a cumulative 50% chance
@@ -22,33 +22,26 @@ import javelin.view.screen.BattleScreen;
  * @author alex
  */
 public class DungeonMap extends Feature{
-	final double AREA=RPG.r(10,25)/100.0;
+  /** Constructor. */
+  public DungeonMap(DungeonFloor f){
+    super("map");
+  }
 
-	/** Constructor. */
-	public DungeonMap(DungeonFloor f){
-		super("map");
-	}
-
-	@Override
-	public boolean activate(){
-		var d=Dungeon.active;
-		var floors=new HashSet<Point>();
-		for(var x=0;x<d.size;x++)
-			for(var y=0;y<d.size;y++)
-				if(d.map[x][y]!=FloorTile.WALL) floors.add(new Point(x,y));
-		for(var f:new ArrayList<>(floors))
-			floors.addAll(f.getadjacent());
-		var area=AREA;
-		while(area<1&&RPG.chancein(2))
-			area+=AREA;
-		if(area>1) area=1;
-		var p=RPG.pick(floors);
-		floors.stream().sorted((a,b)->Double.compare(a.distance(p),b.distance(p)))
-				.limit((int)Math.round(floors.size()*area))
-				.forEach(tile->Brazier.reveal(tile));
-		BattleScreen.active.center(p.x,p.y);
-		Javelin.redraw();
-		Javelin.message("A map reveals a portion of the level!",false);
-		return true;
-	}
+  @Override
+  public boolean activate(){
+    var d=Dungeon.active;
+    var size=d.size;
+    var pool=new HashSet<Point>(size*size);
+    for(var x=0;x<size;x++) for(var y=0;y<size;y++)
+      if(d.map[x][y]!=FloorTile.WALL) pool.add(new Point(x,y));
+    for(var f:new ArrayList<>(pool)) pool.addAll(f.getadjacent());
+    var target=RPG.pick(new ArrayList<>(pool));
+    var points=pool.stream()
+        .sorted((a,b)->Double.compare(a.distance(target),b.distance(target)))
+        .limit(pool.size()*RPG.r(10,30)/100).toList();
+    for(var point:points) Brazier.reveal(point);
+    MapPanel.get().center(target.x,target.y,true);
+    Javelin.message("A map reveals a portion of the level!",false);
+    return true;
+  }
 }

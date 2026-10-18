@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.JavelinApp;
 import javelin.controller.content.action.ActionCost;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.content.quality.Quality;
@@ -39,7 +38,7 @@ public class StatisticsScreen extends InfoScreen{
       print(header+Monster.DESCRIPTIONS.get(c.source.name));
       updatescreens();
     }
-    JavelinApp.reopen();
+    Screen.reopen();
   }
 
   /**
@@ -228,7 +227,7 @@ public class StatisticsScreen extends InfoScreen{
   }
 
   Character updatescreens(){
-    Javelin.app.switchScreen(this);
+    Screen.change(this);
     return InfoScreen.feedback();
   }
 }

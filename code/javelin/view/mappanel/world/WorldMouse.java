@@ -13,12 +13,12 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.old.Interface;
 import javelin.old.messagepanel.MessagePanel;
-import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.overlay.MoveOverlay;
 import javelin.view.mappanel.overlay.Overlay;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.DungeonScreen;
+import javelin.view.screen.Screen;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -36,14 +36,16 @@ public class WorldMouse extends Mouse{
 
     @Override
     public void run(){
+      var dungeon=Dungeon.active;
       Point interrupted=null;
-      for(Point p:overlay.affected) if(!WorldMove.move(p.x,p.y)){
+      var affected=overlay.affected;
+      for(var tile:affected) if(!WorldMove.move(tile.x,tile.y)){
         interrupted=overlay.path.resetlocation();
         break;
       }
-      if(Dungeon.active==null) return; //left dungeon
+      if(dungeon!=Dungeon.active) return; //left dungeon
       if(interrupted==null){
-        var destination=overlay.affected.getLast();
+        var destination=affected.getLast();
         WorldScreen.get().mappanel.center(destination.x,destination.y,true);
         return;
       }
@@ -66,7 +68,7 @@ public class WorldMouse extends Mouse{
     public void run(){
       if(!target.isadjacent(Squad.active)){
         target.accessremotely();
-        Javelin.app.switchScreen(WorldScreen.get());
+        Screen.reopen();
         return;
       }
       if(target instanceof Squad s){
@@ -85,11 +87,6 @@ public class WorldMouse extends Mouse{
 
   boolean showingdescription=false;
   long lastcall=-Integer.MIN_VALUE;
-
-  /** Constructor. */
-  public WorldMouse(MapPanel panel){
-    super(panel);
-  }
 
   @Override
   public void mouseClicked(MouseEvent e){
@@ -145,7 +142,7 @@ public class WorldMouse extends Mouse{
     if(!Interface.userinterface.waiting) return;
     Overlay.clear();
     var t=(WorldTile)gettile(e);
-    if(!t.discovered) return;
+    if(t==null||!t.discovered) return;
     var target=World.get(t.x,t.y);
     if(target==null) walk(new Point(t.x,t.y));
     else describe(target);

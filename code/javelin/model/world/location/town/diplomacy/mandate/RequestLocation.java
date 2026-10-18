@@ -18,43 +18,42 @@ import javelin.old.RPG;
  * @see Actor#see()
  */
 public class RequestLocation extends Mandate{
-	Actor target=null;
+  Actor target=null;
 
-	/** Reflection constructor. */
-	public RequestLocation(Town t){
-		super(t);
-	}
+  /** Reflection constructor. */
+  public RequestLocation(Town t){
+    super(t);
+  }
 
-	Actor find(Class<? extends Actor> type){
-		var found=World.getactors().stream()
-				.filter(a->type.isInstance(a)&&!a.cansee())
-				.collect(Collectors.toList());
-		return found.isEmpty()?null:RPG.pick(found);
-	}
+  Actor find(Class<? extends Actor> type){
+    var found=World.getactors().stream()
+        .filter(a->type.isInstance(a)&&!a.cansee())
+        .collect(Collectors.toList());
+    return found.isEmpty()?null:RPG.pick(found);
+  }
 
-	@Override
-	public void define(){
-		for(var type:List.of(Town.class,TempleEntrance.class,Haunt.class)){
-			target=find(type);
-			if(target!=null) break;
-		}
-		super.define();
-	}
+  @Override
+  public void define(){
+    for(var type:List.of(Town.class,TempleEntrance.class,Haunt.class)){
+      target=find(type);
+      if(target!=null) break;
+    }
+    super.define();
+  }
 
-	@Override
-	public boolean validate(){
-		return target!=null&&!target.cansee();
-	}
+  @Override
+  public boolean validate(){
+    return target!=null&&!target.cansee();
+  }
 
-	@Override
-	public String getname(){
-		return "Reveal location of "+target;
-	}
+  @Override
+  public String getname(){
+    return "Reveal location of "+target;
+  }
 
-	@Override
-	public void act(){
-		target.reveal();
-		Javelin.redraw();
-		Javelin.message("The location of "+target+" is revealed!",true);
-	}
+  @Override
+  public void act(){
+    target.reveal();
+    Javelin.message("The location of "+target+" is revealed!",true);
+  }
 }

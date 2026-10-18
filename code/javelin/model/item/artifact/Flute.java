@@ -5,7 +5,6 @@ import javelin.model.transport.FlyingNimbus;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.view.screen.BattleScreen;
 
 /**
  * Summons a {@link FlyingNimbus}.
@@ -13,27 +12,22 @@ import javelin.view.screen.BattleScreen;
  * @author alex
  */
 public class Flute extends Artifact{
-	/** Constructor. */
-	public Flute(){
-		super("Flute of Wind");
-		usedinbattle=false;
-		usedoutofbattle=true;
-	}
+  /** Constructor. */
+  public Flute(){
+    super("Flute of Wind");
+    usedinbattle=false;
+    usedoutofbattle=true;
+  }
 
-	@Override
-	protected boolean activate(Combatant user){
-		if(Dungeon.active!=null){
-			Javelin.app.switchScreen(BattleScreen.active);
-			Javelin.message(
-					"You play the flute but nothing happens. Try it outside next time!",
-					false);
-			return true;
-		}
-		Squad.active.transport=new FlyingNimbus(Squad.active.transport);
-		Squad.active.updateavatar();
-		Javelin.app.switchScreen(BattleScreen.active);
-		Javelin.message("You are taken by a "+Squad.active.transport+"!",false);
-		return true;
-	}
-
+  @Override
+  protected boolean activate(Combatant user){
+    var text="You play the flute but nothing happens. Try it outside next time!";
+    if(Dungeon.active==null){
+      Squad.active.transport=new FlyingNimbus(Squad.active.transport);
+      Squad.active.updateavatar();
+      text="You are taken by a "+Squad.active.transport+"!";
+    }
+    Javelin.message(text,false);
+    return true;
+  }
 }

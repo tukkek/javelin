@@ -3,12 +3,13 @@ package javelin.view.mappanel.dungeon;
 import java.awt.Graphics;
 import java.util.HashSet;
 
+import javelin.controller.Point;
 import javelin.controller.db.Preferences;
+import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.Tile;
-import javelin.view.screen.BattleScreen;
 
 public class DungeonPanel extends MapPanel{
   DungeonFloor dungeon;
@@ -21,7 +22,7 @@ public class DungeonPanel extends MapPanel{
 
   @Override
   protected Mouse getmouselistener(){
-    return new DungeonMouse(this);
+    return new DungeonMouse();
   }
 
   @Override
@@ -41,16 +42,18 @@ public class DungeonPanel extends MapPanel{
 
   @Override
   public void refresh(Graphics g){
-    var p=scroll.getScrollPosition();
-    var s=scroll.getViewportSize();
-    var w=s.width;
-    var h=s.height;
-    var size=MapPanel.get().gettilesize();
-    for(Tile[] tiles:tiles) for(Tile tile:tiles){
-      if(!tile.discovered) continue;
-      var t=(DungeonTile)tile;
-      if(p.x<=t.x*size&&(t.x+1)*size<=p.x+w&&p.y<=(t.y+1)*size&&t.y*size<=p.y+h)
-        t.repaint(g);
-    }
+    refresh(Dungeon.active.squadlocation,g);
+  }
+
+  /// Center every turn if there is no set {@link Grid#center}.
+  static public void refresh(Point p,Graphics g){
+    var tile=MapPanel.get().tiles[p.x][p.y];
+    var grid=Grid.get();
+    var center=grid.center;
+    if(tile!=center&&center==null) grid.center(tile,true);
+    var discovered=0;
+    for(var tiles:MapPanel.get().tiles)
+      for(var tile2:tiles) if(tile2.discovered) discovered+=1;
+    grid.draw(tile,g);
   }
 }

@@ -16,7 +16,7 @@ import javelin.view.mappanel.Tile;
 
 /** @author alex */
 public class BattlePanel extends MapPanel{
-  /** Active unit. */
+  /// Active unit. TODO is it redundant with {@link BattleState#next}?
   static public Combatant current=null;
 
   /** If <code>true</code>, all {@link BattleTile}s are visible. */
@@ -35,7 +35,7 @@ public class BattlePanel extends MapPanel{
 
   @Override
   protected Mouse getmouselistener(){
-    return new BattleMouse(this);
+    return new BattleMouse();
   }
 
   @Override
@@ -49,11 +49,12 @@ public class BattlePanel extends MapPanel{
     if(state==null) return;
     updatestate();
     calculatevision();
-    for(var tiles:this.tiles) for(var tile:tiles) tile.repaint(g);
+    var point=current.getlocation();
+    grid.draw(tiles[point.x][point.y],g);
   }
 
   void calculatevision(){
-    if(daylight||state.getteam(current)==state.redteam) return;
+    if(daylight) return;
     for(var s:seen){
       var t=(BattleTile)tiles[s.x][s.y];
       t.shrouded=true;

@@ -203,7 +203,6 @@ public class Door extends Feature{
     Dungeon.active.map[x][y]=FloorTile.FLOOR;
     draw=true;
     hidden=false;
-    Javelin.redraw();
     if(searching!=null) Javelin.message("You find a hidden door!",true);
     return true;
   }

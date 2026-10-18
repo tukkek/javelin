@@ -55,6 +55,8 @@ import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.dungeon.DungeonTile;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.DungeonScreen;
+import javelin.view.screen.Screen;
+import javelin.view.screen.WorldScreen;
 
 /**
  * A floor of a {@link Dungeon}.
@@ -445,7 +447,9 @@ public class DungeonFloor implements Serializable{
     }
     WorldMove.abort=true;
     Dungeon.active=null;
-    JavelinApp.reopen();
+    var screen=new WorldScreen();
+    screen.open();
+    Screen.change(screen);
     if(Squad.getsquads().contains(Squad.active)) Squad.active.place();
   }
 
@@ -539,9 +543,9 @@ public class DungeonFloor implements Serializable{
     JavelinApp.context=screen;
     BattleScreen.active=screen;
     Squad.active.updateavatar();
-    MapPanel.get().center(squadlocation.x,squadlocation.y,true);
     features.getknown();
-    Javelin.app.switchScreen(screen);
+    Screen.change(screen);
+    MapPanel.get().center(squadlocation.x,squadlocation.y,true);
   }
 
   /** @see Dungeon#gettier() */

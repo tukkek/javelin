@@ -19,17 +19,19 @@ public class BreathOverlay extends Overlay{
 
   /** Constructor. */
   public BreathOverlay(Set<Point> area){
-    affected.addAll(area);
+    var map=MapPanel.get();
+    var tiles=area.stream().map(point->map.tiles[point.x][point.y]).toList();
+    affected.addAll(tiles);
     var size=MapPanel.get().gettilesize();
     border=BorderFactory.createLineBorder(Color.CYAN,size/10);
   }
 
   @Override
   public void overlay(Tile t,Graphics g){
-    if(!affected.contains(new Point(t.x,t.y))) return;
+    if(!affected.contains(t)) return;
     var map=MapPanel.get();
     var s=map.gettilesize();
-    var p=t.getposition();
+    var p=t.draw();
     border.paintBorder(map.canvas,g,p.x,p.y,s,s);
   }
 }

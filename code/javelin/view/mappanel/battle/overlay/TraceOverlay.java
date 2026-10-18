@@ -9,6 +9,7 @@ import javelin.controller.content.fight.Fight;
 import javelin.controller.walker.state.ClearPath;
 import javelin.controller.walker.state.ObstructedPath;
 import javelin.view.Images;
+import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.overlay.Overlay;
 
@@ -20,16 +21,18 @@ public class TraceOverlay extends Overlay{
 
   public TraceOverlay(Point from,Point to){
     this.to=to;
-    var s=Fight.state;
-    List<Point> l=new ClearPath(from,to,s).walk();
-    if(l==null) l=new ObstructedPath(from,to,s).walk();
-    affected.addAll(l);
+    var state=Fight.state;
+    var points=new ClearPath(from,to,state).walk();
+    if(points==null) points=new ObstructedPath(from,to,state).walk();
+    var map=MapPanel.get();
+    var tiles=points.stream().map(point->map.tiles[point.x][point.y]).toList();
+    affected.addAll(tiles);
   }
 
   @Override
   public void overlay(Tile t,Graphics g){
     var p=new Point(t.x,t.y);
     if(p.equals(to)) draw(t,TargetOverlay.TARGET,g);
-    else if(affected.contains(p)) draw(t,TRACE,g);
+    else if(affected.contains(t)) draw(t,TRACE,g);
   }
 }

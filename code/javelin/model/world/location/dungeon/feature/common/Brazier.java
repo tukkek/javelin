@@ -81,7 +81,6 @@ public class Brazier extends Feature{
       if(Dungeon.active.map[r.x][r.y]!=FloorTile.WALL)
         revealed.addAll(r.getadjacent());
     for(var r:revealed) reveal(r);
-    Javelin.redraw();
     var p=JavelinApp.context.getsquadlocation();
     JavelinApp.context.view(p.x,p.y);
     Javelin.message("You light up the brazier!",false);

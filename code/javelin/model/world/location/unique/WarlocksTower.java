@@ -163,7 +163,6 @@ public class WarlocksTower extends Location{
         var lose="\"The price you will pay for your loss is for %s to become one of my slaves!\"";
         var m=RPG.pick(squad.members);
         Fight.originalblueteam.remove(m);
-        //        squad.remove(m);
         Javelin.message(lose.formatted(m),true);
       }else return;
       Fight.victory=false;

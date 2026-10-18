@@ -22,46 +22,46 @@ import javelin.model.world.location.PointOfInterest;
  * @author alex
  */
 public class WanderingPegasus extends Wanderer{
-	private static final String PROMPT="A herd of Pegasus is grazing nearby. They seem pretty docile.\n"
-			+"Do you want to try to ride them?\n"
-			+"Press r to ride and i to ignore the herd...";
+  private static final String PROMPT="""
+      A herd of Pegasus is grazing nearby. They seem pretty docile.
+      Do you want to try to ride them?
+      Press r to ride and i to ignore the herd...""";
 
-	/** Reflection-friendly constructor. */
-	public WanderingPegasus(PointOfInterest l){
-		super("Pegasus ride",l);
-	}
+  /** Reflection-friendly constructor. */
+  public WanderingPegasus(PointOfInterest l){
+    super("Pegasus ride",l);
+  }
 
-	@Override
-	public boolean validate(Squad s,int squadel){
-		if(!super.validate(s,squadel)||s.members.size()>10) return false;
-		var terrain=Terrain.get(location.x,location.y);
-		if(!(terrain.equals(Terrain.HILL)||terrain.equals(Terrain.PLAIN)))
-			return false;
-		for(var member:s)
-			if(member.source.alignment.isevil()) return false;
-		return true;
-	}
+  @Override
+  public boolean validate(Squad s,int squadel){
+    if(!super.validate(s,squadel)||s.members.size()>10) return false;
+    var terrain=Terrain.get(location.x,location.y);
+    if(!(terrain.equals(Terrain.HILL)||terrain.equals(Terrain.PLAIN)))
+      return false;
+    for(var member:s) if(member.source.alignment.isevil()) return false;
+    return true;
+  }
 
-	@Override
-	public void happen(Squad s){
-		var input=Javelin.prompt(PROMPT,Set.of('r','i'));
-		if(input=='i') return;
-		var vision=s.seesurroundings(s.perceive(true,true,true)+4);
-		Javelin.redraw();
-		Javelin.message("Your group shoots up into the air!",true);
-		var destinations=new ArrayList<>(World.getactors().stream()
-				.filter(a->a instanceof Location&&a.distanceinsteps(location.x,location.y)<=vision)
-				.collect(Collectors.toList()));
-		destinations.add(0,s);
-		var names=destinations.stream().map(a->"Nearby to: "+a.describe()).map(
-				name->(name.contains("\n")?name.substring(0,name.indexOf('\n')):name))
-				.collect(Collectors.toList());
-		names.set(0,"Back where you were before");
-		var landing=destinations
-				.get(Javelin.choose("Where do you want to land?",names,true,true));
-		if(landing==s) return;
-		s.x=landing.x;
-		s.y=landing.y;
-		s.displace();
-	}
+  @Override
+  public void happen(Squad s){
+    var input=Javelin.prompt(PROMPT,Set.of('r','i'));
+    if(input=='i') return;
+    var vision=s.seesurroundings(s.perceive(true,true,true)+4);
+    Javelin.message("Your group shoots up into the air!",true);
+    var destinations=new ArrayList<>(World.getactors().stream()
+        .filter(a->a instanceof Location
+            &&a.distanceinsteps(location.x,location.y)<=vision)
+        .collect(Collectors.toList()));
+    destinations.add(0,s);
+    var names=destinations.stream().map(a->"Nearby to: "+a.describe()).map(
+        name->(name.contains("\n")?name.substring(0,name.indexOf('\n')):name))
+        .collect(Collectors.toList());
+    names.set(0,"Back where you were before");
+    var landing=destinations
+        .get(Javelin.choose("Where do you want to land?",names,true,true));
+    if(landing==s) return;
+    s.x=landing.x;
+    s.y=landing.y;
+    s.displace();
+  }
 }

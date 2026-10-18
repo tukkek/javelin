@@ -100,7 +100,7 @@ public class SquadScreen extends InfoScreen{
 
   void print(){
     while(squad.getel()<EL){
-      Javelin.app.switchScreen(this);
+      Screen.change(this);
       var team=String.join("\n",squad.stream().map(t->"  "+t.toString())
           .collect(Collectors.toList()));
       text=FORMAT.formatted(printtable(),team);

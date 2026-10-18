@@ -67,11 +67,7 @@ public class CastSpells extends WorldAction{
       return;
     }
     var message=s.castpeacefully(caster,target);
-    if(message!=null){
-      Javelin.app.switchScreen(screen);
-      screen.center();
-      Javelin.message(message,false);
-    }
+    if(message!=null) Javelin.message(message,false);
     s.used+=1;
   }
 

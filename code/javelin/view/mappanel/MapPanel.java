@@ -1,8 +1,6 @@
 package javelin.view.mappanel;
 
 import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.Panel;
 import java.awt.ScrollPane;
 import java.awt.event.ComponentAdapter;
@@ -10,28 +8,154 @@ import java.awt.event.ComponentEvent;
 
 import org.lwjgl.opengl.awt.AWTGLCanvas;
 
+import javelin.controller.Point;
+import javelin.controller.Steam;
 import javelin.controller.db.Preferences;
 import javelin.view.OpenGL;
 import javelin.view.OpenGL.Canvas;
+import javelin.view.mappanel.overlay.Overlay;
 import javelin.view.screen.BattleScreen;
 
 /// Game map view, either in or out of battle.
 public abstract class MapPanel extends Panel{
-  /** Scrollbar functionality. */
-  public ScrollPane scroll=new ScrollPane(ScrollPane.SCROLLBARS_ALWAYS);
-  /** Grid of tiles by coordinate. */
+  /// The {@link Steam} overlay requires a plain rendering area so
+  /// {@link ScrollPane}s are not viable. This class alternatively only draws the
+  /// seen {@link Tile}s on the {@link MapPanel#canvas}.
+  ///
+  /// This essentially works as the subset of {@link MapPanel#tiles} that
+  /// are drawn.
+  public class Grid{
+    /// Replaces the anchor-{@link Tile} if not `null`.
+    public Tile center=null;
+
+    /// Only tiles currently drawn. May contain `null` values if out of bounds.
+    Tile[][] drawn=null;
+    /// Last {@link MapPanel#gettilesize()}. {@link #ready()} post changing.
+    int size=-1;
+    /// Location of first drawn pixel.
+    Point origin=null;
+    /// Force a {@link #drawn} if `true`.
+    boolean clear=false;
+
+    void center(){
+      var size=gettilesize();
+      var width=canvas.getWidth()-tiles.length*size;
+      if(width>0) origin.x=width/2;
+      var height=canvas.getHeight()-tiles[0].length*size;
+      if(height>0) origin.y=height/2;
+    }
+
+    /// Calculates {@link #origin} and {@link #drawn}. Tries to stay in bounds.
+    void ready(Tile anchor){
+      size=gettilesize();
+      var canvas=MapPanel.this.canvas.getSize();
+      var center=new Point(canvas.width/2-size/2,canvas.height/2-size/2);
+      origin=new Point(center.x%size,center.y%size);
+      var width=(canvas.width-origin.x)/size;
+      var height=(canvas.height-origin.y)/size;
+      center();
+      var tilex=anchor.x-(center.x-origin.x)/size;
+      if(tilex+width>tiles.length) tilex=tiles.length-width;
+      if(tilex<0) tilex=0;
+      var tiley=anchor.y-(center.y-origin.y)/size;
+      if(tiley+height>tiles[0].length) tiley=tiles[0].length-height;
+      if(tiley<0) tiley=0;
+      var tile=tiles[tilex][tiley];
+      drawn=new Tile[width][height];
+      for(var x=0;x<width;x+=1) for(var y=0;y<height;y+=1){
+        var point=new Point(tile.x+x,tile.y+y);
+        if(point.validate(0,0,tiles.length,tiles[0].length))
+          drawn[x][y]=tiles[point.x][point.y];
+      }
+    }
+
+    boolean contains(Tile t){
+      if(drawn==null) return false;
+      var tile=drawn[0][0];
+      if(tile.x<=t.x&&t.x<tile.x+drawn.length)
+        if(tile.y<=t.y&&t.y<tile.y+drawn[0].length) return true;
+      return false;
+    }
+
+    /// @return `false` if Grid has to be recalculated.
+    boolean check(Tile anchor){
+      if(clear||gettilesize()!=size||!contains(anchor)) return false;
+      var width=drawn.length;
+      var tile=drawn[0][0];
+      var x=anchor.x-tile.x;
+      if(x==0||x==width-1) return false;
+      var height=drawn[0].length;
+      var y=anchor.y-tile.y;
+      if(y==0||y==height-1) return false;
+      return true;
+    }
+
+    void overlay(Tile tile,Graphics g){
+      var overlay=Overlay.get();
+      if(overlay!=null&&overlay.affected.contains(tile))
+        overlay.overlay(tile,g);
+    }
+
+    /// See {@link Tile#paint(Graphics)}.
+    public void draw(Tile anchor,Graphics g){
+      if(center!=null) anchor=center;
+      if(!check(anchor)) ready(anchor);
+      for(var tiles:drawn) for(var tile:tiles) if(tile!=null){
+        tile.repaint(g);
+        overlay(tile,g);
+      }
+      clear=false;
+    }
+
+    /// Forces next {@link #drawn}.
+    public void clear(){
+      clear=true;
+    }
+
+    /// @return Tile at the given coordinate.
+    public Tile get(int x,int y){
+      var size=gettilesize();
+      x=(x-origin.x)/size;
+      y=(y-origin.y)/size;
+      var point=new Point(x,y);
+      return point.validate(0,0,drawn.length,drawn[0].length)?drawn[x][y]:null;
+    }
+
+    /// @return {@link Canvas}~cCoordinates for the tile.
+    public Point position(Tile target){
+      var tile=drawn[0][0];
+      var size=gettilesize();
+      var x=origin.x+(target.x-tile.x)*size;
+      var y=origin.y+(target.y-tile.y)*size;
+      return new Point(x,y);
+    }
+
+    /// @return Current instance.
+    public static Grid get(){
+      return MapPanel.get().grid;
+    }
+
+    /// Sets {@link #center} to this {@link Tile}. Can force a {@link #clear()}.
+    public void center(Tile tile,boolean force){
+      synchronized(OpenGL.LOCK){
+        if(force) clear();
+        center=tile;
+      }
+    }
+  }
+
+  /// All tiles
   public Tile[][] tiles=null;
   /** Main component. */
   public AWTGLCanvas canvas=new Canvas();
+  /// See {@link #refresh(Graphics)}.
+  public Grid grid=new Grid();
 
-  /// Centers the {@link #canvas}.
-  Panel container=new Panel();
   Mouse mouse=getmouselistener();
   String configurationkey;
 
   /** Constructor. */
   public MapPanel(int widthp,int heightp,String configurationkeyp){
-    scroll.setFocusable(false);
     configurationkey=configurationkeyp;
     tiles=new Tile[widthp][heightp];
     for(var x=0;x<widthp;x++)
@@ -43,14 +167,9 @@ public abstract class MapPanel extends Panel{
 
   void resize(){
     synchronized(OpenGL.LOCK){
-      var bounds=getBounds();
-      scroll.setBounds(bounds);
-      container.setSize(scroll.getViewportSize());
-      var tilesize=gettilesize();
-      var width=tilesize*tiles.length;
-      var height=tilesize*tiles[0].length;
-      canvas.setSize(width,height);
+      canvas.setBounds(getBounds());
       revalidate();
+      grid.clear();
     }
   }
 
@@ -63,15 +182,11 @@ public abstract class MapPanel extends Panel{
       }
     });
     synchronized(OpenGL.LOCK){
+      canvas.setFocusable(false);
       canvas.addMouseListener(mouse);
       canvas.addMouseMotionListener(mouse);
       canvas.addMouseWheelListener(mouse);
-      container.setLayout(new GridBagLayout());
-      var constraints=new GridBagConstraints();
-      constraints.anchor=GridBagConstraints.CENTER;
-      container.add(canvas,constraints);
-      scroll.add(container);
-      add(scroll);
+      add(canvas);
     }
   }
 
@@ -113,34 +228,9 @@ public abstract class MapPanel extends Panel{
     return from<=value&&value<=from+offset;
   }
 
-  /**
-   * @param force If false, will only center if coordinates are out-of-view.
-   * @return Whether a scroll reposition has been performed.
-   */
-  public boolean center(int x,int y,boolean force){
-    var width=scroll.getWidth();
-    var height=scroll.getHeight();
-    var current=scroll.getScrollPosition();
-    var tilesize=gettilesize();
-    x*=tilesize;
-    y*=tilesize;
-    var offset=tilesize*2;
-    var fromx=current.getX();
-    var fromy=current.getY();
-    if(!force&&isinside(fromx,x,width-offset)&&isinside(fromy,y,height-offset)){
-      scroll.setScrollPosition(current);
-      return false;
-    }
-    x-=width/2;
-    y-=height/2;
-    x=Math.min(x,canvas.getWidth()-width+scroll.getHScrollbarHeight());
-    y=Math.min(y,canvas.getHeight()-height+scroll.getVScrollbarWidth());
-    x=Math.max(0,x);
-    y=Math.max(0,y);
-    synchronized(OpenGL.LOCK){
-      scroll.setScrollPosition(x,y);
-    }
-    return true;
+  /// @param force If false, will only center if coordinates are out-of-view.
+  public void center(int x,int y,boolean force){
+    grid.center(tiles[x][y],force);
   }
 
   /// Draws the panel.

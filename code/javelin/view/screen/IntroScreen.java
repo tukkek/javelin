@@ -2,9 +2,6 @@ package javelin.view.screen;
 
 import java.awt.Color;
 
-import javelin.Javelin;
-import javelin.old.Screen;
-
 /**
  * Simple notice screen for when a player start the game for the first time.
  *
@@ -15,7 +12,7 @@ public class IntroScreen extends InfoScreen{
 	public IntroScreen(final String text){
 		super(text);
 		configurescreen(this);
-		Javelin.app.switchScreen(this);
+		Screen.change(this);
 	}
 
 	/** Configure colors. */

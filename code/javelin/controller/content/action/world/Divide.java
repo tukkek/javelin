@@ -17,7 +17,7 @@ import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.old.messagepanel.MessagePanel;
-import javelin.view.screen.BattleScreen;
+import javelin.view.screen.Screen;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.SelectScreen;
 
@@ -87,7 +87,6 @@ public class Divide extends WorldAction{
     var oldsquad=new Combatants(Squad.active.members);
     var newsquad=new Combatants();
     while(input!='\n'){
-      clear();
       var oldcolumn=new ArrayList<String>();
       var newcolumn=new ArrayList<String>();
       log(indexreference,oldsquad,oldcolumn);
@@ -96,9 +95,8 @@ public class Divide extends WorldAction{
       if(input=='c') return;
       if(input!='\n'&&!swap(indexreference,input,oldsquad,newsquad)) continue;
     }
+    Screen.reopen();
     if(oldsquad.isEmpty()||newsquad.isEmpty()) return;
-    Javelin.app.switchScreen(BattleScreen.active);
-    BattleScreen.active.center();
     var to=walk();
     if(to==null) throw new RepeatTurn();
     var gold=transfergold(newsquad);

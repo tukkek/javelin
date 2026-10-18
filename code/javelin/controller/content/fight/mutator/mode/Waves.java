@@ -29,85 +29,83 @@ import javelin.view.screen.BattleScreen;
  * @author alex
  */
 public class Waves extends FightMode{
-	/** Least amount of waves. */
-	public static final int MINIMUM=1;
-	/** Most amount of waves. */
-	public static final int MAXIMUM=4;
-	/** EL modifier by number of waves. */
-	public static final Map<Integer,Integer> ELMODIFIER=new TreeMap<>();
+  /** Least amount of waves. */
+  public static final int MINIMUM=1;
+  /** Most amount of waves. */
+  public static final int MAXIMUM=4;
+  /** EL modifier by number of waves. */
+  public static final Map<Integer,Integer> ELMODIFIER=new TreeMap<>();
 
-	static final int ATTEMPTS=10_000;
+  static final int ATTEMPTS=10_000;
 
-	static{
-		ELMODIFIER.put(MINIMUM,0);
-		ELMODIFIER.put(2,-2);
-		ELMODIFIER.put(3,-3);
-		ELMODIFIER.put(MAXIMUM,-4);
-	}
+  static{
+    ELMODIFIER.put(MINIMUM,0);
+    ELMODIFIER.put(2,-2);
+    ELMODIFIER.put(3,-3);
+    ELMODIFIER.put(MAXIMUM,-4);
+  }
 
-	/** Shown when a new wave appears. */
-	protected String message="A new wave of enemies appears!";
-	/** Total waves. */
-	protected int waves;
-	/** Current wave (1 for first). */
-	protected int wave=1;
-	/** Encounter level for each wave. */
-	protected int waveel;
-	/** An {@link Combatant#ap} cost to simulate units entering combat. */
-	protected float delay=.5f;
+  /** Shown when a new wave appears. */
+  protected String message="A new wave of enemies appears!";
+  /** Total waves. */
+  protected int waves;
+  /** Current wave (1 for first). */
+  protected int wave=1;
+  /** Encounter level for each wave. */
+  protected int waveel;
+  /** An {@link Combatant#ap} cost to simulate units entering combat. */
+  protected float delay=.5f;
 
-	public Waves(int elp,int waves){
-		this.waves=waves;
-		waveel=elp+Waves.ELMODIFIER.get(waves);
-	}
+  public Waves(int elp,int waves){
+    this.waves=waves;
+    waveel=elp+Waves.ELMODIFIER.get(waves);
+  }
 
-	public Waves(int elp){
-		this(elp,RPG.r(MINIMUM,MAXIMUM));
-	}
+  public Waves(int elp){
+    this(elp,RPG.r(MINIMUM,MAXIMUM));
+  }
 
-	@Override
-	public Combatants generate(Fight f){
-		return new Combatants(f.getfoes(waveel));
-	}
+  @Override
+  public Combatants generate(Fight f){
+    return new Combatants(f.getfoes(waveel));
+  }
 
-	/**
-	 * An oppotunity for sub-classes to alter {@link Combatant}s before or after
-	 * they are add. By default places the units in combat.
-	 */
-	protected void place(Fight f,Combatants wave,ArrayList<Combatant> team){
-		f.add(wave,team);
-		if(this.wave>1) for(var c:wave)
-			c.ap+=delay;
-	}
+  /**
+   * An oppotunity for sub-classes to alter {@link Combatant}s before or after
+   * they are add. By default places the units in combat.
+   */
+  protected void place(Fight f,Combatants wave,ArrayList<Combatant> team){
+    f.add(wave,team);
+    if(this.wave>1) for(var c:wave) c.ap+=delay;
+  }
 
-	@Override
-	public void checkend(Fight f){
-		var red=Fight.state.redteam;
-		if(!red.isEmpty()) return;
-		wave+=1;
-		if(wave>waves) return;
-		var wave=generate(f);
-		if(wave==null) return;
-		place(f,wave,red);
-		var p=RPG.pick(wave).getlocation();
-		BattleScreen.active.center(p.x,p.y);
-		Javelin.redraw();
-		Javelin.message(message,true);
-	}
+  @Override
+  public void checkend(Fight f){
+    var red=Fight.state.redteam;
+    if(!red.isEmpty()) return;
+    wave+=1;
+    if(wave>waves) return;
+    var wave=generate(f);
+    if(wave==null) return;
+    place(f,wave,red);
+    var p=RPG.pick(wave).getlocation();
+    BattleScreen.active.center(p.x,p.y);
+    Javelin.message(message,true);
+  }
 
-	@Override
-	public void draw(Fight f){
-		checkend(f);
-	}
+  @Override
+  public void draw(Fight f){
+    checkend(f);
+  }
 
-	/** @return Generates at most {@link #MAXIMUM} waves and returns all units. */
-	public static Combatants generatewaves(int elp,EncounterIndex index)
-			throws GaveUp{
-		var nwaves=RPG.r(MINIMUM,MAXIMUM);
-		var waves=new Combatants();
-		int el=elp+ELMODIFIER.get(nwaves);
-		for(var i=0;i<nwaves;i++)
-			waves.addAll(EncounterGenerator.generate(el,index));
-		return waves;
-	}
+  /** @return Generates at most {@link #MAXIMUM} waves and returns all units. */
+  public static Combatants generatewaves(int elp,EncounterIndex index)
+      throws GaveUp{
+    var nwaves=RPG.r(MINIMUM,MAXIMUM);
+    var waves=new Combatants();
+    var el=elp+ELMODIFIER.get(nwaves);
+    for(var i=0;i<nwaves;i++)
+      waves.addAll(EncounterGenerator.generate(el,index));
+    return waves;
+  }
 }

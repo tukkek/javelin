@@ -5,17 +5,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.MediaTracker;
 import java.awt.Toolkit;
 
-import javelin.model.unit.Squad;
 import javelin.view.Images;
-import javelin.view.OpenGL;
-import javelin.view.mappanel.overlay.Overlay;
-import javelin.view.screen.BattleScreen;
-import javelin.view.screen.WorldScreen;
 
 public abstract class QuestApp extends Applet implements Runnable{
   public static final Color TEXTCOLOUR=new Color(192,192,192);
@@ -66,28 +60,6 @@ public abstract class QuestApp extends Applet implements Runnable{
     Interface.userinterface=new Interface();
     QuestApp.thread=new Thread(this);
     QuestApp.thread.start();
-  }
-
-  /** Switches to a new screen, discarding the old one. */
-  public void switchScreen(Component s){
-    var last=mainComponent;
-    if(last==s) return;
-    synchronized(OpenGL.LOCK){
-      BattleScreen.active=null;
-      if(last instanceof Screen screen) screen.close();
-      removeAll();
-      Overlay.clear();
-    }
-    if(Squad.active!=null&&s instanceof WorldScreen w) w.firstdraw=true;
-    if(s instanceof BattleScreen screen) BattleScreen.active=screen;
-    mainComponent=s;
-    add(s);
-    s.revalidate();
-    s.requestFocus();
-    if(s instanceof BattleScreen screen){
-      var point=screen.anchor();
-      EventQueue.invokeLater(()->screen.mappanel.setposition(point.x,point.y));
-    }
   }
 
   @Override

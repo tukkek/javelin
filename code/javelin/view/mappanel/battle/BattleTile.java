@@ -13,7 +13,6 @@ import javelin.model.unit.Combatant;
 import javelin.view.Images;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
-import javelin.view.screen.BattleScreen;
 
 public class BattleTile extends Tile{
   public static float MAXLIFE=Combatant.STATUSUNHARMED;
@@ -32,12 +31,13 @@ public class BattleTile extends Tile{
 
   @Override
   public void paint(Graphics g){
-    if(!discovered){
+    var fight=Fight.current;
+    if(fight==null) return;
+    var day=((BattlePanel)MapPanel.get()).daylight;
+    if(!discovered&&!day){
       drawcover(g);
       return;
     }
-    var fight=Fight.current;
-    if(fight==null) return;
     var m=fight.map;
     var s=Fight.state;
     var square=s.map[x][y];
@@ -58,7 +58,7 @@ public class BattleTile extends Tile{
     if(c!=null) drawcombatant(g,c,this);
     else if(meld!=null) draw(g,meld.getimage(s));
     if(shrouded){
-      var p=getposition();
+      var p=draw();
       g.setColor(new Color(0,0,0,1/3f));
       var tilesize=MapPanel.get().gettilesize();
       g.fillRect(p.x,p.y,tilesize,tilesize);
@@ -74,7 +74,7 @@ public class BattleTile extends Tile{
   void drawcombatant(Graphics g,Combatant c,Tile t){
     var isblue=Fight.state.blueteam.contains(c);
     var s=MapPanel.get().gettilesize();
-    var p=getposition();
+    var p=draw();
     if(BattlePanel.current!=null&&BattlePanel.current.equals(c)){
       g.setColor(isblue?Color.GREEN:Color.ORANGE);
       g.fillRect(p.x,p.y,s,s);

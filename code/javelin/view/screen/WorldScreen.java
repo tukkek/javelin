@@ -48,6 +48,7 @@ import javelin.old.RPG;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.Images;
 import javelin.view.mappanel.MapPanel;
+import javelin.view.mappanel.MapPanel.Grid;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.overlay.Overlay;
 import javelin.view.mappanel.world.WorldPanel;
@@ -140,7 +141,6 @@ public class WorldScreen extends BattleScreen{
         s.join(squad);
       var d=s.getdistrict();
       if(d!=null) d.town.enter();
-
       redraw();
       Interface.userinterface.waiting=true;
       final var updatableUserAction=getUserInput();
@@ -174,6 +174,7 @@ public class WorldScreen extends BattleScreen{
     if(WorldScreen.welcome) welcome();
     else Javelin.lose();
     endday();
+    Grid.get().center(null,false);
     var squads=Squad.getsquads();
     if(squads.isEmpty()) return;
     if(Squad.active==null) Squad.active=squads.stream()
@@ -190,10 +191,7 @@ public class WorldScreen extends BattleScreen{
 
   void redraw(){
     var h=JavelinApp.context.getsquadlocation();
-    if(h!=null){
-      center(h.x,h.y);
-      view(h.x,h.y);
-    }
+    if(h!=null) view(h.x,h.y);
     updateplayerinformation();
     Javelin.redraw();
   }

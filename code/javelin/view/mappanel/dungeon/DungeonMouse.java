@@ -10,13 +10,8 @@ import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.overlay.MoveOverlay;
 import javelin.view.mappanel.overlay.Overlay;
 import javelin.view.mappanel.world.WorldMouse;
-import javelin.view.screen.BattleScreen;
 
 public class DungeonMouse extends Mouse{
-  public DungeonMouse(MapPanel panel){
-    super(panel);
-  }
-
   @Override
   public void mouseClicked(MouseEvent e){
     if(overrideinput()||!Interface.userinterface.waiting) return;

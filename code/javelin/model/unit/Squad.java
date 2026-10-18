@@ -37,9 +37,9 @@ import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.Images;
-import javelin.view.screen.BattleScreen;
 import javelin.view.screen.BribingScreen;
 import javelin.view.screen.NamingScreen;
+import javelin.view.screen.Screen;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -254,8 +254,8 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
   @Override
   public Boolean destroy(Incursion i){
     if(Javelin.DEBUG&&Debug.disablecombat) return false;
-    Javelin.message("You are attacked by: "+i.toString().toLowerCase()+"!",
-        true);
+    var text="You are attacked by: "+i.toString().toLowerCase()+"!";
+    Javelin.message(text,true);
     Squad.active=this;
     throw new StartBattle(new IncursionFight(i));
   }
@@ -372,7 +372,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
     final var bribe=Math.max(1,RewardCalculator.receivegold(foes)/2);
     final var canhire=d>=highest+5;
     var b=new BribingScreen().bribe(foes,dailyfee,bribe,canhire);
-    Javelin.app.switchScreen(BattleScreen.active);
+    Screen.reopen();
     return b;
   }
 
@@ -467,7 +467,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
     if(!strategic) return false;
     Character input=' ';
     while(input!='\n'&&input!='s'){
-      Javelin.app.switchScreen(BattleScreen.active);
+      Screen.reopen();
       final var difficulty=Difficulty.describe(diffifculty);
       final var prompt="Do you want to skip this "+difficulty+" battle?\n\n" //
           +"Press ENTER to open the battle screen.\n"

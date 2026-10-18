@@ -21,6 +21,7 @@ import javelin.model.unit.Squad;
 import javelin.model.world.Period.Time;
 import javelin.old.RPG;
 import javelin.view.screen.InfoScreen;
+import javelin.view.screen.Screen;
 import javelin.view.screen.SquadScreen;
 import javelin.view.screen.WorldScreen;
 
@@ -199,7 +200,7 @@ public class AdventurersGuild extends UniqueLocation{
     }
     training+="\nPress ENTER to continue...";
     var screen=new InfoScreen(training);
-    Javelin.app.switchScreen(screen);
+    Screen.change(screen);
     while(screen.getinput()!='\n'){}
   }
 

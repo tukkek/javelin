@@ -181,8 +181,11 @@ public class Shrine extends Fortification{
     var r=rituals.get(slot);
     if(!r.validate()||!Squad.active.pay(r.price)) return false;
     var message=r.perform();
-    if(message==null) message="The ritual of %s is performed!"
-        .formatted(r.spell.name.toLowerCase());
+    if(message==null){
+      var text="The ritual of %s is performed!";
+      text=text.formatted(r.spell.name.toLowerCase());
+      message=text;
+    }
     Javelin.message(message,true);
     return true;
   }

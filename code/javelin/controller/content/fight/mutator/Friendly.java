@@ -38,7 +38,6 @@ public class Friendly extends Mutator{
       if(t==s.blueteam) s.fleeing.add(c);
       else if(t==s.redteam) s.dead.add(c);
       if(s.next==c) s.next();
-      Javelin.redraw();
       Javelin.message(String.format(REMOVED,c),true);
     }
   }

@@ -3,7 +3,6 @@ package javelin.model.item.artifact;
 import java.util.ArrayList;
 
 import javelin.Javelin;
-import javelin.JavelinApp;
 import javelin.controller.content.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -28,7 +27,6 @@ public class Map extends Artifact{
   @Override
   protected boolean activate(Combatant user){
     if(Dungeon.active!=null){
-      JavelinApp.reopen();
       var text="You draw on the map but nothing happens. Try it outside next time!";
       Javelin.message(text,false);
       return true;

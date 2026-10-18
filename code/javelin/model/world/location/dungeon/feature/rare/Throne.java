@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.JavelinApp;
 import javelin.controller.content.action.world.WorldMove;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -79,7 +78,6 @@ public class Throne extends Feature{
     lastuse=Period.gettime();
     if(!revealed){
       var result=combatant+" has been gifted with a use of "+name+"!";
-      JavelinApp.reopen();
       Javelin.message(result,false);
       revealed=true;
     }

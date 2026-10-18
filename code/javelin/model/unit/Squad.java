@@ -254,8 +254,8 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
   @Override
   public Boolean destroy(Incursion i){
     if(Javelin.DEBUG&&Debug.disablecombat) return false;
-    Javelin.message("You are attacked by: "+i.toString().toLowerCase()+"!",
-        true);
+    var text="You are attacked by: "+i.toString().toLowerCase()+"!";
+    Javelin.message(text,true);
     Squad.active=this;
     throw new StartBattle(new IncursionFight(i));
   }

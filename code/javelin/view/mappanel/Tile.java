@@ -79,4 +79,9 @@ public abstract class Tile{
     var point=draw();
     g.fillRect(point.x,point.y,size,size);
   }
+
+  @Override
+  public String toString(){
+    return "%s %s:%s".formatted(getClass().getSimpleName(),x,y);
+  }
 }

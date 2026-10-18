@@ -43,7 +43,6 @@ public class Potion extends Item{
   @Override
   public boolean use(Combatant user){
     var text=spell.cast(user,user,false,null,null);
-    Javelin.redraw();
     BattleScreen.active.center();
     Javelin.message(text,false);
     return true;

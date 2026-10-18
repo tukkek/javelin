@@ -3,6 +3,7 @@ package javelin.view.mappanel.dungeon;
 import java.awt.Graphics;
 import java.util.HashSet;
 
+import javelin.controller.Point;
 import javelin.controller.db.Preferences;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
@@ -41,10 +42,18 @@ public class DungeonPanel extends MapPanel{
 
   @Override
   public void refresh(Graphics g){
-    var point=Dungeon.active.squadlocation;
-    var tile=MapPanel.get().tiles[point.x][point.y];
+    refresh(Dungeon.active.squadlocation,g);
+  }
+
+  /// Center every turn if there is no set {@link Grid#center}.
+  static public void refresh(Point p,Graphics g){
+    var tile=MapPanel.get().tiles[p.x][p.y];
     var grid=Grid.get();
-    grid.center(tile,grid.center!=tile);
+    var center=grid.center;
+    if(tile!=center&&center==null) grid.center(tile,true);
+    var discovered=0;
+    for(var tiles:MapPanel.get().tiles)
+      for(var tile2:tiles) if(tile2.discovered) discovered+=1;
     grid.draw(tile,g);
   }
 }

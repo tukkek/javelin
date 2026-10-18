@@ -42,8 +42,8 @@ public class Altar extends Feature{
     var blessings=BLESSINGS.stream().filter(b->b.price>=gold&&b.validate())
         .toList();
     if(blessings.isEmpty()){
-      Javelin.message("The gods have no blessing worthy of this tribute...",
-          false);
+      var text="The gods have no blessing worthy of this tribute...";
+      Javelin.message(text,false);
       return false;
     }
     blessings=RPG.shuffle(blessings,true);

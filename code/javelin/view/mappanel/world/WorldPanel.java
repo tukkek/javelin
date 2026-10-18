@@ -13,6 +13,7 @@ import javelin.model.world.location.Location;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.Tile;
+import javelin.view.mappanel.dungeon.DungeonPanel;
 
 public class WorldPanel extends MapPanel{
   public static final Map<Point,Location> DESTINATIONS=new HashMap<>();
@@ -57,9 +58,6 @@ public class WorldPanel extends MapPanel{
   @Override
   public void refresh(Graphics g){
     updateactors();
-    var point=Squad.active.getlocation();
-    var tile=tiles[point.x][point.y];
-    grid.center(tile,tile!=grid.center);
-    grid.draw(tile,g);
+    DungeonPanel.refresh(Squad.active.getlocation(),g);
   }
 }

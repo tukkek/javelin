@@ -1,7 +1,6 @@
 package javelin.model.item.artifact;
 
 import javelin.Javelin;
-import javelin.JavelinApp;
 import javelin.model.transport.FlyingNimbus;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -28,7 +27,6 @@ public class Flute extends Artifact{
       Squad.active.updateavatar();
       text="You are taken by a "+Squad.active.transport+"!";
     }
-    JavelinApp.reopen();
     Javelin.message(text,false);
     return true;
   }

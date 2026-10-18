@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.JavelinApp;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.ItemsByPrice;
@@ -90,7 +89,6 @@ public class Trader extends Inhabitant{
       sell(item);
       return true;
     }
-    JavelinApp.reopen();
     Javelin.message("Too expensive...",false);
     return true;
   }

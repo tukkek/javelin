@@ -26,6 +26,7 @@ import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.old.RPG;
 import javelin.view.screen.InfoScreen;
+import javelin.view.screen.Screen;
 
 /**
  * Casts rituals as a service, which are target-less spells
@@ -212,7 +213,7 @@ public class Shrine extends Fortification{
             r.spell.name,Javelin.format(r.price)))
         .collect(joining("\n"));
     var m=MENU.formatted(priest,rituals,Javelin.format(Squad.active.gold));
-    Javelin.app.switchScreen(new InfoScreen(m));
+    Screen.change(new InfoScreen(m));
     while(!processinput()) continue;
     return true;
   }

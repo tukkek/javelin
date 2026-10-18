@@ -13,6 +13,7 @@ import javelin.model.world.location.town.Town;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.IntroScreen;
 import javelin.view.screen.Option;
+import javelin.view.screen.Screen;
 
 /**
  * Any screen with multiple choices.
@@ -113,7 +114,7 @@ public abstract class SelectScreen extends InfoScreen{
    */
   public void processinput(final List<Option> options){
     var feedback=' ';
-    Javelin.app.switchScreen(this);
+    Screen.change(this);
     while(feedback!=PROCEED){
       repaint();
       feedback=InfoScreen.feedback();

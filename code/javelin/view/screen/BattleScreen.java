@@ -28,7 +28,6 @@ import javelin.model.unit.Combatant;
 import javelin.model.world.Period;
 import javelin.old.Interface;
 import javelin.old.QuestApp;
-import javelin.old.Screen;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.OpenGL;
 import javelin.view.StatusPanel;

@@ -4,10 +4,10 @@ import java.util.LinkedList;
 
 import javelin.Debug;
 import javelin.Javelin;
-import javelin.JavelinApp;
 import javelin.model.unit.Combatant;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
+import javelin.view.screen.Screen;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -62,9 +62,9 @@ public class Help extends Action{
       var d=isworld?Debug.onworldhelp():Debug.onbattlehelp();
       if(!d.isEmpty()) text=d;
     }
-    Javelin.app.switchScreen(new InfoScreen(text));
+    Screen.change(new InfoScreen(text));
     Javelin.input();
-    JavelinApp.reopen();
+    Screen.reopen();
   }
 
   private static String pad(String s,int padding){

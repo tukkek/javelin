@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import javelin.Javelin;
 import javelin.view.screen.InfoScreen;
+import javelin.view.screen.Screen;
 
 /**
  * Outputs the content of a text file to the screen.
@@ -32,7 +33,7 @@ public class TextReader{
 	}
 
 	public static KeyEvent show(File f,String footer){
-		Javelin.app.switchScreen(new InfoScreen(TextReader.read(f)+footer));
+		Screen.change(new InfoScreen(TextReader.read(f)+footer));
 		return Javelin.input();
 	}
 }

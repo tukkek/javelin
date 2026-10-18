@@ -3,7 +3,6 @@ package javelin.view.mappanel.world;
 import java.awt.event.MouseEvent;
 
 import javelin.Javelin;
-import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.content.action.world.WorldMove;
 import javelin.model.unit.Squad;
@@ -19,6 +18,7 @@ import javelin.view.mappanel.overlay.MoveOverlay;
 import javelin.view.mappanel.overlay.Overlay;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.DungeonScreen;
+import javelin.view.screen.Screen;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -68,7 +68,7 @@ public class WorldMouse extends Mouse{
     public void run(){
       if(!target.isadjacent(Squad.active)){
         target.accessremotely();
-        JavelinApp.reopen();
+        Screen.reopen();
         return;
       }
       if(target instanceof Squad s){

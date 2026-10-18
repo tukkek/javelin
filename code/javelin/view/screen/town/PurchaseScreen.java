@@ -4,6 +4,7 @@ import javelin.Javelin;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.Option;
+import javelin.view.screen.Screen;
 
 /***
  * Any screen in which the player can spend money tu buy something.**
@@ -27,7 +28,7 @@ public abstract class PurchaseScreen extends SelectScreen{
 			return true;
 		}
 		text+="\nToo expensive!";
-		Javelin.app.switchScreen(this);
+		Screen.change(this);
 		return false;
 	}
 

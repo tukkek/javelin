@@ -43,6 +43,7 @@ import javelin.view.mappanel.MapPanel;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.Option;
+import javelin.view.screen.Screen;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.SelectScreen;
 
@@ -199,7 +200,7 @@ public class Javelin{
     var squads=Squad.getsquads();
     var held=World.getactors().stream().filter(Actor::hold).toList();
     if(!squads.isEmpty()||!held.isEmpty()) return false;
-    JavelinApp.reopen();
+    Screen.reopen();
     MessagePanel.get().clear();
     message("Please wait...",Delay.NONE);
     StateManager.clear();
@@ -254,9 +255,9 @@ public class Javelin{
       text+=item;
       if(!multicolumn||!leftcolumn) text+="\n";
     }
-    if(full) app.switchScreen(new InfoScreen(text));
+    if(full) Screen.change(new InfoScreen(text));
     else{
-      JavelinApp.reopen();
+      Screen.reopen();
       MessagePanel.active.clear();
       Javelin.message(text,Delay.NONE);
     }
@@ -269,7 +270,7 @@ public class Javelin{
       }
       i=SelectScreen.convertkeytoindex(f);
     }
-    if(full) JavelinApp.reopen();
+    if(full) Screen.reopen();
     return i;
   }
 
@@ -283,7 +284,7 @@ public class Javelin{
    * @return the key pressed by the user as confirmation for seeing the message.
    */
   public static KeyEvent message(String text,boolean requireenter){
-    JavelinApp.reopen();
+    Screen.reopen();
     MessagePanel.active.clear();
     text+="\nPress "+(requireenter?"ENTER":"any key")+" to continue...";
     Javelin.message(text,Delay.NONE);

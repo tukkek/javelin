@@ -21,6 +21,7 @@ import javelin.model.world.location.order.TrainingOrder;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.Option;
+import javelin.view.screen.Screen;
 import javelin.view.screen.town.SelectScreen;
 
 /**
@@ -133,7 +134,7 @@ public abstract class UpgradingScreen extends SelectScreen{
     if(showmoneyinfo)
       text+="Your squad has $"+Javelin.format(getgold())+".\n\n";
     text+="Which squad member? Press r to return to upgrade selection.";
-    Javelin.app.switchScreen(this);
+    Screen.change(this);
     while(true){
       repaint();
       try{

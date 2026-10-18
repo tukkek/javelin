@@ -11,6 +11,7 @@ import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.Option;
+import javelin.view.screen.Screen;
 import javelin.view.screen.town.SelectScreen;
 
 /**
@@ -51,12 +52,12 @@ public abstract class Wish extends Option{
       var error=w.validate();
       if(error!=null){
         text+="\n"+error;
-        Javelin.app.switchScreen(this);
+        Screen.change(this);
         return false;
       }
       if(price>rubies){
         text+="\n\nNot enough rubies...";
-        Javelin.app.switchScreen(this);
+        Screen.change(this);
         return false;
       }
       if(!w.wish(w.requirestarget?selectmember():null)) return false;
@@ -91,7 +92,7 @@ public abstract class Wish extends Option{
     }
 
     Character print(){
-      Javelin.app.switchScreen(this);
+      Screen.change(this);
       return feedback();
     }
 

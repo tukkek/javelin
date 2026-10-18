@@ -15,6 +15,7 @@ import javelin.old.RPG;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
+import javelin.view.screen.Screen;
 
 /**
  * A {@link Fight} has started.
@@ -48,7 +49,7 @@ public class StartBattle extends BattleEvent{
       screen.open();
       for(var m:fight.mutators) m.draw(fight);
       if(Javelin.DEBUG) Debug.onbattlestart();
-      Javelin.app.switchScreen(screen);
+      Screen.change(screen);
       screen.mainloop();
     }else quickbattle(diffifculty);
   }

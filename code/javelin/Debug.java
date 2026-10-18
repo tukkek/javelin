@@ -28,7 +28,6 @@ import javelin.model.world.Period;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Feature;
-import javelin.model.world.location.dungeon.feature.rare.inhabitant.Trader;
 import javelin.model.world.location.town.Town;
 import javelin.view.Images;
 import javelin.view.TextWindow;
@@ -295,7 +294,6 @@ public class Debug{
 
   /** @see StartBattle */
   public static void onbattlestart(){
-    Helpers.freeze();
     //
   }
 
@@ -312,7 +310,6 @@ public class Debug{
    * @return Any text will be printed below the usual help output.
    */
   public static String onworldhelp(){
-    Helpers.place(new Trader(Dungeon.active));
     return "";
   }
 }

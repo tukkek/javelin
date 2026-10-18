@@ -23,12 +23,11 @@ import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.generator.WorldGenerator;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.old.QuestApp;
 import javelin.old.RPG;
-import javelin.old.Screen;
 import javelin.view.screen.BattleScreen;
+import javelin.view.screen.Screen;
 import javelin.view.screen.SquadScreen;
 import javelin.view.screen.WorldScreen;
 
@@ -88,7 +87,7 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
 
   void loop(){
     try{
-      if(BattleScreen.active==null) reopen();
+      if(BattleScreen.active==null) Screen.reopen();
       while(true) JavelinApp.context.turn();
     }catch(StartBattle e){
       if(Debug.disablecombat) return;
@@ -177,21 +176,5 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
     }
     JOptionPane.showMessageDialog(Javelin.app,message);
     System.exit(20201202);
-  }
-
-  /// Opens the correct {@link Screen}.
-  public static void reopen(){
-    var screen=BattleScreen.active;
-    if(screen!=null&&screen==Javelin.app.mainComponent){
-      Javelin.redraw();
-      return;
-    }
-    var dungeon=Dungeon.active;
-    if(Fight.current!=null) screen=new BattleScreen(true);
-    else if(dungeon==null) screen=new WorldScreen();
-    else dungeon.enter();
-    if(screen==null) return;
-    screen.open();
-    Javelin.app.switchScreen(screen);
   }
 }

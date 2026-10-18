@@ -26,13 +26,12 @@ import org.lwjgl.opengl.awt.GLData.VersionPolicy;
 import org.lwjgl.system.MemoryUtil;
 
 import javelin.Javelin;
-import javelin.JavelinApp;
 import javelin.controller.Steam;
-import javelin.old.Screen;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.overlay.Overlay;
 import javelin.view.screen.BattleScreen;
+import javelin.view.screen.Screen;
 
 /**
  * <p>
@@ -80,7 +79,7 @@ public class OpenGL{
    * To ensure consistency per frame rendered this lock synchronizes:
    * <ul>
    * <li>{@link Canvas#render()}</li>
-   * <li>{@link JavelinApp#switchScreen(java.awt.Component)} so {@link Screen}s
+   * <li>{@link Screen#change(java.awt.Component)} so {@link Screen}s
    * are not removed midpaint</li>
    * <li>Changing the {@link Overlay}</li>
    * </ul>

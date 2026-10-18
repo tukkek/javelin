@@ -7,7 +7,6 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.JavelinApp;
 import javelin.controller.collection.CountingSet;
 import javelin.controller.content.action.world.WorldAction;
 import javelin.model.item.Item;
@@ -15,6 +14,7 @@ import javelin.model.item.gear.Gear;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.view.screen.InfoScreen;
+import javelin.view.screen.Screen;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.SelectScreen;
 
@@ -64,7 +64,7 @@ public class UseItems extends WorldAction{
       infoscreen.print(actions+"\n"+list);
       if(executecommand(allitems,list,infoscreen)) break;
     }
-    JavelinApp.reopen();
+    Screen.reopen();
   }
 
   /** Toggle between {@link UseItems} and {@link EquipGear}. */
@@ -74,13 +74,13 @@ public class UseItems extends WorldAction{
 
   boolean executecommand(ArrayList<Item> allitems,String list,
       InfoScreen infoscreen){
-    Javelin.app.switchScreen(infoscreen);
+    Screen.change(infoscreen);
     var input=InfoScreen.feedback();
     if(input=='d'){
       var i=select(allitems,infoscreen);
       if(i==null) return false;
       var name=i.toString().toLowerCase();
-      Javelin.app.switchScreen(new InfoScreen(DISCARD.formatted(name)));
+      Screen.change(new InfoScreen(DISCARD.formatted(name)));
       if(InfoScreen.feedback()=='d') Squad.active.equipment.remove(i);
       return false;
     }

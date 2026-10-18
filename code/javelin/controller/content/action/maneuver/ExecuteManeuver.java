@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.JavelinApp;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.content.action.Action;
 import javelin.controller.content.action.ai.AiAction;
@@ -15,6 +14,7 @@ import javelin.model.unit.abilities.discipline.Maneuver;
 import javelin.model.unit.abilities.discipline.Maneuvers;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.BattleScreen;
+import javelin.view.screen.Screen;
 import javelin.view.screen.town.SelectScreen;
 
 public class ExecuteManeuver extends Action implements AiAction{
@@ -96,7 +96,7 @@ public class ExecuteManeuver extends Action implements AiAction{
       if(!m.instant) return m;
     }
     var choice=SelectScreen.convertkeytoindex(Javelin.promptscreen(prompt));
-    JavelinApp.reopen();
+    Screen.reopen();
     if(choice==-1&&choice<maneuvers.size()) throw new RepeatTurn();
     return maneuvers.get(choice);
   }

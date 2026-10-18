@@ -5,7 +5,6 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.Javelin.Delay;
-import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.exception.RepeatTurn;
@@ -18,6 +17,7 @@ import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.old.messagepanel.MessagePanel;
+import javelin.view.screen.Screen;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.SelectScreen;
 
@@ -95,7 +95,7 @@ public class Divide extends WorldAction{
       if(input=='c') return;
       if(input!='\n'&&!swap(indexreference,input,oldsquad,newsquad)) continue;
     }
-    JavelinApp.reopen();
+    Screen.reopen();
     if(oldsquad.isEmpty()||newsquad.isEmpty()) return;
     var to=walk();
     if(to==null) throw new RepeatTurn();

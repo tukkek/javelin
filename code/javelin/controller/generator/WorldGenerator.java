@@ -38,6 +38,8 @@ import javelin.view.screen.InfoScreen;
  * @author alex
  */
 public class WorldGenerator extends Thread{
+  /// Infinitely generate {@link World}s if {@link Javelin#DEBUG} and `true`.
+  public static boolean LOOP=false;
   /** {@link Terrain} generation steps. */
   public static final Terrain[] GENERATIONORDER={Terrain.MOUNTAINS,
       Terrain.MOUNTAINS,Terrain.DESERT,Terrain.PLAIN,Terrain.HILL,Terrain.WATER,
@@ -49,7 +51,7 @@ public class WorldGenerator extends Thread{
 
   static final Terrain[] NOISE={Terrain.PLAIN,Terrain.HILL,Terrain.FOREST,
       Terrain.MOUNTAINS};
-  static final String PROGRESSHEADER="Building world, using %S thread(s)...";
+  static final String HEADER="Building world, using %S thread(s)...";
   static final int NTHREADS=Math.max(1,Preferences.maxthreads);
   static final List<WorldGenerator> WORLDTHREADS=new ArrayList<>(NTHREADS);
   static final int NOISEAMOUNT=World.SIZE*World.SIZE/10;
@@ -210,7 +212,7 @@ public class WorldGenerator extends Thread{
   static boolean generatedungeons(String label,ProgressScreen s){
     s.print(String.format(PROGRESS,label,0));
     var dungeons=World.getactors().stream()
-        .filter(a->a instanceof DungeonEntrance)
+        .filter(DungeonEntrance.class::isInstance)
         .map(a->((DungeonEntrance)a).dungeon).collect(Collectors.toList());
     for(var d:new ArrayList<>(dungeons)) addbranches(d,dungeons);
     dungeons=dungeons.stream().filter(d->d.floors.getFirst().features.isEmpty())
@@ -250,27 +252,27 @@ public class WorldGenerator extends Thread{
    * @see Dungeon#generate()
    */
   public static void build(){
-    var header=String.format(PROGRESSHEADER,NTHREADS);
-    var s=new ProgressScreen(header);
     working=true;
-    while(true) try{
-      generateworld(s);
-      s.fix();
-      generatedungeons("Generating dungeons",s);
-      generatedungeons("Generating branches",s);
-      while(generatedungeons("Generating more branches",s)){
-        //continue
+    var screen=new ProgressScreen(HEADER.formatted(NTHREADS));
+    var debug=Javelin.DEBUG;
+    var count=0;
+    while(working) try{
+      World.seed=null;
+      screen.reset();
+      generateworld(screen);
+      screen.fix();
+      while(generatedungeons("Generating dungeons",screen)) continue;
+      if(debug&&LOOP){
+        count+=1;
+        Debug.log("Created %s worlds.".formatted(count),WorldGenerator.class);
+        continue;
       }
       working=false;
-      return;
     }catch(Exception e){
-      if(Javelin.DEBUG){
-        Throwable t=e;
-        while(t.getCause()!=null) t=t.getCause();
-        if(!(t instanceof RestartWorldGeneration)) throw e;
-      }
-      World.seed=null;
-      s.reset();
+      Throwable t=e;
+      while(t.getCause()!=null) t=t.getCause();
+      if(debug&&!(t instanceof RestartWorldGeneration))
+        throw new RuntimeException(t);
     }
   }
 }

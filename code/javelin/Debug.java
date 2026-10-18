@@ -27,6 +27,8 @@ import javelin.model.world.Actor;
 import javelin.model.world.Period;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.rare.inhabitant.Trader;
 import javelin.model.world.location.town.Town;
 import javelin.view.Images;
 import javelin.view.TextWindow;
@@ -230,6 +232,15 @@ public class Debug{
     static void flee(){
       Fight.current.flee(true);
     }
+
+    public static void place(Feature f){
+      var dungeon=Dungeon.active;
+      for(var point:dungeon.squadlocation.getadjacent()){
+        if(dungeon.isoccupied(point)) continue;
+        f.place(dungeon,point);
+        break;
+      }
+    }
   }
 
   /** @see Preferences */
@@ -284,6 +295,7 @@ public class Debug{
 
   /** @see StartBattle */
   public static void onbattlestart(){
+    Helpers.freeze();
     //
   }
 
@@ -300,6 +312,7 @@ public class Debug{
    * @return Any text will be printed below the usual help output.
    */
   public static String onworldhelp(){
+    Helpers.place(new Trader(Dungeon.active));
     return "";
   }
 }

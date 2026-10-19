@@ -32,7 +32,6 @@ Level 1 (caster level 1)
   Cure light wounds: cures 5 hit points. Touch.
   Detect magic: allows you to make a Spellcraft skill check to identify a single item.
   Doom: shakens an enemy.
-  Flare burst: makes creatures in a 10-feet radius dazzled for 10 rounds.
   Identify: reveals the function of an unidentfied magic item.
   Inflict light wounds: causes 5 points of damage. Touch, safe.
   Longstrider: increases caster's walking speed by 10 feet per round.
@@ -60,6 +59,7 @@ Level 3 (caster level 5)
   Displacement: makes target blink for 6 turns, providing a 50% miss chance to attacks against him. Touch.
   Deeper darkness: darkens environment.
   Find traps: caster gains +3 bonus to Search.
+  Flare burst: makes creatures in a 10-feet radius dazzled for 10 rounds.
   Heroism: For 1 hour target gains a +2 morale bonus on attack rolls, saves, and skill checks. Touch.
   Inflict serious wounds: causes 20 points of damage. Touch, safe.
   Rage: +2 strength and constitution, +1 will, -2 to armor class of an ally (duration based on target's constitution).

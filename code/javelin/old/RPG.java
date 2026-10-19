@@ -12,6 +12,10 @@ import javelin.controller.ai.BattleAi;
 
 public class RPG{
   public static Random rand=new Random();
+  /// Converts 5E advantage-mechanic to bonus.
+  public static int ADVANTAGE=+5;
+  /// Negative {@link #ADVANTAGE}.
+  public static int DISADVANTAGE=-ADVANTAGE;
 
   public static float random(){
     return rand.nextFloat();

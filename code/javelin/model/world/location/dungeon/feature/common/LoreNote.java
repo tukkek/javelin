@@ -3,13 +3,10 @@
  */
 package javelin.model.world.location.dungeon.feature.common;
 
-import java.util.stream.Collectors;
-
 import javelin.Javelin;
 import javelin.controller.table.dungeon.feature.FeatureModifierTable;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
-import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonEntrance;
 import javelin.model.world.location.dungeon.DungeonFloor;
@@ -21,8 +18,6 @@ import javelin.old.RPG;
  * Discovers {@link Lore} about another {@link DungeonFloor}. Generated
  * on-demand and not while generating {@link DungeonFloor} so we can have access
  * to all {@link DungeonFloor#lore}.
- *
- * TODO should probably {@link Location#reveal()}
  *
  * @author alex
  */
@@ -41,6 +36,14 @@ public class LoreNote extends Feature{
     dc=10+f.level+f.gettable(FeatureModifierTable.class).roll();
   }
 
+  boolean validate(Dungeon d){
+    var active=Dungeon.active;
+    if(d==active.dungeon) return false;
+    var tier=active.gettier().tier;
+    var level=d.level;
+    return tier.minlevel<=level&&level<=tier.maxlevel+5;
+  }
+
   @Override
   public boolean activate(){
     var reader=Squad.active.getbest(Skill.KNOWLEDGE);
@@ -49,16 +52,14 @@ public class LoreNote extends Feature{
       return false;
     }
     remove();
-    var tier=Dungeon.active.gettier().tier;
-    var entrances=DungeonEntrance.getdungeonsandtemples();
-    var candidates=entrances
-        .stream().map(e->e.dungeon).filter(d->tier.minlevel<=d.level
-            &&d.level<=tier.maxlevel+5&&d!=Dungeon.active.dungeon)
-        .collect(Collectors.toList());
-    var d=RPG.pick(candidates);
-    var lore=RPG.pick(d.lore);
+    var entrances=DungeonEntrance.getdungeonsandtemples().stream()
+        .filter(e->validate(e.dungeon)).toList();
+    var entrance=RPG.pick(entrances);
+    entrance.reveal();
+    var dungeon=entrance.dungeon;
+    var lore=RPG.pick(dungeon.lore);
     lore.discovered=true;
-    Javelin.message(String.format(SUCCESS,d,lore),true);
+    Javelin.message(SUCCESS.formatted(dungeon,lore),true);
     return false;
   }
 }

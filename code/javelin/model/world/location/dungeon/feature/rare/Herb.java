@@ -13,6 +13,7 @@ import javelin.controller.content.fight.RandomDungeonEncounter;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.model.item.Item;
 import javelin.model.item.consumable.potion.Potion;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.unit.skill.Survival;
@@ -25,6 +26,8 @@ import javelin.old.RPG;
 /**
  * Similar to a {@link Chest} but requires someone with enough {@link Survival}
  * and results in a higher-than average {@link Potion} treasure.
+ *
+ * TODO brew bombs?
  *
  * @see RewardCalculator
  * @author alex
@@ -55,6 +58,8 @@ public class Herb extends Feature{
     MAXLEVEL=level;
   }
 
+  record Test(Combatant combatant,int roll){}
+
   int dc;
   List<Potion> loot;
 
@@ -66,34 +71,37 @@ public class Herb extends Feature{
     loot=generate(f);
   }
 
+  Test test(Skill s){
+    var combatant=Squad.active.getbest(s);
+    return new Test(combatant,combatant.taketen(s));
+  }
+
   @Override
   public boolean activate(){
     var description=describe(loot);
-    var s=Squad.active;
-    var survivalist=s.getbest(Skill.SURVIVAL);
-    if(survivalist.taketen(Skill.SURVIVAL)<dc){
-      var text=survivalist+" is not familiar with this plant...";
-      if(s.getbest(Skill.KNOWLEDGE).taketen(Skill.KNOWLEDGE)>=dc)
-        text="A more skilled group could turn these herbs into "+description
-            +"...";
+    var squad=Squad.active;
+    var survival=test(Skill.SURVIVAL);
+    var survivalist=survival.combatant;
+    if(survival.roll<dc){
+      var wisdom=test(Skill.KNOWLEDGE).roll;
+      var text=wisdom>=dc
+          ?"A survivalist could turn these to %s...".formatted(description)
+          :"%s is is unfamiliar with this plant...".formatted(survivalist);
       Javelin.message(text,false);
       return true;
     }
-    //TODO test
-    //TODO brew bombs?
-    var prompt="Should %s extract these herbs into a %s?\n"
-        +"Press ENTER to continue, any other key to cancel...";
-    if(Javelin.prompt(prompt.formatted(survivalist,description))!='\n')
-      return false;
+    var lines=List.of("Should %s extract these herbs to a %s?",
+        "Press ENTER to continue; any other key to cancel...");
+    var text=String.join("\n",lines).formatted(survivalist,description);
+    if(Javelin.prompt(text)!='\n') return false;
     if(RPG.chancein(2)&&!Debug.disablecombat){
-      var interupted="You are interrupted while extracting "+description+"!";
-      Javelin.message(interupted,false);
+      Javelin.message("You are interrupted!",false);
       throw new StartBattle(new RandomDungeonEncounter(Dungeon.active));
     }
-    s.delay(1);
-    var success="You extract "+description+" from the herbs!";
-    Javelin.message(success,false);
-    for(Potion p:loot) p.grab();
+    squad.delay(1);
+    text="You extract a %s from the herbs!".formatted(description);
+    Javelin.message(text,false);
+    for(var potion:loot) potion.grab();
     remove();
     return false;
   }

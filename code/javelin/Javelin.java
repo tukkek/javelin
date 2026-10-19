@@ -265,7 +265,7 @@ public class Javelin{
     while(!(0<=i&&i<names.size())){
       var f=InfoScreen.feedback();
       if(f==InfoScreen.ESCAPE&&!force){
-        i=~1;
+        i=-1;
         break;
       }
       i=SelectScreen.convertkeytoindex(f);

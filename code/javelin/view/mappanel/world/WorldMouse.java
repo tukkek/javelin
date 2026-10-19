@@ -13,6 +13,7 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.old.Interface;
 import javelin.old.messagepanel.MessagePanel;
+import javelin.view.OpenGL;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.overlay.MoveOverlay;
 import javelin.view.mappanel.overlay.Overlay;
@@ -90,19 +91,21 @@ public class WorldMouse extends Mouse{
 
   @Override
   public void mouseClicked(MouseEvent e){
-    if(overrideinput()||!Interface.userinterface.waiting) return;
-    final var t=(WorldTile)gettile(e);
-    if(!t.discovered) return;
-    if(e.getButton()==MouseEvent.BUTTON1){
-      final var target=World.get(t.x,t.y);
-      if(target==Squad.active) return;
-      if(target!=null){
-        BattleScreen.perform(new Interact(target));
-        return;
+    synchronized(OpenGL.LOCK){
+      if(overrideinput()||!Interface.userinterface.waiting) return;
+      var t=(WorldTile)gettile(e);
+      if(t==null||!t.discovered) return;
+      if(e.getButton()==MouseEvent.BUTTON1){
+        final var target=World.get(t.x,t.y);
+        if(target==Squad.active) return;
+        if(target!=null){
+          BattleScreen.perform(new Interact(target));
+          return;
+        }
+        if(move()) return;
       }
-      if(move()) return;
+      super.mouseClicked(e);
     }
-    super.mouseClicked(e);
   }
 
   /**
@@ -139,12 +142,14 @@ public class WorldMouse extends Mouse{
 
   @Override
   public void mouseMoved(MouseEvent e){
-    if(!Interface.userinterface.waiting) return;
-    Overlay.clear();
-    var t=(WorldTile)gettile(e);
-    if(t==null||!t.discovered) return;
-    var target=World.get(t.x,t.y);
-    if(target==null) walk(new Point(t.x,t.y));
-    else describe(target);
+    synchronized(OpenGL.LOCK){
+      if(!Interface.userinterface.waiting) return;
+      Overlay.clear();
+      var t=(WorldTile)gettile(e);
+      if(t==null||!t.discovered) return;
+      var target=World.get(t.x,t.y);
+      if(target==null) walk(new Point(t.x,t.y));
+      else describe(target);
+    }
   }
 }

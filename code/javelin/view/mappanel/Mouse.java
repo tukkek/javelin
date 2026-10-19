@@ -7,14 +7,16 @@ import java.awt.event.MouseWheelEvent;
 
 import javelin.JavelinApp;
 import javelin.old.Interface;
+import javelin.view.OpenGL;
 import javelin.view.mappanel.battle.BattlePanel;
 
 public abstract class Mouse extends MouseAdapter{
   @Override
   public void mouseClicked(MouseEvent e){
-    if(e.getButton()==MouseEvent.BUTTON3){
+    synchronized(OpenGL.LOCK){
+      if(e.getButton()!=MouseEvent.BUTTON3) return;
       var t=gettile(e);
-      MapPanel.get().center(t.x,t.y,true);
+      if(t!=null) MapPanel.get().center(t.x,t.y,true);
     }
   }
 
@@ -25,9 +27,11 @@ public abstract class Mouse extends MouseAdapter{
 
   @Override
   public void mouseWheelMoved(MouseWheelEvent e){
-    var p=JavelinApp.context==null?BattlePanel.current.getlocation()
-        :JavelinApp.context.getsquadlocation();
-    MapPanel.get().zoom(-e.getWheelRotation(),p.x,p.y);
+    synchronized(OpenGL.LOCK){
+      var p=JavelinApp.context==null?BattlePanel.current.getlocation()
+          :JavelinApp.context.getsquadlocation();
+      MapPanel.get().zoom(-e.getWheelRotation(),p.x,p.y);
+    }
   }
 
   /**

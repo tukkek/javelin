@@ -114,6 +114,7 @@ public abstract class MapPanel extends Panel{
 
     /// @return Tile at the given coordinate.
     public Tile get(int x,int y){
+      if(origin==null) return null;
       var size=gettilesize();
       x=(x-origin.x)/size;
       y=(y-origin.y)/size;

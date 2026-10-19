@@ -14,10 +14,9 @@ public abstract class Mouse extends MouseAdapter{
   @Override
   public void mouseClicked(MouseEvent e){
     synchronized(OpenGL.LOCK){
-      if(e.getButton()==MouseEvent.BUTTON3){
-        var t=gettile(e);
-        MapPanel.get().center(t.x,t.y,true);
-      }
+      if(e.getButton()!=MouseEvent.BUTTON3) return;
+      var t=gettile(e);
+      if(t!=null) MapPanel.get().center(t.x,t.y,true);
     }
   }
 

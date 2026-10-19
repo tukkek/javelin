@@ -93,8 +93,8 @@ public class WorldMouse extends Mouse{
   public void mouseClicked(MouseEvent e){
     synchronized(OpenGL.LOCK){
       if(overrideinput()||!Interface.userinterface.waiting) return;
-      final var t=(WorldTile)gettile(e);
-      if(!t.discovered) return;
+      var t=(WorldTile)gettile(e);
+      if(t==null||!t.discovered) return;
       if(e.getButton()==MouseEvent.BUTTON1){
         final var target=World.get(t.x,t.y);
         if(target==Squad.active) return;

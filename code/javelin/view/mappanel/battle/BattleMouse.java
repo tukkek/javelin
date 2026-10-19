@@ -36,6 +36,7 @@ public class BattleMouse extends Mouse{
     synchronized(OpenGL.LOCK){
       if(overrideinput()) return;
       var t=gettile(e);
+      if(t==null) return;
       var s=Fight.state;
       var target=s.getcombatant(t.x,t.y);
       var button=e.getButton();
@@ -82,6 +83,7 @@ public class BattleMouse extends Mouse{
       MessagePanel.get().clear();
       try{
         var t=gettile(e);
+        if(t==null) return;
         var s=Fight.state;
         var current=s.clone(BattlePanel.current);
         var target=s.getcombatant(t.x,t.y);

@@ -17,8 +17,8 @@ public class DungeonMouse extends Mouse{
   public void mouseClicked(MouseEvent e){
     synchronized(OpenGL.LOCK){
       if(overrideinput()||!Interface.userinterface.waiting) return;
-      final var t=gettile(e);
-      if(!t.discovered) return;
+      var t=gettile(e);
+      if(t==null||!t.discovered) return;
       if(e.getButton()==MouseEvent.BUTTON1&&WorldMouse.move()){
         var p=Dungeon.active.squadlocation;
         MapPanel.get().center(p.x,p.y,true);
@@ -31,8 +31,8 @@ public class DungeonMouse extends Mouse{
     synchronized(OpenGL.LOCK){
       if(!Interface.userinterface.waiting) return;
       Overlay.clear();
-      final var t=gettile(e);
-      if(!t.discovered) return;
+      var t=gettile(e);
+      if(t==null||!t.discovered) return;
       var l=new Point(Dungeon.active.squadlocation);
       var walker=new DungeonWalker(l,new Point(t.x,t.y),Dungeon.active);
       Overlay.set(new MoveOverlay(walker));

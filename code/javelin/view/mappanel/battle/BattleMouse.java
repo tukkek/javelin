@@ -10,6 +10,7 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.old.Interface;
 import javelin.old.messagepanel.MessagePanel;
+import javelin.view.OpenGL;
 import javelin.view.StatusPanel;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
@@ -32,22 +33,24 @@ public class BattleMouse extends Mouse{
 
   @Override
   public void mouseClicked(MouseEvent e){
-    if(overrideinput()) return;
-    var t=gettile(e);
-    var s=Fight.state;
-    var target=s.getcombatant(t.x,t.y);
-    var button=e.getButton();
-    if(button==MouseEvent.BUTTON3&&target!=null){
-      BattleScreen.perform(()->{
-        if(!target.source.passive) new StatisticsScreen(target);
-      });
-      return;
+    synchronized(OpenGL.LOCK){
+      if(overrideinput()) return;
+      var t=gettile(e);
+      var s=Fight.state;
+      var target=s.getcombatant(t.x,t.y);
+      var button=e.getButton();
+      if(button==MouseEvent.BUTTON3&&target!=null){
+        BattleScreen.perform(()->{
+          if(!target.source.passive) new StatisticsScreen(target);
+        });
+        return;
+      }
+      if(button==MouseEvent.BUTTON1){
+        click(target,s);
+        return;
+      }
+      super.mouseClicked(e);
     }
-    if(button==MouseEvent.BUTTON1){
-      click(target,s);
-      return;
-    }
-    super.mouseClicked(e);
   }
 
   void click(Combatant target,BattleState s){
@@ -68,30 +71,32 @@ public class BattleMouse extends Mouse{
 
   @Override
   public void mouseMoved(MouseEvent e){
-    var statuspanel=StatusPanel.get();
-    if(Examine.lastlooked!=null){
-      Examine.lastlooked=null;
-      statuspanel.repaint();
-    }
-    if(!Interface.userinterface.waiting) return;
-    Overlay.clear();
-    MessagePanel.get().clear();
-    try{
-      var t=gettile(e);
-      var s=Fight.state;
-      var current=s.clone(BattlePanel.current);
-      var target=s.getcombatant(t.x,t.y);
-      var action=getaction(s,target,current);
-      if(action==null){
-        var status=target+" ("+target.getstatus()+")";
-        showstatus(status,target,null);
-      }else action.onenter(current,target,t,s);
-      if(target!=null&&(action==null||action.clearoverlay)){
-        Examine.lastlooked=target;
+    synchronized(OpenGL.LOCK){
+      var statuspanel=StatusPanel.get();
+      if(Examine.lastlooked!=null){
+        Examine.lastlooked=null;
         statuspanel.repaint();
       }
-    }finally{
-      MessagePanel.active.repaint();
+      if(!Interface.userinterface.waiting) return;
+      Overlay.clear();
+      MessagePanel.get().clear();
+      try{
+        var t=gettile(e);
+        var s=Fight.state;
+        var current=s.clone(BattlePanel.current);
+        var target=s.getcombatant(t.x,t.y);
+        var action=getaction(s,target,current);
+        if(action==null){
+          var status=target+" ("+target.getstatus()+")";
+          showstatus(status,target,null);
+        }else action.onenter(current,target,t,s);
+        if(target!=null&&(action==null||action.clearoverlay)){
+          Examine.lastlooked=target;
+          statuspanel.repaint();
+        }
+      }finally{
+        MessagePanel.active.repaint();
+      }
     }
   }
 
@@ -105,9 +110,11 @@ public class BattleMouse extends Mouse{
 
   @Override
   public void mouseWheelMoved(MouseWheelEvent e){
-    if(!Interface.userinterface.waiting) return;
-    super.mouseWheelMoved(e);
-    var current=BattlePanel.current;
-    MapPanel.get().center(current.location[0],current.location[1],true);
+    synchronized(OpenGL.LOCK){
+      if(!Interface.userinterface.waiting) return;
+      super.mouseWheelMoved(e);
+      var current=BattlePanel.current;
+      MapPanel.get().center(current.location[0],current.location[1],true);
+    }
   }
 }

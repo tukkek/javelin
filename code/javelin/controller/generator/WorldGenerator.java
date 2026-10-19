@@ -10,12 +10,9 @@ import java.util.stream.Collectors;
 
 import javelin.Debug;
 import javelin.Javelin;
-import javelin.JavelinApp;
 import javelin.controller.Point;
-import javelin.controller.collection.CountingSet;
 import javelin.controller.content.fight.RandomEncounter;
 import javelin.controller.content.terrain.Terrain;
-import javelin.controller.db.Preferences;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.generator.feature.LocationGenerator;
 import javelin.model.Realm;
@@ -24,6 +21,7 @@ import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonEntrance;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.feature.BranchPortal;
 import javelin.old.RPG;
 import javelin.view.screen.InfoScreen;
@@ -38,20 +36,19 @@ import javelin.view.screen.InfoScreen;
  * @author alex
  */
 public class WorldGenerator extends Thread{
+  /// Infinitely generate {@link World}s if {@link Javelin#DEBUG} and `true`.
+  public static boolean LOOP=false;
   /** {@link Terrain} generation steps. */
   public static final Terrain[] GENERATIONORDER={Terrain.MOUNTAINS,
       Terrain.MOUNTAINS,Terrain.DESERT,Terrain.PLAIN,Terrain.HILL,Terrain.WATER,
       Terrain.WATER,Terrain.MARSH,Terrain.FOREST};
   /** Arbitrary number to serve as guideline for {@link Terrain} generation. */
   public static final int NREGIONS=16;
-  /** @see Debug */
-  public static final CountingSet RESETS=Javelin.DEBUG?new CountingSet():null;
 
   static final Terrain[] NOISE={Terrain.PLAIN,Terrain.HILL,Terrain.FOREST,
       Terrain.MOUNTAINS};
-  static final String PROGRESSHEADER="Building world, using %S thread(s)...";
-  static final int NTHREADS=Math.max(1,Preferences.maxthreads);
-  static final List<WorldGenerator> WORLDTHREADS=new ArrayList<>(NTHREADS);
+  static final String HEADER="Building world, using %S thread(s)...";
+  static final int NTHREADS=Runtime.getRuntime().availableProcessors();
   static final int NOISEAMOUNT=World.SIZE*World.SIZE/10;
   static final String PROGRESS="%s: %s%%...";
   static final int MAXRETRIES=1000*2;
@@ -132,7 +129,6 @@ public class WorldGenerator extends Thread{
     if(DEBUG){
       var e=new RuntimeException("Reset");
       e.fillInStackTrace();
-      RESETS.add(JavelinApp.printstacktrace(e));
     }
     throw new RestartWorldGeneration();
   }
@@ -177,8 +173,13 @@ public class WorldGenerator extends Thread{
   }
 
   static void generateworld(InfoScreen s){
+    var threads=new ArrayList<WorldGenerator>(NTHREADS);
     try{
-      for(var i=0;i<NTHREADS;i++) startthread();
+      for(var i=0;i<NTHREADS;i++){
+        var thread=new WorldGenerator();
+        threads.add(thread);
+        thread.start();
+      }
       var lastdiscarded=-1;
       while(World.seed==null){
         if(lastdiscarded!=discarded){
@@ -187,12 +188,12 @@ public class WorldGenerator extends Thread{
         }
         Thread.sleep(REFRESH);
       }
-      for(var t:WORLDTHREADS){
+      for(var t:threads){
         t.interrupt();
         t.join();
       }
     }catch(InterruptedException e){
-      for(var t:WORLDTHREADS) t.interrupt();
+      for(var t:threads) t.interrupt();
       throw new RuntimeException(e);
     }
   }
@@ -210,36 +211,27 @@ public class WorldGenerator extends Thread{
   static boolean generatedungeons(String label,ProgressScreen s){
     s.print(String.format(PROGRESS,label,0));
     var dungeons=World.getactors().stream()
-        .filter(a->a instanceof DungeonEntrance)
+        .filter(DungeonEntrance.class::isInstance)
         .map(a->((DungeonEntrance)a).dungeon).collect(Collectors.toList());
     for(var d:new ArrayList<>(dungeons)) addbranches(d,dungeons);
     dungeons=dungeons.stream().filter(d->d.floors.getFirst().features.isEmpty())
         .sorted((a,b)->Integer.compare(a.floors.size(),b.floors.size()))
         .collect(Collectors.toList());
     if(dungeons.isEmpty()) return false;
-    var pool=Executors.newFixedThreadPool(NTHREADS);
-    var ndungeons=dungeons.size();
-    var tasks=new ArrayList<Future<?>>(ndungeons);
-    for(var d:dungeons) tasks.add(pool.submit(()->d.generate()));
-    try{
+    try(var pool=Executors.newFixedThreadPool(NTHREADS)){
+      var ndungeons=dungeons.size();
+      var tasks=new ArrayList<Future<?>>(ndungeons);
+      for(var d:dungeons) tasks.add(pool.submit(()->d.generate()));
       for(var i=0;i<ndungeons;i++){
         tasks.get(i).get();
         var progress=100.0*(i+1)/ndungeons;
         s.print(String.format(PROGRESS,label,Math.round(progress)));
       }
+      s.fix();
+      return true;
     }catch(Exception e){
-      pool.shutdownNow();
       throw new RuntimeException(e);
     }
-    s.fix();
-    pool.shutdown();
-    return true;
-  }
-
-  static void startthread(){
-    var thread=new WorldGenerator();
-    thread.start();
-    WORLDTHREADS.add(thread);
   }
 
   /**
@@ -250,27 +242,34 @@ public class WorldGenerator extends Thread{
    * @see Dungeon#generate()
    */
   public static void build(){
-    var header=String.format(PROGRESSHEADER,NTHREADS);
-    var s=new ProgressScreen(header);
     working=true;
-    while(true) try{
-      generateworld(s);
-      s.fix();
-      generatedungeons("Generating dungeons",s);
-      generatedungeons("Generating branches",s);
-      while(generatedungeons("Generating more branches",s)){
-        //continue
+    var screen=new ProgressScreen(HEADER.formatted(NTHREADS));
+    var debug=Javelin.DEBUG;
+    var count=0;
+    while(working) try{
+      DungeonFloor.FREE.clear();
+      World.seed=null;
+      screen.reset();
+      generateworld(screen);
+      screen.fix();
+      while(generatedungeons("Generating dungeons",screen)) continue;
+      if(debug&&LOOP){
+        count+=1;
+        Debug.log("Created %s worlds.".formatted(count),WorldGenerator.class);
+        continue;
       }
       working=false;
-      return;
     }catch(Exception e){
-      if(Javelin.DEBUG){
-        Throwable t=e;
-        while(t.getCause()!=null) t=t.getCause();
-        if(!(t instanceof RestartWorldGeneration)) throw e;
-      }
-      World.seed=null;
-      s.reset();
+      Throwable t=e;
+      while(t.getCause()!=null) t=t.getCause();
+      if(debug&&!(t instanceof RestartWorldGeneration))
+        throw new RuntimeException(t);
     }
+  }
+
+  public static void restart(){
+    if(working) throw new RestartWorldGeneration();
+    var text="Some issue can not be resolved by simply creating a new world.";
+    throw new RuntimeException(text);
   }
 }

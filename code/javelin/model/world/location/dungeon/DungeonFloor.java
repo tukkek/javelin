@@ -2,9 +2,11 @@ package javelin.model.world.location.dungeon;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
@@ -19,6 +21,8 @@ import javelin.controller.content.fight.RandomEncounter;
 import javelin.controller.content.template.Template;
 import javelin.controller.content.terrain.hazard.Hazard;
 import javelin.controller.db.EncounterIndex;
+import javelin.controller.exception.RestartWorldGeneration;
+import javelin.controller.generator.WorldGenerator;
 import javelin.controller.generator.dungeon.DungeonGenerator;
 import javelin.controller.generator.dungeon.template.FloorTile;
 import javelin.controller.generator.encounter.Encounter;
@@ -64,8 +68,10 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class DungeonFloor implements Serializable{
-  static final Class<? extends Feature> DEBUGFEATURE=null;
-  static final int ENCOUNTERATTEMPTS=1000;
+  public static final Class<? extends Feature> DEBUGFEATURE=null;
+  public static final int ENCOUNTERATTEMPTS=1000;
+  /// Cache. Holds all points in a dungeon which are popped as they are used.
+  public static Map<DungeonFloor,LinkedList<Point>> FREE=new HashMap<>();
 
   /**
    * A loose approximation of how many {@link DungeonTile}s are revealed with
@@ -197,14 +203,10 @@ public class DungeonFloor implements Serializable{
     }
     var target=DungeonTier.TIERS.indexOf(gettier())+RPG.randomize(6,4,7);
     for(var i=0;encounters.size()<target;i++){
+      if(i>ENCOUNTERATTEMPTS) WorldGenerator.restart();
       var el=level+Difficulty.get();
       var e=EncounterGenerator.generatebyindex(el,List.of(index));
       if(e!=null) encounters.add(e);
-      if(i>ENCOUNTERATTEMPTS){
-        if(!Javelin.DEBUG) return;
-        var error="Cannot generate encounters for %s [EL %s]!";
-        throw new RuntimeException(String.format(error,this,level));
-      }
     }
   }
 
@@ -291,11 +293,11 @@ public class DungeonFloor implements Serializable{
       area.addAll(z.area);
       for(var door:z.doors){
         if(!door.locked||!generated.add(door.key)) continue;
-        Point p=null;
-        while(p==null||isoccupied(p)) p=RPG.pick(area);
+        var point=RPG.shuffle(area).stream().filter(p->!isoccupied(p)).findAny()
+            .orElseThrow(RestartWorldGeneration::new);
         try{
           var k=door.key.getConstructor(DungeonFloor.class).newInstance(this);
-          new Chest(k,this).place(this,p);
+          new Chest(k,this).place(this,point);
         }catch(ReflectiveOperationException e){
           throw new RuntimeException(e);
         }
@@ -305,9 +307,18 @@ public class DungeonFloor implements Serializable{
 
   /** * @return A random, free {@link DungeonTile}. */
   public Point getunnocupied(){
-    Point p=null;
-    while(p==null||isoccupied(p)) p=new Point(RPG.r(0,size-1),RPG.r(0,size-1));
-    return p;
+    var free=FREE.get(this);
+    if(free==null){
+      free=RPG.shuffle(new LinkedList<>(Point.getrange(size,size)));
+      FREE.put(this,free);
+    }
+    Point point=null;
+    while(point==null){
+      if(free.isEmpty()) WorldGenerator.restart();
+      point=free.pop();
+      if(isoccupied(point)) point=null;
+    }
+    return point;
   }
 
   void generatestairs(DungeonZoner zoner){

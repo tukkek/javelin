@@ -9,6 +9,7 @@ import javelin.controller.content.terrain.Water;
 import javelin.controller.db.EncounterIndex;
 import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.exception.GaveUp;
+import javelin.controller.generator.WorldGenerator;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.model.world.location.haunt.Haunt;
@@ -120,6 +121,7 @@ public class EncounterGenerator{
     var index=EncounterIndex.merge(encounters);
     var attempts=1+EXPANSIONS;
     COUNT.add(index.count());
+    if(index.isEmpty()) WorldGenerator.restart();
     while(attempts>1&&el>index.firstKey()&&index.count()<PREEXPAND){
       index.expand(el);
       attempts-=1;

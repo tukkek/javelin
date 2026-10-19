@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import javelin.controller.Point;
+import javelin.controller.generator.WorldGenerator;
 import javelin.controller.generator.dungeon.template.FloorTile;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.door.Door;
@@ -121,7 +122,9 @@ public class DungeonZoner{
 
   /** Helper method to place a {@link Feature}. */
   public void place(Feature f,DungeonFloor floor){
-    f.place(floor,getpoint());
+    var point=getpoint();
+    if(point==null) WorldGenerator.restart();
+    else f.place(floor,point);
   }
 
   /**

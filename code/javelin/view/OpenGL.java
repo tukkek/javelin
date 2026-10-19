@@ -79,8 +79,8 @@ public class OpenGL{
    * To ensure consistency per frame rendered this lock synchronizes:
    * <ul>
    * <li>{@link Canvas#render()}</li>
-   * <li>{@link Screen#change(java.awt.Component)} so {@link Screen}s
-   * are not removed midpaint</li>
+   * <li>{@link Screen#change(java.awt.Component)} so {@link Screen}s are not
+   * removed midpaint</li>
    * <li>Changing the {@link Overlay}</li>
    * </ul>
    */

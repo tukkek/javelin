@@ -141,14 +141,17 @@ public class Dungeon implements Serializable{
       if(getClass()!=Dungeon.class&&getClass()!=Wilderness.class)
         throw new RuntimeException(getClass().getSimpleName());
     try{
-      var name=World.getseed().dungeonnames.pop();
+      var names=World.getseed().dungeonnames;
+      var name=names.pop();
       name=name.substring(name.lastIndexOf(" ")+1);
       var suffix=name.charAt(name.length()-1)=='s'?"'":"'s";
       return "%s%s %s".formatted(name,suffix,base.toLowerCase());
-    }catch(NoSuchElementException e){
-      if(Javelin.DEBUG)
-        throw new NoSuchElementException("Out of dungeon names!");
-      return "Nameless "+base;
+    }catch(NoSuchElementException|NullPointerException e){
+      // There is a bug that is hard to pinpoint as there are more names than dungeons per World-instance.
+      // Pop can return null and checking if empty is not enough hence the catching block.
+      // Likely a concurrenc yissue.
+      WorldGenerator.restart();
+      throw e;
     }
   }
 
@@ -169,14 +172,15 @@ public class Dungeon implements Serializable{
     if(index.isEmpty()){
       var terrains=new HashSet<>(this.terrains);
       for(var b:branches) terrains.addAll(b.terrains);
-      index=RPG.pick(terrains).getencounters();
+      index=RPG.pick(terrains).getencounters().copy();
     }
     var templates=branches.stream().flatMap(b->b.templates.stream())
         .collect(Collectors.toList());
     if(templates.isEmpty()) return index;
     index=index.filter(level);
     for(var encounters:index.values()){
-      var invalid=encounters.stream().filter(e->!validate(e.group)).toList();
+      var invalid=encounters.stream().filter(e->e!=null&&!validate(e.group))
+          .toList();
       encounters.removeAll(invalid);
     }
     index=index.limit(9);

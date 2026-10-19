@@ -31,7 +31,7 @@ public class Ruby extends CommandItem{
 
   @Override
   public boolean usepeacefully(Combatant user){
-    //TODO test and Wish is probably no longer needed
+    //TODO Wish is probably no longer needed
     //TODO new Hire action as third use for rubies? instead of per-screen logic
     for(var member:Squad.active) Fountain.heal(member);
     for(var item:Squad.active.equipment.getall())

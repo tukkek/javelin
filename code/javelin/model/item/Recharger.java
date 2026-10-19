@@ -48,7 +48,6 @@ public class Recharger implements Serializable,Cloneable{
   public boolean recharge(int hours){
     if(hours==0) return !isempty();
     if(hours==Integer.MAX_VALUE){
-      //TODO test
       recharging=0;
       used=0;
       return true;

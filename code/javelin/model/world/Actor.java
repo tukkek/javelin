@@ -303,8 +303,8 @@ public abstract class Actor implements Serializable{
    * @see Scenario#fogofwar
    */
   public void reveal(){
-    if(WorldScreen.get()!=null) MapPanel.get().tiles[x][y].discovered=true;
     World.getseed().discovered.add(getlocation());
+    if(WorldScreen.get()!=null) MapPanel.get().tiles[x][y].discovered=true;
   }
 
   /** @return <code>true</code> to signal the game shouldn't be lost yet. */

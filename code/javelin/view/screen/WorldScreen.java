@@ -171,6 +171,7 @@ public class WorldScreen extends BattleScreen{
 
   @Override
   public void turn(){
+    if(!(Javelin.app.mainComponent instanceof WorldScreen)) Screen.reopen();
     if(WorldScreen.welcome) welcome();
     else Javelin.lose();
     endday();

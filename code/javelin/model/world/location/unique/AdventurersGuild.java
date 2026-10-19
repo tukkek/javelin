@@ -31,11 +31,11 @@ public class AdventurersGuild extends UniqueLocation{
   /** Amount of {@link Combatant#xp} used to study. */
   public static final int INCREMENT=1;
 
-  static final List<String> KEYS=Arrays
-      .asList("1234567890abcdefghijklnoprsuvxyz/*-+.?!@#$%&()_=[]{}<>;:\"\\|"
-          .split(""));
+  static final String CHARACTERS="1234567890abcdefghijklnoprsuvxyz/*-+.?!@#$%&()_=[]{}<>;:\"\\|";
+  static final List<String> KEYS=Arrays.asList(CHARACTERS.split(""));
   static final String TITLE="Adventurers guild";
   static final float MAX=Tier.LOW.maxlevel;
+  //TODO split and join to show recruit
   static final String PROMPT="""
       You enter a tall building where people are training and studying in several large rooms.
 
@@ -47,7 +47,7 @@ public class AdventurersGuild extends UniqueLocation{
       t - begin training
       h - hire recruit (%s)
       q - quit
-      """//TODO split and join to show recruit
+      """
       .trim();
   static final List<Monster> RECRUITS=SquadScreen.CANDIDATES.stream()
       .filter(c->c.think(0)).toList();

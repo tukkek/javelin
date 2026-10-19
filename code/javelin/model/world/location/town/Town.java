@@ -441,13 +441,15 @@ public class Town extends Location{
   }
 
   /** Displays relevant town news. */
-  public void report(){
-    events.clear();//TODO show news on town screen instead
-    if(!ishostile()){
-      var events=this.events;
-      if(events.size()>9) events=events.subList(events.size()-9,events.size());
-      for(var e:events)
-        Javelin.message("News from %s:\n%s".formatted(this,e),true);
+  public void report(){//TODO show news on town screen
+    if(ishostile()){
+      events.clear();
+      return;
+    }
+    while(events.size()>9) events.remove(0);
+    for(var event:events){
+      var text="News from %s:\n%s".formatted(this,event);
+      Javelin.message(text,true);
     }
     events.clear();
   }

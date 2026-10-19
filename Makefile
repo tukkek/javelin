@@ -10,18 +10,23 @@ define flatten
 endef
 
 define jlink
-	read -p "TODO do not distribute steam libraries on GIt Hub!"
 	echo "Building Javelin for $(1)..."
 	mkdir --parents build/output/$(1)/javelin/
 	mvn --activate-profiles $(1) compile jlink:jlink package
 	cp -r target/maven-jlink/default build/output/$(1)/javelin/java
 	cp -r build/static/$(1)/* doc avatars maps monsters.xml preferences.properties README.txt audio build/output/$(1)/javelin
 	cp /tmp/VERSION.txt build/output/$(1)/javelin/doc/VERSION.txt 
-	#cp --recursive target/native/ build/output/$(1)/javelin/native/
-	#cp --recursive build/static/steam/sdk/redistributable_bin/ build/output/$(1)/javelin/native/steam/
-	#$(call flatten, build/output/$(1))
-	echo "Bundling javelin-$(1).zip"
-	cd build/output/$(1)/;zip -v "../javelin-$(1).zip" . -r > /dev/null
+	cp --recursive target/native/ build/output/$(1)/javelin/native/
+	cp --recursive build/static/steam/sdk/redistributable_bin/ build/output/$(1)/javelin/native/steam/
+	$(call flatten, build/output/$(1))
+	echo "Creating javelin.$(1).steam.zip."
+	mv build/output/$(1)/ build/output/$(1)-steam/
+	cd build/output/$(1)-steam/;zip -v "../javelin.$(1).steam.zip" . -r > /dev/null
+	echo "Creating javelin.$(1).github.zip."
+	cp --recursive build/output/$(1)-steam/ build/output/$(1)-github/
+	rm --recursive build/output/$(1)-github/javelin/native/steam/
+	rm build/output/$(1)-github/javelin/native/*steam_api*
+	cd build/output/$(1)-github/;zip -v "../javelin.$(1).github.zip" . -r > /dev/null
 endef
 
 default: windows linux

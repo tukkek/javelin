@@ -34,7 +34,7 @@ public class EncounterIndex extends TreeMap<Integer,List<Encounter>>{
   /** Constructor. */
   public EncounterIndex(){}
 
-  /** Constructor from {@link Monster}s, with NPCs and mixed encounters. */
+  /// Constructor from {@link Monster}s, with NPCs and mixed encounters.
   public EncounterIndex(List<Monster> pool){
     for(var m:pool){
       for(var i=1;i<=Encounter.BIG;i++) put(new Encounter(m,i));
@@ -160,5 +160,13 @@ public class EncounterIndex extends TreeMap<Integer,List<Encounter>>{
       e.addAll(encounters.get(j).group);
       if(new AlignmentDetector(e).check()) put(new Encounter(e));
     }
+  }
+
+  /// @return A new index with new internal {@link List}s.
+  public EncounterIndex copy(){
+    var indexes=List.of(this,new EncounterIndex());
+    for(var key:indexes.get(0).keySet())
+      indexes.get(1).put(key,new ArrayList<>(indexes.get(0).get(key)));
+    return indexes.get(1);
   }
 }

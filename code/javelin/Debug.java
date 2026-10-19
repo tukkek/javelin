@@ -17,7 +17,6 @@ import javelin.controller.db.Preferences;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.generator.NpcGenerator;
-import javelin.controller.generator.WorldGenerator;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
@@ -30,7 +29,6 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.town.Town;
 import javelin.view.Images;
-import javelin.view.TextWindow;
 import javelin.view.mappanel.overlay.Overlay;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
@@ -149,15 +147,6 @@ public class Debug{
       Squad.active.setlocation(to.x,to.y);
       Squad.active.displace();
       Squad.active.place();
-    }
-
-    static void printworldresets(){
-      var text="";
-      for(String reset:WorldGenerator.RESETS.getinvertedelements()){
-        text+="Count: "+WorldGenerator.RESETS.getcount(reset)+"\n";
-        text+=reset+"\n\n";
-      }
-      new TextWindow("World generation resets",text).show();
     }
 
     static void happen(Class<? extends EventCard> type){

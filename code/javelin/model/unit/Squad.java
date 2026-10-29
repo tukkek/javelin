@@ -371,9 +371,8 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
     if(Dungeon.active!=null) dailyfee*=10;
     final var bribe=Math.max(1,RewardCalculator.receivegold(foes)/2);
     final var canhire=d>=highest+5;
-    var b=new BribingScreen().bribe(foes,dailyfee,bribe,canhire);
-    Screen.reopen();
-    return b;
+    var s=new BribingScreen().bribe(foes,dailyfee,bribe,canhire);
+    return s;
   }
 
   /**

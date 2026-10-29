@@ -10,6 +10,7 @@ import javelin.controller.db.Preferences;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Period;
+import javelin.view.OpenGL;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.Tile;
@@ -54,17 +55,19 @@ public class BattlePanel extends MapPanel{
   }
 
   void calculatevision(){
-    if(daylight) return;
-    for(var s:seen){
-      var t=(BattleTile)tiles[s.x][s.y];
-      t.shrouded=true;
-    }
-    var vision=current.calculatevision(state);
-    for(var v:vision){ // seen
-      var t=(BattleTile)tiles[v.x][v.y];
-      seen.add(v);
-      t.discovered=true;
-      t.shrouded=false;
+    synchronized(OpenGL.LOCK){
+      if(daylight) return;
+      for(var s:seen){
+        var t=(BattleTile)tiles[s.x][s.y];
+        t.shrouded=true;
+      }
+      var vision=current.calculatevision(state);
+      for(var v:vision){ // seen
+        var t=(BattleTile)tiles[v.x][v.y];
+        seen.add(v);
+        t.discovered=true;
+        t.shrouded=false;
+      }
     }
   }
 

@@ -212,11 +212,12 @@ public class BattleScreen extends Screen{
     try{
       if(updatableUserAction==null) try{
         callback.run();
+        return;
       }finally{
         callback=null;
       }
-      else perform(convertEventToAction(updatableUserAction),
-          updatableUserAction.isShiftDown());
+      var a=convertEventToAction(updatableUserAction);
+      perform(a,updatableUserAction.isShiftDown());
     }catch(RepeatTurn e){
       MessagePanel.active.clear();
       humanmove();
@@ -286,11 +287,12 @@ public class BattleScreen extends Screen{
   /** TODO */
   public void view(int x,int y){
     var p=Fight.state.period;
-    if(p.equals(Period.EVENING)||p.equals(Period.NIGHT))
+    if(p.equals(Period.EVENING)||p.equals(Period.NIGHT)){
       Fight.state.next.detect();
-    else if(!maprevealed){
-      for(javelin.view.mappanel.Tile[] ts:mappanel.tiles)
-        for(javelin.view.mappanel.Tile t:ts) t.discovered=true;
+      return;
+    }
+    if(!maprevealed){
+      for(var tiles:mappanel.tiles) for(var t:tiles) t.discovered=true;
       maprevealed=true;
     }
   }
@@ -320,12 +322,13 @@ public class BattleScreen extends Screen{
   public void setstate(final ChanceNode state,boolean enableoverrun){
     Overlay.set(state.overlay);
     BattlePanel.current=current;
-    final var s=(BattleState)state.n;
+    var s=(BattleState)state.n;
     Fight.state=s;
     if(lastaimove==null) Javelin.redraw();
     var delay=state.delay;
-    if(enableoverrun&&delay==Javelin.Delay.WAIT
-        &&(s.redteam.contains(s.next)||s.next.automatic)){
+    var wait=delay==Javelin.Delay.WAIT;
+    var foe=s.redteam.contains(s.next)||s.next.automatic;
+    if(enableoverrun&&wait&&foe){
       delay=Javelin.Delay.NONE;
       jointurns=true;
     }
@@ -334,10 +337,7 @@ public class BattleScreen extends Screen{
     Javelin.message(state.action,delay);
   }
 
-  /**
-   * @return Gets action for this event
-   * @throws RepeatTurn
-   */
+  /// @return Gets action for this event
   public Action convertEventToAction(final KeyEvent keyEvent){
     if(rejectEvent(keyEvent)) throw new RepeatTurn();
     return ActionMapping.SINGLETON.getaction(keyEvent);

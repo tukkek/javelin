@@ -134,7 +134,7 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
     WorldGenerator.build();
     var start=WorldGenerator.start;
     var s=new SquadScreen().open();
-    s.gold=100;
+    s.gold=200;
     s.setlocation(start.getlocation());
     s.displace();
     s.place();

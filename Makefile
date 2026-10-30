@@ -19,14 +19,12 @@ define jlink
 	cp --recursive target/native/ build/output/$(1)/javelin/native/
 	cp --recursive build/static/steam/sdk/redistributable_bin/ build/output/$(1)/javelin/native/steam/
 	$(call flatten, build/output/$(1))
-	echo "Creating javelin.$(1).steam.zip."
 	mv build/output/$(1)/ build/output/$(1)-steam/
-	cd build/output/$(1)-steam/;zip -v "../javelin.$(1).steam.zip" . -r > /dev/null
 	echo "Creating javelin.$(1).github.zip."
 	cp --recursive build/output/$(1)-steam/ build/output/$(1)-github/
 	rm --recursive build/output/$(1)-github/javelin/native/steam/
 	rm build/output/$(1)-github/javelin/native/*steam_api*
-	cd build/output/$(1)-github/;zip -v "../javelin.$(1).github.zip" . -r > /dev/null
+	cd build/output/$(1)-github/;zip -v "../javelin.$(1).zip" . -r > /dev/null
 endef
 
 default: windows linux

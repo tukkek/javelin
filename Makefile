@@ -20,7 +20,7 @@ define jlink
 	cp --recursive build/static/steam/sdk/redistributable_bin/ build/output/$(1)/javelin/native/steam/
 	$(call flatten, build/output/$(1))
 	mv build/output/$(1)/ build/output/$(1)-steam/
-	echo "Creating javelin.$(1).github.zip."
+	echo "Creating javelin.$(1).zip."
 	cp --recursive build/output/$(1)-steam/ build/output/$(1)-github/
 	rm --recursive build/output/$(1)-github/javelin/native/steam/
 	rm build/output/$(1)-github/javelin/native/*steam_api*

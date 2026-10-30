@@ -3,6 +3,6 @@ PERMISSIONS="--enable-native-access=javelin,org.lwjgl,steamworks4j,org.lwjgl.jaw
 AWT="-Dsun.java2d.uiScale.enabled=false"
 FLAGS="-Djava.library.path=native/ -Dorg.lwjgl.opengl.explicitInit=true $PERMISSIONS $AWT"
 DIR=`dirname $0`
-PATH="$PATH:phiola/"
+PATH="$PATH:beet/"
 
 exec $DIR/java/bin/java $FLAGS -m javelin/javelin.Javelin "$@"

@@ -21,13 +21,9 @@ If you don't have Java installed on your system or if your installed Java versio
 Notice that as of Java 12 the macOS OpenJDK package has a slightly different directory structure to Windows and Linux. To work around this issue, extract only the appropriate folder (Home) so that the resulting JDK directory becomes equivalent to the other ones.
 
 # Audio
-## Unix
-Released at https://github.com/stsaz/phiola/releases/. The package needs to be unpacked exactly at these locations:
-* `build/static/linux/phiola/`
-* `build/static/mac/phiola/`
-
-## Windows
-Phiola seems to have problems on Windows so for now extract `https://github.com/jimlawless/cmdmp3` to `build/static/windows/cmdmp3.exe`.
+Download from https://github.com/tukkek/beet:
+* build/static/linux/beet/beet
+* build/static/windows/beet/beet.exe
 
 # Steam
 `javelin.controller.Steam` uses `steamworks4j` with a thin wrapper for LWJGL to integrate with Steam. 

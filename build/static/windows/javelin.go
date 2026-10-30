@@ -26,18 +26,16 @@ func main() {
 
 	// Preserve the inherited environment and extend PATH.
 	cmd.Env = os.Environ()
-	
 	pathFound := false
 	for i, entry := range cmd.Env {
 		if strings.HasPrefix(strings.ToUpper(entry), "PATH=") {
-			cmd.Env[i] = entry + ";phiola\\"
+			cmd.Env[i] = entry + ";beet\\"
 			pathFound = true
 			break
 		}
 	}
-
 	if !pathFound {
-		cmd.Env = append(cmd.Env, "PATH=phiola\\")
+		cmd.Env = append(cmd.Env, "PATH=beet\\")
 	}
 
 	// Print the full command before execution.

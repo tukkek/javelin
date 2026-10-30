@@ -82,7 +82,7 @@ public class Preferences{
   /** Tile size for {@link DungeonScreen}. */
   public static int tilesizedungeons;
   /** {@link Audio} volume. */
-  public static String volume;
+  public static String player;
 
   static{
     load();
@@ -191,7 +191,7 @@ public class Preferences{
     }catch(Exception e){
       TextZone.fontcolor=Color.BLACK;
     }
-    volume=getstring("io.volume");
+    player=getstring("io.player");
 
     initkeys("keys.world",new WorldKeysScreen());
     initkeys("keys.battle",new BattleKeysScreen());

@@ -5,7 +5,7 @@
 set PERMISSIONS=--enable-native-access=javelin,org.lwjgl,steamworks4j,org.lwjgl.jawt,org.lwjgl.opengl
 set AWT=-Dsun.java2d.uiScale.enabled=false
 set FLAGS=-Djava.library.path=native\ -Dorg.lwjgl.opengl.explicitInit=true %PERMISSIONS% %AWT% 
-set PATH=%PATH%;phiola\
+set PATH=%PATH%;beet\
 
 :: not needed but documented here as potential fixes for future errors 
 :: set FLAGS=%FLAGS% -Dorg.lwjgl.librarypath=native

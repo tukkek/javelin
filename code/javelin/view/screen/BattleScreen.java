@@ -6,6 +6,7 @@ import java.awt.Image;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
+import javelin.Debug;
 import javelin.Javelin;
 import javelin.Javelin.Delay;
 import javelin.controller.Point;
@@ -336,7 +337,8 @@ public class BattleScreen extends Screen{
     if(enableoverrun&&wait&&foe){
       delay=Javelin.Delay.NONE;
       jointurns=true;
-    }
+    }else if(Javelin.DEBUG&&Debug.demonstrating&&delay==Delay.BLOCK)
+      delay=Delay.WAIT;
     messagepanel.clear();
     statuspanel.repaint();
     updatescreen();

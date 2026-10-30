@@ -10,6 +10,7 @@ import javelin.controller.content.action.Action;
 import javelin.controller.content.action.Help;
 import javelin.controller.content.event.EventCard;
 import javelin.controller.content.fight.Fight;
+import javelin.controller.content.fight.RandomEncounter;
 import javelin.controller.content.fight.mutator.Mutator;
 import javelin.controller.content.kit.Kit;
 import javelin.controller.content.map.Map;
@@ -48,6 +49,9 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class Debug{
+  /// See {@link Helpers#demonstrate()}.
+  public static boolean demonstrating=false;
+
   /** Utility class, can be automated. */
   public static class DebugFight extends Fight{
     /** If not <code>null</code>, override {@link #avoid(List)}. */
@@ -228,6 +232,34 @@ public class Debug{
         f.place(dungeon,point);
         break;
       }
+    }
+
+    static void demonstrate(){
+      demonstrating=true;
+      var blue=new Combatants();
+      for(var text:List.of("Hill dwarf","Mountain dwarf","Deep dwarf"))
+        blue.add(NpcGenerator.generate(Monster.get(text),3));
+      var red=new Combatants();
+      while(red.getel()<blue.getel()){
+        var foe=new Combatant(Monster.get("Goblin"),true);
+        red.add(foe);
+      }
+      for(var units:List.of(blue,red)) for(var unit:units) unit.automatic=true;
+      var f=new RandomEncounter(){
+        @Override
+        public ArrayList<Combatant> getblueteam(){
+          return blue;
+        }
+
+        @Override
+        public Combatants generate(ArrayList<Combatant> blueteam){
+          return red;
+        }
+      };
+      f.period=Period.EVENING;
+      f.bribe=false;
+      f.hide=false;
+      throw new StartBattle(f);
     }
   }
 

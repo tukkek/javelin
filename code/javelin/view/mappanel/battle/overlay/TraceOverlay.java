@@ -24,6 +24,7 @@ public class TraceOverlay extends Overlay{
     var state=Fight.state;
     var points=new ClearPath(from,to,state).walk();
     if(points==null) points=new ObstructedPath(from,to,state).walk();
+    points.add(to);
     var map=MapPanel.get();
     var tiles=points.stream().map(point->map.tiles[point.x][point.y]).toList();
     affected.addAll(tiles);

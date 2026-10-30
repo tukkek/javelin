@@ -57,7 +57,7 @@ public class AttackResolver{
 
     @Override
     public boolean equals(Object o){
-      var r=o instanceof DamageNode?(DamageNode)o:null;
+      var r=o instanceof DamageNode d?d:null;
       return r!=null&&action.equals(r.action);
     }
 
@@ -90,7 +90,7 @@ public class AttackResolver{
 
     @Override
     public boolean equals(Object o){
-      var r=o instanceof SequenceResult?(SequenceResult)o:null;
+      var r=o instanceof SequenceResult s?s:null;
       return r!=null&&outcomes.equals(r.outcomes);
     }
 

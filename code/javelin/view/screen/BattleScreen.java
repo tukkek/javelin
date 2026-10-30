@@ -151,6 +151,7 @@ public class BattleScreen extends Screen{
    */
   public void mainloop(){
     callback=null;
+    updatescreen();
     while(true) turn();
   }
 
@@ -286,14 +287,16 @@ public class BattleScreen extends Screen{
 
   /** TODO */
   public void view(int x,int y){
-    var p=Fight.state.period;
-    if(p.equals(Period.EVENING)||p.equals(Period.NIGHT)){
-      Fight.state.next.detect();
-      return;
-    }
-    if(!maprevealed){
-      for(var tiles:mappanel.tiles) for(var t:tiles) t.discovered=true;
-      maprevealed=true;
+    synchronized(OpenGL.LOCK){
+      var p=Fight.state.period;
+      if(p.equals(Period.EVENING)||p.equals(Period.NIGHT)){
+        Fight.state.next.detect();
+        return;
+      }
+      if(!maprevealed){
+        for(var tiles:mappanel.tiles) for(var t:tiles) t.discovered=true;
+        maprevealed=true;
+      }
     }
   }
 
@@ -305,6 +308,8 @@ public class BattleScreen extends Screen{
   /** Redraws screen. */
   protected void updatescreen(){
     if(first) Javelin.redraw();
+    var p=(BattlePanel)mappanel;
+    p.updatestate();
     var current=Fight.state.clone(this.current);
     if(current!=null){
       var l=current.getlocation();
@@ -334,6 +339,7 @@ public class BattleScreen extends Screen{
     }
     messagepanel.clear();
     statuspanel.repaint();
+    updatescreen();
     Javelin.message(state.action,delay);
   }
 

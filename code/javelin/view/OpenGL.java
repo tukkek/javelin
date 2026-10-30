@@ -109,7 +109,8 @@ public class OpenGL{
       var panel=screen.mappanel;
       if(panel==null) return;
       var canvas=panel.canvas;
-      if(canvas.isDisplayable()&&canvas.isShowing()) synchronized(LOCK){
+      if(!canvas.isDisplayable()||!canvas.isShowing()) return;
+      synchronized(LOCK){
         canvas.render();
       }
     }

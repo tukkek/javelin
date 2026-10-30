@@ -4,7 +4,6 @@ import java.awt.Graphics;
 import java.util.HashSet;
 import java.util.Set;
 
-import javelin.controller.Point;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.db.Preferences;
 import javelin.model.state.BattleState;
@@ -23,7 +22,7 @@ public class BattlePanel extends MapPanel{
   /** If <code>true</code>, all {@link BattleTile}s are visible. */
   public boolean daylight;
 
-  Set<Point> seen=new HashSet<>();
+  Set<BattleTile> seen=new HashSet<>();
   BattleState previous=null;
   BattleState state=null;
 
@@ -48,42 +47,37 @@ public class BattlePanel extends MapPanel{
   public void refresh(Graphics g){
     var state=Fight.state;
     if(state==null) return;
-    updatestate();
-    calculatevision();
     var point=current.getlocation();
     grid.draw(tiles[point.x][point.y],g);
   }
 
-  void calculatevision(){
+  public void calculatevision(){
     synchronized(OpenGL.LOCK){
+      var p=state.period;
+      daylight=p.equals(Period.MORNING)||p.equals(Period.AFTERNOON);
+      if(previous==null||p!=previous.period)
+        for(var tiles:this.tiles) for(var tile:tiles){
+          var bt=(BattleTile)tile;
+          bt.shrouded=!daylight;
+          if(daylight) seen.add(bt);
+        }
       if(daylight) return;
-      for(var s:seen){
-        var t=(BattleTile)tiles[s.x][s.y];
-        t.shrouded=true;
-      }
-      var vision=current.calculatevision(state);
-      for(var v:vision){ // seen
-        var t=(BattleTile)tiles[v.x][v.y];
-        seen.add(v);
-        t.discovered=true;
-        t.shrouded=false;
+      for(var tile:seen) tile.shrouded=true;
+      for(var tile:current.calculatevision(state)){
+        var bt=(BattleTile)tiles[tile.x][tile.y];
+        seen.add(bt);
+        bt.discovered=true;
+        bt.shrouded=false;
       }
     }
   }
 
-  void updatestate(){
+  public void updatestate(){
     previous=state;
     state=Fight.state.clonedeeply();
     current=state.clone(current);
     BattleTile.panel=this;
-    var p=state.period;
-    daylight=p.equals(Period.MORNING)||p.equals(Period.AFTERNOON);
-    if(previous==null||p!=previous.period)
-      for(var tiles:tiles) for(var t:tiles){
-        var bt=(BattleTile)t;
-        bt.shrouded=!daylight;
-        if(daylight) seen.add(new Point(t.x,t.y));
-      }
+    calculatevision();
   }
 
   @Override

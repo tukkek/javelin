@@ -19,6 +19,8 @@ import javelin.old.RPG;
  * {@link RandomEncounter}s fresh by avoiding hard static numbers.
  */
 public class EncounterMixer{
+  static final int LIMIT=300;
+
   public List<Monsters> possibilites=new ArrayList<>();
 
   HashMap<String,Monster> units=new HashMap<>();
@@ -39,22 +41,21 @@ public class EncounterMixer{
   }
 
   void lower(List<Monsters> reference){
-    if(reference.size()==0) return;
+    if(reference.size()==0||possibilites.size()>LIMIT/2) return;
     var lower=new LinkedList<Monsters>();
     for(var r:reference) for(var name:units.keySet()){
       var u=r.stream().filter(m->m.toString().equals(name)).findAny()
           .orElse(null);
-      if(u!=null){
-        var monsters=new Monsters(r);
-        monsters.remove(u);
-        lower.add(monsters);
-      }
+      if(u==null) continue;
+      var monsters=new Monsters(r);
+      monsters.remove(u);
+      lower.add(monsters);
     }
     lower(register(lower));
   }
 
   private void raise(List<Monsters> reference){
-    if(reference.size()==0) return;
+    if(reference.size()==0||possibilites.size()>LIMIT) return;
     var higher=new LinkedList<Monsters>();
     for(var r:reference) for(var u:units.values()){
       var monsters=new Monsters(r);

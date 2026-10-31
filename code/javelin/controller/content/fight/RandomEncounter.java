@@ -19,6 +19,7 @@ import javelin.model.unit.Squad;
 import javelin.model.world.Season;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.dungeon.Wilderness;
 import javelin.old.RPG;
 import javelin.view.screen.WorldScreen;
@@ -61,15 +62,16 @@ public class RandomEncounter extends Fight{
   static final int REFRESHCHANCE=Math
       .round((1+REFRESHDIE)/2*2*Season.SEASONDURATION/ENCOUNTERS);
 
-  /** Foes. */
-  public Combatants enemies;
+  /// Foes. Can be `null` if rolled a voided {@link DungeonFloor#encounters}
+  /// for example.
+  public Combatants enemies=null;
 
-  /** Internal constructor. */
+  /// Internal constructor.
   protected RandomEncounter(Combatants c){
-    enemies=new EncounterMixer(c).mix();
+    if(c!=null) enemies=new EncounterMixer(c).mix();
   }
 
-  /** Constructor. */
+  /// Constructor.
   public RandomEncounter(){
     this(generate());
   }
@@ -99,7 +101,7 @@ public class RandomEncounter extends Fight{
   static public void encounter(double chance){
     if(Debug.disablecombat||RPG.random()>=chance) return;
     var f=JavelinApp.context.encounter();
-    if(f==null) return;
+    if(f==null||f.skip()) return;
     var el=Squad.active.getel();
     if(Difficulty.calculate(el,f.getel(el))>Difficulty.VERYEASY)
       throw new StartBattle(f);
@@ -141,5 +143,10 @@ public class RandomEncounter extends Fight{
         encounters.remove(RPG.r(0,encounters.size()-1));
       generate(encounters,encounters.size()+RPG.r(1,REFRESHDIE),t);
     }
+  }
+
+  @Override
+  public boolean skip(){
+    return enemies==null;
   }
 }

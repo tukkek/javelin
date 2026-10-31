@@ -30,6 +30,7 @@ import javelin.model.unit.abilities.spell.enchantment.compulsion.DominateMonster
 import javelin.model.unit.skill.Diplomacy;
 import javelin.model.world.Period;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.feature.rare.inhabitant.Leader;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.BattleScreen;
 
@@ -366,5 +367,11 @@ public abstract class Fight{
     state.blueteam.clear();
     victory=false;
     throw new EndBattle();
+  }
+
+  /// @return true to skip some fights such as when a {@link Leader} signs
+  ///   a treaty.
+  public boolean skip(){
+    return false;
   }
 }

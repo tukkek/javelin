@@ -209,7 +209,7 @@ public class BattleScreen extends Screen{
     updatescreen();
     blockinput();
     Interface.userinterface.waiting=true;
-    final var updatableUserAction=callback==null?getUserInput():null;
+    final var updatableUserAction=callback==null?Javelin.input():null;
     Overlay.clear();
     try{
       if(updatableUserAction==null) try{
@@ -349,13 +349,6 @@ public class BattleScreen extends Screen{
   public Action convertEventToAction(final KeyEvent keyEvent){
     if(rejectEvent(keyEvent)) throw new RepeatTurn();
     return ActionMapping.SINGLETON.getaction(keyEvent);
-  }
-
-  /**
-   * @return User-input.
-   */
-  public KeyEvent getUserInput(){
-    return Javelin.input();
   }
 
   /**

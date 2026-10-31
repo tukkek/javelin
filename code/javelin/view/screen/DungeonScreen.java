@@ -36,16 +36,18 @@ public class DungeonScreen extends WorldScreen{
 
   @Override
   public boolean react(int x,int y){
-    var searching=Squad.active.getbest(Skill.PERCEPTION);
-    for(var f:floor.features.copy()) if(Walker.distanceinsteps(x,y,f.x,f.y)==1)
-      f.discover(searching,searching.roll(Skill.PERCEPTION));
-    var f=floor.features.get(x,y);
-    if(f==null) return false;
-    var activated=f.activate();
-    if(activated&&f.remove) floor.features.remove(f);
-    if(!f.enter) WorldMove.abort=true;
-    if(!activated) return false;
-    if(!WorldMove.abort) WorldMove.place(x,y);
+    var p=Skill.PERCEPTION;
+    var unit=Squad.active.getbest(p);
+    var r=unit.roll(p);
+    var features=floor.features;
+    var near=features.stream().filter(f->Walker.distanceinsteps(x,y,f.x,f.y)==1)
+        .toList();
+    for(var feature:near) feature.discover(unit,r);
+    var f=features.get(x,y);
+    if(f==null||!f.activate()) return false;
+    if(f.remove) features.remove(f);
+    if(f.enter) WorldMove.place(x,y);
+    else WorldMove.abort=true;
     return true;
   }
 
@@ -56,14 +58,16 @@ public class DungeonScreen extends WorldScreen{
 
   @Override
   public void updatelocation(int x,int y){
-    floor.squadlocation.x=x;
-    floor.squadlocation.y=y;
+    var point=floor.squadlocation;
+    point.x=x;
+    point.y=y;
   }
 
   @Override
   public void view(int xp,int yp){
-    for(var p:Brazier.reveal(floor.squadlocation,floor.dungeon.vision))
-      floor.setvisible(p.x,p.y);
+    var point=floor.squadlocation;
+    var v=floor.dungeon.vision;
+    for(var p:Brazier.reveal(point,v)) floor.setvisible(p.x,p.y);
   }
 
   @Override

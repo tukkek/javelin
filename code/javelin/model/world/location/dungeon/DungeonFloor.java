@@ -499,12 +499,15 @@ public class DungeonFloor implements Serializable{
     return false;
   }
 
-  /** Makes this {@link Point} visible to the player. */
+  /// Makes this {@link Point} visible to the player.
   public void setvisible(int x,int y){
-    if(0<=x&&x<=size&&0<=y&&y<=size){
-      visible[x][y]=true;
-      MapPanel.get().tiles[x][y].discovered=true;
-    }
+    var valid=0<=x&&x<=size;
+    if(!valid) return;
+    valid=0<=y&&y<=size;
+    if(!valid) return;
+    visible[x][y]=true;
+    var panel=MapPanel.get();
+    if(panel!=null) panel.tiles[x][y].discovered=true;
   }
 
   /** @param f {@link #setvisible(int, int)} and reveals {@link Feature}. */

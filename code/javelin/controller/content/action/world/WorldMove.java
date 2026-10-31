@@ -1,18 +1,13 @@
 package javelin.controller.content.action.world;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javelin.Javelin;
 import javelin.JavelinApp;
-import javelin.controller.Point;
 import javelin.controller.content.terrain.Terrain;
 import javelin.controller.content.terrain.hazard.Hazard;
 import javelin.controller.exception.RepeatTurn;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
-import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonFloor;
@@ -84,8 +79,8 @@ public class WorldMove extends WorldAction{
   }
 
   @Override
-  public void perform(final WorldScreen s){
-    final var p=JavelinApp.context.getsquadlocation();
+  public void perform(WorldScreen s){
+    var p=JavelinApp.context.getsquadlocation();
     var x=p.x+deltax;
     var y=p.y+deltay;
     move(x,y);
@@ -95,32 +90,28 @@ public class WorldMove extends WorldAction{
    * @return <code>true</code> to continue moving, if relevant.
    * @see BattleScreen
    */
-  public static boolean move(int tox,int toy){
+  public static boolean move(int x,int y){
     var c=JavelinApp.context;
-    if(!c.validatepoint(tox,toy)) throw new RepeatTurn();
+    if(!c.validatepoint(x,y)) throw new RepeatTurn();
     abort=false;
-    var t=Terrain.get(tox,toy);
+    if(c.react(x,y)||abort||!place(x,y)) return false;
     try{
-      if(c.react(tox,toy)||abort||!place(tox,toy)||abort) return false;
-      var stop=false;
-      if(walk(c.getsquadlocation())) stop=!c.explore(tox,toy);
-      heal();
+      var stop=walk()&&!c.explore(x,y);
+      heal();//TASK
       return !stop;
-    }finally{
+    }finally{//battle starts?
       var s=Squad.active;
-      if(s!=null&&t.enter(Squad.active,tox,toy)) s.move(true,t,tox,toy);
+      var t=Terrain.get(x,y);
+      if(s!=null&&t.enter(s,x,y)) s.move(true,t,x,y);
     }
   }
 
-  /**
-   * @return <code>true</code> if moved current actor to the given location.
-   */
-  public static boolean place(final int tox,final int toy){
-    if(!JavelinApp.context.allowmove(tox,toy)
-        ||!JavelinApp.context.validatepoint(tox,toy))
-      return false;
-    JavelinApp.context.updatelocation(tox,toy);
-    JavelinApp.context.view(tox,toy);
+  /// @return <code>true</code> if moved current actor to the given location.
+  public static boolean place(int x,int y){
+    var c=JavelinApp.context;
+    if(!c.allowmove(x,y)||!c.validatepoint(x,y)) return false;
+    c.updatelocation(x,y);
+    c.view(x,y);
     return true;
   }
 
@@ -129,15 +120,13 @@ public class WorldMove extends WorldAction{
       if(c.source.fasthealing!=0) c.heal(c.maxhp,false);
   }
 
-  static boolean walk(final Point t){
+  static boolean walk(){
     if(Dungeon.active!=null) return true;
-    final List<Squad> here=new ArrayList<>();
-    for(final Actor p:World.getall(Squad.class)){
-      var s=(Squad)p;
-      if(s.x==t.x&&s.y==t.y) here.add(s);
-    }
-    if(here.size()<=1) return true;
-    here.get(0).join(here.get(1));
+    var point=JavelinApp.context.getsquadlocation();
+    var squads=World.getall(Squad.class).stream()
+        .filter(s->s.getlocation().equals(point)).map(s->(Squad)s).toList();
+    if(squads.size()<=1) return true;
+    squads.get(0).join(squads.get(1));
     return false;
   }
 }

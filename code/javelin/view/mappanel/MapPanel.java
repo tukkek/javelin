@@ -241,6 +241,7 @@ public abstract class MapPanel extends Panel{
 
   /// @return Map-component for {@link BattleScreen#active}.
   static public MapPanel get(){
-    return BattleScreen.active.mappanel;
+    var screen=BattleScreen.active;
+    return screen==null?null:screen.mappanel;
   }
 }

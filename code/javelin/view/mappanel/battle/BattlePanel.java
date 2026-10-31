@@ -73,6 +73,7 @@ public class BattlePanel extends MapPanel{
   }
 
   public void updatestate(){
+    if(current==null) return;
     previous=state;
     state=Fight.state.clonedeeply();
     current=state.clone(current);

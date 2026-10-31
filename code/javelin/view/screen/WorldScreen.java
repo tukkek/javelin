@@ -127,38 +127,43 @@ public class WorldScreen extends BattleScreen{
     return mappanel.tiles;
   }
 
+  boolean resolve(){
+    if(callback==null) return false;
+    callback.run();
+    callback=null;
+    Javelin.redraw();
+    return true;
+  }
+
   void act(){
     try{
-      if(callback!=null){
-        callback.run();
-        callback=null;
-        Javelin.redraw();
-        return;
-      }
-      var s=Squad.active;
-      for(var squad:Squad.getsquads()) if(squad!=s&&s.gettime()!=squad.gettime()
-          &&squad.getlocation().equals(s.getlocation()))
-        s.join(squad);
-      var d=s.getdistrict();
+      if(resolve()) return;
+      var active=Squad.active;
+      List<Squad> squads=Squad.getsquads();
+      squads.remove(active);
+      squads=squads.stream()
+          .filter(s->s.getlocation().equals(active.getlocation()))
+          .filter(s->active.gettime()!=s.gettime()).toList();
+      for(var squad:squads) active.join(squad);
+      var d=active.getdistrict();
       if(d!=null) d.town.enter();
       redraw();
       Interface.userinterface.waiting=true;
-      final var updatableUserAction=getUserInput();
       Overlay.clear();
-      perform(updatableUserAction);
+      perform(Javelin.input());
     }catch(RepeatTurn e){
       MessagePanel.active.clear();
-      updateplayerinformation();
+      inform();
       act();
     }
   }
 
-  void perform(KeyEvent keyEvent){
-    if(keyEvent==null) return;
-    var a=WorldAction.press(keyEvent.getKeyChar(),keyEvent.getKeyCode());
-    if(a==null) throw new RepeatTurn();
+  void perform(KeyEvent e){
+    if(e==null) return;
+    var action=WorldAction.press(e.getKeyChar(),e.getKeyCode());
+    if(action==null) throw new RepeatTurn();
     MessagePanel.active.clear();
-    a.perform(this);
+    action.perform(this);
   }
 
   void save(){
@@ -171,9 +176,10 @@ public class WorldScreen extends BattleScreen{
 
   @Override
   public void turn(){
-    if(!(Javelin.app.mainComponent instanceof WorldScreen)) Screen.reopen();
-    if(WorldScreen.welcome) welcome();
-    else Javelin.lose();
+    var c=Javelin.app.mainComponent;
+    if(!(c instanceof WorldScreen)) Screen.reopen();
+    welcome();
+    Javelin.lose();
     endday();
     Grid.get().center(null,false);
     var squads=Squad.getsquads();
@@ -193,7 +199,7 @@ public class WorldScreen extends BattleScreen{
   void redraw(){
     var h=JavelinApp.context.getsquadlocation();
     if(h!=null) view(h.x,h.y);
-    updateplayerinformation();
+    inform();
     Javelin.redraw();
   }
 
@@ -251,8 +257,8 @@ public class WorldScreen extends BattleScreen{
     var act=Javelin.act();
     var time=Math.round(act==null?lastday*24:act.gettime());
     var day=Math.round(Math.round(Math.ceil(time/24.0)));
-    while(day>WorldScreen.lastday||World.getall(Squad.class).isEmpty()){
-      WorldScreen.lastday+=1;
+    while(day>lastday||World.getall(Squad.class).isEmpty()){
+      lastday+=1;
       Season.change(day);
       Weather.weather();
       Portal.turn();
@@ -271,7 +277,7 @@ public class WorldScreen extends BattleScreen{
       if(Javelin.lose()) break;
       if(day-lastday>1){ //redraw day for long waits
         Javelin.redraw();
-        updateplayerinformation();
+        inform();
       }
     }
   }
@@ -288,7 +294,7 @@ public class WorldScreen extends BattleScreen{
   }
 
   /** Show party/world status. */
-  public void updateplayerinformation(){
+  public void inform(){
     var s=Squad.active;
     if(s==null) return;
     MessagePanel.active.clear();
@@ -371,12 +377,13 @@ public class WorldScreen extends BattleScreen{
   }
 
   void welcome(){
+    if(!welcome) return;
     if(Dungeon.active==null) Squad.updatevision();
     Javelin.message(Javelin.welcome(),Javelin.Delay.NONE);
-    WorldScreen.get().center();
+    center();
     InfoScreen.feedback();
     messagepanel.clear();
-    WorldScreen.welcome=false;
+    welcome=false;
   }
 
   /**
@@ -419,22 +426,20 @@ public class WorldScreen extends BattleScreen{
    *   prevent further moves in a sequence by flagging {@link WorldMove#abort}.
    */
   public boolean react(int x,int y){
-    if(!World.seed.map[x][y].enter(Squad.active,x,y)){
+    var s=Squad.active;
+    if(!World.seed.map[x][y].enter(s,x,y)){
       WorldMove.abort=true;
       return false;
     }
-    var s=Squad.active;
     s.lastterrain=Terrain.current();
     var actor=World.get(x,y,World.getactors());
     if(actor==null) return false;
-    var l=actor instanceof Location l2?l2:null;
     try{
-      if(actor.interact()) return true;
-      if(l!=null&&l.allowentry&&!l.ishostile()) WorldMove.place(x,y);
+      actor.interact();
       return true;
-    }catch(StartBattle e){
-      if(l!=null&&l.allowentry) WorldMove.place(x,y);
-      throw e;
+    }finally{//battle starts
+      if(actor instanceof Location l&&l.allowentry&&!l.ishostile())
+        WorldMove.place(x,y);
     }
   }
 

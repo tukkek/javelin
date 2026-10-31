@@ -123,7 +123,7 @@ public class WorldMouse extends Mouse{
       showingdescription=false;
       var panel=MessagePanel.active;
       panel.clear();
-      WorldScreen.get().updateplayerinformation();
+      WorldScreen.get().inform();
       panel.repaint();
     }
     var active=Squad.active;

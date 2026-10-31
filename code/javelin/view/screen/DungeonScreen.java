@@ -44,8 +44,9 @@ public class DungeonScreen extends WorldScreen{
         .toList();
     for(var feature:near) feature.discover(unit,r);
     var f=features.get(x,y);
-    if(f==null||!f.activate()) return false;
-    if(f.remove) features.remove(f);
+    if(f==null) return false;
+    if(f.activate()&&f.remove) features.remove(f);
+    if(WorldMove.abort) return true;
     if(f.enter) WorldMove.place(x,y);
     else WorldMove.abort=true;
     return true;

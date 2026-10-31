@@ -619,9 +619,9 @@ public class Combatant implements Serializable,Cloneable{
     var toy=Math.min(here.y+range,map[0].length-1);
     for(var x=fromx;x<=tox;x++) for(var y=fromy;y<=toy;y++){
       var p=new Point(x,y);
-      if(seen.contains(p)
-          ||s.haslineofsight(here,p,range,perception)==Vision.BLOCKED)
-        continue;
+      if(p.distance(here)>range) continue;
+      var vision=s.haslineofsight(here,p,range,perception);
+      if(vision==Vision.BLOCKED) continue;
       seen.add(p);
       if(BattleState.lineofsight!=null) seen.addAll(BattleState.lineofsight);
     }

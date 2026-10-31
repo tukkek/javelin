@@ -11,21 +11,21 @@ import javelin.model.world.location.dungeon.DungeonFloor;
  * @author alex
  */
 public class StairsDown extends Feature{
-	static final String CONFIRM="Go down the stairs?\nPress ENTER to confirm, any other key to cancel...";
+  static final String CONFIRM="Go down the stairs?\nPress ENTER to confirm, any other key to cancel...";
 
-	/** Constructor. */
-	public StairsDown(DungeonFloor f){
-		super("stairs down");
-		remove=false;
-		enter=true;
-	}
+  /** Constructor. */
+  public StairsDown(DungeonFloor f){
+    super("stairs down");
+    remove=false;
+    enter=true;
+  }
 
-	@Override
-	public boolean activate(){
-		if(Javelin.prompt(CONFIRM)=='\n'){
-			WorldMove.abort=true;
-			Dungeon.active.godown();
-		}
-		return false;
-	}
+  @Override
+  public boolean activate(){
+    if(Javelin.prompt(CONFIRM)=='\n'){
+      WorldMove.abort=true;
+      Dungeon.active.godown();
+    }
+    return false;
+  }
 }

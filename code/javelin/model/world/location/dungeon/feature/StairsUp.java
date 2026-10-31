@@ -12,32 +12,32 @@ import javelin.model.world.location.dungeon.DungeonFloor;
  * @author alex
  */
 public class StairsUp extends Feature{
-	/** Message to show on {@link #activate()}. */
-	protected String prompt="Go up the stairs?";
+  /** Message to show on {@link #activate()}. */
+  protected String prompt="Go up the stairs?";
 
-	DungeonFloor floor;
+  DungeonFloor floor;
 
-	/** Cosntructor. */
-	public StairsUp(Point p,DungeonFloor f){
-		super("stairs up");
-		remove=false;
-		enter=true;
-		floor=f;
-	}
+  /** Cosntructor. */
+  public StairsUp(Point p,DungeonFloor f){
+    super("stairs up");
+    remove=false;
+    enter=true;
+    floor=f;
+  }
 
-	@Override
-	public boolean activate(){
-		var prompt=this.prompt+"\n"
-				+"Press ENTER to confirm, any other key to cancel...";
-		if(Javelin.prompt(prompt)=='\n'){
-			WorldMove.abort=true;
-			Dungeon.active.goup();
-		}
-		return false;
-	}
+  @Override
+  public boolean activate(){
+    var prompt=this.prompt+"\n"
+        +"Press ENTER to confirm, any other key to cancel...";
+    if(Javelin.prompt(prompt)=='\n'){
+      WorldMove.abort=true;
+      Dungeon.active.goup();
+    }
+    return false;
+  }
 
-	@Override
-	public String toString(){
-		return "Stairs to level "+floor.getdepth();
-	}
+  @Override
+  public String toString(){
+    return "Stairs to level "+floor.getdepth();
+  }
 }

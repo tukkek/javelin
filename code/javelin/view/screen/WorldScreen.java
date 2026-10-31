@@ -543,4 +543,9 @@ public class WorldScreen extends BattleScreen{
   public Point anchor(){
     return getsquadlocation();
   }
+
+  @Override
+  protected void updatescreen(){
+    // pass
+  }
 }

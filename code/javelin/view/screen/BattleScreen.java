@@ -132,6 +132,7 @@ public class BattleScreen extends Screen{
     BattleScreen.active=this;
     Javelin.delayblock=false;
     partialmove=0;
+    if(Fight.current!=null) updatescreen();
   }
 
   /** @return Map panel implementation for this screen. */

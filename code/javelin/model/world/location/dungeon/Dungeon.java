@@ -338,4 +338,10 @@ public class Dungeon implements Serializable{
         .findAny().orElse(null);
     return new SpecialChest(f,item==null?new Ruby():item);
   }
+
+  /// @return All branches.
+  public List<Dungeon> branch(boolean recurse){
+    return floors.stream().flatMap(floor->floor.branch(recurse).stream())
+        .toList();
+  }
 }

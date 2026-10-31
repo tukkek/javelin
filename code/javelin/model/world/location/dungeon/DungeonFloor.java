@@ -569,4 +569,15 @@ public class DungeonFloor implements Serializable{
     RandomEncounter.encounter(1f/stepsperencounter);
     return !triggerhazard();
   }
+
+  /// @return All branches.
+  public List<Dungeon> branch(boolean recurse){
+    var dungeons=new ArrayList<Dungeon>();
+    for(var f:features) if(f instanceof BranchPortal p){
+      var dungeon=p.destination;
+      dungeons.add(dungeon);
+      if(recurse) dungeons.addAll(dungeon.branch(true));
+    }
+    return dungeons;
+  }
 }

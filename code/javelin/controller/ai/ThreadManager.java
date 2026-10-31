@@ -60,7 +60,7 @@ public class ThreadManager{
   public static int performance=0;
 
   public static List<ChanceNode> think(BattleState state){
-    final long start;
+    var start=now();
     try{
       working=true;
       interrupt();
@@ -78,9 +78,7 @@ public class ThreadManager{
     }catch(Exception e){
       interrupt();
       working=false;
-      Javelin.message("Fatal error: "+ERROR.getMessage(),Javelin.Delay.NONE);
-      ERROR.printStackTrace();
-      throw new RuntimeException(ERROR);
+      Javelin.app.uncaughtException(Thread.currentThread(),ERROR==null?e:ERROR);
     }
     int deepest=AiThread.FINISHED.descendingKeySet().first();
     analyze(start,deepest);
@@ -96,8 +94,9 @@ public class ThreadManager{
   }
 
   static void sleep(final long start) throws InterruptedException,Exception{
-    var sleepfor=Preferences.maxmilisecondsthinking-(now()-start);
-    Thread.sleep(sleepfor>=0?sleepfor:0);
+    var miliseconds=Preferences.maxmilisecondsthinking-(now()-start);
+    if(miliseconds<0) miliseconds=0;
+    Thread.sleep(miliseconds);
     while(AiThread.FINISHED.isEmpty()){
       if(ThreadManager.ERROR!=null) throw ThreadManager.ERROR;
       Thread.sleep(500);

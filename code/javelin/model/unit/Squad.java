@@ -6,6 +6,7 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javelin.Debug;
@@ -329,12 +330,11 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
     for(Combatant foe:foes)
       if(10+foe.perceive(flying,outside,outside)>=hideroll) return false; // spotted!
     // hidden
-    var input=' ';
-    final var prompt="You have hidden from a group of enemies!\n"
-        +"Press s to storm them or w to wait for them to go away...\n\n"
+    var prompt="You have hidden from a group of enemies!\n"
+        +"Press enter to fight or escape to wait for them to go away...\n\n"
         +"Enemies: "+scout(foes,null)+".";
-    while(input!='w'&&input!='s') input=Javelin.prompt(prompt);
-    return input=='w';
+    var symbol=Javelin.prompt(prompt,Set.of('\n','q'));
+    return symbol=='q';
   }
 
   /**

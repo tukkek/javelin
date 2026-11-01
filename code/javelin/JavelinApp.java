@@ -94,9 +94,9 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
       exception.battle();
     }catch(EndBattle end){
       EndBattle.end();
-      Fight.current=null;
-      Fight.state=null;
     }
+    Fight.current=null;
+    Fight.state=null;
   }
 
   void loop(){

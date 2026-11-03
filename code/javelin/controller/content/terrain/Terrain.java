@@ -167,6 +167,11 @@ public abstract class Terrain implements Serializable{
     return Dungeon.active==null?World.getseed().map[x][y]:Terrain.UNDERGROUND;
   }
 
+  /// {@link #get(int, int)} but for {@link Point}s.
+  public static Terrain get(Point p){
+    return get(p.x,p.y);
+  }
+
   @Override
   public String toString(){
     return name;

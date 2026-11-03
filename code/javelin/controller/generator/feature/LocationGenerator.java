@@ -86,13 +86,23 @@ public class LocationGenerator implements Serializable{
 
   final HashMap<Class<? extends Actor>,Frequency> generators=new HashMap<>();
 
+  /// Starting Town.
+  public Town home;
+
+  World world;
+
+  /// Constructor
+  public LocationGenerator(World w){
+    world=w;
+  }
+
   /**
    * The ultimate goal of this method is to try and make it so one feature only
    * is generated per week. Since we want some features to have a higher chance
    * of being spawned this deals with these cases dynamically to avoid
    * manually-written methods from becoming too large.
    */
-  void setup(){
+  void ready(){
     generators.put(Outpost.class,new Frequency(.1f));
     if(PointOfInterest.ENABLED)
       generators.put(PointOfInterest.class,new Frequency(2f));
@@ -147,27 +157,25 @@ public class LocationGenerator implements Serializable{
    * @param a Spawns this actor near the given {@link Town}.
    * @param min Minimum distance.
    * @param max Maximum distance.
-   * @param clear Whether to capture the garrison, if the given actor is a
-   *   {@link Location}.
    * @return The given actor, for call-chaining.
    */
-  static Actor spawnnear(Town t,Actor a,World w,int min,int max,boolean clear){
-    Point p=null;
+  Actor surround(Town t,Actor a,int min,int max){
+    max+=1;
+    var points=new ArrayList<>(Point.getrange(t.x-min,t.y-min,t.x+max,t.y+max));
+    RPG.shuffle(points);
     var actors=World.getactors();
-    while(p==null||World.get(t.x+p.x,t.y+p.y,actors)!=null
-        ||!World.validatecoordinate(t.x+p.x,t.y+p.y)
-        ||w.map[t.x+p.x][t.y+p.y].equals(Terrain.WATER)){
-      p=new Point(RPG.r(min,max),RPG.r(min,max));
-      if(RPG.chancein(2)) p.x*=-1;
-      if(RPG.chancein(2)) p.y*=-1;
-      WorldGenerator.retry();
+    for(var p:points){
+      var valid=World.validatecoordinate(p.x,p.y);
+      if(!valid) continue;
+      var water=world.map[p.x][p.y].equals(Terrain.WATER);
+      if(water) continue;
+      var empty=World.get(p,actors)==null;
+      if(!empty) continue;
+      a.setlocation(p);
+      a.place();
+      return a;
     }
-    a.x=p.x+t.x;
-    a.y=p.y+t.y;
-    var l=a instanceof Location?(Location)a:null;
-    a.place();
-    if(l!=null&&clear) l.capture();
-    return a;
+    throw new RestartWorldGeneration();
   }
 
   long countadjacent(Point p){
@@ -244,26 +252,19 @@ public class LocationGenerator implements Serializable{
     placecontested();
   }
 
-  static void generatestartingarea(World w,Town t){
-    var s=Shop.makebasic();
-    // TODO remove   var a=Academy.makebasic();
-    // TODO remove   var m=MagesGuild.makebasicmage();
-    var district=List.of(new Lodge(),s,new AdventurersGuild());
-    for(var l:RPG.shuffle(new ArrayList<>(district))) spawnnear(t,l,w,1,2,true);
-    var p=t.getlocation();
-    var recruits=RPG.shuffle(Terrain.get(p.x,p.y).getmonsters());
-    recruits.sort((o1,o2)->{
-      var difference=o1.cr-o2.cr;
-      if(difference==0) return 0;
-      return difference>0?1:-1;
-    });
-    spawnnear(t,new Arena(),w,2,3,false).reveal();
+  void found(Town t){
+    surround(t,new Lodge(),1,2);
+    if(t!=home) return;
+    var district=List.of(Shop.makebasic(),new AdventurersGuild());
+    district=RPG.shuffle(new ArrayList<>(district));
+    for(var location:district) surround(t,location,1,2);
+    surround(t,new Arena(),2,3).reveal();
     var r=District.RADIUSMAX/2;
     var farther=(int)Math.round(r*1.5);
-    spawnnear(t,new WarlocksTower(),w,r+1,farther,false).reveal();
-    spawnnear(t,new Catacombs().entrance,w,r+1,farther,false).reveal();
-    placedeepdungeon(w,t);
-    w.discovered.addAll(t.getdistrict().getarea());
+    surround(t,new WarlocksTower(),r+1,farther).reveal();
+    surround(t,new Catacombs().entrance,r+1,farther).reveal();
+    placedeepdungeon();
+    world.discovered.addAll(t.getdistrict().getarea());
   }
 
   /**
@@ -272,11 +273,10 @@ public class LocationGenerator implements Serializable{
    * players who only want to dungeon crawl can learn to look for it and focus
    * mostly on that.
    */
-  static void placedeepdungeon(World w,Town t){
+  void placedeepdungeon(){
     var d=new DungeonEntrance(new DeepDungeon());
     var allowed=Set.of(Terrain.FOREST,Terrain.HILL,Terrain.PLAIN);
-    while(d.x<0||!allowed.contains(Terrain.get(d.x,d.y)))
-      spawnnear(t,d,w,4,4,false);
+    while(d.x<0||!allowed.contains(Terrain.get(d.x,d.y))) surround(home,d,4,4);
     d.reveal();
   }
 
@@ -290,22 +290,20 @@ public class LocationGenerator implements Serializable{
    *
    * @see Terrain
    */
-  public Location generate(LinkedList<Realm> realms,List<Set<Point>> regions,
-      World w){
+  public void generate(LinkedList<Realm> realms,List<Set<Point>> regions){
     generatetowns(realms,regions);
-    var starting=determinestartingtown(w);
-    generatefeatures(w,starting);
-    for(Town t:Town.gettowns()) if(t!=starting){
+    home=determinestartingtown(world);
+    generatefeatures();
+    for(Town t:Town.gettowns()) if(t!=home){
       t.setgovernor(new MonsterGovernor(t));
       t.populate(RPG.r(1,4));
     }else t.setgovernor(new HumanGovernor(t));
-    return starting;
   }
 
-  void generatefeatures(World w,Town starting){
-    setup();
+  void generatefeatures(){
+    ready();
     Temple.generatetemples();
-    generatestartingarea(w,starting);
+    for(var town:World.getall(Town.class)) found((Town)town);
     generatestaticlocations();
     for(Class<? extends Actor> feature:generators.keySet())
       generators.get(feature).seed(feature);
@@ -328,7 +326,7 @@ public class LocationGenerator implements Serializable{
      * when it happens and make sure towns are being generated properly */
   }
 
-  Town determinestartingtown(World seed){
+  static Town determinestartingtown(World seed){
     var terrain=RPG.pick(List.of(Terrain.PLAIN,Terrain.HILL));
     var t=gettown(terrain,seed,Town.gettowns());
     if(Terrain.search(new Point(t.x,t.y),Terrain.WATER,2,seed)!=0)

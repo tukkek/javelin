@@ -218,4 +218,9 @@ public class World implements Serializable{
   public static World getseed(){
     return Thread.currentThread() instanceof WorldGenerator g?g.world:seed;
   }
+
+  /// As {@link #get(int, int)} but for {@link Point}s.
+  public static Actor get(Point p,ArrayList<Actor> actors){
+    return get(p.x,p.y,actors);
+  }
 }

@@ -105,9 +105,10 @@ public class WorldGenerator extends Thread{
     var realms=RPG.shuffle(new LinkedList<>(Realm.REALMS));
     var regions=new ArrayList<Set<Point>>(realms.size());
     generategeography(regions,world);
-    world.featuregenerator=new LocationGenerator();
-    var start=world.featuregenerator.generate(realms,regions,world);
-    finish(start,world);
+    var generator=new LocationGenerator(world);
+    world.featuregenerator=generator;
+    generator.generate(realms,regions);
+    finish(generator.home,world);
   }
 
   synchronized void finish(Location start,World w){

@@ -11,6 +11,7 @@ import javelin.controller.content.action.Help;
 import javelin.controller.content.event.EventCard;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.content.fight.RandomEncounter;
+import javelin.controller.content.fight.mutator.Freeze;
 import javelin.controller.content.fight.mutator.Mutator;
 import javelin.controller.content.kit.Kit;
 import javelin.controller.content.map.Map;
@@ -132,15 +133,7 @@ public class Debug{
     }
 
     static void freeze(){
-      var m=new Mutator(){
-        @Override
-        public void endturn(Fight fight){
-          super.endturn(fight);
-          for(var c:Fight.state.redteam) c.ap=1000;
-        }
-      };
-      m.endturn(null);
-      Fight.current.mutators.add(m);
+      Fight.current.mutators.add(new Freeze());
     }
 
     static void teleport(Class<? extends Actor> type){
@@ -207,11 +200,12 @@ public class Debug{
       Fight.state.redteam.clear();
     }
 
-    static void encounter(){
-      var d=WorldScreen.get().encounter();
-      d.bribe=false;
-      d.hide=false;
-      throw new StartBattle(d);
+    static void encounter(boolean freeze){
+      var fight=WorldScreen.get().encounter();
+      fight.bribe=false;
+      fight.hide=false;
+      if(freeze) fight.mutators.add(new Freeze());
+      throw new StartBattle(fight);
     }
 
     static void hire(String monster,boolean multiple){

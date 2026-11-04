@@ -1,6 +1,7 @@
 package javelin.controller.exception.battle;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javelin.Debug;
 import javelin.Javelin;
@@ -38,20 +39,24 @@ public class StartBattle extends BattleEvent{
     if(fight.avoid(foes)) return;
     preparebattle(foes);
     fight.setup.setup();
-    Fight.state.next();
-    for(var m:fight.mutators) m.ready(fight);
-    final var elred=ChallengeCalculator.calculateel(Fight.state.redteam);
-    final var elblue=ChallengeCalculator.calculateel(Fight.state.blueteam);
-    var diffifculty=elred-elblue;
-    if(!Squad.active.skipcombat(diffifculty)){
-      BattlePanel.current=Fight.state.next;
-      var screen=new BattleScreen(true);
-      screen.open();
-      for(var m:fight.mutators) m.draw(fight);
-      if(Javelin.DEBUG) Debug.onbattlestart();
-      Screen.change(screen);
-      screen.mainloop();
-    }else quickbattle(diffifculty);
+    var s=Fight.state;
+    s.next();
+    var mutators=fight.mutators;
+    for(var m:mutators) m.ready(fight);
+    var el=List.of(s.redteam,s.blueteam).stream()
+        .map(ChallengeCalculator::calculateel).toList();
+    var diffifculty=el.get(0)-el.get(1);
+    if(Squad.active.skipcombat(diffifculty)){
+      quickbattle(diffifculty);
+      return;
+    }
+    BattlePanel.current=s.next;
+    var screen=new BattleScreen(true);
+    screen.open();
+    if(Javelin.DEBUG) Debug.onbattlestart();
+    for(var m:mutators) m.draw(fight);
+    Screen.change(screen);
+    screen.mainloop();
   }
 
   /**

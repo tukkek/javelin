@@ -91,7 +91,10 @@ public class AdventurersGuild extends UniqueLocation{
         change(s.get(index));
         continue;
       }
-      if(input=='t'&&train()||input=='h'&&hire()) return true;
+      var training=input=='t'||input=='\n';
+      if(training&&train()) return true;
+      var hiring=input=='h';
+      if(hiring&&hire()) return true;
     }
     return true;
   }

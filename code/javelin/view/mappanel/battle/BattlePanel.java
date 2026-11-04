@@ -63,7 +63,7 @@ public class BattlePanel extends MapPanel{
         }
       if(daylight) return;
       for(var tile:seen) tile.shrouded=true;
-      for(var tile:current.calculatevision(state)){
+      if(current!=null) for(var tile:current.calculatevision(state)){
         var bt=(BattleTile)tiles[tile.x][tile.y];
         seen.add(bt);
         bt.discovered=true;

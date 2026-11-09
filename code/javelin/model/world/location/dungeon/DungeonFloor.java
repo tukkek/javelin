@@ -450,9 +450,9 @@ public class DungeonFloor implements Serializable{
   public void leave(){
     var e=dungeon.exit;
     if(e!=null){
-      var p=e.features.getall(BranchPortal.class).stream()
+      var point=e.features.getall(BranchPortal.class).stream()
           .filter(f->f.destination==dungeon).findAny().orElseThrow();
-      e.squadlocation=p.getlocation();
+      e.squadlocation=point.getlocation();
       e.enter();
       return;
     }

@@ -3,8 +3,6 @@ package javelin.view.screen;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Image;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 
 import javelin.Debug;
 import javelin.Javelin;
@@ -22,7 +20,6 @@ import javelin.controller.content.action.world.WorldMove;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.db.Preferences;
 import javelin.controller.exception.RepeatTurn;
-import javelin.controller.exception.battle.EndBattle;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Period;
@@ -144,30 +141,17 @@ public class BattleScreen extends Screen{
     return Fight.state.next.getlocation();
   }
 
-  /**
-   * this is the main game loop. it catches any exceptions for stability and
-   * lets the game continue <br>
-   * very important that endTurn() gets called after the player moves, this
-   * ensures that the rest of the map stays up to date <br>
-   */
-  public void loop(){
-    callback=null;
-    while(true) try{
-      Screen.change(this);
-      turn();
-    }catch(RepeatTurn e){
-      continue;
-    }
+  void next(){
+    for(var c:Fight.state.getcombatants()) c.refresh();
+    Fight.state.next();
+    current=Fight.state.next;
+    StatusPanel.looking=null;
+    partialmove=0;
   }
 
   /** Routine for human interaction. */
   protected void turn(){
     try{
-      for(var c:Fight.state.getcombatants()) c.refresh();
-      Fight.state.next();
-      current=Fight.state.next;
-      StatusPanel.looking=null;
-      partialmove=0;
       updatescreen();
       checkai();
       var r=Fight.state.redteam.contains(current);
@@ -187,6 +171,19 @@ public class BattleScreen extends Screen{
       var f=Fight.current;
       for(var m:f.mutators) m.endturn(f);
       f.checkend();
+    }
+  }
+
+  /// Handle repeating {@link #turn()}s during {@link Fight}~.
+  public void fight(){
+    callback=null;
+    next();
+    while(true) try{
+      Screen.change(this);
+      turn();
+      next();
+    }catch(RepeatTurn e){
+      continue;
     }
   }
 
@@ -223,8 +220,10 @@ public class BattleScreen extends Screen{
     }
     var event=Javelin.input();
     if(event==null) return;
-    var action=act(event);
-    perform(action,event.isShiftDown());
+    var action=ActionMapping.SINGLETON.getaction(event);
+    current=Fight.state.clone(current);
+    if(current.burrowed&&!action.allowburrowed) Dig.refuse();
+    if(!action.perform(current)) throw new RepeatTurn();
   }
 
   void computermove(){
@@ -344,44 +343,6 @@ public class BattleScreen extends Screen{
     statuspanel.repaint();
     updatescreen();
     Javelin.message(state.action,delay);
-  }
-
-  /// @return Gets action for this event
-  public Action act(final KeyEvent keyEvent){
-    if(rejectEvent(keyEvent)) throw new RepeatTurn();
-    return ActionMapping.SINGLETON.getaction(keyEvent);
-  }
-
-  /**
-   * @param thing Visual representation of current unit.
-   * @param action What is being performed.
-   * @param isShiftDown Ignored.
-   */
-  void perform(final Action action,final boolean isShiftDown){
-    try{
-      current=Fight.state.clone(current);
-      if(current.burrowed&&!action.allowburrowed) Dig.refuse();
-      if(!action.perform(current)) throw new RepeatTurn();
-    }catch(EndBattle e){
-      throw e;
-    }catch(Exception e){
-      // TODO throw on debug?
-      if(!(e instanceof RepeatTurn)) e.printStackTrace();
-      throw new RepeatTurn();
-    }
-  }
-
-  /**
-   * TODO is needed?
-   *
-   * BUG Fix for
-   * http://sourceforge.net/tracker/index.php?func=detail&aid=1088187
-   * &group_id=16696&atid=116696 Ignore Alt keypresses, we may need to add more
-   * of these for other platforms.
-   */
-  protected boolean rejectEvent(final KeyEvent keyEvent){
-    return (keyEvent.getModifiers()|InputEvent.ALT_DOWN_MASK)!=0
-        &&keyEvent.getKeyCode()==18;
   }
 
   /**

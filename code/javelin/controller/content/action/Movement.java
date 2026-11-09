@@ -96,8 +96,6 @@ public class Movement extends Action{
         Javelin.message(c+" "+action+"...",Javelin.Delay.WAIT);
       }else Fight.current.meld(c,meld);
       return true;
-    }catch(RuntimeException e){
-      throw e;
     }finally{
       Movement.lastmovewasattack=false;
     }

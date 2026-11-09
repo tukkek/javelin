@@ -100,8 +100,8 @@ public class EndBattle extends BattleEvent{
   }
 
   /**
-   * Tries to {@link #show(Combatant)} the combatant. If can't, remove him from
-   * the game.
+   * Tries to {@link ReviveScreen#show(Combatant)} the combatant. If can't,
+   * remove him from the game.
    *
    * TODO isn't updating {@link Ressurect#dead} when the entire Squad dies! this
    * probably isn't being called

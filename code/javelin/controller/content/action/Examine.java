@@ -23,7 +23,7 @@ import javelin.view.screen.StatisticsScreen;
 /// Lets the player examine surroundings and units.
 public class Examine extends Action{
   static final HashMap<Character,Point> DIRECTIONS=new HashMap<>();
-  static final char SHOW='s';
+  static final char VIEW='v';
 
   static{
     DIRECTIONS.put('8',new Point(0,-1));
@@ -49,7 +49,7 @@ public class Examine extends Action{
 
   static void message(String s){
     MessagePanel.get().clear();
-    var message="Move the cursor over a combatant, press s to show its character sheet.\n\n";
+    var message="Move over a combatant then press v to view its statistics.\n\n";
     message+=s;
     Javelin.message(message,Javelin.Delay.NONE);
     Javelin.redraw();
@@ -118,8 +118,8 @@ public class Examine extends Action{
     set(x,y);
   }
 
-  static boolean show(char key){
-    if(key!=SHOW) return false;
+  static boolean view(char key){
+    if(key!=VIEW) return false;
     var target=Fight.state.getcombatant(locate());
     new StatisticsScreen().open(target);
     throw new RepeatTurn();
@@ -146,7 +146,7 @@ public class Examine extends Action{
     var delta=new Point(0,0);
     while(delta!=null){
       var key=press();
-      if(key==null||show(key)) continue;
+      if(key==null||view(key)) continue;
       delta=DIRECTIONS.get(key);
       if(delta!=null) move(delta);
     }

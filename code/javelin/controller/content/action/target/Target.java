@@ -30,7 +30,7 @@ import javelin.view.screen.StatisticsScreen;
 public abstract class Target extends Action{
   static final char NEXT='+';
   static final char GO='\n';
-  static final char SHOW='s';
+  static final char VIEW='v';
   static final char LAST='-';
 
   class SelectTarget implements Comparator<Combatant>{
@@ -126,8 +126,8 @@ public abstract class Target extends Action{
     return false;
   }
 
-  boolean show(char key){
-    if(key!=SHOW) return false;
+  boolean view(char key){
+    if(key!=VIEW) return false;
     new StatisticsScreen().open(target);
     throw new RepeatTurn();
   }
@@ -158,7 +158,7 @@ public abstract class Target extends Action{
       Javelin.redraw();
       var key=InfoScreen.feedback();
       if(attack(key,active,s)) break;
-      if(navigate(key)||show(key)) continue;
+      if(navigate(key)||view(key)) continue;
       StatusPanel.looking=null;
       Javelin.redraw();
       throw new RepeatTurn();
@@ -208,8 +208,8 @@ public abstract class Target extends Action{
     BattleScreen.active.center(point.x,point.y);
     StatusPanel.looking=target;
     MessagePanel.active.clear();
-    var prompt="Use ← and → to select target, ENTER or "+confirmkey
-        +" to confirm, s to show statistics, q to quit.\n\n";
+    var prompt="Press ← and → to select target; ENTER or "+confirmkey
+        +" to confirm; v to view statistics or q to quit.\n\n";
     prompt+=describehitchance(active,target,s);
     Javelin.message(prompt,Javelin.Delay.NONE);
   }

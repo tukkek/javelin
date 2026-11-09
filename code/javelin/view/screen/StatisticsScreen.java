@@ -41,7 +41,6 @@ public class StatisticsScreen extends InfoScreen{
       print(header+Monster.DESCRIPTIONS.get(c.source.name));
       updatescreens();
     }
-    Screen.reopen();
   }
 
   /**

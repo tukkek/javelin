@@ -5,6 +5,7 @@ import java.awt.event.MouseWheelEvent;
 
 import javelin.Javelin;
 import javelin.controller.content.fight.Fight;
+import javelin.controller.exception.RepeatTurn;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.old.Interface;
@@ -31,7 +32,10 @@ public class BattleMouse extends Mouse{
       new MeleeMouseAction(),new RangedMouseAction()};
 
   void show(Combatant c){
-    BattleScreen.perform(()->new StatisticsScreen().open(c));
+    BattleScreen.perform(()->{
+      new StatisticsScreen().open(c);
+      throw new RepeatTurn();
+    });
   }
 
   @Override

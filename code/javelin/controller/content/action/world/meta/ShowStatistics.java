@@ -3,14 +3,11 @@ package javelin.controller.content.action.world.meta;
 import javelin.Javelin;
 import javelin.controller.content.action.world.WorldAction;
 import javelin.model.unit.Squad;
+import javelin.view.screen.Screen;
 import javelin.view.screen.StatisticsScreen;
 import javelin.view.screen.WorldScreen;
 
-/**
- * Show unit information.
- *
- * @author alex
- */
+/// Show unit information.
 public class ShowStatistics extends WorldAction{
   /** Constructor. */
   public ShowStatistics(){
@@ -24,5 +21,6 @@ public class ShowStatistics extends WorldAction{
     if(answer==-1) return;
     var combatant=Squad.active.members.get(answer);
     new StatisticsScreen().open(combatant);
+    Screen.reopen();
   }
 }

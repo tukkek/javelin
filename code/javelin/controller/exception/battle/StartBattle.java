@@ -56,7 +56,7 @@ public class StartBattle extends BattleEvent{
     if(Javelin.DEBUG) Debug.onbattlestart();
     for(var m:mutators) m.draw(fight);
     Screen.change(screen);
-    screen.mainloop();
+    screen.loop();
   }
 
   /**

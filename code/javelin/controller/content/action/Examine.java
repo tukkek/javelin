@@ -122,7 +122,7 @@ public class Examine extends Action{
     if(key!=SHOW) return false;
     var target=Fight.state.getcombatant(locate());
     new StatisticsScreen().open(target);
-    return true;
+    throw new RepeatTurn();
   }
 
   static Character press(){

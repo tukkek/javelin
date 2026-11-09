@@ -150,10 +150,14 @@ public class BattleScreen extends Screen{
    * very important that endTurn() gets called after the player moves, this
    * ensures that the rest of the map stays up to date <br>
    */
-  public void mainloop(){
+  public void loop(){
     callback=null;
-    updatescreen();
-    while(true) turn();
+    while(true) try{
+      Screen.change(this);
+      turn();
+    }catch(RepeatTurn e){
+      continue;
+    }
   }
 
   /** Routine for human interaction. */
@@ -179,6 +183,7 @@ public class BattleScreen extends Screen{
       updatescreen();
       block();
     }finally{
+      MessagePanel.active.clear();
       var f=Fight.current;
       for(var m:f.mutators) m.endturn(f);
       f.checkend();
@@ -199,7 +204,7 @@ public class BattleScreen extends Screen{
     }
   }
 
-  synchronized void humanmove(){
+  void humanmove(){
     var s=Fight.state;
     lastaicheck=s.next.ap;
     if(current==null||current.automatic||s.fleeing.contains(current)) return;
@@ -209,21 +214,17 @@ public class BattleScreen extends Screen{
     updatescreen();
     blockinput();
     Interface.userinterface.waiting=true;
-    final var updatableUserAction=callback==null?Javelin.input():null;
     Overlay.clear();
-    try{
-      if(updatableUserAction==null) try{
-        callback.run();
-        return;
-      }finally{
-        callback=null;
-      }
-      var a=convertEventToAction(updatableUserAction);
-      perform(a,updatableUserAction.isShiftDown());
-    }catch(RepeatTurn e){
-      MessagePanel.active.clear();
-      humanmove();
+    if(callback!=null){
+      var runnable=callback;
+      callback=null;
+      runnable.run();
+      return;
     }
+    var event=Javelin.input();
+    if(event==null) return;
+    var action=act(event);
+    perform(action,event.isShiftDown());
   }
 
   void computermove(){
@@ -346,7 +347,7 @@ public class BattleScreen extends Screen{
   }
 
   /// @return Gets action for this event
-  public Action convertEventToAction(final KeyEvent keyEvent){
+  public Action act(final KeyEvent keyEvent){
     if(rejectEvent(keyEvent)) throw new RepeatTurn();
     return ActionMapping.SINGLETON.getaction(keyEvent);
   }

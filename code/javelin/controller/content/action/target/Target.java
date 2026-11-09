@@ -129,7 +129,7 @@ public abstract class Target extends Action{
   boolean show(char key){
     if(key!=SHOW) return false;
     new StatisticsScreen().open(target);
-    return true;
+    throw new RepeatTurn();
   }
 
   boolean attack(char key,Combatant active,BattleState s){

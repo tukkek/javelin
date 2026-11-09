@@ -128,7 +128,7 @@ public class Debug{
       f.map=m;
       f.bribe=false;
       f.hide=false;
-      f.period=Period.AFTERNOON;
+      f.period=Period.DAY;
       throw new StartBattle(f);
     }
 

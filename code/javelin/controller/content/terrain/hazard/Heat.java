@@ -20,7 +20,7 @@ public class Heat extends PartyHazard{
 		if(Season.current==Season.SUMMER)
 			level+=2;
 		else if(Season.current==Season.WINTER) level-=2;
-		if(Period.AFTERNOON.is())
+		if(Period.DAY.is())
 			level+=1;
 		else if(Period.NIGHT.is()) level-=1;
 		/* doesn't rain on the desert so don't consider weather */

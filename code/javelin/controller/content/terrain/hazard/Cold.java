@@ -35,7 +35,7 @@ public class Cold extends PartyHazard{
 		if(Weather.current!=Weather.CLEAR) level+=1;
 		if(Period.NIGHT.is())
 			level+=1;
-		else if(Period.AFTERNOON.is()) level-=1;
+		else if(Period.DAY.is()) level-=1;
 		return level>=2;
 	}
 

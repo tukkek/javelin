@@ -18,7 +18,7 @@ import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.Incursion;
-import javelin.model.world.Period;
+import javelin.model.world.Time;
 import javelin.model.world.World;
 import javelin.model.world.location.Fortification;
 import javelin.model.world.location.Location;
@@ -155,7 +155,7 @@ public class Mine extends Fortification{
     if(d==null) return;
     var population=d.town.population;
     progress+=population+RPG.randomize(population);
-    var upgrade=level*Period.Time.YEAR/20;
+    var upgrade=level*Time.YEAR/20;
     if(progress>upgrade){
       progress-=upgrade;
       upgrade();

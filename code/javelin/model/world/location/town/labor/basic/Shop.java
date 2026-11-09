@@ -276,7 +276,7 @@ public class Shop extends Location{
   @Override
   public boolean interact(){
     if(!super.interact()
-        ||!isopen(List.of(Period.MORNING,Period.AFTERNOON),this))
+        ||!isopen(List.of(Period.MORNING,Period.DAY),this))
       return false;
     var crafted=crafting.reclaim(Period.gettime()).stream()
         .map(c->(CraftingOrder)c).map(o->o.item).toList();

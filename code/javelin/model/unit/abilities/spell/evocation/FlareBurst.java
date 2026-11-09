@@ -6,7 +6,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.AreaSpell;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.condition.Dazzled;
-import javelin.model.world.Period.Time;
+import javelin.model.world.Time;
 import javelin.old.RPG;
 
 /**

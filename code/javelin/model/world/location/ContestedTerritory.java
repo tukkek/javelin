@@ -25,7 +25,7 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.Incursion;
-import javelin.model.world.Period.Time;
+import javelin.model.world.Time;
 import javelin.model.world.World;
 import javelin.model.world.location.town.diplomacy.quest.kill.Raid;
 import javelin.model.world.location.town.labor.basic.Lodge;

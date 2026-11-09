@@ -394,10 +394,10 @@ public class Combatant implements Serializable,Cloneable{
       case 0:
         return p;
       case Monster.VISION_DARK:
-        return Period.AFTERNOON;
+        return Period.DAY;
       case Monster.VISION_LOWLIGHT:
         if(p.equals(Period.NIGHT)) return Period.EVENING;
-        if(p.equals(Period.EVENING)) return Period.AFTERNOON;
+        if(p.equals(Period.EVENING)) return Period.DAY;
     }
     return p;
   }
@@ -410,7 +410,7 @@ public class Combatant implements Serializable,Cloneable{
    * @see #perceive(String)
    */
   public int view(Period p){
-    if(source.vision==2||p.equals(Period.MORNING)||p.equals(Period.AFTERNOON))
+    if(source.vision==2||p.equals(Period.MORNING)||p.equals(Period.DAY))
       return Integer.MAX_VALUE;
     if(source.vision==1) return p.equals(Period.EVENING)?12:8;
     return p.equals(Period.EVENING)?8:4;

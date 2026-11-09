@@ -30,7 +30,7 @@ public class BattlePanel extends MapPanel{
   public BattlePanel(BattleState s){
     super(s.map.length,s.map[0].length,Preferences.KEYTILEBATTLE);
     var p=Fight.current.period;
-    daylight=p.equals(Period.MORNING)||p.equals(Period.AFTERNOON);
+    daylight=p.equals(Period.MORNING)||p.equals(Period.DAY);
   }
 
   @Override
@@ -54,7 +54,7 @@ public class BattlePanel extends MapPanel{
   public void calculatevision(){
     synchronized(OpenGL.LOCK){
       var p=state.period;
-      daylight=p.equals(Period.MORNING)||p.equals(Period.AFTERNOON);
+      daylight=p.equals(Period.MORNING)||p.equals(Period.DAY);
       if(previous==null||p!=previous.period)
         for(var tiles:this.tiles) for(var tile:tiles){
           var bt=(BattleTile)tile;

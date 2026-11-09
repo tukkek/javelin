@@ -45,7 +45,7 @@ public class Robbers extends UrbanEncounter{
 
 	@Override
 	protected boolean validate(Monster foe){
-		if(Period.MORNING.is()||Period.AFTERNOON.is()) return false;
+		if(Period.MORNING.is()||Period.DAY.is()) return false;
 		var a=foe.alignment;
 		return a.ethics!=Ethics.LAWFUL&&a.morals!=Morals.GOOD&&foe.cr<=5
 				&&super.validate(foe);

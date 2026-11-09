@@ -72,7 +72,7 @@ public class FindMob extends SkillEvent{
 	@Override
 	public boolean validate(Squad s,int squadel){
 		if(Season.current==Season.WINTER) return false;
-		if(!Period.AFTERNOON.is()&&!Period.EVENING.is()) return false;
+		if(!Period.DAY.is()&&!Period.EVENING.is()) return false;
 		terrain=Terrain.get(location.x,location.y);
 		return terrain.equals(Terrain.HILL)||terrain.equals(Terrain.PLAIN);
 	}

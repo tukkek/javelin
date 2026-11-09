@@ -32,7 +32,7 @@ import javelin.model.unit.Monster.MonsterType;
 import javelin.model.unit.Squad;
 import javelin.model.world.Incursion;
 import javelin.model.world.Period;
-import javelin.model.world.Period.Time;
+import javelin.model.world.Time;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.DungeonFloor;
 import javelin.model.world.location.town.District;
@@ -122,7 +122,7 @@ public class Arena extends UniqueLocation{
       super(Arena.this,new ArenaMap());
       team=t;
       mutators.add(new Friendly(Combatant.STATUSINJURED));
-      period=Period.AFTERNOON;
+      period=Period.DAY;
       goldbonus=.5;
     }
 
@@ -242,7 +242,7 @@ public class Arena extends UniqueLocation{
     }
 
     void turn(Arena a){
-      var upgrade=Period.Time.YEAR/20;
+      var upgrade=Time.YEAR/20;
       if(RPG.chancein(size()==1?Time.WEEK:Time.SEASON)) hire();
       else if(RPG.chancein(upgrade)){
         var t=(Town)a.findclosest(Town.class);
@@ -277,7 +277,7 @@ public class Arena extends UniqueLocation{
   @Override
   public boolean interact(){
     if(!super.interact()
-        ||!isopen(List.of(Period.AFTERNOON,Period.EVENING),this))
+        ||!isopen(List.of(Period.DAY,Period.EVENING),this))
       return false;
     var hurt=Squad.active.members.stream()
         .filter(c->c.getnumericstatus()<Combatant.STATUSSCRATCHED).limit(1);

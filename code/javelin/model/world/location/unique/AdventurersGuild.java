@@ -18,7 +18,7 @@ import javelin.controller.generator.NpcGenerator;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
-import javelin.model.world.Period.Time;
+import javelin.model.world.Time;
 import javelin.old.RPG;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.Screen;

@@ -182,7 +182,7 @@ public class Javelin{
   public static String welcome(){
     String flavor;
     if(Period.MORNING.is()) flavor="What dangers lie ahead..?";
-    else if(Period.AFTERNOON.is()) flavor="Onwards to victory!";
+    else if(Period.DAY.is()) flavor="Onwards to victory!";
     else if(Period.EVENING.is()) flavor="Cheers!";
     else if(Period.NIGHT.is())
       flavor="What a horrible night to suffer an invasion...";

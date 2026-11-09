@@ -21,7 +21,7 @@ public class DayLight extends Spell{
 	@Override
 	public String cast(Combatant caster,Combatant target,boolean saved,
 			BattleState s,ChanceNode cn){
-		s.period=Period.AFTERNOON;
+		s.period=Period.DAY;
 		return "The area brightens!";
 	}
 

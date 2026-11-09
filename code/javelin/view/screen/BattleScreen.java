@@ -16,7 +16,6 @@ import javelin.controller.content.action.Action;
 import javelin.controller.content.action.ActionCost;
 import javelin.controller.content.action.ActionMapping;
 import javelin.controller.content.action.Dig;
-import javelin.controller.content.action.Examine;
 import javelin.controller.content.action.Movement;
 import javelin.controller.content.action.world.WorldAction;
 import javelin.controller.content.action.world.WorldMove;
@@ -163,7 +162,7 @@ public class BattleScreen extends Screen{
       for(var c:Fight.state.getcombatants()) c.refresh();
       Fight.state.next();
       current=Fight.state.next;
-      Examine.lastlooked=null;
+      StatusPanel.looking=null;
       partialmove=0;
       updatescreen();
       checkai();

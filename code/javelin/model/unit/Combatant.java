@@ -63,7 +63,6 @@ import javelin.old.RPG;
 import javelin.view.OpenGL;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.battle.BattlePanel;
-import javelin.view.mappanel.battle.action.BattleMouseAction;
 import javelin.view.screen.BattleScreen;
 
 /**
@@ -800,10 +799,6 @@ public class Combatant implements Serializable,Cloneable{
 
   public Point getlocation(){
     return new Point(location[0],location[1]);
-  }
-
-  public BattleMouseAction getmouseaction(){
-    return null;
   }
 
   /**

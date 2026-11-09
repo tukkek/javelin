@@ -9,23 +9,21 @@ import javelin.controller.content.action.ai.attack.AttackResolver;
 import javelin.controller.content.action.ai.attack.MeleeAttack;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.exception.RepeatTurn;
-import javelin.model.state.BattleState;
+import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
+import javelin.old.RPG;
 import javelin.old.messagepanel.MessagePanel;
+import javelin.view.StatusPanel;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.mappanel.battle.overlay.TargetOverlay;
 import javelin.view.mappanel.overlay.Overlay;
-import javelin.view.screen.BattleScreen;
 import javelin.view.screen.StatisticsScreen;
 
-/**
- * Lets the player examine the surroundings and monsters.
- *
- * @author alex
- */
+/// Lets the player examine surroundings and units.
 public class Examine extends Action{
-  final static HashMap<Character,Point> DIRECTIONS=new HashMap<>();
+  static final HashMap<Character,Point> DIRECTIONS=new HashMap<>();
+  static final char SHOW='s';
 
   static{
     DIRECTIONS.put('8',new Point(0,-1));
@@ -38,132 +36,98 @@ public class Examine extends Action{
     DIRECTIONS.put('3',new Point(1,1));
   }
 
-  /** Last unit to be examined. */
-  static public Combatant lastlooked=null;
-
   /** Constructor. */
   public Examine(){
     super("examine",new String[]{"x"});
     allowburrowed=true;
   }
 
-  @Override
-  public boolean perform(Combatant active){
-    doLook(active,BattleScreen.active);
-    throw new RepeatTurn();
-  }
-
-  /** get location, initially place crosshairs at start */
-  static public Point getTargetLocation(Point start,BattleScreen s){
-    startlooking(start,s);
-    try{
-      while(true){
-        final var e=Javelin.input();
-        if(e==null) continue;
-        var delta=new Point(0,0);
-        var key=convertkey(e);
-        var cursor=getcursor();
-        if(DIRECTIONS.get(key)!=null) delta=DIRECTIONS.get(key);
-        else if(key=='v'){
-          var target=Fight.state.getcombatant(cursor.x,cursor.y);
-          if(target!=null&&!target.source.passive) new StatisticsScreen(target);
-        }else if(key=='q'){
-          clearCursor();
-          return null;
-        }else{
-          clearCursor();
-          return cursor;
-        }
-        look(delta,cursor,s);
-      }
-    }finally{
-      lastlooked=null;
-      MessagePanel.active.clear();
-    }
-  }
-
-  static void look(Point delta,Point cursor,BattleScreen s){
-    var x=checkbounds(cursor.x+delta.x,Fight.state.map.length);
-    var y=checkbounds(cursor.y+delta.y,Fight.state.map[0].length);
-    setCursor(x,y,s);
-    s.mappanel.viewposition(x,y);
-    doLookPoint(getcursor(),s);
-  }
-
-  static void startlooking(Point start,BattleScreen s){
-    if(start==null){
-      var active=Fight.state.next;
-      start=new Point(active.location[0],active.location[1]);
-    }
-    setCursor(start.x,start.y,s);
-    s.mappanel.viewposition(start.x,start.y);
-    doLookPoint(getcursor(),s);
-    s.statuspanel.repaint();
-  }
-
-  static void clearCursor(){
-    Overlay.clear();
-  }
-
-  static Point getcursor(){
+  static Point locate(){
     var cursor=(TargetOverlay)Overlay.get();
     return new Point(cursor.x,cursor.y);
   }
 
-  static void setCursor(int x,int y,BattleScreen s){
-    clearCursor();
-    Overlay.set(new TargetOverlay(x,y));
-    MapPanel.get().center(x,y,true);
-  }
-
-  static void doLook(Combatant active,BattleScreen s){
-    doLookPoint(getTargetLocation(active.getlocation(),s),s);
-  }
-
-  static void doLookPoint(final Point p,BattleScreen s){
-    if(p==null) return;
-    if(!s.mappanel.tiles[p.x][p.y].discovered){
-      lookmessage("Can't see",s);
-      return;
-    }
-    lookmessage("",s);
-    lastlooked=null;
-    final var state=Fight.state;
-    final var combatant=state.getcombatant(p.x,p.y);
-    if(combatant!=null){
-      var customaction=combatant.getmouseaction();
-      if(customaction!=null) customaction.onenter(state.next,combatant,
-          MapPanel.get().tiles[p.x][p.y],state);
-      else{
-        lookmessage(describestatus(combatant,state),s);
-        lastlooked=combatant;
-      }
-    }else if(state.map[p.x][p.y].flooded) lookmessage("Flooded",s);
-    else if(Fight.current.map.map[p.x][p.y].blocked) lookmessage("Blocked",s);
-    s.statuspanel.repaint();
-  }
-
-  static void lookmessage(final String status,BattleScreen s){
-    s.messagepanel.clear();
-    var message="Examine: move the cursor over another combatant, press v to view character sheet.\n\n";
-    Javelin.message(message+status,Javelin.Delay.NONE);
+  static void message(String s){
+    MessagePanel.get().clear();
+    var message="Move the cursor over a combatant, press s to show its character sheet.\n\n";
+    message+=s;
+    Javelin.message(message,Javelin.Delay.NONE);
     Javelin.redraw();
   }
 
-  static String describestatus(Combatant c,BattleState s){
-    var current=BattlePanel.current;
-    var status=c.printstatus(s);
-    if(current.getlocation().distanceinsteps(c.getlocation())==1){
-      var sequence=current.source.melee.get(0);
-      var resolver=new AttackResolver(MeleeAttack.INSTANCE,current,c,
-          sequence.get(0),s);
-      resolver.preview(c);
-      status+=", "+resolver.chance;
-    }
-    return status.isEmpty()?c.toString():c+" ("+status+")";
+  static void describe(Square s){
+    if(s.flooded) message("Flooded.");
+    else if(s.blocked) message("Blocked.");
   }
 
-  static char convertkey(final KeyEvent e){
+  static String describe(Combatant target){
+    var s=Fight.state;
+    var active=BattlePanel.current;
+    var text=target.printstatus(s);
+    if(active.getlocation().distanceinsteps(target.getlocation())==1){
+      var melee=MeleeAttack.INSTANCE;
+      var attack=active.source.melee.get(0).get(0);
+      var resolver=new AttackResolver(melee,active,target,attack,s);
+      resolver.preview(target);
+      text+=", "+resolver.chance;
+    }
+    if(text.isEmpty()) return target.toString();
+    return "%s (%s)".formatted(target,text);
+  }
+
+  static void inspect(Point p){
+    var state=Fight.state;
+    var c=state.getcombatant(p.x,p.y);
+    if(c==null){
+      var square=state.map[p.x][p.y];
+      describe(square);
+      return;
+    }
+    message(describe(c));
+    StatusPanel.looking=c;
+  }
+
+  static void look(Point p){
+    if(p==null) return;
+    var panel=(BattlePanel)MapPanel.get();
+    var tile=panel.tiles[p.x][p.y];
+    if(!panel.daylight&&!tile.discovered){
+      message("Unseen.");
+      return;
+    }
+    message("");
+    StatusPanel.looking=null;
+    inspect(p);
+    StatusPanel.get().repaint();
+  }
+
+  static void set(int x,int y){
+    Overlay.set(new TargetOverlay(x,y));
+    MapPanel.get().center(x,y,true);
+    look(locate());
+    StatusPanel.get().repaint();
+  }
+
+  static void move(Point delta){
+    var point=locate();
+    var x=point.x+delta.x;
+    var y=point.y+delta.y;
+    var map=Fight.state.map;
+    x=RPG.clamp(0,x,map.length-1);
+    y=RPG.clamp(0,y,map[0].length-1);
+    set(x,y);
+  }
+
+  static boolean show(char key){
+    if(key!=SHOW) return false;
+    var target=Fight.state.getcombatant(locate());
+    new StatisticsScreen().open(target);
+    return true;
+  }
+
+  static Character press(){
+    var e=Javelin.input();
+    if(e==null) return null;
     return switch(e.getKeyCode()){
       case KeyEvent.VK_UP -> '8';
       case KeyEvent.VK_DOWN -> '2';
@@ -178,8 +142,29 @@ public class Examine extends Action{
     };
   }
 
-  static int checkbounds(int i,int upperbound){
-    if(i<0) return 0;
-    return i<upperbound?i:upperbound-1;
+  static Point navigate(){
+    var delta=new Point(0,0);
+    while(delta!=null){
+      var key=press();
+      if(key==null||show(key)) continue;
+      delta=DIRECTIONS.get(key);
+      if(delta!=null) move(delta);
+    }
+    return locate();
+  }
+
+  @Override
+  public boolean perform(Combatant active){
+    try{
+      var point=active.getlocation();
+      set(point.x,point.y);
+      point=navigate();
+      Overlay.clear();
+      look(point);
+      throw new RepeatTurn();
+    }finally{
+      StatusPanel.looking=null;
+      MessagePanel.active.clear();
+    }
   }
 }

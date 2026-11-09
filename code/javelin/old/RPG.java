@@ -178,4 +178,11 @@ public class RPG{
     shuffle(list);
     return list;
   }
+
+  /// Returns the number clamped to minimum and maximum values
+  public static int clamp(int least,int number,int most){
+    if(number>most) return most;
+    if(number<least) return least;
+    return number;
+  }
 }

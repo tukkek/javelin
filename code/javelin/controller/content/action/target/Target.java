@@ -8,13 +8,13 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.content.action.Action;
-import javelin.controller.content.action.Examine;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.walker.Walker;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.old.messagepanel.MessagePanel;
+import javelin.view.StatusPanel;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.battle.overlay.TraceOverlay;
 import javelin.view.mappanel.overlay.Overlay;
@@ -28,12 +28,17 @@ import javelin.view.screen.StatisticsScreen;
  * @author alex
  */
 public abstract class Target extends Action{
-  public class SelectTarget implements Comparator<Combatant>{
+  static final char NEXT='+';
+  static final char GO='\n';
+  static final char SHOW='s';
+  static final char LAST='-';
+
+  class SelectTarget implements Comparator<Combatant>{
     Combatant c;
     BattleState state;
     private Target action;
 
-    public SelectTarget(Combatant c,BattleState state,Target action){
+    SelectTarget(Combatant c,BattleState state,Target action){
       this.c=c;
       this.state=state;
       this.action=action;
@@ -50,13 +55,14 @@ public abstract class Target extends Action{
     }
   }
 
-  /**
-   * Pressing this key confirms the target selection, usually same as the action
-   * key.
-   *
-   * @see Action#keys
-   */
+  /// Pressing this key confirms the target selection, usually same as the
+  /// action key.
+  ///
+  /// @see Action#keys
   protected char confirmkey;
+
+  int index=0;
+  Combatant target=null;
 
   /** Constructor. */
   public Target(String string){
@@ -104,35 +110,58 @@ public abstract class Target extends Action{
       throw new RepeatTurn();
     }
     Collections.sort(targets,new SelectTarget(c,state,this));
-    selecttarget(combatant,targets,state);
+    select(combatant,targets,state);
     return true;
   }
 
-  /** TODO rename to select() */
-  void selecttarget(Combatant c,List<Combatant> targets,BattleState state){
-    var targeti=0;
-    lock(c,targets.get(0),state);
+  boolean navigate(char key){
+    if(key==NEXT||Action.MOVE_E.isPressed(key)){
+      index+=1;
+      return true;
+    }
+    if(key==LAST||Action.MOVE_W.isPressed(key)){
+      index-=1;
+      return true;
+    }
+    return false;
+  }
+
+  boolean show(char key){
+    if(key!=SHOW) return false;
+    new StatisticsScreen().open(target);
+    return true;
+  }
+
+  boolean attack(char key,Combatant active,BattleState s){
+    if(key!=GO&&key!=confirmkey) return false;
+    Overlay.clear();
+    MessagePanel.active.clear();
+    attack(active,target,s);
+    return true;
+  }
+
+  void target(List<Combatant> targets){
+    // wrap index
+    var size=targets.size();
+    if(index>=size) index=0;
+    else if(index<0) index=size-1;
+    // target
+    target=targets.get(index);
+  }
+
+  void select(Combatant active,List<Combatant> targets,BattleState s){
+    index=0;
+    target=null;
     while(true){
+      target(targets);
+      lock(active,s);
       Javelin.redraw();
       var key=InfoScreen.feedback();
-      if(Action.MOVE_W.isPressed(key)||key=='-') targeti-=1;
-      else if(Action.MOVE_E.isPressed(key)||key=='+') targeti+=1;
-      else if(key=='\n'||key==confirmkey){
-        Overlay.clear();
-        MessagePanel.active.clear();
-        attack(c,targets.get(targeti),state);
-        break;
-      }else if(key=='v'&&!targets.get(targeti).source.passive)
-        new StatisticsScreen(targets.get(targeti));
-      else{
-        Examine.lastlooked=null;
-        Javelin.redraw();
-        throw new RepeatTurn();
-      }
-      var max=targets.size()-1;
-      if(targeti>max) targeti=0;
-      else if(targeti<0) targeti=max;
-      lock(c,targets.get(targeti),state);
+      if(attack(key,active,s)) break;
+      if(navigate(key)||show(key)) continue;
+      StatusPanel.looking=null;
+      Javelin.redraw();
+      throw new RepeatTurn();
     }
   }
 
@@ -173,14 +202,14 @@ public abstract class Target extends Action{
     return new TraceOverlay(active.getlocation(),target.getlocation());
   }
 
-  void lock(Combatant active,Combatant target,BattleState s){
+  void lock(Combatant active,BattleState s){
     Overlay.set(overlay(active,target));
     var point=target.getlocation();
     BattleScreen.active.center(point.x,point.y);
-    Examine.lastlooked=target;
+    StatusPanel.looking=target;
     MessagePanel.active.clear();
     var prompt="Use ← and → to select target, ENTER or "+confirmkey
-        +" to confirm, v to view target's sheet, q to quit.\n\n";
+        +" to confirm, s to show statistics, q to quit.\n\n";
     prompt+=describehitchance(active,target,s);
     Javelin.message(prompt,Javelin.Delay.NONE);
   }

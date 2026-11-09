@@ -4,7 +4,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
 import javelin.Javelin;
-import javelin.controller.content.action.Examine;
 import javelin.controller.content.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
@@ -31,26 +30,23 @@ public class BattleMouse extends Mouse{
   static final BattleMouseAction[] ACTIONS={new MoveMouseAction(),
       new MeleeMouseAction(),new RangedMouseAction()};
 
+  void show(Combatant c){
+    BattleScreen.perform(()->new StatisticsScreen().open(c));
+  }
+
   @Override
   public void mouseClicked(MouseEvent e){
+    super.mouseClicked(e);
     synchronized(OpenGL.LOCK){
       if(overrideinput()) return;
       var t=gettile(e);
       if(t==null) return;
       var s=Fight.state;
       var target=s.getcombatant(t.x,t.y);
-      var button=e.getButton();
-      if(button==MouseEvent.BUTTON3&&target!=null){
-        BattleScreen.perform(()->{
-          if(!target.source.passive) new StatisticsScreen(target);
-        });
-        return;
+      if(target!=null) switch(e.getButton()){
+        case MouseEvent.BUTTON1 -> click(target,s);
+        case MouseEvent.BUTTON3 -> show(target);
       }
-      if(button==MouseEvent.BUTTON1){
-        click(target,s);
-        return;
-      }
-      super.mouseClicked(e);
     }
   }
 
@@ -64,8 +60,6 @@ public class BattleMouse extends Mouse{
 
   public BattleMouseAction getaction(BattleState s,Combatant target,
       Combatant current){
-    var custom=target==null?null:target.getmouseaction();
-    if(custom!=null&&custom.validate(current,target,s)) return custom;
     for(BattleMouseAction a:ACTIONS) if(a.validate(current,target,s)) return a;
     return null;
   }
@@ -74,8 +68,8 @@ public class BattleMouse extends Mouse{
   public void mouseMoved(MouseEvent e){
     synchronized(OpenGL.LOCK){
       var statuspanel=StatusPanel.get();
-      if(Examine.lastlooked!=null){
-        Examine.lastlooked=null;
+      if(StatusPanel.looking!=null){
+        StatusPanel.looking=null;
         statuspanel.repaint();
       }
       if(!Interface.userinterface.waiting) return;
@@ -93,7 +87,7 @@ public class BattleMouse extends Mouse{
           showstatus(status,target,null);
         }else action.onenter(current,target,t,s);
         if(target!=null&&(action==null||action.clearoverlay)){
-          Examine.lastlooked=target;
+          StatusPanel.looking=target;
           statuspanel.repaint();
         }
       }finally{

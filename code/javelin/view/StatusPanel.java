@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.List;
 
 import javelin.controller.collection.CountingSet;
-import javelin.controller.content.action.Examine;
 import javelin.controller.content.fight.Fight;
 import javelin.model.item.Item;
 import javelin.model.state.BattleState;
@@ -30,9 +29,12 @@ import javelin.view.screen.BattleScreen;
  * @author alex
  */
 public class StatusPanel extends TPanel{
-  private static final long serialVersionUID=3905800885761095223L;
+  /// Unit being examined by an action
+  static public Combatant looking=null;
+
   static final int boxborder=1;
   static final Color powercolor=new Color(0,128,60);
+
   static int charwidth=0;
   static int charheight=0;
   static int charmaxascent=0;
@@ -61,7 +63,7 @@ public class StatusPanel extends TPanel{
     var hero=BattleState.getcombatant(BattlePanel.current,
         state.getcombatants());
     if(hero==null||hero.source==null) return;
-    if(Examine.lastlooked!=null) hero=Examine.lastlooked;
+    if(looking!=null) hero=looking;
     var helper="";
     for(final char c:(maininfo(hero)+movementdata(hero)+attackdata(hero)
         +passivedata(hero)+spelldata(hero)+itemdata(hero)+conditiondata(hero))

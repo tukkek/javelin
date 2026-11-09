@@ -27,11 +27,14 @@ public class StatisticsScreen extends InfoScreen{
   static final String DESCRIPTIONHEADER="(The text below is taken from the d20 SRD and doesn't necessarily reflect the in-game enemy)\n\n";
   static final boolean DEBUG=false;
 
-  /**
-   * @param c Shows statistic for this unit.
-   */
-  public StatisticsScreen(Combatant c){
+  /// Constructor.
+  public StatisticsScreen(){
     super("");
+  }
+
+  /// @param c Shows statistic for this unit.
+  public void open(Combatant c){
+    if(c==null||c.source.passive) return;
     text=gettext(c,true);
     if(updatescreens().equals('v')){
       var header=DESCRIPTIONHEADER;

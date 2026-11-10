@@ -45,7 +45,8 @@ public abstract class Dragoon extends Kit{
   /** Constructor. */
   protected Dragoon(String subtype,BreathWeapon breath,int naturalarmor,
       int walk,int flight,DamageEffect effect){
-    super("Dragoon",Warrior.SINGLETON,RaiseStrength.SINGLETON,
+    var name="Dragoon (%s)".formatted(subtype.toLowerCase());
+    super(name,Warrior.SINGLETON,RaiseStrength.SINGLETON,
         RaiseDexterity.SINGLETON);
     basic.add(new WalkingSpeed(subtype+" dragon speed",walk));
     extension.add(

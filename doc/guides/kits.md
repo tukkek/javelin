@@ -149,7 +149,7 @@ Some kits are "prestige kits" and are not usually available or useful for low-le
 * Spell: locate object
 * Spell: prying eyes
 
-## Dragoon
+## Dragoon (black)
 * Class: warrior
 * Acid spray
 * Acrobatic
@@ -171,7 +171,7 @@ Some kits are "prestige kits" and are not usually available or useful for low-le
 * Skill: perception
 * Toughness
 
-## Dragoon
+## Dragoon (blue)
 * Class: warrior
 * Acrobatic
 * Alertness
@@ -192,7 +192,7 @@ Some kits are "prestige kits" and are not usually available or useful for low-le
 * Stunning shock
 * Toughness
 
-## Dragoon
+## Dragoon (green)
 * Class: warrior
 * Acrobatic
 * Alertness
@@ -213,7 +213,7 @@ Some kits are "prestige kits" and are not usually available or useful for low-le
 * Skill: perception
 * Toughness
 
-## Dragoon
+## Dragoon (red)
 * Class: warrior
 * Acrobatic
 * Alertness
@@ -233,7 +233,7 @@ Some kits are "prestige kits" and are not usually available or useful for low-le
 * Skill: perception
 * Toughness
 
-## Dragoon
+## Dragoon (white)
 * Class: warrior
 * Acrobatic
 * Alertness

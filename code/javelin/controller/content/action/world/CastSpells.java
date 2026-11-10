@@ -1,6 +1,7 @@
 package javelin.controller.content.action.world;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
@@ -48,7 +49,8 @@ public class CastSpells extends WorldAction{
       return;
     }
     var caster=casters.get(choice);
-    List<Spell> spells=new ArrayList<>(caster.spells);
+    var spells=new ArrayList<>(caster.spells);
+    spells.sort(Comparator.comparing(s1->s1.name));
     var s=selectspell(spells);
     if(s==null){
       MessagePanel.active.clear();

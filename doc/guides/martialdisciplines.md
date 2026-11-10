@@ -1,0 +1,21 @@
+# Martial disciplines
+There are several types of martial arts in the world of Javelin - each with their own style and specialties. You'll find academies devoted to each style throughout the land and they'll happily teach you their secrets for a fee - and if you meet their requisities.
+
+A strike maneuver usually has to hit to be successful. The "initiation modifier" mentioned in some of the descriptions below is half the attacker's hit dice plus the highest of his Intelligence, Wisdom or Charisma modifiers.
+
+# Steel serpent 
+## Level 1
+* Dizzying venom prana: staggers the enemy for half a turn. Also reduces Wisdom by 2 points on a failed Fortitude save (DC11 + initiation modifier).
+* Sting of the rattler: Attack that inflicts an additional 1d4 points of damage plus 1d4 damage the following round.
+
+## Level 2
+* Iron fang: strike that inflicts 2d6 extra damage and ignores any damage reduction. Grants +2 to the DC of any poison effects.
+* Sting of the asp: strike inflicts 1d6 extra damage and 1 point of Constitution damage. On a failed Constitution save (DC 12 + initiatior modifier), inflicts 1 extra Constitution damage and on the next turn, additional 2 Constitution damage and 1d6 normal damage.
+* Weakening venom prana: boosts an attack with 1d4 of strength damage (half on a Fortitude save, DC 12 + initiatior level).
+
+## Level 3
+* Sickening venom strike: deal 2 Constitution damage. Also sickens target for 1d4 turns on a failed Fortitude save (DC 13 + initiator modifier).
+
+## Level 4
+* Sting of the Adder: deals 5d6 extra damage and 1d4 Wisdom damage (Fortitude save for half). A failed save results in another 1d6 damage and 2 Wisdom damage in the following turn. Save DC: 14 + initiation level.
+* Tearing fang: for 1 turn, all attacks deal an extra 2d6 damage and will cause the target to bleed, taking 2 damage per turn for 1d4 turns. A bleeding unit will automatically apply first-aid to itself if it can take-ten on a Heal check against DC15 (instead of taking any damage). Any magical effect that heals a unit will also stop all bleeding immediately.

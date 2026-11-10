@@ -1,26 +1,27 @@
-IDENTIFYING ITEMS
+# Items
+# Identifying items
 Some of the items you can use need to be identified before their effects are made clear but that usually only applies to those that are highly arcane or one-use only (as permanent items can be experimented with and thus considered automatically identified through trial-and-error). Even if an item is unidentified, you can sometimes use it anyway - the only caveat being that you don't know beforehand what their effect will be!
 
 Some of the spells of the divination school of magic are dedicated to identifying items (see the spell guide for more details). The spellcraft skill can achieve the same purpose (see the skill guide for details).
 
-ART PIECES AND GEMS
+# Art and gems
 These do not have any use other than selling them for their full value in gold (but if you're lucky some of them can sell for very high prices)!
 
-POTIONS AND FLASKS
-Potions produce a spell-like effect on the user and are spent afterwards. Their effect is automatic: no prerequisites or rolls are needed. Flasks are like potions but they aren't discarded after use and will slowly refill (especially while you rest).
-
-BOMBS AND VAPORIZERS
-Much like potions, vaporizers affect a small area around the user, allowing many units to receive the benefits instead of only one. Bombs work similarly but for offensive purposes and need to be thrown at enemies, exploding when they land and giving a major save penalty to the enemy at the center and a minor save bonus to everyone else in the area. If the thrower misses the attack, the bomb will still be launched and explode but will probably land somewhere else than intended!
-
-EIDOLONS
+# Eidolons
 A magic stone that carries the essence of a creature and can be used to manifest a temporary copy of it on the battlefield. A minor eidolon is immediately consumed, while normal eidolons have charges that will replenish with time and rest.
 
-SCROLLS
+# Scrolls
 A scroll is a one-use item that works like a magic spell but requires its reader to have at least one mental attribute score (intelligence, wisdom or charisma) equal or higher to its spell's level + 10. The reader's caster level must also be higher than the spell's caster level (see the spell guide for more information). The spellcraft or use magic device skills may overcome these limitation when high enough.
 
 Scrolls require the unit to meet nearly all of the requirements necessary as for them to cast the spells themselves but the use magic device skill can circumvent that. A scroll also always needs to be deciphered (identified) before it can be used. More powerful scrolls will require higher ability scores, more class levels or skill ranks.
 
-WANDS, STAVES AND RODS
+# Foci
 Each of those items allow certain types of spells to be cast. They have a limited number of uses and become worthless after these charges are spent. Wands can be used at any time straight from the inventory but staves need to be equipped prior to battle. Requirements for wands and staves are lower than for scrolls but some of those still need to be met (including identifying them beforehand). 
 
 Rods are similar to staves in that they need to be equipped before being used but they don't have a limited number of charges nor they require magical expertise to be used: any unit that can equip them may activate their powers. Note that each squad member can only have one Rod or Staff equipped at any given time.
+
+# Potions and flasks
+Potions produce a spell-like effect on the user and are spent afterwards. Their effect is automatic: no prerequisites or rolls are needed. Flasks are like potions but they aren't discarded after use and will slowly refill (especially while you rest).
+
+## Bombs and vaporizers
+Much like potions, vaporizers affect a small area around the user, allowing many units to receive the benefits instead of only one. Bombs work similarly but for offensive purposes and need to be thrown at enemies, exploding when they land and giving a major save penalty to the enemy at the center and a minor save bonus to everyone else in the area. If the thrower misses the attack, the bomb will still be launched and explode but will probably land somewhere else than intended!

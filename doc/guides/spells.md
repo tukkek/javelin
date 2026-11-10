@@ -1,0 +1,100 @@
+# Spells
+Some units naturally know a certain set of spells or a random amount of spells - others can learn spells from multiple sources, including mage guilds in towns.
+
+# Learning spells
+* To learn a certain spell, you need a minimum amount of "caster levels" - which is the sum of a creature's natural hit dice and acquired class levels.
+* You can learn as many individual spells as you have caster levels. Each spell has a daily use limit that is reset upon resting.
+* If a spell is of the highest possible level you can learn, it can only be cast once per day. Other spells can be learned multiple times, up to 5 uses per day.
+* These guidelines apply only to spells learned through study and training. Any types of items that allow you to cast spells work under different rules.
+* The spellcraft skill allows you to learn more powerful spells earlier than normal. How early depends on each unit, but usually each 2 ranks unlock a new spell level.
+
+# Qualifiers
+* Most spells cannot be cast while engaged in close combat, while more offensive ones generally can. Having high enough Concentration will bypass that for all spells.
+* Safe spells are those that can always be cast even while engaged in close combat.
+* Touch spells can only be targeted at those immediately adjacent to the spellcaster or at the spellcaster himself.
+
+# Schools
+* Abjuration: protective spells.
+* Conjuration: spells that deal with creation, healing, teleportation and the summoning of allies.
+* Divination: spells that reveal secrets and predict the future.
+* Enchantment: spells that affect the minds of others, influencing or controlling their behavior. 
+* Evocation: spells that manipulate energy or tap unseen sources of power, usually to create mayhem!
+* Illusion: spells that deceive the senses or minds of others
+* Necromancy: spells manipulate the power of death, including the summoning of undead allies!
+* Transmutation: school focused on changing the properties of creatures and objects.
+
+# Level 0 (caster level 1)
+* Read magic: identifies all scrolls in inventory.
+
+# Level 1 (caster level 1)
+* Bane: all enemies have -1 to attack rolls.
+* Barbarian rage: shorter-lived version of the Rage spell (level 3), targets self only.
+* Bless: all allies gain +1 to attack rolls.
+* Cure light wounds: cures 5 hit points. Touch.
+* Detect magic: allows you to make a Spellcraft skill check to identify a single item.
+* Doom: shakens an enemy.
+* Identify: reveals the function of an unidentfied magic item.
+* Inflict light wounds: causes 5 points of damage. Touch, safe.
+* Longstrider: increases caster's walking speed by 10 feet per round.
+* Magic missile: deals 1d4+1 of force damage, always hits.
+  
+# Level 2 (caster level 3)
+* Bear's endurance: +2 constitution bonus. Touch.
+* Blink: makes the caster blink for 4 turns, providing a 50% miss chance to attacks against him. Safe.
+* Bull's strength: +2 strength bonus. Touch.
+* Cat's grace: +2 dexterity bonus. Touch.
+* Cure moderate wounds: cures 13 hit points. Touch.
+* Eagle's splendor: +2 charisma bonus. Touch.
+* Fox's cunning: +2 intelligence bonus. Touch.
+* Inflict moderate wounds: causes 13 points of damage. Touch, safe.
+* Lesser restoration: dispels effect-reducing conditions or cures 1d4 ability damage.
+* Locate object: locates nearest treasure chest in a dungeon.
+* Owl's wisdom: +2 wisdom bonus. Touch.
+* Ray of exhaustion: makes a creature fatigued or exhausted.
+* Scorching ray: deals 4d6 points of energy damage.
+* Sound burst: blasts a 10-foot radius with a tremendous cacophony.
+
+# Level 3 (caster level 5)
+* Cure serious wounds: cures 20 hit points. Touch.
+* Daylight: lights up environment.
+* Displacement: makes target blink for 6 turns, providing a 50% miss chance to attacks against him. Touch.
+* Deeper darkness: darkens environment.
+* Find traps: caster gains +3 bonus to Search.
+* Flare burst: makes creatures in a 10-feet radius dazzled for 10 rounds.
+* Heroism: For 1 hour target gains a +2 morale bonus on attack rolls, saves, and skill checks. Touch.
+* Inflict serious wounds: causes 20 points of damage. Touch, safe.
+* Rage: +2 strength and constitution, +1 will, -2 to armor class of an ally (duration based on target's constitution).
+* Vampiric touch: steals 21 temporary hit points from an enemy. Touch, safe. Lasts for 1 hour.
+  
+# Level 4 (caster level 7)
+* Barkskin: grants +3 to armor class for 1 hour to an ally.
+* Cure critical wounds: cures 26 hit points. Touch.
+* Inflict critical wounds: causes 26 points of damage. Touch, safe.
+* Neutralize poison: disables natural poison on an enemy or grants poison immunity to ally for an hour. Safe.
+* Resist energy: grants energy resistance 20 for 1 hour to an ally.
+* Secure shelter: lets you rest safely (when not in a dungeon or wilderness location).
+  
+# Level 5 (caster level 9)
+* Flame strike: produces a vertical column of divine fire with a 10 foot radius.
+* Hold monster: target temporarily cannot move and loses all dexterity.
+* Overland flight: target flies at 35-feet speed for 24 hours.
+* Prying eyes: reveals dungeon map or nearby area on world map.
+* Raise dead: after battle, resurrects a killed ally.
+* Slay living: kills target. Touch, safe.
+  
+# Level 6 (caster level 11)
+* Greater dispel magic: removes target's magical conditions.
+* Word of recall: returns party to last visited town.
+  
+# Level 7 (caster level 13)
+* Control weather: changes weather to dry, raining or storm.
+* Greater teleport: teleports you to any unique world location. Vehicles are left behind.
+* Ressurect: after battle, resurrects a killed ally to full hit points.
+  
+# Level 8 (caster level 15)
+* Discern location: reveals location of nearest undiscovered town.
+* Polar ray: freezing ray deals 15d6 points of energy damage.
+  
+# Level 9 (caster level 17)
+* Dominate monster: brings an enemy to your team for the duration of the battle.
+* Kill: kills an enemy with 100 hit points or less left.

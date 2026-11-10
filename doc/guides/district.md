@@ -1,3 +1,4 @@
+# Districts
 Each town has a certain area around it called a district. This space is used for building supporting structures, which are listed below. Moving inside the district is usually safe, with the size of the district being determined by that Town's population - it can be seen by hovering the mouse over the town's icon on the world map.
 
 Traits are fundamental for defining the culture and society of a Town - they start without any but can acquire multiple of them as they grow. Traits affect what types of projects the town can work on, what types of quests and treaties are available and possibly the types of events that will occur inside the district as the game progresses.
@@ -12,62 +13,40 @@ You can direct what projects a Town will be working on, under the town managemen
 
 If a town is captured by enemies, it will become hostile. It will still continue to work on projects independently but players won't be able to access quests, treaties or the management screen until they liberate that district. Hostile towns will also periodically generate incursions that will roam the world and capture other locations.
 
-ALL DISTRICTS
+# Projects
+* Build shop: crafts magic items for a fee.
+* Build traveller's lodge: a place to rest and recover for a small fee, can be upgraded to hotel (requires village) and hospital (requires town).
+* Cancel projects: immediately cancels all ongoing projects, discarding any progress.
+* Growth: grows the city population by 1, resulting in higher labor throughput and possibly increasing the district size, up to "city" size.
+* Guilds: different guild types are available in most districts, which are kit-based locations for the training and recruiting of units. Upgrading some guilds at a later point can unlock new kits. See the guide on kits for more information.
+* Redraw: when done, discards all available project options and draws new (doesn't affect ongoing projects).
+* Trait: adding a trait to a town will open up new project options, as seen below.
 
-Build shop: crafts magic items for a fee.
+## Criminal
+* Build sewers: monsters will inhabit the sewers periodically, can be upgraded for tougher fights.
+* Build slums: slums buy and sell items depending on availabity and the district's population.
+* Guilds: black dragoon, ninja dojo, thieves (rogue).
 
-Build traveller's lodge: a place to rest and recover for a small fee, can be upgraded to hotel (requires village) and hospital (requires town).
+## EXpansive
+*  Build docks: purchase a blessing for faster travel and rent a ship. In the upgraded version, rent an airship.
 
-Cancel projects: immediately cancels all ongoing projects, discarding any progress.
+## Magical
+* Build artificer: forges and buys gear.
+* Build rune shop: sells runes, used to enchant gear.
+* Build summoning circle: teaches spells that summon outsiders.
+* Guilds: bards, all mages.
 
-Growth: grows the city population by 1, resulting in higher labor throughput and possibly increasing the district size, up to "city" size.
+## Mercantile
+* Build mine: allows units placed inside to mine for gold and can be upgraded to automatically mine wish rubies.
+* Deforestate: converts a forest tile in the district into 50% extra labor.
 
-Guilds: different guild types are available in most districts, which are kit-based locations for the training and recruiting of units. Upgrading some guilds at a later point can unlock new kits. See the guide on kits for more information.
+## Military
+* Build mercenaries guild: allows hiring unique heroes, for a daily fee.
+* Guilds: fighter, monastery (monk), red dragoon.
 
-Redraw: when done, discards all available project options and draws new (doesn't affect ongoing projects).
+## Natural
+* Guilds: archery range (ranger), blue dragoon, green dragoon, henge (druid), mead hall (barbarian), steel serpent, white dragoon.
 
-Trait: adding a trait to a town will open up new project options, as seen below.
-
-CRIMINAL DISTRICTS
-
-Build sewers: monsters will inhabit the sewers periodically, can be upgraded for tougher fights.
-
-Build slums: slums buy and sell items depending on availabity and the district's population.
-
-Guilds: black dragoon, ninja dojo, thieves (rogue).
-
-EXPANSIVE DISTRICTS
-
-Build docks: purchase a blessing for faster travel and rent a ship. In the upgraded version, rent an airship.
-
-MAGICAL DISTRICTS
-
-Build artificer: forges and buys gear.
-
-Build rune shop: sells runes, used to enchant gear.
-
-Build summoning circle: teaches spells that summon outsiders.
-
-Guilds: bards, all mages.
-
-MERCANTILE DISTRICTS
-
-Build mine: allows units placed inside to mine for gold and can be upgraded to automatically mine wish rubies.
-
-Deforestate: converts a forest tile in the district into 50% extra labor.
-
-MILITARY DISTRICTS
-
-Build mercenaries guild: allows hiring unique heroes, for a daily fee.
-
-Guilds: fighter, monastery (monk), red dragoon.
-
-NATURAL DISTRICTS
-
-Guilds: archery range (ranger), blue dragoon, green dragoon, henge (druid), mead hall (barbarian), steel serpent, white dragoon.
-
-RELIGIOUS DISTRICTS
-
-Build shrine: casts divine rituals in exchange for a donation.
-
-Guilds: sanctuary (cleric and paladin).
+## Religious
+* Build shrine: casts divine rituals in exchange for a donation.
+* Guilds: sanctuary (cleric and paladin).

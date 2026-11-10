@@ -1,0 +1,20 @@
+# Artifacts
+These powerful items can be equipped to enhance a character in some way or another. 
+
+Each artifact occupies a certain body slot. For example: a character cannot wear more than one headpiece at the same time.  The exception are rings, which can be worn 2 at a time, one in each hand.
+
+Caster rings, which are not listed below, allow their users to cast a certain number of daily uses of a given spell. Note that this requires a period of rest for the ring to attune itself to its owner first. 
+
+# List
+* Amulet of health: raises constitution.
+* Belt of giant strength: raises strength.
+* Cloak of charisma: raises charisma.
+* Cloak of resistance: enhances saving throws.
+* Gloves of dexterity: raises dexterity.
+* Goggles of night: provide darkvision.
+* Headband of intellect: raises intelligence.
+* Mantle of spell resistance: provides 20 spell resistance.
+* Periapt of wisdom:  raises wisdom.
+* Ring of energy resistance: provides energy resistance.
+* Ring of protection: raises armor class.
+* Wings of flying: provides flying.

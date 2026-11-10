@@ -1,0 +1,22 @@
+# Skills
+Each skill allows you to perform one or more type of actions more easily in the game world. Once you train a skill, it will automatically be raised whenever you gain a class level. At most 3 (plus Intelligence bonus) skills can be trained.
+
+Some skill checks only take into account the best (or worst) value of your entire party, so you usually don't necessarily benefit from having multiple units trained in Survival or Knowledge, for example.
+
+Many skill rolls aren't actually rolled on a die but use the "take 10" rule instead. This prevents players from sequentially retrying actions hoping "to get a good roll". If it didn't work the first time, trying again before leveling up probably won't help.
+
+# List
+* Acrobatics: allows you to disengage faster. Individual roll.
+* Bluff: whenever you miss a melee attack, automatically applies a small cumulative penalty to the target's Armor Class, with a maximum value equal to its Dexterity bonus. It lasts for a turn but is extended whenever reapplied.
+* Concentration: allows you to cast spells while engaged in combat. DC 15 + spell level to cast a spell of that level while engaged. Individual roll.
+* Diplomacy: allows you to parlay with intelligent enemies and gather information about nearby points of interest, when visiting friendly locations.
+* Disable device: disarms traps and unlocks doors. A disarm failure could result in the trap being activated.
+* Disguise: allows you to infiltrate an enemy location. Individual roll, resisted by enemies' Perception. Note that assassination attempts use Stealth instead.
+* Heal: DC 15 to double natural healing rates and also helps prevent secondary damage from poison. A unit usually cannot heal while badly wounded.
+* Knowledge: DC 10 + encounter level to reveal details of a particular location (including dungeon features).
+* Perception: Allows opponent and defending army units to be revealed. Allows you to notice and try to avoid enemy groups. Lets you see farther in the world map. Helps find hidden dungeon features. Subject to time of day, weather and other conditions (such as fliers gaining circumstancial bonuses in open areas).
+* Sense motive: sets the DC for Bluff rolls by taking-ten or 10+BAB+Wisdom bonus, whichever is higher.
+* Spellcraft: identifies items when casting the Detect Magic spell (see item guide). With enough training, will also work passively without requiring that spell to be cast.
+* Stealth: Allows you to avoid enemy groups. Also used as a resistance skill to Perception. Individual roll (usually the worst ally rolls for the entire group).
+* Survival: for each 4 ranks finds daily food to sustain one of your units. Allows a squad to evade some terrain-specific hazards and find their way in the wild.
+* Use magic device: circumvents several limitations on using magic items, allowing a unit to identify or activate items it normally wouldn't be able to for various reasons.

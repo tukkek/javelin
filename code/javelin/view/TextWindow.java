@@ -46,7 +46,7 @@ public class TextWindow extends Frame{
 
   /** @param name Filename under the "doc/guides" folders; */
   static public TextWindow open(String name){
-    var filename=name.replaceAll(" ","").toLowerCase()+".txt";
+    var filename=name.replaceAll(" ","").toLowerCase()+".md";
     var text=TextReader.read(new File(FOLDER,filename));
     return new TextWindow(name,text);
   }

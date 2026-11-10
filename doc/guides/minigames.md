@@ -1,19 +1,16 @@
+# Minigames
 Mini-games are games within the game world. You can play Javelin exclusively by focusing on a particular mini-game or you can interact with them as part of your campaign (or even ignore them completely).
 
-ARENA
-
+# Arena
 The Arena is always located inside a player's starting town and it grows together with that town. It allows players to train their units in a safer environment (although accidents can still happen)... The Arena might not have the sheer variety of the rest of the world but it offers easy access to many interesting combat scenarios without leaving town and the safer combat rules allows for an increase in challenge without as much risk as if you were in a real combat situation.
 
-CATACOMBS
-
+# Catacombs
 The Catacombs are a set of four large old-school, spooky, self-contained dungeons - swarming with creepy-crawlies and haunted by unnatural beings! Each of these dungeons receives a secondary theme for each playthrough, for maximum replay-value, strategic challenge and immersion! To unlock the next dungeon, you must first find its key somewhere inside the areas you already have access to. If you're truly fearless, try venturing alone into the dark of the Catacombs, for the true rogue-like experience!
 
 At night, the horrors inside may venture out and prowl the doorways into this ghastly realm but once cleared, the surface above can be eerily peaceful, with a few amenities to support its rare explorers, who may be in need of respite from the dangers below.
 
-DEEP DUNGEON
-
+# Deep dungeon
 Unlike most dungeons, the Deep Dungeon is guaranteed to start at floor 1 and end at floor 20 in every single game. It's the perfect way for dungeon crawlers to experience the game - it even offers more ways to level up than the normal dungeon, so that players don't need to go travelling around the world for the perfect Academy to train their units! Like most dungeons, the Deep Dungeon has plenty of ways in and out, for when you need to go back to town to rest and restock.
 
-WARLOCK'S TOWER
-
+# Warlock-Tower
 The mad Warlock has turned his tower into the ultimate proving ground for those risk-minded adventurers looking for a real challenge (with equally high rewards)! The Warlock will provide a player will extremely challenging fights but if you manage to survive, he will make it worth your trouble! Players can use the Tower as a way to gain power early on or when they feel they are ready for a challenge or as a way to gain levels quickly - especially if they aren't afraid of a little risk of death...

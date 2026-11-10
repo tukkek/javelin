@@ -1,11 +1,11 @@
+# Campaign
 Javelin is a complex game with simple rules. You can learn everything just by playing so go ahead and give it a try! Don't be upset if something unexpected happens or if you die, since it can be a difficult game, especially on the early levels and when you're still learning. These guides leave a lot unexplained on purpose, so you can discover things while you play (hopefully without being too unfair towards new players).
 
 As most roguelikes, becoming a good Javelin player takes time and patience - but getting there is half the fun! Dying and losing the game is always a risk at any point, even for veteran players - especially early on when your units have less tools at their disposal. Try looking at starting a new game after losing as an opportunity to try something new on a new journey in a new world - not as a failure or penalty. Each new playthrough is designed to be its own unique challenge!
 
 Javelin, as a roguelike, can be hard. Take things at your own pace, there are many ways to play and enjoy it. Your journey is more important than the destination.
 
-THE CAMPAIGN
-
+# Starting
 Every time you start a new game a new world is generated! If you want to give up on a playthrough, press Q (uppercase) to quit and start a new game. If you want to save your current campaign and continue later on, just close the game window (saving is automatic).
 
 In Javelin, you control one or more parties and explore the world and its locations. Towns have Shops; let you rest to recover health at Inns; and Academies train your units after they acquire experience points (XP) in combat. You can manage how friendly towns grow through the management screen but don't worry: they'll do it on their own too without your guidance!
@@ -16,34 +16,29 @@ At the start of a new game, you can visit the Adventurers Guild to get some init
 
 Javelin is a sandbox game and it tries to make sure you can have fun in your own way (or whichever way you feel like playing today). You can enter dungeons, complete quests, explore the world map, conquer enemy towns, engage in mass combat and sieges... or any combination of all the ways to play the game! The "official" way to win the game is to collect 7 Wish Rubies, which can be acquired from many sources and then wish to "win" - but feel free to make your own goals and challenges instead! When a game is over, you get a score based on how far you've got into a campaign - try to beat your score as you improve your skills!
 
-DIFFICULTY
-
+# Difficulty
 Javelin encompasses a wide range of challenges, from low tier to epic tier. Players are allowed to choose their own play-style: playing safely will allow you to grow powerful at a steady pace while taking risks will reward you with power more quickly (but also increasing your chances of losing the game).
 
 The world map, while mostly safe to explore once you've acquired a couple levels worth of training for your units, can still be dangerous even late into the game. As such, as you play, try to gauge your limits and prepare yourself ahead of time for longer journeys - you will out-level the basic enemies pretty fast but the world will still test your strength now and then.
 
 On many situations, the game will show you a difficulty estimate based on your current power and the challenge you are about to face. Keep in mind these are only best-effort estimates to help you make a judgment - they cannot account for all the possible factors involved (including some fights inside a location being easier or harder than average). Use these indicators as a starting point for your own risk assessment. Here's a rough description of the possible values shown:
-
- - Very easy / irrelevant: should pose little or no threat to you.
- - Easy: should only pose a threat to you after several fights.
- - Moderate: not necessarily an immediate threat but a few fights in a row could quickly become dangerous.
- - Difficult: odds are in your favor but victory may come at a high cost. Make sure to stock up on items to better your odds!
- - Deadly; you and your enemy have roughly equal chances of winning, even if you go into battle well prepared and stocked!
- - Impossible: you are not likely to survive this challenge right now. come back when you have become stronger.
+- Very easy / irrelevant: should pose little or no threat to you.
+- Easy: should only pose a threat to you after several fights.
+- Moderate: not necessarily an immediate threat but a few fights in a row could quickly become dangerous.
+- Difficult: odds are in your favor but victory may come at a high cost. Make sure to stock up on items to better your odds!
+- Deadly; you and your enemy have roughly equal chances of winning, even if you go into battle well prepared and stocked!
+- Impossible: you are not likely to survive this challenge right now. come back when you have become stronger.
 
 Learning when to flee from a dangerous combat scenario or a dangerous situation you've ran into is a major skill in Javelin! Once your learn the game you will become better at not putting yourself at risk but the game is designed so that not even the most veteran of players will be safe all the time. Do not hesitate to cut your losses and run away to safety!
 
-FURTHER HELP
-
+# Further help
 You can press h in or out of battle to see a list of all possible actions you can perform (you can also press k to configure your key bindings). 
 
 When you open this help menu, it will also list all the available guides, much like this one - including descriptions of spells, upgrades and more.
 
 If you still can't find the information you're looking for or just want to discuss the game or make a suggestion, check the community links below!
 
-EXTERNAL RESOURCES  
-
-* News and updates: http://javelinrl.wordpress.com
+# Links
+* News and updates: https://tukkek.github.io/blog/ 
 * Community chat: https://discord.gg/Eh6SxsV
-* Community forum: http://reddit.com/r/javelinrl
 * Combat rules: http://d20srd.org

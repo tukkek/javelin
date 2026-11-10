@@ -167,7 +167,6 @@ public class BattleScreen extends Screen{
       updatescreen();
       block();
     }finally{
-      MessagePanel.active.clear();
       var f=Fight.current;
       for(var m:f.mutators) m.endturn(f);
       f.checkend();

@@ -149,7 +149,7 @@ public class BattleState implements Node,TeamContainer{
 
   @Override
   public ArrayList<Combatant> getcombatants(){
-    final var list=new ArrayList<Combatant>(blueteam);
+    final var list=new ArrayList<>(blueteam);
     list.addAll(redteam);
     return list;
   }
@@ -224,15 +224,17 @@ public class BattleState implements Node,TeamContainer{
    */
   public Vision haslineofsight(final Point me,final Point target,int range,
       Period perception){
-    if(Walker.distance(me.x,me.y,target.x,target.y)<=1) return Vision.CLEAR;
-    final List<Point> clear=new ClearPath(me,target,this).walk();
+    var distance=me.distance(target);
+    if(distance<2) return Vision.CLEAR;
+    if(distance>range) return Vision.BLOCKED;
+    var clear=new ClearPath(me,target,this).walk();
     List<Point> covered=null;
     if(!perception.equals(Period.EVENING)&&!perception.equals(Period.NIGHT))
       covered=new ObstructedPath(me,target,this).walk();
     if(clear==null&&covered==null) return Vision.BLOCKED;
-    if(clear==null) lineofsight=covered;
-    else if((covered==null)||(clear.size()<=covered.size())) lineofsight=clear;
-    else lineofsight=covered;
+    if(clear==null||covered!=null&&clear.size()>covered.size())
+      lineofsight=covered;
+    else lineofsight=clear;
     if(lineofsight.size()>=range) return Vision.BLOCKED;
     return lineofsight==clear?Vision.CLEAR:Vision.COVERED;
   }
@@ -275,10 +277,8 @@ public class BattleState implements Node,TeamContainer{
    */
   public boolean isflanked(final Combatant target,final Combatant attacker){
     if(attacker.burrowed||Walker.distance(target,attacker)>=1.5) return false;
-    final var attackerteam=blueteam.contains(attacker)?blueteam
-        :redteam;
-    final var defenderteam=blueteam.contains(target)?blueteam
-        :redteam;
+    final var attackerteam=blueteam.contains(attacker)?blueteam:redteam;
+    final var defenderteam=blueteam.contains(target)?blueteam:redteam;
     if(attackerteam==defenderteam) return false;
     final var deltax=target.location[0]-attacker.location[0];
     final var deltay=target.location[1]-attacker.location[1];

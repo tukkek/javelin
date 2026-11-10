@@ -128,7 +128,6 @@ public class BattleScreen extends Screen{
     BattleScreen.active=this;
     Javelin.delayblock=false;
     partialmove=0;
-    if(Fight.current!=null) updatescreen();
   }
 
   /** @return Map panel implementation for this screen. */
@@ -152,19 +151,17 @@ public class BattleScreen extends Screen{
   /** Routine for human interaction. */
   protected void turn(){
     try{
-      updatescreen();
       checkai();
-      var r=Fight.state.redteam.contains(current);
-      if(r||current.automatic){
+      var foe=Fight.state.redteam.contains(current);
+      if(foe||current.automatic){
         lastaimove=current;
         computermove();
-        if(!r) first=false;
+        if(!foe) first=false;
       }else{
         humanmove();
         lastaimove=null;
         jointurns=false;
       }
-      updatescreen();
       block();
     }finally{
       var f=Fight.current;
@@ -207,7 +204,6 @@ public class BattleScreen extends Screen{
     Overlay.clear();
     BattlePanel.current=current;
     messagepanel.clear();
-    updatescreen();
     blockinput();
     Interface.userinterface.waiting=true;
     Overlay.clear();
@@ -217,6 +213,7 @@ public class BattleScreen extends Screen{
       runnable.run();
       return;
     }
+    reflect();
     var event=Javelin.input();
     if(event==null) return;
     var action=ActionMapping.SINGLETON.getaction(event);
@@ -231,9 +228,9 @@ public class BattleScreen extends Screen{
       BattlePanel.current=current;
       MessagePanel.active.clear();
       Overlay.clear();
+      reflect();
       Javelin.message("Thinking...\n",Javelin.Delay.NONE);
       messagepanel.repaint();
-      updatescreen();
     }
     if(Javelin.DEBUG) Action.outcome(ThreadManager.think(Fight.state),true);
     else try{
@@ -305,15 +302,14 @@ public class BattleScreen extends Screen{
     mappanel.center(x,y,first);
   }
 
-  /** Redraws screen. */
-  protected void updatescreen(){
-    if(first) Javelin.redraw();
+  /// Redraws screen.
+  protected void reflect(){
     var p=(BattlePanel)mappanel;
     p.updatestate();
-    var current=Fight.state.clone(this.current);
-    if(current!=null){
-      var l=current.getlocation();
-      if(mappanel.tiles[l.x][l.y].discovered) view(l.x,l.y);
+    var combatant=Fight.state.clone(current);
+    if(combatant!=null){
+      var l=combatant.getlocation();
+      if(p.tiles[l.x][l.y].discovered) view(l.x,l.y);
     }
     Javelin.redraw();
     Grid.get().center(null,false);
@@ -340,7 +336,7 @@ public class BattleScreen extends Screen{
       delay=Delay.WAIT;
     messagepanel.clear();
     statuspanel.repaint();
-    updatescreen();
+    reflect();
     Javelin.message(state.action,delay);
   }
 

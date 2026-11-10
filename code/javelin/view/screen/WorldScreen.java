@@ -545,7 +545,7 @@ public class WorldScreen extends BattleScreen{
   }
 
   @Override
-  protected void updatescreen(){
+  protected void reflect(){
     // pass
   }
 }

@@ -62,9 +62,10 @@ public class Help extends Action{
       var d=isworld?Debug.onworldhelp():Debug.onbattlehelp();
       if(!d.isEmpty()) text=d;
     }
+    var screen=Javelin.app.mainComponent;
     Screen.change(new InfoScreen(text));
     Javelin.input();
-    Screen.reopen();
+    Screen.change(screen);
   }
 
   private static String pad(String s,int padding){

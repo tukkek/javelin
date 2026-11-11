@@ -1,27 +1,17 @@
 package javelin.controller.content.action;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import javelin.Javelin;
 import javelin.controller.comparator.ItemsByName;
 import javelin.controller.content.fight.Fight;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
-import javelin.old.messagepanel.MessagePanel;
-import javelin.view.screen.Screen;
 
-/**
- * Activates an {@link Item} in battle.
- *
- * @author alex
- */
+/// Activates an {@link Item} in battle.
 public class UseItem extends Action{
-  /** Unique instance of this class. */
-  public static final Action SINGLETON=new UseItem();
+  /// Singleton.
+  public static Action INSTANCE=new UseItem();
 
-  private UseItem(){
+  UseItem(){
     super("Use item","i");
   }
 
@@ -31,9 +21,8 @@ public class UseItem extends Action{
   }
 
   @Override
-  public boolean perform(Combatant active){
-    final var c=active;
-    final var item=queryforitemselection(c,true);
+  public boolean perform(Combatant c){
+    var item=query(c,true);
     if(item==null) return false;
     c.ap+=item.apcost;
     c.source=c.source.clone();
@@ -41,39 +30,32 @@ public class UseItem extends Action{
     return true;
   }
 
-  /**
-   * Asks player to choose an item.
-   *
-   * @return null if for any reason the player has no items, cannot use any
-   *   right now, canceled... Otherwise the selected item.
-   */
-  public static Item queryforitemselection(final Combatant c,boolean validate){
-    final List<Item> items=new ArrayList<>(Fight.current.getbag(c));
-    var noeligible=c+" doesn't have any usable battle items right now...";
+  /// Asks player to choose an item.
+  ///
+  /// @param c Active unit.
+  /// @param validate `true` to disregard items that can not be used now.
+  ///
+  /// @return Selected item or `null` if the player has no items; can not use
+  ///   any; cancelled...
+  public static Item query(Combatant c,boolean validate){
+    var f=Fight.current;
+    var items=f.getbag(c).stream().sorted(ItemsByName.SINGLETON).toList();
+    if(validate) items=items.stream()
+        .filter(i->i.usedinbattle&&i.canuse(c)==null).toList();
     if(items.isEmpty()){
-      Javelin.message(noeligible,false);
+      var text="%s does not have any battling items...";
+      Javelin.message(text.formatted(c),false);
       return null;
     }
-    if(validate) for(final Item i:new ArrayList<>(items))
-      if(!i.usedinbattle||i.canuse(c)!=null) items.remove(i);
+    var engaged=Fight.state.isengaged(c);
+    if(engaged) items=items.stream().filter(i->!i.provokesaoo).toList();
     if(items.isEmpty()){
-      Javelin.message(noeligible,false);
+      Javelin.message("Can not use any of these items while engaged...",false);
       return null;
     }
-    Collections.sort(items,ItemsByName.SINGLETON);
-    final var threatened=Fight.state.isengaged(c);
-    for(final Item it:new ArrayList<>(items))
-      if(threatened&&it.provokesaoo) items.remove(it);
-    if(items.isEmpty()){
-      MessagePanel.active.clear();
-      Javelin.message("Can't use any of these items while engaged...",false);
-      return null;
-    }
-    var fullscreen=items.size()>4;
-    var prompt="Which item?";
-    var choice=Javelin.choose(prompt,items,fullscreen,false);
-    var i=choice>=0?items.get(choice):null;
-    if(fullscreen) Screen.reopen();
-    return i;
+    var text="Which item?";
+    var full=items.size()>3;
+    var index=Javelin.choose(text,items,full,false);
+    return index<0?null:items.get(index);
   }
 }

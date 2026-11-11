@@ -39,7 +39,7 @@ public class PassItem extends Action{
 			Javelin.message("No unthreatened allies nearby...",Javelin.Delay.WAIT);
 			return false;
 		}
-		final Item item=UseItem.queryforitemselection(me,false);
+		final Item item=UseItem.query(me,false);
 		if(item==null) return false;
 		BattleScreen.active.center();
 		int choice=Javelin.choose("Give this item to whom?",surroudings,

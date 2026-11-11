@@ -7,7 +7,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.FileReader;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -243,35 +242,28 @@ public class Javelin{
       boolean force){
     if(!force) text+=" (q to quit)";
     text+="\n\n";
-    var nnames=names.size();
-    var multicolumn=nnames>20;
-    var options=new ArrayList<>();
-    for(var i=0;i<nnames;i++){
-      var leftcolumn=i%2==0;
+    var s=names.size();
+    var columns=s>20;
+    for(var i=0;i<s;i++){
       var name=names.get(i).toString();
-      options.add(name);
-      var item="["+SelectScreen.getkey(i)+"] "+name;
-      if(multicolumn&&leftcolumn) while(item.length()<50) item+=" ";
+      var key=SelectScreen.getkey(i);
+      var item="[%s] %s".formatted(key,name);
+      if(columns&&i%2==0) while(item.length()<50) item+=" ";
+      else item+="\n";
       text+=item;
-      if(!multicolumn||!leftcolumn) text+="\n";
     }
-    if(full) Screen.change(new InfoScreen(text));
-    else{
-      Screen.reopen();
-      MessagePanel.active.clear();
-      Javelin.message(text,Delay.NONE);
+    var screen=app.mainComponent;
+    if(full||columns) Screen.change(new InfoScreen(text));
+    else Javelin.message(text,Delay.NONE);
+    var index=Integer.MAX_VALUE;
+    while(!(-1<=index&&index<names.size())){
+      var symbol=InfoScreen.feedback();
+      var escape=symbol==InfoScreen.ESCAPE;
+      index=escape?-1:SelectScreen.convertkeytoindex(symbol);
+      if(index==-1&&force) index=Integer.MAX_VALUE;
     }
-    var i=-1;
-    while(!(0<=i&&i<names.size())){
-      var f=InfoScreen.feedback();
-      if(f==InfoScreen.ESCAPE&&!force){
-        i=-1;
-        break;
-      }
-      i=SelectScreen.convertkeytoindex(f);
-    }
-    if(full) Screen.reopen();
-    return i;
+    Screen.change(screen);
+    return index;
   }
 
   /**
@@ -379,18 +371,20 @@ public class Javelin{
 
   /// Main output function for {@link BattleScreen}s.
   public static void message(String text,Delay d){
+    var panel=MessagePanel.active;
+    panel.clear();
     if(BattleScreen.lastaicheck==null&&d==Delay.BLOCK) d=Delay.WAIT;
-    MessagePanel.active.add(text);
+    panel.add(text);
+    panel.repaint();
     if(d==Delay.NONE) return;
     if(d==Delay.BLOCK){
-      MessagePanel.active.add("\n"+TextZone.BLACK+"-- ENTER --");
+      panel.add("\n"+TextZone.BLACK+"-- ENTER --");
       delayblock=true;
       return;
     }
     try{
-      redraw();
       Thread.sleep(Preferences.messagewait);
-      MessagePanel.active.clear();
+      panel.clear();
     }catch(final InterruptedException e){
       e.printStackTrace();
     }

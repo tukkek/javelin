@@ -30,7 +30,7 @@ public class ActionMapping{
       Dig.SINGLETON, // d
       Fire.SINGLETON, // f
       new CastSpell(), // s
-      UseItem.SINGLETON, // i
+      UseItem.INSTANCE, // i
       new ActionAdapter(OpenJournal.getsingleton()), // o
       new ActionAdapter(ShowOptions.getsingleton()), // o
       PassItem.SINGLETON, // p

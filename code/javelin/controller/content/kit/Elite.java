@@ -53,7 +53,7 @@ public class Elite extends Kit{
   }
 
   Elite(){
-    super("Primitive elite",null,null,null);
+    super("Elite",null,null,null);
   }
 
   @Override

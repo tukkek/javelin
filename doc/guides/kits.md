@@ -6,18 +6,19 @@ Kits are initially found as starting options in the Adventurers Guild, in the ea
 Some kits are "prestige kits" and are not usually available or useful for low-level characters.
 
 # List
-* Barbarian (Mead hall): focused on close-combat, often able to enter a temporary battle lust known as berserker rage.
-* Bard (Bards guild): a social expert, performer and often found in supportive and leadership roles, well suited as a front-man and magic item user.
-* Cleric (Sanctuary): a healing and support powerhouse, being able to care for his allies both inside and outside battle.
-* Dragoon (Dragoons guild, prestige): a highly mobile close-quarters elite warrior, inheriting supernatural abilities from a certain type of dragon - from flight to terrifying breath weapons!
-* Druid (Henge): ally to the wildlife, able to summon animals to fight by his side.
-* Fighter (Martial academies): the ultimate mêlée fighter.
-* Monk (Monastery): as skilled on the battlefield with his raw close-quarters attack power as with his grace and mobility.
-* Ninja (Ninja dojo): a master of deceit and stealth, an infiltration expert with poison on his weapons. Highly mobile.
-* Paladin (upgraded Sanctuary): a more battle-focused Cleric, with lesser healing abilities, standing against evil and chaos.
-* Ranger (Archery range): the ultimate ranged shooter.
-* Rogue (Thieves guild): master of stealth, skilled with traps and ranged combat. A versatile combatant.
-* Wizard (Mage guilds): the ultimate spellcaster. Each Wizard kit focuses on a particular school of magic. See the spell guide for a brief description of each school.
+* Barbarian (Mead hall). Focused on close-combat, often able to enter a temporary battle lust known as berserker rage.
+* Bard (Bards guild). A social expert, performer and often found in supportive and leadership roles, well suited as a front-man and magic item user.
+* Cleric (Sanctuary). A healing and support powerhouse, being able to care for his allies both inside and outside battle.
+* Dragoon (Dragoons guild, prestige). A highly mobile close-quarters elite warrior, inheriting supernatural abilities from a certain type of dragon - from flight to terrifying breath weapons!
+* Druid (Henge). Ally to the wildlife, able to summon animals to fight by his side.
+* Elite. Can be applied to primitive units. Grants levels in a class that fits the unit.  
+* Fighter (Martial academies). The ultimate mêlée fighter.
+* Monk (Monastery). As skilled on the battlefield with his raw close-quarters attack power as with his grace and mobility.
+* Ninja (Ninja dojo). A master of deceit and stealth, an infiltration expert with poison on his weapons. Highly mobile.
+* Paladin (upgraded Sanctuary). A more battle-focused Cleric, with lesser healing abilities, standing against evil and chaos.
+* Ranger (Archery range). The ultimate ranged shooter.
+* Rogue (Thieves guild). Master of stealth, skilled with traps and ranged combat. A versatile combatant.
+* Wizard (Mage guilds). The ultimate spellcaster. Each Wizard kit focuses on a particular school of magic. See the spell guide for a brief description of each school.
 
 # Upgrades
 ## Abjurer

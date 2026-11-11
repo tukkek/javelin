@@ -148,8 +148,13 @@ public class Movement extends Action{
   /// @return <code>true</code> if some action taken
   static public boolean move(int x,int y,Combatant active){
     var s=Fight.state;
+    var map=s.map;
+    var valid=0<=x&&x<map.length;
+    if(!valid) throw new RepeatTurn();
+    valid=0<=y&&y<map[x].length;
+    if(!valid) throw new RepeatTurn();
     var target=s.getcombatant(x,y);
-    var blocked=s.map[x][y].blocked;
+    var blocked=map[x][y].blocked;
     var fly=active.source.fly>0&&Fight.current.map.flying;
     if(target==null&&blocked&&!fly) return false;
     var m=s.getmeld(x,y);

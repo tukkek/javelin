@@ -271,18 +271,19 @@ public class Javelin{
    * confirmation.
    *
    * @param text Prints this message in the status panel.
-   * @param requireenter If <code>true</code> will wait for the player to press
+   * @param enter If <code>true</code> will wait for the player to press
    *   ENTER, otherwise any key will do.
    * @return the key pressed by the user as confirmation for seeing the message.
    */
-  public static KeyEvent message(String text,boolean requireenter){
+  public static KeyEvent message(String text,boolean enter){
     Screen.reopen();
-    MessagePanel.active.clear();
-    text+="\nPress "+(requireenter?"ENTER":"any key")+" to continue...";
+    var panel=MessagePanel.active;
+    panel.clear();
+    text+="\nPress "+(enter?"ENTER":"any key")+" to continue...";
     Javelin.message(text,Delay.NONE);
     var input=Javelin.input();
-    while(requireenter&&input.getKeyChar()!='\n') input=Javelin.input();
-    MessagePanel.active.clear();
+    while(enter&&input.getKeyChar()!='\n') input=Javelin.input();
+    panel.clear();
     return input;
   }
 

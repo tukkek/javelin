@@ -68,6 +68,7 @@ public abstract class Strike extends Maneuver{
     var attacks=engaged?c.source.melee:c.source.ranged;
     var choices=attacks.stream().map(a->a.get(0).toString()).toList();
     var i=Javelin.choose("Select attack:",choices,false,false);
+    if(i==-1) return false;
     var sequence=attacks.get(i);
     var a=sequence.get(0);
     var action=engaged?new MeleeTarget(a,sequence,'m',new MeleeAttack(this))

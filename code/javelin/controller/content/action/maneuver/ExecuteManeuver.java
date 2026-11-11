@@ -38,8 +38,7 @@ public class ExecuteManeuver extends Action implements AiAction{
           var chance=new ArrayList<ChanceNode>();
           c2.ready(m2);
           final var feedback=c2+" readies "+m2.name.toLowerCase()+"!";
-          final var node=new ChanceNode(s2,1,feedback,
-              Javelin.Delay.BLOCK);
+          final var node=new ChanceNode(s2,1,feedback,Javelin.Delay.BLOCK);
           chance.add(node);
           outcomes.add(chance);
         }else{
@@ -95,9 +94,10 @@ public class ExecuteManeuver extends Action implements AiAction{
       var m=maneuvers.get(0);
       if(!m.instant) return m;
     }
+    var screen=BattleScreen.active;
     var choice=SelectScreen.convertkeytoindex(Javelin.promptscreen(prompt));
-    Screen.reopen();
-    if(choice==-1&&choice<maneuvers.size()) throw new RepeatTurn();
-    return maneuvers.get(choice);
+    Screen.change(screen);
+    if(0<=choice&&choice<maneuvers.size()) return maneuvers.get(choice);
+    throw new RepeatTurn();
   }
 }

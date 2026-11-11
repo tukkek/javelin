@@ -148,7 +148,7 @@ public class StatusPanel extends TPanel{
     if(c.source.touch!=null) s+=c.source.touch.name+"\n";
     var maneuvers=c.disciplines.getmaneuvers();
     if(!maneuvers.isEmpty()){
-      s+="Maneveurs\n";
+      s+="\nManeveurs\n";
       for(Maneuver m:maneuvers){
         final var spent=m.spent?"*":"";
         var name=m.name;

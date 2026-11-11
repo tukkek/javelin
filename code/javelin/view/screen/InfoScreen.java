@@ -30,7 +30,7 @@ public class InfoScreen extends Screen{
     font=QuestApp.mainfont;
     setForeground(QuestApp.INFOTEXTCOLOUR);
     setBackground(QuestApp.INFOSCREENCOLOUR);
-    setFont(font);
+    setFont(font.deriveFont(20f));
   }
 
   @Override

@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javelin.controller.collection.CountingSet;
+import javelin.controller.content.action.Movement;
 import javelin.controller.content.fight.Fight;
 import javelin.model.item.Item;
 import javelin.model.state.BattleState;
@@ -131,8 +132,8 @@ public class StatusPanel extends TPanel{
     }
     var steps=c.gettopspeed(Fight.state)/5;
     output+=steps+" steps";
-    if(BattlePanel.current.equals(c)&&BattleScreen.partialmove!=0){
-      var left=(.5f-BattleScreen.partialmove)/.5f;
+    if(BattlePanel.current.equals(c)&&Movement.partial!=0){
+      var left=(.5f-Movement.partial)/.5f;
       left=steps*left;
       output+=" ("+Math.round(left)+" left)";
     }

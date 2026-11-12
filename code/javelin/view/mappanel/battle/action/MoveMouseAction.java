@@ -3,6 +3,7 @@ package javelin.view.mappanel.battle.action;
 import javelin.Javelin;
 import javelin.Javelin.Delay;
 import javelin.controller.Point;
+import javelin.controller.content.action.Movement;
 import javelin.controller.content.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
@@ -11,7 +12,6 @@ import javelin.view.mappanel.battle.overlay.BattleWalker;
 import javelin.view.mappanel.battle.overlay.BattleWalker.BattleStep;
 import javelin.view.mappanel.overlay.MoveOverlay;
 import javelin.view.mappanel.overlay.Overlay;
-import javelin.view.screen.BattleScreen;
 
 public class MoveMouseAction extends BattleMouseAction{
   public MoveMouseAction(){
@@ -35,7 +35,7 @@ public class MoveMouseAction extends BattleMouseAction{
       var c=move.clone(current);
       c.location[0]=to.x;
       c.location[1]=to.y;
-      c.ap+=to.totalcost-BattleScreen.partialmove;
+      c.ap+=to.totalcost-Movement.partial;
       var m=move.getmeld(to.x,to.y);
       if(m!=null&&c.ap>=m.meldsat) Fight.current.meld(c,m);
       if(to.engaged) Javelin.message(c+" disengages...",Delay.WAIT);

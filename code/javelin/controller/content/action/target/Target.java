@@ -8,6 +8,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.content.action.Action;
+import javelin.controller.content.action.Movement;
 import javelin.controller.content.fight.Fight;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.walker.Walker;
@@ -115,11 +116,11 @@ public abstract class Target extends Action{
   }
 
   boolean navigate(char key){
-    if(key==NEXT||Action.MOVE_E.isPressed(key)){
+    if(key==NEXT||Movement.E.isPressed(key)){
       index+=1;
       return true;
     }
-    if(key==LAST||Action.MOVE_W.isPressed(key)){
+    if(key==LAST||Movement.W.isPressed(key)){
       index-=1;
       return true;
     }

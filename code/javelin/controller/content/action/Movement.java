@@ -1,5 +1,7 @@
 package javelin.controller.content.action;
 
+import java.awt.event.KeyEvent;
+
 import javelin.Javelin;
 import javelin.controller.Audio;
 import javelin.controller.Point;
@@ -10,26 +12,72 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.skill.Acrobatics;
 import javelin.model.unit.skill.Skill;
-import javelin.view.screen.BattleScreen;
+import javelin.view.mappanel.battle.BattleMouse;
+import javelin.view.mappanel.battle.overlay.BattleWalker;
 
 /**
  * @see AiMovement
  * @author alex
  */
 public class Movement extends Action{
-  /** Cost to disengage. */
+  /// Cost to disengage in action-points
   public static final float DISENGAGE=.25f;
-  private final String descriptivekeys;
-  /** TODO hack */
-  public static boolean lastmovewasattack=false;
+  /// North-west
+  public static final Movement NW=new Movement(Direction.NW,
+      new String[]{"7","KeyEvent"+KeyEvent.VK_HOME,"U"},
+      "↖ (7 on numpad, or U)");
+  /// North
+  public static final Movement N=new Movement(Direction.N,
+      new String[]{"8","KeyEvent"+KeyEvent.VK_UP,"I"},"↑ (8 on numpad, or I)");
+  /// North-east
+  public static final Movement NE=new Movement(Direction.NE,
+      new String[]{"9","KeyEvent"+KeyEvent.VK_PAGE_UP,"O"},
+      "↗ (9 on numpad, or O)");
+  /// West
+  public static final Movement W=new Movement(Direction.W,
+      new String[]{"4","KeyEvent"+KeyEvent.VK_LEFT,"J","←"},
+      "← (4 on numpad, or J)");
+  /// East
+  public static final Movement E=new Movement(Direction.E,
+      new String[]{"6","KeyEvent"+KeyEvent.VK_RIGHT,"L","→"},
+      "→ (6 on numpad, or L)");
+  /// South-west
+  public static final Movement SW=new Movement(Direction.SW,
+      new String[]{"1","KeyEvent"+KeyEvent.VK_END,"M"},"↙ (1 in numpad, or M)");
+  /// South
+  public static final Movement S=new Movement(Direction.S,
+      new String[]{"2","KeyEvent"+KeyEvent.VK_DOWN,"<"},
+      "↓ (2 in numpad, or <)");
+  /// South-east
+  public static final Movement SE=new Movement(Direction.SE,
+      new String[]{"3","KeyEvent"+KeyEvent.VK_PAGE_DOWN,">"},
+      "↘ (3 on numpad, or >)");
 
   /**
-   * @see Action#Action(String, String[]).
-   * @param descriptivekeys Used in printed description to user.
+   * Keeps track of human {@link Movement} steps using the keyboard. We want to
+   * allow them to move up to a {@link ActionCost#MOVE} action without
+   * disruption their current action - even if {@link RepeatTurn} is thrown from
+   * another action (like cancelling a menu, etc.).
+   *
+   * {@link BattleMouse} and {@link BattleWalker} take this into consideration
+   * too, so as not to allow the player to cheat by using half their share of
+   * keyboard movements and then using another {@link ActionCost#MOVE} worth of
+   * movement witht the mouse. Mouse moves, however are instantaneous and apply
+   * the relevant AP cost, plus the current value of this variable. This of
+   * course still allows player to make shorter, tactical moves (consuming less
+   * AP) if so desired.
    */
-  public Movement(final String name,final String[] keys,
-      final String descriptivekeys){
-    super(name,keys);
+  static public float partial=0;
+
+  static boolean attacked=false;
+
+  String descriptivekeys;
+  Direction direction;
+
+  /// Constructor
+  Movement(Direction d,String[] keys,String descriptivekeys){
+    super("Move (%s)".formatted(d.arrow),keys);
+    direction=d;
     this.descriptivekeys=descriptivekeys;
     allowburrowed=true;
   }
@@ -37,10 +85,9 @@ public class Movement extends Action{
   /**
    * @param x Location.
    * @param y Location.
-   * @param disengaging
    * @return How much it costs to move to the specified square.
    */
-  static public float cost(final Combatant c,final BattleState s,int x,int y,
+  static public float cost(Combatant c,BattleState s,int x,int y,
       boolean disengaging){
     float speed;
     if(c.burrowed) speed=c.source.burrow;
@@ -76,73 +123,41 @@ public class Movement extends Action{
 
   @Override
   public boolean perform(Combatant c){
-    try{
-      var disengaging=Fight.state.isengaged(c);
-      final var to=doDirection(this,c);
-      if(to==null) return false;
-      var meld=Fight.state.getmeld(to.x,to.y);
-      if(!Movement.lastmovewasattack){
-        var ap=cost(c,Fight.state,to.x,to.y,disengaging);
-        BattleScreen.partialmove+=ap;
-        c.ap+=ap;
-      }
-      final var finishmove=meld!=null||disengaging||Movement.lastmovewasattack
-          ||BattleScreen.partialmove>=.5f;
-      if(!finishmove) throw new RepeatTurn();
-      new Audio("move",c).play();
-      BattleScreen.partialmove=0;
-      if(!Movement.lastmovewasattack) if(meld==null||meld.meldsat>c.ap){
-        var action=disengaging?"disengages":"moves";
-        Javelin.message(c+" "+action+"...",Javelin.Delay.WAIT);
-      }else Fight.current.meld(c,meld);
-      return true;
-    }finally{
-      Movement.lastmovewasattack=false;
+    // premove
+    Movement.attacked=false;
+    var s=Fight.state;
+    var disengaging=s.isengaged(c);
+    // move?
+    var to=step(c);
+    if(to==null) return false;
+    // pay
+    var attacked=Movement.attacked;
+    if(!attacked){
+      var ap=cost(c,s,to.x,to.y,disengaging);
+      Movement.partial+=ap;
+      c.ap+=ap;
     }
+    /// end?
+    var audio="move";
+    var meld=s.getmeld(to.x,to.y);
+    String message=null;
+    if(Movement.partial>=.5f) message="%s moves...".formatted(c);
+    else if(attacked) audio=null;
+    else if(disengaging) message="%s disengages...".formatted(c);
+    else if(meld!=null&&meld.meldsat<=c.ap) Fight.current.meld(c,meld);
+    else throw new RepeatTurn();
+    Movement.partial=0;
+    if(audio!=null) new Audio(audio,c).play();
+    if(message!=null) Javelin.message(message,Javelin.Delay.WAIT);
+    return true;
   }
 
-  Point doDirection(final ActionDescription action,Combatant hero){
-    final var direction=convertActionToDirection(action);
-    final var tox=hero.location[0]+direction.x;
-    final var toy=hero.location[1]+direction.y;
-    return Movement.move(tox,toy,hero)?new Point(tox,toy):null;
-  }
-
-  static Point convertActionToDirection(final ActionDescription action){
-    final var direction=new Point(Integer.MIN_VALUE,Integer.MIN_VALUE);
-    if(action==Action.MOVE_N){
-      direction.x=0;
-      direction.y=-1;
-    }
-    if(action==Action.MOVE_S){
-      direction.x=0;
-      direction.y=1;
-    }
-    if(action==Action.MOVE_W){
-      direction.x=-1;
-      direction.y=0;
-    }
-    if(action==Action.MOVE_E){
-      direction.x=1;
-      direction.y=0;
-    }
-    if(action==Action.MOVE_NW){
-      direction.x=-1;
-      direction.y=-1;
-    }
-    if(action==Action.MOVE_NE){
-      direction.x=1;
-      direction.y=-1;
-    }
-    if(action==Action.MOVE_SW){
-      direction.x=-1;
-      direction.y=1;
-    }
-    if(action==Action.MOVE_SE){
-      direction.x=1;
-      direction.y=1;
-    }
-    return direction.x==Integer.MIN_VALUE?null:direction;
+  Point step(Combatant hero){
+    var point=hero.getlocation();
+    var delta=direction.point;
+    point.x+=delta.x;
+    point.y+=delta.y;
+    return Movement.move(point.x,point.y,hero)?point:null;
   }
 
   /// @return <code>true</code> if some action taken
@@ -166,7 +181,7 @@ public class Movement extends Action{
     }
     if(target.isally(active,s)) throw new RepeatTurn();
     if(target.burrowed) Dig.refuse();
-    lastmovewasattack=true;
+    attacked=true;
     active.meleeattacks(target,s);
     return true;
   }

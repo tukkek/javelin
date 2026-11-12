@@ -11,7 +11,6 @@ import javelin.controller.Point;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.ai.ThreadManager;
 import javelin.controller.content.action.Action;
-import javelin.controller.content.action.ActionCost;
 import javelin.controller.content.action.ActionMapping;
 import javelin.controller.content.action.Dig;
 import javelin.controller.content.action.Movement;
@@ -31,9 +30,7 @@ import javelin.view.StatusPanel;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.MapPanel.Grid;
 import javelin.view.mappanel.Mouse;
-import javelin.view.mappanel.battle.BattleMouse;
 import javelin.view.mappanel.battle.BattlePanel;
-import javelin.view.mappanel.battle.overlay.BattleWalker;
 import javelin.view.mappanel.overlay.Overlay;
 
 /**
@@ -67,22 +64,6 @@ public class BattleScreen extends Screen{
    * @see DungeonScreen
    */
   public static BattleScreen active;
-  /**
-   * Keeps track of human {@link Movement} steps using the keyboard. We want to
-   * allow them to move up to a {@link ActionCost#MOVE} action without
-   * disruption their current action - even if {@link RepeatTurn} is thrown from
-   * another action (like cancelling a menu, etc.).
-   *
-   * {@link BattleMouse} and {@link BattleWalker} take this into consideration
-   * too, so as not to allow the player to cheat by using half their share of
-   * keyboard movements and then using another {@link ActionCost#MOVE} worth of
-   * movement witht the mouse. Mouse moves, however are instantaneous and apply
-   * the relevant AP cost, plus the current value of this variable. This of
-   * course still allows player to make shorter, tactical moves (consuming less
-   * AP) if so desired.
-   */
-  public static float partialmove=0;
-
   static Runnable callback=null;
 
   /** Text output component. */
@@ -127,7 +108,7 @@ public class BattleScreen extends Screen{
     setFont(QuestApp.mainfont);
     BattleScreen.active=this;
     Javelin.delayblock=false;
-    partialmove=0;
+    Movement.partial=0;
   }
 
   /** @return Map panel implementation for this screen. */
@@ -145,7 +126,7 @@ public class BattleScreen extends Screen{
     Fight.state.next();
     current=Fight.state.next;
     StatusPanel.looking=null;
-    partialmove=0;
+    Movement.partial=0;
   }
 
   /** Routine for human interaction. */

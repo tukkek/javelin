@@ -13,7 +13,6 @@ import javelin.model.unit.Combatant;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.mappanel.battle.BattleTile;
-import javelin.view.screen.BattleScreen;
 
 public class BattleWalker extends OverlayWalker{
   /**
@@ -62,7 +61,7 @@ public class BattleWalker extends OverlayWalker{
   @Override
   protected Point step(Point step,LinkedList<Point> previous){
     var last=previous.isEmpty()?null:(BattleStep)previous.getLast();
-    var totalcost=last==null?BattleScreen.partialmove:last.totalcost;
+    var totalcost=last==null?Movement.partial:last.totalcost;
     return new BattleStep(step,totalcost);
   }
 

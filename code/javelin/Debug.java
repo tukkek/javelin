@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin.Delay;
+import javelin.controller.Point;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.content.action.Action;
@@ -20,6 +21,7 @@ import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.generator.NpcGenerator;
 import javelin.model.item.Item;
+import javelin.model.state.MeldCrystal;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
@@ -31,6 +33,7 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.town.Town;
 import javelin.view.Images;
+import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.mappanel.overlay.Overlay;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
@@ -254,6 +257,17 @@ public class Debug{
       f.bribe=false;
       f.hide=false;
       throw new StartBattle(f);
+    }
+
+    static void meld(){
+      Point point=null;
+      var combatant=BattlePanel.current;
+      var origin=combatant.getlocation();
+      var s=Fight.state;
+      for(var radius=1;point==null;radius+=1) point=origin.getadjacent(radius)
+          .stream().filter(p->!s.isblocked(p.x,p.y)).findAny().orElse(null);
+      var m=new MeldCrystal(point.x,point.y,combatant.ap+1,null);
+      s.meld.add(m);
     }
   }
 

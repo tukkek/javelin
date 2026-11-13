@@ -58,6 +58,7 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
   static final String[] CRASHQUOTES={"A wild error appears!",
       "You were eaten by a grue.","So again it has come to pass...",
       "Mamma mia!",};
+  static final String README="readme.md";
 
   /** TODO change into actual context (separate from UI code). */
   public static WorldScreen context;
@@ -117,16 +118,15 @@ public class JavelinApp extends QuestApp implements UncaughtExceptionHandler{
   }
 
   void disclaimer(){
-    while(TextReader
-        .show(new File("README.txt"),
-            "This message will only be shown once, press ENTER to continue.")
-        .getKeyCode()!=KeyEvent.VK_ENTER){
+    var extra="This message will only be shown once, press ENTER to continue.";
+    var enter=KeyEvent.VK_ENTER;
+    while(TextReader.show(new File(README),extra).getKeyCode()!=enter){
       // wait for enter
     }
   }
 
   static void initialize(){
-    var readme=TextReader.read(new File("README.txt"));
+    var readme=TextReader.read(new File(README));
     System.out.println(readme.replaceAll("\n\n","\n"));
     try{
       version=TextReader.read(new File("doc","VERSION.txt"));

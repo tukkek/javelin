@@ -1,6 +1,10 @@
 # Javelin
 > Strategic Roguelike
 
+For your convenience a copy of this Read Me is included in the installation-folder for the game.
+
+Happy gaming!
+
 # Links
 * Steam https://store.steampowered.com/app/5259370/Javelin/
 * Downloads https://github.com/tukkek/javelin/releases

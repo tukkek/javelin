@@ -5,7 +5,7 @@
 * Steam https://store.steampowered.com/app/5259370/Javelin/
 * Downloads https://github.com/tukkek/javelin/releases
 * Community https://discord.gg/5sXXcwPCSP
-* Blog https://javelinrl.wordpress.com/
+* Blog https://tukkek.github.io/blog/
 * Documentation https://github.com/tukkek/javelin/tree/master/doc
 
 # Licenses

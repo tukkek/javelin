@@ -2,7 +2,7 @@
 > Strategic Roguelike
 
 # Links
-* Steam https://store.steampowered.com/app/5259370/Javelin/?beta=1
+* Steam https://store.steampowered.com/app/5259370/Javelin/
 * Downloads https://github.com/tukkek/javelin/releases
 * Community https://discord.gg/5sXXcwPCSP
 * Blog https://javelinrl.wordpress.com/

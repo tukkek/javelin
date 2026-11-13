@@ -14,7 +14,7 @@ define jlink
 	mkdir --parents build/output/$(1)/javelin/
 	mvn --activate-profiles $(1) compile jlink:jlink package
 	cp -r target/maven-jlink/default build/output/$(1)/javelin/java
-	cp -r build/static/$(1)/* doc avatars maps monsters.xml preferences.properties readme.txt audio build/output/$(1)/javelin
+	cp -r build/static/$(1)/* doc avatars maps monsters.xml preferences.properties readme.md audio build/output/$(1)/javelin
 	cp /tmp/VERSION.txt build/output/$(1)/javelin/doc/VERSION.txt 
 	cp --recursive target/native/ build/output/$(1)/javelin/native/
 	cp --recursive build/static/steam/sdk/redistributable_bin/ build/output/$(1)/javelin/native/steam/

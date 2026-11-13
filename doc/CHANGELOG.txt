@@ -1,30 +1,120 @@
-Version 1.7
+Version 1.7 (2026-11-13)
 
- * Mouse support!
- * Game sounds!
- * 3 gameplay modes: Campaign, Dungeon World and Art of War!
- * 2 mini-games: Arena and Battlefield!
- * City management redesign, with 7 city traits and 36 projects!
- * New systems for town quests, diplomacy, urban and wilderness events!
- * New items: caster rings (grants spells) and Eidolons (summons allies)!
- * Dungeon redesign (templated-based maps, 4 tiers, keys, NPCs and more)!
- * Introducing 6 Haunt locations!
- * New kits: 8 wizards (one per school of magic), 5 dragoons and more!
- * Items and Upgrades no longer tied to Realms (upgrades now fully kit-based)
- * Hostile monsters and mercenaries can now be Elite or kit-based NPCs
- * Martial disciplines (Steel Serpent)
- * Hostile towns now spawn incursions that can capture locations (campaign)
- * New locations: natural resources, Assassins Guild and Deep Dungeon
- * New skills: Bluff and Sense Motive
- * New world action: Infiltrate hostile locations
- * World map fog-of-war
- * More responsive user-interface during battles
- * Improved battle AI
- * Multi-threaded world generation
- * Auto-attack using the Tab key (for both close and ranged combat)
- * Improved artwork
- * Gems and Art Objects as treasure
- * Downloads now come with self-contained, optmized per-OS Java 12 runtimes
+* Adventurers-guild
+* New dungeon-inhabitant: Hunter
+* Varying number of foes in encounter-tables
+* Towns
+  * Develop more quickly in the early game
+  * A lodge per town
+* Volume-option
+* Icons for unexplored dungeons
+* Smaller squads start with experience 
+* Concede Arena-matches
+* New battle-maps
+* Radial vision
+* List kit-upgrades in kit-guide
+* Larger text
+
+Version 1.7, beta 22 (2022-09-30)
+
+* Minigames
+  * Warlock-Tower. Wave-based. Highly risky and highly rewarding gauntlets.
+  * Arena redesign with evolving teams.
+  * Catacombs. 4 progressing classic-horror dungeons.
+* New consumables: bombs and vaporizers
+* World
+  * Contested territories
+  * Location-colors indicate their challenge-tier
+* Towns
+  * Semifixed items in the starting shop
+  * Redesigned quests and diplomacy: 3 quest-categories; 7 quest-types and 6 mandates
+* New dungeon-features: altars and corrupted altars
+* 9 new combat-maps focusing on shores and town-shores
+* New spells: Detect Magic, Read Magic, Word of power: Kill, Flare Burst and Overland Flight.
+
+Version 1.7, beta 20 (2021-04-06)
+
+* Rune-gear and crafting runes
+* Dungeons
+  * Branches
+  * World-portals
+  * Specialized chests
+  * Decoration
+  * Lore
+* Identify consumable items 
+* Dungeons
+  * New features: passages; maps; crates; recipes and paths
+  * Hidden traps and chests in decorations
+* Towns
+  * Redesigned diplomacy and quests
+  * Redesigned mines
+  * Rune-shops
+* Separate screens for using items and equipping gear
+* Camping can be used to quickly heal with spells
+
+Version 1.7, beta 19 (2019-08-20)
+
+* Haunt redesign and new haunts (14 in total)
+* Attacking now uses a full attacks-sequence
+
+Version 1.7, beta 18 (2019-07-07)
+
+* New items: Staves, Rods and Flasks
+* New world-locations: Wilderness
+* Major eidolons recharge; minor eidolons are consumed
+* Improved-placing battle-units
+
+Version 1.7, beta 16 (2018-09-06)
+
+* Quests and diplomacy for towns
+* New dungeon features: Herbs and Camp-fires
+* New combat maps
+  * Shores
+  * Constructed Underground
+  * Dynamic maps for town-sieges
+* New Questions-guide 
+* Detect and prompt when-all battle-units are automated
+* More details provided in crash-reports
+* New art
+
+Version 1.7, beta 15 (2018-05-20)
+
+* Skills
+  * Bluff
+  * Sense Motive
+  * Are now either trained or untrained
+* Dungeons
+  * Names
+  * Encounters-tables
+  * Inhabitants: leaders; prisoners; brokers
+  * Autoreveal features with Knowledge
+  * Temples now have varying number of floors
+* Sell items on shops or drop them from the inventory
+
+Version 1.7, beta 14 (2018-05-12)
+
+* Elite monsters and foes with kits
+* Dungeons
+  * Rebalanced
+  * Doors and keys
+  * Different visuals per tier
+
+Version 1.7, beta 13 (2018-04-16)
+
+* Redesigned Arena 
+* Redesigned Dungeons and Temples 
+  * Template-based system for generating maps
+  * 4 tier-sizes
+* Redesigned incursions
+* Constriction damage when grappling
+ 
+Version 1.7, beta 6 (2017-10-05)
+
+* Support mouse
+* Minigames: Arena; Deep Dungeon 
+* Redesign city-management with 7 traits and 36 projects
+* Casting rings
+* Martial discipline: Steel-Serpent
 
 Version 1.6 (2016-07-15) 
 

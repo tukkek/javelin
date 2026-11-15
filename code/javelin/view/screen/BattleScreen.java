@@ -92,6 +92,7 @@ public class BattleScreen extends Screen{
   /// creates subcomponents
   public void open(){
     BattleScreen.active=this;
+    BattleScreen.callback=null;
     setForeground(Color.WHITE);
     setBackground(Color.BLACK);
     setLayout(new BorderLayout());

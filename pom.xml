@@ -79,13 +79,14 @@
 										<version>${lwjgl3-awt.version}</version>
 			                        </artifact>
 			                        <moduleInfoSource>
-			                            module lwjgl3.awt {
-			                                exports org.lwjgl.opengl.awt;
-			                                requires java.desktop;
-			                                requires org.lwjgl;
-			                                requires org.lwjgl.jawt;
-			                                requires org.lwjgl.opengl; 
-			                            }
+										module lwjgl3.awt {
+											exports org.lwjgl.opengl.awt;
+											requires java.desktop;
+											requires org.lwjgl;
+											requires org.lwjgl.jawt;
+											requires org.lwjgl.opengl; 
+											requires org.lwjgl.egl; 
+										}
 			                        </moduleInfoSource>
 			                    </module>
 			                </modules>

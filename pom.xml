@@ -209,5 +209,9 @@
 			<artifactId>lwjgl-opengl</artifactId>
 			<classifier>${lwjgl.natives}</classifier>
 		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl-egl</artifactId>
+		</dependency>
 	</dependencies>
 </project>

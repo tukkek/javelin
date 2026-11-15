@@ -32,22 +32,29 @@ public class BattleMouse extends Mouse{
       new MeleeMouseAction(),new RangedMouseAction()};
 
   void show(Combatant c){
-    BattleScreen.perform(()->{
+    if(c!=null) BattleScreen.perform(()->{
       new StatisticsScreen().open(c);
       throw new RepeatTurn();
     });
   }
 
+  boolean skip(){
+    if(Javelin.delayblock||Javelin.waiting) return true;
+    return !Interface.userinterface.waiting;
+  }
+
   @Override
   public void mouseClicked(MouseEvent e){
+    var skip=skip();
     super.mouseClicked(e);
+    if(skip) return;
     synchronized(OpenGL.LOCK){
       if(overrideinput()) return;
       var t=gettile(e);
       if(t==null) return;
       var s=Fight.state;
       var target=s.getcombatant(t.x,t.y);
-      if(target!=null) switch(e.getButton()){
+      switch(e.getButton()){
         case MouseEvent.BUTTON1 -> click(target,s);
         case MouseEvent.BUTTON3 -> show(target);
       }
@@ -70,6 +77,7 @@ public class BattleMouse extends Mouse{
 
   @Override
   public void mouseMoved(MouseEvent e){
+    if(skip()) return;
     synchronized(OpenGL.LOCK){
       var statuspanel=StatusPanel.get();
       if(StatusPanel.looking!=null){

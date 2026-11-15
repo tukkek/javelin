@@ -15,6 +15,7 @@ import javelin.view.mappanel.battle.overlay.TraceOverlay;
 public class RangedMouseAction extends BattleMouseAction{
   @Override
   public boolean validate(Combatant current,Combatant target,BattleState s){
+    if(target==null) return false;
     return !target.isally(current,s)&&!current.isadjacent(target)
         &&!current.source.ranged.isEmpty()&&!s.isengaged(current)
         &&s.haslineofsight(current,target)!=Vision.BLOCKED;

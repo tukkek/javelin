@@ -269,11 +269,12 @@ public abstract class Fight{
     }
     if(Javelin.DEBUG) withdrawall(true);
     if(has(Friendly.class)==null&&state.isengaged(c)){
-      Javelin.prompt("Disengage first!");
+      Javelin.message("Disengage first!",Javelin.Delay.WAIT);
       throw new RepeatTurn();
     }
     Javelin.message(ESCAPE,Javelin.Delay.NONE);
-    if(Javelin.input().getKeyChar()!='\n') throw new RepeatTurn();
+    var i=Javelin.input();
+    if(i==null||i.getKeyChar()!='\n') throw new RepeatTurn();
     c.escape(state);
     throw state.blueteam.isEmpty()?new EndBattle():new RepeatTurn();
   }

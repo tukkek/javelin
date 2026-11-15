@@ -258,9 +258,9 @@ public class BattleScreen extends Screen{
   /** Processes {@link Javelin#delayblock}. */
   public void block(){
     if(Javelin.delayblock){
-      Javelin.delayblock=false;
       Javelin.input();
       messagepanel.clear();
+      Javelin.delayblock=false;
     }
   }
 

@@ -71,16 +71,18 @@ public class Javelin{
   /** Roll target on a d20. */
   public static final int EASY=8;
   /** Roll target on a d20. */
-  public static final int EFFORTLESS=4;
+  static public final int EFFORTLESS=4;
 
   static final String TITLE="Javelin";
   static final DecimalFormat COSTFORMAT=new DecimalFormat("####,###,##0");
 
   /** Singleton. */
-  public static JavelinApp app;
-  public static boolean delayblock=false;
+  static public JavelinApp app;
+  static public boolean delayblock=false;
   /** Not sure how necessary this is - can do away with on 2.0+ TODO */
-  public static MediaTracker tracker;
+  static public MediaTracker tracker;
+  /// True while printing a message with {@link Delay#WAIT}.
+  static public boolean waiting=false;
 
   static{
     ClassLevelUpgrade.setup();
@@ -271,8 +273,8 @@ public class Javelin{
    * confirmation.
    *
    * @param text Prints this message in the status panel.
-   * @param enter If <code>true</code> will wait for the player to press
-   *   ENTER, otherwise any key will do.
+   * @param enter If <code>true</code> will wait for the player to press ENTER,
+   *   otherwise any key will do.
    * @return the key pressed by the user as confirmation for seeing the message.
    */
   public static KeyEvent message(String text,boolean enter){
@@ -282,7 +284,11 @@ public class Javelin{
     text+="\nPress "+(enter?"ENTER":"any key")+" to continue...";
     Javelin.message(text,Delay.NONE);
     var input=Javelin.input();
-    while(enter&&input.getKeyChar()!='\n') input=Javelin.input();
+    while(enter){
+      //mouse clicked or enter pressed
+      if(input==null||input.getKeyChar()=='\n') break;
+      input=Javelin.input();
+    }
     panel.clear();
     return input;
   }
@@ -364,10 +370,12 @@ public class Javelin{
     active.statuspanel.repaint();
   }
 
+  /// TASK do not return event but expose key and click
   public static KeyEvent input(){
     if(MessagePanel.active!=null) MessagePanel.active.repaint();
-    Interface.userinterface.getinput();
-    return Interface.userinterface.keyevent;
+    var i=Interface.userinterface;
+    i.getinput();
+    return i.keyevent;
   }
 
   /// Main output function for {@link BattleScreen}s.
@@ -384,8 +392,10 @@ public class Javelin{
       return;
     }
     try{
+      waiting=true;
       Thread.sleep(Preferences.messagewait);
       panel.clear();
+      waiting=false;
     }catch(final InterruptedException e){
       e.printStackTrace();
     }

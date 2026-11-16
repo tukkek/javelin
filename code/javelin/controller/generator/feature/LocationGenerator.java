@@ -174,6 +174,7 @@ public class LocationGenerator implements Serializable{
       if(!empty) continue;
       a.setlocation(p);
       a.place();
+      if(t==home) a.reveal();
       return a;
     }
     throw new RestartWorldGeneration();
@@ -259,11 +260,11 @@ public class LocationGenerator implements Serializable{
     var district=List.of(Shop.makebasic(),new AdventurersGuild());
     district=RPG.shuffle(new ArrayList<>(district));
     for(var location:district) surround(t,location,1,2);
-    surround(t,new Arena(),2,3).reveal();
+    surround(t,new Arena(),2,3);
     var r=District.RADIUSMAX/2;
     var farther=(int)Math.round(r*1.5);
-    surround(t,new WarlocksTower(),r+1,farther).reveal();
-    surround(t,new Catacombs().entrance,r+1,farther).reveal();
+    surround(t,new WarlocksTower(),r+1,farther);
+    surround(t,new Catacombs().entrance,r+1,farther);
     placedeepdungeon();
     world.discovered.addAll(t.getdistrict().getarea());
   }
@@ -278,7 +279,6 @@ public class LocationGenerator implements Serializable{
     var d=new DungeonEntrance(new DeepDungeon());
     var allowed=Set.of(Terrain.FOREST,Terrain.HILL,Terrain.PLAIN);
     while(d.x<0||!allowed.contains(Terrain.get(d.x,d.y))) surround(home,d,4,4);
-    d.reveal();
   }
 
   /**

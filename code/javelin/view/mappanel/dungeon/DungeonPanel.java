@@ -47,7 +47,9 @@ public class DungeonPanel extends MapPanel{
 
   /// Center every turn if there is no set {@link Grid#center}.
   static public void refresh(Point p,Graphics g){
-    var tile=MapPanel.get().tiles[p.x][p.y];
+    var panel=MapPanel.get();
+    if(panel==null) return;
+    var tile=panel.tiles[p.x][p.y];
     var grid=Grid.get();
     var center=grid.center;
     if(tile!=center&&center==null) grid.center(tile,true);

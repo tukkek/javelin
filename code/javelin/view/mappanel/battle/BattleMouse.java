@@ -40,6 +40,8 @@ public class BattleMouse extends Mouse{
 
   boolean skip(){
     if(Javelin.delayblock||Javelin.waiting) return true;
+    var c=BattlePanel.current;
+    if(c!=null&&c.automatic) return true;
     return !Interface.userinterface.waiting;
   }
 

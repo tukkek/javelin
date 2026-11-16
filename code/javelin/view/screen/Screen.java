@@ -32,6 +32,8 @@ public class Screen extends TPanel{
     var application=Javelin.app;
     var last=application.mainComponent;
     if(last==component) return;
+    Overlay.clear();
+    BattleScreen.perform(null);
     synchronized(OpenGL.LOCK){
       BattleScreen.active=null;
       if(last instanceof Screen screen) screen.close();

@@ -29,7 +29,7 @@ import javelin.view.screen.WorldScreen;
  */
 public class WorldMouse extends Mouse{
   public static class Movement implements Runnable{
-    private final MoveOverlay overlay;
+    final MoveOverlay overlay;
 
     public Movement(MoveOverlay overlay){
       this.overlay=overlay;
@@ -44,10 +44,12 @@ public class WorldMouse extends Mouse{
         interrupted=overlay.path.resetlocation();
         break;
       }
-      if(dungeon!=Dungeon.active) return; //left dungeon
+      var left=dungeon!=Dungeon.active;
+      var s=WorldScreen.get();
+      if(left||s==null) return;
       if(interrupted==null){
         var destination=affected.getLast();
-        WorldScreen.get().mappanel.center(destination.x,destination.y,true);
+        s.mappanel.center(destination.x,destination.y,true);
         return;
       }
       overlay.reset();
@@ -96,7 +98,7 @@ public class WorldMouse extends Mouse{
       var t=(WorldTile)gettile(e);
       if(t==null||!t.discovered) return;
       if(e.getButton()==MouseEvent.BUTTON1){
-        final var target=World.get(t.x,t.y);
+        var target=World.get(t.x,t.y);
         if(target==Squad.active) return;
         if(target!=null){
           BattleScreen.perform(new Interact(target));
@@ -115,6 +117,7 @@ public class WorldMouse extends Mouse{
    */
   public static boolean move(){
     var overlay=Overlay.get();
+    Overlay.clear();
     return overlay!=null&&overlay.click();
   }
 

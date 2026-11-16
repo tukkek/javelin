@@ -161,7 +161,8 @@ public class LocationGenerator implements Serializable{
    */
   Actor surround(Town t,Actor a,int min,int max){
     max+=1;
-    var points=new ArrayList<>(Point.getrange(t.x-min,t.y-min,t.x+max,t.y+max));
+    var points=new ArrayList<>(Point.getrange(t.x-max,t.y-max,t.x+max,t.y+max)
+        .stream().filter(p->p.distanceinsteps(t.getlocation())>=min).toList());
     RPG.shuffle(points);
     var actors=World.getactors();
     for(var p:points){

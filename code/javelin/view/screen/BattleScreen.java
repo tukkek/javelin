@@ -173,7 +173,10 @@ public class BattleScreen extends Screen{
     try{
       if(!first) return;
       first=false;
-      if(!Javelin.DEBUG) Thread.sleep(1_000);
+      if(!Javelin.DEBUG){
+        reflect();
+        Thread.sleep(1_000);
+      }
     }catch(InterruptedException e){
       //ignore
     }

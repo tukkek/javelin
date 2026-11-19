@@ -18,6 +18,7 @@ import java.util.Optional;
 import javax.swing.JOptionPane;
 
 import javelin.Javelin;
+import javelin.controller.Report;
 import javelin.controller.Steam;
 import javelin.controller.Weather;
 import javelin.controller.content.action.world.meta.OpenJournal;
@@ -161,7 +162,7 @@ public class StateManager{
         }
         exit(window);
       }catch(RuntimeException e){
-        Javelin.app.uncaughtException(Thread.currentThread(),e);
+        Report.handle(e);
         exit(window);
       }
     }
@@ -230,8 +231,7 @@ public class StateManager{
       return true;
     }catch(final Throwable e){
       StateManager.clear();
-      Javelin.app.uncaughtException(Thread.currentThread(),e);
-      //			System.exit(20140406);
+      Report.handle(e);
       return false;
     }
   }

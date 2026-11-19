@@ -204,6 +204,7 @@ public class Debug{
     }
 
     static void encounter(boolean freeze){
+      disablecombat=false;
       var fight=WorldScreen.get().encounter();
       fight.bribe=false;
       fight.hide=false;

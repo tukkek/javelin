@@ -41,6 +41,7 @@ import javelin.model.item.key.door.Key;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
+import javelin.model.world.World;
 import javelin.model.world.location.dungeon.feature.BranchPortal;
 import javelin.model.world.location.dungeon.feature.Decoration;
 import javelin.model.world.location.dungeon.feature.Feature;
@@ -582,5 +583,13 @@ public class DungeonFloor implements Serializable{
       if(recurse) dungeons.addAll(dungeon.branch(true));
     }
     return dungeons;
+  }
+
+  /// @return Next floor up on the same {@link Dungeon} or crossing
+  ///   {@link BranchPortal} or `null` if exits to the {@link World}.
+  public DungeonFloor climb(){
+    var floors=dungeon.floors;
+    var index=floors.indexOf(this);
+    return index==0?dungeon.exit:floors.get(index-1);
   }
 }

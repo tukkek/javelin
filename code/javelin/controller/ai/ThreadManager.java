@@ -8,6 +8,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import javelin.Javelin;
+import javelin.controller.Report;
 import javelin.controller.ai.cache.AiCache;
 import javelin.controller.content.action.world.meta.ShowOptions;
 import javelin.controller.db.Preferences;
@@ -78,7 +79,7 @@ public class ThreadManager{
     }catch(Exception e){
       interrupt();
       working=false;
-      Javelin.app.uncaughtException(Thread.currentThread(),ERROR==null?e:ERROR);
+      Report.INSTANCE.handle(ERROR==null?e:ERROR);
     }
     int deepest=AiThread.FINISHED.descendingKeySet().first();
     analyze(start,deepest);

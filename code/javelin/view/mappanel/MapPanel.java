@@ -151,8 +151,9 @@ public abstract class MapPanel extends Panel{
   public AWTGLCanvas canvas=new Canvas();
   /// See {@link #refresh(Graphics)}.
   public Grid grid=new Grid();
+  /// Handles mouse events.
+  public Mouse mouse=getmouselistener();
 
-  Mouse mouse=getmouselistener();
   String configurationkey;
 
   /** Constructor. */

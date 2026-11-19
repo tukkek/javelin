@@ -15,11 +15,7 @@ import javelin.model.unit.condition.Fatigued;
 import javelin.model.unit.condition.Poisoned;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
 
-/**
- * http://www.d20srd.org/srd/spells/restorationLesser.htm
- *
- * @author alex
- */
+/// http://www.d20srd.org/srd/spells/restorationLesser.htm
 public class LesserRestoration extends Touch{
   static final ArrayList<Class<? extends Condition>> CONDITIONS=new ArrayList<>();
 
@@ -70,10 +66,11 @@ public class LesserRestoration extends Touch{
   }
 
   @Override
-  public void filter(Combatant combatant,List<Combatant> targets,BattleState s){
-    super.filter(combatant,targets,s);
-    for(Combatant c:new ArrayList<>(targets))
-      if(!combatant.isally(c,s)) targets.remove(c);
+  public void filter(Combatant active,List<Combatant> combatants,BattleState s){
+    super.filter(active,combatants,s);
+    if(s==null) return;
+    var foes=combatants.stream().filter(c->!c.isally(active,s)).toList();
+    combatants.removeAll(foes);
   }
 
   @Override

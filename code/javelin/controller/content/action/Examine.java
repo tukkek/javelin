@@ -11,6 +11,7 @@ import javelin.controller.content.fight.Fight;
 import javelin.controller.exception.RepeatTurn;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
+import javelin.old.Interface;
 import javelin.old.RPG;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.StatusPanel;
@@ -126,9 +127,9 @@ public class Examine extends Action{
   }
 
   static Character press(){
-    var e=Javelin.input();
-    if(e==null) return null;
-    return switch(e.getKeyCode()){
+    var symbol=Javelin.input();
+    if(symbol==null) return null;
+    return switch(Interface.code){
       case KeyEvent.VK_UP -> '8';
       case KeyEvent.VK_DOWN -> '2';
       case KeyEvent.VK_LEFT -> '4';
@@ -138,7 +139,7 @@ public class Examine extends Action{
       case KeyEvent.VK_PAGE_UP -> '9';
       case KeyEvent.VK_PAGE_DOWN -> '3';
       case KeyEvent.VK_ESCAPE -> 'q';
-      default -> Character.toLowerCase(e.getKeyChar());
+      default -> Character.toLowerCase(symbol);
     };
   }
 

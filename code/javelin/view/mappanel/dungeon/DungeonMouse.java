@@ -16,7 +16,7 @@ public class DungeonMouse extends Mouse{
   @Override
   public void mouseClicked(MouseEvent e){
     synchronized(OpenGL.LOCK){
-      if(overrideinput()||!Interface.userinterface.waiting) return;
+      if(enter(e)||!Interface.waiting) return;
       var t=gettile(e);
       if(t==null||!t.discovered) return;
       if(e.getButton()==MouseEvent.BUTTON1&&WorldMouse.move()){
@@ -29,7 +29,7 @@ public class DungeonMouse extends Mouse{
   @Override
   public void mouseMoved(MouseEvent e){
     synchronized(OpenGL.LOCK){
-      if(!Interface.userinterface.waiting) return;
+      if(!Interface.waiting) return;
       Overlay.clear();
       var t=gettile(e);
       if(t==null||!t.discovered) return;

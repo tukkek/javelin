@@ -57,7 +57,6 @@ public abstract class QuestApp extends Applet implements Runnable{
     setBackground(Color.black);
     setFont(QuestApp.mainfont);
     // set game in action
-    Interface.userinterface=new Interface();
     QuestApp.thread=new Thread(this);
     QuestApp.thread.start();
   }

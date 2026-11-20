@@ -190,7 +190,7 @@ public class BattleScreen extends Screen{
     BattlePanel.current=current;
     messagepanel.clear();
     blockinput();
-    Interface.userinterface.waiting=true;
+    Interface.waiting=true;
     Overlay.clear();
     if(callback!=null){
       var runnable=callback;
@@ -199,9 +199,8 @@ public class BattleScreen extends Screen{
       return;
     }
     reflect();
-    var event=Javelin.input();
-    if(event==null) return;
-    var action=ActionMapping.SINGLETON.getaction(event);
+    var action=ActionMapping.SINGLETON.getaction();
+    if(action==null) return;
     current=Fight.state.clone(current);
     if(current.burrowed&&!action.allowburrowed) Dig.refuse();
     if(!action.perform(current)) throw new RepeatTurn();
@@ -255,7 +254,8 @@ public class BattleScreen extends Screen{
    */
   static public void perform(Runnable r){
     callback=r;
-    Interface.userinterface.go(null);
+    Interface.clear();
+    Interface.release();
   }
 
   /** Processes {@link Javelin#delayblock}. */

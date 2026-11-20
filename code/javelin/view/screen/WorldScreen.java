@@ -1,7 +1,6 @@
 package javelin.view.screen;
 
 import java.awt.Image;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -148,9 +147,9 @@ public class WorldScreen extends BattleScreen{
       var d=active.getdistrict();
       if(d!=null) d.town.enter();
       redraw();
-      Interface.userinterface.waiting=true;
+      Interface.waiting=true;
       Overlay.clear();
-      perform(Javelin.input());
+      perform();
     }catch(RepeatTurn e){
       MessagePanel.active.clear();
       inform();
@@ -158,9 +157,8 @@ public class WorldScreen extends BattleScreen{
     }
   }
 
-  void perform(KeyEvent e){
-    if(e==null) return;
-    var action=WorldAction.press(e.getKeyChar(),e.getKeyCode());
+  void perform(){
+    var action=WorldAction.press();
     if(action==null) throw new RepeatTurn();
     MessagePanel.active.clear();
     action.perform(this);

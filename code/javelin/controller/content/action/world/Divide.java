@@ -55,8 +55,7 @@ public class Divide extends WorldAction{
   /** TODO would be nice to highlight and use the mouse */
   Point walk(){
     Javelin.message("Select a direction to move into...",Delay.NONE);
-    var to=Javelin.input();
-    var action=WorldAction.press(to.getKeyChar(),to.getKeyCode());
+    var action=WorldAction.press();
     var m=action instanceof WorldMove w?w:null;
     if(m==null) return null;
     var l=Squad.active.getlocation();

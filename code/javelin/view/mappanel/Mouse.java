@@ -14,7 +14,7 @@ public abstract class Mouse extends MouseAdapter{
   @Override
   public void mouseClicked(MouseEvent e){
     synchronized(OpenGL.LOCK){
-      Interface.userinterface.click();
+      Interface.click(e);
       if(e.getButton()!=MouseEvent.BUTTON3) return;
       var t=gettile(e);
       if(t!=null) MapPanel.get().center(t.x,t.y,true);
@@ -35,16 +35,11 @@ public abstract class Mouse extends MouseAdapter{
     }
   }
 
-  /**
-   * @return Subclasses should call this at the beggining of
-   *   {@link #mouseClicked(MouseEvent)} and return without further action if
-   *   <code>true</code>.
-   */
-  public boolean overrideinput(){
-    if(Interface.userinterface.waiting) return false;
-    var k=new KeyEvent(MapPanel.get(),0,System.currentTimeMillis(),0,0,'c');
-    k.setKeyChar('\n');
-    Interface.userinterface.go(k);
+  /// Convert click to enter if not {@link Interface#waiting}.
+  static public boolean enter(MouseEvent e){
+    if(Interface.waiting) return false;
+    if(e.getButton()==3) Interface.press('q',KeyEvent.VK_ENTER);
+    else Interface.press('\n',KeyEvent.VK_ENTER);
     return true;
   }
 }

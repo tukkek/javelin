@@ -26,6 +26,7 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.unit.abilities.BreathWeapon.BreathArea;
 import javelin.model.unit.condition.Breathless;
+import javelin.old.Interface;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
 import javelin.view.mappanel.battle.overlay.BreathOverlay;
@@ -120,7 +121,7 @@ public class Breathe extends Action implements AiAction{
     var text=targetinfo(state,area);
     text+="Press ENTER or b to confirm, q to quit.";
     Javelin.message(text,Javelin.Delay.NONE);
-    var confirm=Javelin.input().getKeyChar();
+    var confirm=Javelin.input();
     Overlay.clear();
     try{
       quit(confirm);
@@ -237,9 +238,8 @@ public class Breathe extends Action implements AiAction{
   }
 
   public Integer selectdirection(Combatant hero){
-    var direction=Javelin.input();
-    var code=direction.getKeyCode();
-    var key=direction.getKeyChar();
+    var key=Javelin.input();
+    var code=Interface.code;
     quit(key);
     if(key=='U'||key=='7') return 1;
     if(code==KeyEvent.VK_UP||key=='I'||key=='8') return 2;

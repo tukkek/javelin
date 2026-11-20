@@ -384,7 +384,7 @@ public abstract class Location extends Actor{
     var message=String.format(CLOSED,l,from,var);
     Javelin.message(message,Delay.NONE);
     /* TODO this could easily be refactored into Squad#waitfor(Period) */
-    if(Javelin.input().getKeyChar()!='\n') throw new RepeatTurn();
+    if(Javelin.input()!='\n') throw new RepeatTurn();
     var wait=open.get(0).from-Period.gethour();
     if(wait<0) wait+=24;
     Squad.active.delay(wait);

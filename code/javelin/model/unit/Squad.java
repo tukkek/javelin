@@ -210,7 +210,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
         Javelin.message(
             c+" is not paid, abandons your ranks!\n\nPress ENTER to coninue...",
             Javelin.Delay.NONE);
-        while(Javelin.input().getKeyChar()!='\n'){
+        while(Javelin.input()!='\n'){
           // wait for enter
         }
         MessagePanel.active.clear();

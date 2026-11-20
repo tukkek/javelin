@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 
+import javelin.Javelin;
 import javelin.controller.content.action.ai.AiMovement;
 import javelin.controller.content.action.ai.attack.MeleeAttack;
 import javelin.controller.content.action.ai.attack.RangedAttack;
@@ -14,6 +15,7 @@ import javelin.controller.content.action.world.meta.OpenJournal;
 import javelin.controller.content.action.world.meta.ShowOptions;
 import javelin.controller.content.action.world.meta.help.Guide;
 import javelin.controller.exception.RepeatTurn;
+import javelin.old.Interface;
 
 /**
  * Basic listing of in-game {@link Action}s.
@@ -84,27 +86,21 @@ public class ActionMapping{
     }
   }
 
-  /**
-   * @return The appropriate acttion for the given {@link KeyEvent}.
-   */
-  public Action getaction(final KeyEvent keyEvent){
+  /// @return The appropriate acttion for the given {@link KeyEvent}.
+  public Action getaction(){
+    var key=Javelin.input();
+    if(key==null) return null;
     if(ActionMapping.reset){
       mappings.clear();
       setup();
     }
-    final var keyChar=keyEvent.getKeyChar();
-    if(keyChar==KeyEvent.CHAR_UNDEFINED){
-      final var action=mappings.get("KeyEvent"+keyEvent.getKeyCode());
-
+    var code=Interface.code;
+    if(key==KeyEvent.CHAR_UNDEFINED){
+      var action=mappings.get("KeyEvent"+code);
       if(action==null) throw new RepeatTurn();
-
       return action;
     }
-    // Make sure we can control-something events
-    if(keyEvent.isControlDown()) // Not sure the puritain JDK will like this
-      // Sun should sue those Eclipse guys
-      return mappings.get("Control"+keyEvent.getKeyCode());
-    var action=mappings.get(Character.toString(keyChar));
+    var action=mappings.get(Character.toString(key));
     if(action==null) throw new RepeatTurn();
     return action;
   }

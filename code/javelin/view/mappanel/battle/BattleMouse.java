@@ -42,7 +42,7 @@ public class BattleMouse extends Mouse{
     if(Javelin.delayblock||Javelin.waiting) return true;
     var c=BattlePanel.current;
     if(c!=null&&c.automatic) return true;
-    return !Interface.userinterface.waiting;
+    return !Interface.waiting;
   }
 
   @Override
@@ -51,7 +51,7 @@ public class BattleMouse extends Mouse{
     super.mouseClicked(e);
     if(skip) return;
     synchronized(OpenGL.LOCK){
-      if(overrideinput()) return;
+      if(enter(e)) return;
       var t=gettile(e);
       if(t==null) return;
       var s=Fight.state;
@@ -86,7 +86,7 @@ public class BattleMouse extends Mouse{
         StatusPanel.looking=null;
         statuspanel.repaint();
       }
-      if(!Interface.userinterface.waiting) return;
+      if(!Interface.waiting) return;
       Overlay.clear();
       MessagePanel.get().clear();
       try{
@@ -121,7 +121,7 @@ public class BattleMouse extends Mouse{
   @Override
   public void mouseWheelMoved(MouseWheelEvent e){
     synchronized(OpenGL.LOCK){
-      if(!Interface.userinterface.waiting) return;
+      if(!Interface.waiting) return;
       super.mouseWheelMoved(e);
       var current=BattlePanel.current;
       MapPanel.get().center(current.location[0],current.location[1],true);

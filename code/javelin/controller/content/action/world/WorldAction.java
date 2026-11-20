@@ -2,6 +2,7 @@ package javelin.controller.content.action.world;
 
 import java.awt.event.KeyEvent;
 
+import javelin.Javelin;
 import javelin.controller.content.action.Action;
 import javelin.controller.content.action.ActionDescription;
 import javelin.controller.content.action.world.inventory.EquipGear;
@@ -18,6 +19,7 @@ import javelin.controller.content.action.world.meta.help.Guide;
 import javelin.controller.content.action.world.meta.help.WorldHelp;
 import javelin.controller.content.action.world.meta.zoom.ZoomWorldIn;
 import javelin.controller.content.action.world.meta.zoom.ZoomWorldOut;
+import javelin.old.Interface;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -111,15 +113,13 @@ public abstract class WorldAction implements ActionDescription{
     morekeys[0]=key;
   }
 
-  /**
-   * @param keyp Key for {@link #morekeys} or <code>null</code>.
-   * @param code Key for {@link #keys} or <code>null</code>.
-   * @return The associated action or <code>null</code> for none.
-   */
-  public static WorldAction press(Character keyp,Integer code){
-    var key=keyp==null?null:Character.toString(keyp);
+  /// @return The associated action or <code>null</code> for none.
+  public static WorldAction press(){
+    var symbol=Javelin.input();
+    var text=symbol==null?null:Character.toString(symbol);
+    var code=Interface.code;
     for(var a:WorldAction.ACTIONS){
-      if(keyp!=null) for(var k:a.morekeys) if(k.equals(key)) return a;
+      if(text!=null) for(var k:a.morekeys) if(k.equals(text)) return a;
       if(code!=null) for(var k:a.keys) if(k==code) return a;
     }
     return null;

@@ -75,6 +75,13 @@ public class Javelin{
 
   static final String TITLE="Javelin";
   static final DecimalFormat COSTFORMAT=new DecimalFormat("####,###,##0");
+  /// TASK test removal on all platforms
+  static final KeyAdapter PRESS=new KeyAdapter(){
+    @Override
+    public void keyPressed(KeyEvent e){
+      Interface.press(e);
+    }
+  };
 
   /** Singleton. */
   static public JavelinApp app;
@@ -133,12 +140,7 @@ public class Javelin{
     app.setVisible(false);
     frame.add(app);
     frame.setSize(app.getPreferredSize().width,app.getPreferredSize().height);
-    frame.addKeyListener(new KeyAdapter(){
-      @Override
-      public void keyPressed(final KeyEvent e){
-        Interface.userinterface.go(e);
-      }
-    });
+    frame.addKeyListener(PRESS);
     app.setVisible(true);
     frame.setVisible(true);
     frame.setExtendedState(Frame.MAXIMIZED_BOTH);
@@ -277,7 +279,7 @@ public class Javelin{
    *   otherwise any key will do.
    * @return the key pressed by the user as confirmation for seeing the message.
    */
-  public static KeyEvent message(String text,boolean enter){
+  public static Character message(String text,boolean enter){
     Screen.reopen();
     var panel=MessagePanel.active;
     panel.clear();
@@ -286,7 +288,7 @@ public class Javelin{
     var input=Javelin.input();
     while(enter){
       //mouse clicked or enter pressed
-      if(input==null||input.getKeyChar()=='\n') break;
+      if(input==null||input=='\n') break;
       input=Javelin.input();
     }
     panel.clear();
@@ -371,11 +373,10 @@ public class Javelin{
   }
 
   /// TASK do not return event but expose key and click
-  public static KeyEvent input(){
+  public static Character input(){
     if(MessagePanel.active!=null) MessagePanel.active.repaint();
-    var i=Interface.userinterface;
-    i.getinput();
-    return i.keyevent;
+    Interface.block();
+    return Interface.key;
   }
 
   /// Main output function for {@link BattleScreen}s.

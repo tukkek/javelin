@@ -1,6 +1,5 @@
 package javelin;
 
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.math.BigDecimal;
 
@@ -91,8 +90,7 @@ public class JavelinApp extends QuestApp{
 
   void disclaimer(){
     var extra="This message will only be shown once, press ENTER to continue.";
-    var enter=KeyEvent.VK_ENTER;
-    while(TextReader.show(new File(README),extra).getKeyCode()!=enter){
+    while(TextReader.show(new File(README),extra)!='\n'){
       // wait for enter
     }
   }

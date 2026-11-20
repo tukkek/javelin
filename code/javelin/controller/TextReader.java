@@ -1,6 +1,5 @@
 package javelin.controller;
 
-import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -16,24 +15,24 @@ import javelin.view.screen.Screen;
  * @author alex
  */
 public class TextReader{
-	static public String read(File text){
-		try{
-			String out="";
-			BufferedReader reader=new BufferedReader(new FileReader(text));
-			String line=reader.readLine();
-			while(line!=null){
-				out+=line+"\n";
-				line=reader.readLine();
-			}
-			reader.close();
-			return out;
-		}catch(IOException e){
-			throw new RuntimeException(e);
-		}
-	}
+  static public String read(File text){
+    try{
+      var out="";
+      var reader=new BufferedReader(new FileReader(text));
+      var line=reader.readLine();
+      while(line!=null){
+        out+=line+"\n";
+        line=reader.readLine();
+      }
+      reader.close();
+      return out;
+    }catch(IOException e){
+      throw new RuntimeException(e);
+    }
+  }
 
-	public static KeyEvent show(File f,String footer){
-		Screen.change(new InfoScreen(TextReader.read(f)+footer));
-		return Javelin.input();
-	}
+  public static Character show(File f,String footer){
+    Screen.change(new InfoScreen(TextReader.read(f)+footer));
+    return Javelin.input();
+  }
 }

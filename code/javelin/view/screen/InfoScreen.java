@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 
 import javelin.Javelin;
+import javelin.old.Interface;
 import javelin.old.QuestApp;
 import javelin.old.messagepanel.Text;
 
@@ -67,7 +68,7 @@ public class InfoScreen extends Screen{
    */
   static public Character feedback(){
     var input=Javelin.input();
-    switch(input.getKeyCode()){
+    switch(Interface.code){
       case KeyEvent.VK_RIGHT:
         return '→';
       case KeyEvent.VK_LEFT:
@@ -81,7 +82,7 @@ public class InfoScreen extends Screen{
       case KeyEvent.VK_TAB:
         return '\t';
     }
-    return input.getKeyChar();
+    return input;
   }
 
   /**

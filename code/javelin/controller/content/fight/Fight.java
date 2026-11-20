@@ -274,7 +274,7 @@ public abstract class Fight{
     }
     Javelin.message(ESCAPE,Javelin.Delay.NONE);
     var i=Javelin.input();
-    if(i==null||i.getKeyChar()!='\n') throw new RepeatTurn();
+    if(i==null||i!='\n') throw new RepeatTurn();
     c.escape(state);
     throw state.blueteam.isEmpty()?new EndBattle():new RepeatTurn();
   }

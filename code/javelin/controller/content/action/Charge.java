@@ -72,6 +72,7 @@ public class Charge extends Fire implements AiAction{
     s=s.clone();
     me=s.clone(me);
     target=s.clone(target);
+    var ally=s.blueteam.contains(target);
     var walk=walk(me,target,s);
     var destination=walk.get(walk.size()-1);
     if(s.getmeld(destination.x,destination.y)!=null) return chances;
@@ -92,9 +93,7 @@ public class Charge extends Fire implements AiAction{
       node.action=me+" charges!\n"+node.action;
       node.delay=Delay.WAIT;
       var dead=((BattleState)node.n).dead;
-      //if(!me.automatic||!target.automatic||dead.contains(target))
-      //  node.delay=Delay.BLOCK;
-      if(dead.contains(target)) node.delay=Delay.BLOCK;
+      if(ally&&dead.contains(target)&&!target.summoned) node.delay=Delay.BLOCK;
       node.overlay=o;
       if(bullrush){
         var post=(BattleState)node.n;

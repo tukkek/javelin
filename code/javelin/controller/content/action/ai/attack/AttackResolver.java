@@ -49,9 +49,6 @@ public class AttackResolver{
       overlay=new TraceOverlay(attacker.getlocation(),target.getlocation());
       var action=AttackResolver.this.action;
       var fallen=target.hp<=0;
-      if(fallen) delay=Delay.BLOCK;
-      //if(hit&&(!attacker.automatic||!target.automatic)||fallen)
-      //        delay=Delay.BLOCK;
       if(fallen) audio=new Audio("die",target);
       else if(hit) audio=new Audio(action.soundhit,attacker);
       else audio=new Audio(action.soundmiss,attacker);
@@ -284,6 +281,7 @@ public class AttackResolver{
     s=s.clone();
     c=s.clone(c).clonesource();
     target=s.clone(target).clonesource();
+    var ally=s.blueteam.contains(target);
     var attacks=new ArrayList<String>(sequence.size());
     var hit=false;
     var ap=0f;
@@ -311,7 +309,10 @@ public class AttackResolver{
     c.ap+=this.ap==null?ap:this.ap;
     if(maneuver!=null) maneuver.postattacks(c,target,sequence,s);
     var message=contextualize(c,target,hit,attacks);
-    return new DamageNode(c,target,s,chance,message,hit);
+    var n=new DamageNode(c,target,s,chance,message,hit);
+    var block=target.hp<1&&ally&&!target.summoned;
+    if(block) n.delay=Delay.BLOCK;
+    return n;
   }
 
   List<ChanceNode> merge(List<ChanceNode> nodes){

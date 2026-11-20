@@ -30,7 +30,7 @@ public class BribingScreen{
     var text=printdiplomacy(foes,dailyfee,bribe,canhire);
     var s=new InfoScreen("");
     var choice=' ';
-    while(choice!='f'){
+    while(choice!='f'&&choice!='\n'){
       s.print(text);
       choice=InfoScreen.feedback();
       var nogold=false;

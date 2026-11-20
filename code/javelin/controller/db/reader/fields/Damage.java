@@ -47,8 +47,8 @@ public class Damage extends FieldReader{
   }
 
   boolean parseattacks(final ArrayList<Attack> attacks,final String attackp){
-    var attack=attackp.replace(" or","").replace("or ","")
-        .replaceAll("  "," ").trim();
+    var attack=attackp.replace(" or","").replace("or ","").replaceAll("  "," ")
+        .trim();
     Spell effect=null;
     for(DamageEffect e:DamageEffect.EFFECTS) if(attack.contains(e.name)){
       attack=removeeffect(attack,e.name);
@@ -82,18 +82,21 @@ public class Damage extends FieldReader{
     return false;
   }
 
-  void setdamage(String damage,final Attack a){
+  void setdamage(String text,Attack a){
     try{
-      damage=parseelementaldamage(damage,a);
-      a.damage=parsedamage(
-          damage.substring(cutname(damage)+1,damage.lastIndexOf(' ')).trim());
+      text=parseelementaldamage(text,a);
+      var index=new int[2];
+      index[0]=cutname(text)+1;
+      index[1]=text.lastIndexOf(' ');
+      a.damage=parsedamage(text.substring(index[0],index[1]).trim());
       a.getAverageDamageNoBonus();
-      final var crit=damage
-          .substring(damage.indexOf('(')+1,damage.indexOf(')')).split("/");
-      a.threat=Integer.parseInt(crit[0]);
-      a.multiplier=Integer.parseInt(crit[1].substring(1));
+      index[0]=text.indexOf('(')+1;
+      index[1]=text.indexOf(')');
+      var critical=text.substring(index[0],index[1]).split("/");
+      a.threat=Integer.parseInt(critical[0]);
+      a.multiplier=Integer.parseInt(critical[1].substring(1));
     }catch(final IndexOutOfBoundsException e){
-      reader.errorhandler.setInvalid("Invalid damage (oob): "+damage);
+      reader.errorhandler.setInvalid("Invalid damage (oob): "+text);
     }catch(final Exception e){
       throw new RuntimeException(e);
     }

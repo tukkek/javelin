@@ -92,8 +92,9 @@ public class Charge extends Fire implements AiAction{
       node.action=me+" charges!\n"+node.action;
       node.delay=Delay.WAIT;
       var dead=((BattleState)node.n).dead;
-      if(!me.automatic||!target.automatic||dead.contains(target))
-        node.delay=Delay.BLOCK;
+      //if(!me.automatic||!target.automatic||dead.contains(target))
+      //  node.delay=Delay.BLOCK;
+      if(dead.contains(target)) node.delay=Delay.BLOCK;
       node.overlay=o;
       if(bullrush){
         var post=(BattleState)node.n;

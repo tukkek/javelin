@@ -49,10 +49,12 @@ public class AttackResolver{
       overlay=new TraceOverlay(attacker.getlocation(),target.getlocation());
       var action=AttackResolver.this.action;
       var fallen=target.hp<=0;
-      if(hit&&(!attacker.automatic||!target.automatic)||fallen)
-        delay=Delay.BLOCK;
-      audio=fallen?new Audio("die",target)
-          :new Audio(hit?action.soundhit:action.soundmiss,attacker);
+      if(fallen) delay=Delay.BLOCK;
+      //if(hit&&(!attacker.automatic||!target.automatic)||fallen)
+      //        delay=Delay.BLOCK;
+      if(fallen) audio=new Audio("die",target);
+      else if(hit) audio=new Audio(action.soundhit,attacker);
+      else audio=new Audio(action.soundmiss,attacker);
     }
 
     @Override
